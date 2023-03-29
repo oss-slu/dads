@@ -3,7 +3,7 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
-import  { useState } from 'react';
+import { useState } from 'react';
 
 function Page1({ width }) {
 
@@ -14,15 +14,52 @@ function Page1({ width }) {
         console.log(el)
     }
 
+
+    //used to set a filter property, replacing it with the old value
+    const replaceFilter = (filterName, filterValue) => {
+
+        if (filterName in filters && filters[filterName].includes(filterValue)) {
+            setFilters({ ...filters, [filterName]: [] })
+        }
+        else {
+            setFilters({ ...filters, [filterName]: [filterValue] })
+        }
+    }
+
+    //used to add to a filter property, adding to it if any other values exist
+    const appendFilter = (filterName, filterValue) => {
+
+        if (filterName in filters) {
+
+            //remove it from list
+            if (filters[filterName].includes(filterValue)) {
+                setFilters({ ...filters, [filterName]: filters[filterName].filter(item => item !== filterValue) })
+            }
+            //add it to list
+            else {
+                filters[filterName].push(filterValue)
+            }
+
+        }
+        else {
+            setFilters({ ...filters, [filterName]: [filterValue] })
+        }
+    }
+
+
+
     const textBoxStyle = {
-        width: "80px",
+        width: "60px",
         marginRight: "12px"
     }
-    const [dimension, setDimension] = useState(0);
+    const [filters, setFilters] = useState({});
+
+
 
     return (
         <>
             <div style={{ marginLeft: width }}>
+                <button onClick={() => console.log(filters)}>Log Filters</button>
 
                 <Grid container style={{ height: "600px", padding: "20px" }} >
 
@@ -37,15 +74,16 @@ function Page1({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Dimension</span>
                                     <ul className="nested">
-                                        <input type="checkbox" />
+                                        <input type="checkbox" onClick={() => appendFilter('dimension', 1)} />
                                         <label>P<sup>1</sup> {String.fromCharCode(8594)} P<sup>1</sup></label>
                                         <br />
-                                        <input type="checkbox" />
+                                        <input type="checkbox" onClick={() => appendFilter('dimension', 2)} />
                                         <label>P<sup>2</sup> {String.fromCharCode(8594)} P<sup>2</sup></label>
                                         <br />
-                                        <input type="text" style={textBoxStyle} />
+                                        <input type="text" style={textBoxStyle}
+                                            onChange={(event) => replaceFilter('customDimension', event.target.value)} />
                                         <label>Custom</label>
-                                        <br />  <br />
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -55,18 +93,19 @@ function Page1({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Degree</span>
                                     <ul className="nested">
-                                        <input type="checkbox" />
+                                        <input type="checkbox" onClick={() => appendFilter('degree', 2)} />
                                         <label>2</label>
                                         <br />
-                                        <input type="checkbox" />
+                                        <input type="checkbox" onClick={() => appendFilter('degree', 3)} />
                                         <label>3</label>
                                         <br />
-                                        <input type="checkbox" />
+                                        <input type="checkbox" onClick={() => appendFilter('degree', 2)} />
                                         <label>4</label>
                                         <br />
-                                        <input type="text" style={textBoxStyle} />
+                                        <input type="text" style={textBoxStyle}
+                                            onChange={(event) => replaceFilter('customDegree', event.target.value)} />
                                         <label>Custom</label>
-                                        <br /> <br />
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -81,7 +120,7 @@ function Page1({ width }) {
                                         <br />
                                         <input type="checkbox" />
                                         <label>Family</label>
-                                        <br /> <br />
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -89,6 +128,18 @@ function Page1({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Type</span>
                                     <ul className="nested">
+                                        <input type="checkbox" />
+                                        <label>Polynomial</label>
+                                        <br />
+                                        <input type="checkbox" />
+                                        <label>Lattes</label>
+                                        <br />
+                                        <input type="checkbox" />
+                                        <label>Chebyshev</label>
+                                        <br />
+                                        <input type="checkbox" />
+                                        <label>Newton</label>
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -96,6 +147,12 @@ function Page1({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Field of Definition</span>
                                     <ul className="nested">
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Degree</label>
+                                        <br />
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Label</label>
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -103,6 +160,12 @@ function Page1({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Rational Periodic Points</span>
                                     <ul className="nested">
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Cardinality</label>
+                                        <br />
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Largest Cycle</label>
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -175,7 +238,12 @@ function Page1({ width }) {
                                 <li><span className="caret" onClick={toggleTree}>Number PCF</span>
                                     <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
-
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Average Size of PC Set</label>
+                                        <br />
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Largest PC Set</label>
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -186,7 +254,12 @@ function Page1({ width }) {
                                 <li><span className="caret" onClick={toggleTree}>Average #Periodic</span>
                                     <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
-
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Most Periodic</label>
+                                        <br />
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Largest Cycle</label>
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -195,6 +268,12 @@ function Page1({ width }) {
                                 <li><span className="caret" onClick={toggleTree}>Average #Preperiodic</span>
                                     <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Most Preperiodic </label>
+                                        <br />
+                                        <input type="text" style={textBoxStyle} />
+                                        <label>Largest Comp.</label>
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
