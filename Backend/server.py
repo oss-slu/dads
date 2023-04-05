@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/data")
 def data():
-    return {"data": ["data1", "data2", "data3"]}
+    return {"data": ["data1", "data2", "data3", "data4"]}
 
 
 if __name__ == "__main__":
