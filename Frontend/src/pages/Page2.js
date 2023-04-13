@@ -3,9 +3,46 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getData } from '../api/routes';
+
 
 function Page1({ width }) {
+    const [filters, setFilters] = useState({});
+    const [data, setData] = useState(null);
+
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            try {
+                const result = await getData()
+
+
+                let dataProperties = result.data.map(x =>
+                    [x.label,
+                    <>P<sup>{x.N}</sup> {String.fromCharCode(8594)} P<sup>{x.N}</sup></>,
+                    x.base_field_degree,
+                    x.models_original_polys_val,
+                    x.base_field_latex
+
+                    ]
+
+                )
+
+                setData(dataProperties);
+
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        fetchData();
+
+    }, []);
+
+
+
+
 
     const toggleTree = (event) => {
         let el = event.target;
@@ -52,7 +89,7 @@ function Page1({ width }) {
         width: "60px",
         marginRight: "12px"
     }
-    const [filters, setFilters] = useState({});
+
 
 
 
@@ -208,12 +245,7 @@ function Page1({ width }) {
                         <p style={{ textAlign: "center", marginTop: 0 }}>Results</p>
                         <DataTable
                             labels={['Label', 'Domain', 'Degree', 'Polynomials', 'Field']}
-                            data={
-                                [
-                                    ['1.2.f4075c4e.1', <>P<sup>1</sup> {String.fromCharCode(8594)} P<sup>1</sup></>, '2', '[x^2 : y^2]', 'QQ'],
-                                    ['1.2.3cf16159.1', <>P<sup>1</sup> {String.fromCharCode(8594)} P<sup>1</sup></>, '2', '[x^2 + y^2 : y^2]', 'QQ']
-                                ]
-                            }
+                            data={data == null ? [] : data}
                         />
                     </Grid>
 
