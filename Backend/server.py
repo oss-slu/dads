@@ -7,8 +7,8 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/data")
-def index():
+@app.route("/data", methods=['POST', 'GET'])
+def data():
     with open('./static/test_data.csv', encoding='utf-8') as csv_file:
         csvReader = csv.DictReader(csv_file)
 
@@ -17,23 +17,27 @@ def index():
         for row in csvReader:
             print(row)
             jsonData.append(row)
+
+        user = request.get_json()
+        print(user)
     return jsonify(jsonData)
 
 
-@app.route("/filterData", methods=['POST', 'GET'])
-def login():
 
+
+@app.route("/filterData", methods=['POST', 'GET'])
+def filterData():
     try:
-        print('hi')
-        user = request.json
+        user = request.get_json()
         print(user)
-        return test_data
+        print(user['dimension'])
+
+        filtered = [d for d in test_data if int(d['N']) in user['dimension']]
+        return filtered
+    
     except Exception as error:
-        # handle the exception
-        # An exception occurred: division by zero
         print("An exception occurred:", error)
         return
-
 
 if __name__ == "__main__":
     app.run()

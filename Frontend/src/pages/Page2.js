@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
 import { useState, useEffect } from 'react';
-import { getData } from '../api/routes';
+import { getData, getFilterData } from '../api/routes';
 
 
 function Page1({ width }) {
@@ -12,33 +12,33 @@ function Page1({ width }) {
     const [data, setData] = useState(null);
 
 
-    useEffect(() => {
-
-        const fetchData = async () => {
-            try {
-                const result = await getData()
+    const fetchData = async () => {
+        try {
+            const result = await getFilterData(filters)
 
 
-                let dataProperties = result.data.map(x =>
-                    [x.label,
+            let dataProperties = result.data.map(x =>
+                [   
+                    x.label,
                     <>P<sup>{x.N}</sup> {String.fromCharCode(8594)} P<sup>{x.N}</sup></>,
                     x.base_field_degree,
                     x.models_original_polys_val,
                     x.base_field_latex
+                ]
+            )
+            setData(dataProperties);
+            console.log(data)
 
-                    ]
+        } catch (error) {
+            console.log(error)
+        }
+    };
 
-                )
 
-                setData(dataProperties);
-
-            } catch (error) {
-                console.log(error)
-            }
-        };
+    useEffect(() => {
         fetchData();
 
-    }, []);
+    }, [filters]);
 
 
 
@@ -61,6 +61,8 @@ function Page1({ width }) {
         else {
             setFilters({ ...filters, [filterName]: [filterValue] })
         }
+
+        fetchData();
     }
 
     //used to add to a filter property, adding to it if any other values exist
@@ -81,6 +83,9 @@ function Page1({ width }) {
         else {
             setFilters({ ...filters, [filterName]: [filterValue] })
         }
+
+
+        fetchData();
     }
 
 
@@ -247,6 +252,8 @@ function Page1({ width }) {
                             labels={['Label', 'Domain', 'Degree', 'Polynomials', 'Field']}
                             data={data == null ? [] : data}
                         />
+
+                        {data == null ? <p>Loading Data</p> : <></>}
                     </Grid>
 
 
