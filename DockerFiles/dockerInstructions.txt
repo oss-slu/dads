@@ -1,0 +1,32 @@
+Install Docker Desktop (https://docs.docker.com/desktop/install/windows-install/)
+
+Open CMD as admin, navigate to folder with Dockerfile
+
+Run "docker build -t NAME_OF_IMAGE ./"
+
+Run "docker run --name NAME_OF_CONTAINER -v SOME_FILE_PATH/pgdata:/var/lib/postgresql/data -p 5432:5432 NAME_OF_IMAGE"
+
+Navigate to the File path provided in the previous step, then into the new pgdata folder
+
+Paste data.csv (Our test data) into this folder
+
+In a new cmd window run "docker exec -it NAME_OF_CONTAINER psql -U postgres -d dynamSystems
+
+This should give a shell within the docker container
+
+In this shell, run "\copy data FROM '/var/lib/postgresql/data/data.csv' DELIMITER ',' CSV HEADER;"
+
+
+This should get the database setup and populated. Now you should be able to connect using this info
+Host: localhost
+Port: 5432
+User: postgres
+Password: docker
+Database Name: dynamSystems
+Table Name: public.data
+
+You'll only need to follow these inital steps the very first time you set it up, after that you should be able to just restart the container by using 
+
+docker start NAME_OF_CONTAINER 
+
+in a cmd, and the database should persist
