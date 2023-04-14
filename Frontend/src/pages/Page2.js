@@ -8,32 +8,37 @@ import { getData, getFilterData } from '../api/routes';
 
 
 function Page1({ width }) {
-    const [filters, setFilters] = useState({});
-    const [data, setData] = useState(null);
+   
+    const [filters, setFilters] = useState({
+        dimension: [],
+        degree: [],
+        customDegree: [],
+        customDimension: []
+    });
 
+    const [data, setData] = useState(null);
 
     const fetchData = async () => {
         try {
+            
+            //todo filters need to have right names to work for backend
             const result = await getFilterData(filters)
 
-
-            let dataProperties = result.data.map(x =>
-                [   
+            let displayData = result.data.map(x =>
+                [
                     x.label,
                     <>P<sup>{x.N}</sup> {String.fromCharCode(8594)} P<sup>{x.N}</sup></>,
-                    x.base_field_degree,
+                    x.degree,
                     x.models_original_polys_val,
                     x.base_field_latex
                 ]
             )
-            setData(dataProperties);
-            console.log(data)
-
+            setData(displayData);
         } catch (error) {
+            setData(null)
             console.log(error)
         }
     };
-
 
     useEffect(() => {
         fetchData();
@@ -41,21 +46,17 @@ function Page1({ width }) {
     }, [filters]);
 
 
-
-
-
     const toggleTree = (event) => {
         let el = event.target;
         el.parentElement.querySelector(".nested").classList.toggle("active");
         el.classList.toggle("caret-down");
-        console.log(el)
     }
 
 
     //used to set a filter property, replacing it with the old value
     const replaceFilter = (filterName, filterValue) => {
 
-        if (filterName in filters && filters[filterName].includes(filterValue)) {
+        if (filters[filterName].includes(filterValue)) {
             setFilters({ ...filters, [filterName]: [] })
         }
         else {
@@ -65,37 +66,26 @@ function Page1({ width }) {
         fetchData();
     }
 
-    //used to add to a filter property, adding to it if any other values exist
+
+    //used to add to a filter property that can contain multiple values
     const appendFilter = (filterName, filterValue) => {
 
-        if (filterName in filters) {
-
-            //remove it from list
-            if (filters[filterName].includes(filterValue)) {
-                setFilters({ ...filters, [filterName]: filters[filterName].filter(item => item !== filterValue) })
-            }
-            //add it to list
-            else {
-                filters[filterName].push(filterValue)
-            }
-
+        //remove it from list
+        if (filters[filterName].includes(filterValue)) {
+            setFilters({ ...filters, [filterName]: filters[filterName].filter(item => item !== filterValue) })
         }
+        //add it to list
         else {
-            setFilters({ ...filters, [filterName]: [filterValue] })
+            filters[filterName].push(filterValue)
         }
-
-
         fetchData();
     }
-
 
 
     const textBoxStyle = {
         width: "60px",
         marginRight: "12px"
     }
-
-
 
 
     return (
@@ -141,7 +131,7 @@ function Page1({ width }) {
                                         <input type="checkbox" onClick={() => appendFilter('degree', 3)} />
                                         <label>3</label>
                                         <br />
-                                        <input type="checkbox" onClick={() => appendFilter('degree', 2)} />
+                                        <input type="checkbox" onClick={() => appendFilter('degree', 4)} />
                                         <label>4</label>
                                         <br />
                                         <input type="text" style={textBoxStyle}

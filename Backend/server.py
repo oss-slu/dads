@@ -23,21 +23,30 @@ def data():
     return jsonify(jsonData)
 
 
-
-
 @app.route("/filterData", methods=['POST', 'GET'])
 def filterData():
     try:
-        user = request.get_json()
-        print(user)
-        print(user['dimension'])
+        filters = request.get_json()
 
-        filtered = [d for d in test_data if int(d['N']) in user['dimension']]
+        filtered = []
+
+        for item in test_data:
+            add = True
+            for filter in filters:
+                if (filters[filter] != []):
+                    if(filter in item and not str(item[filter]) in str(filters[filter])):
+                        add = False
+                        break
+            if(add):
+                filtered.append(item)
+
         return filtered
     
     except Exception as error:
         print("An exception occurred:", error)
-        return
+        return 
+
+
 
 if __name__ == "__main__":
     app.run()
