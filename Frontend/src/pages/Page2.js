@@ -1,3 +1,4 @@
+import './Page2.css'
 
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
@@ -93,10 +94,10 @@ function Page1({ width }) {
             <div style={{ marginLeft: width }}>
                 <button onClick={() => console.log(filters)}>Log Filters</button>
 
-                <Grid container style={{ height: "600px", padding: "20px" }} >
+                <div className="results-container" container>
 
 
-                    <Grid item xs={3} style={{ backgroundColor: '#B6D1EE', borderRadius: "25px" }}  >
+                    <Grid className="sidebar" item xs={3}>
 
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p>Filters</p>
@@ -235,7 +236,7 @@ function Page1({ width }) {
                     </Grid>
 
 
-                    <Grid item xs={6} style={{ padding: "20px" }}>
+                    <Grid className="results-table" item xs={6} >
                         <span style={{ float: "right", color: "red" }}>Download</span>
                         <p style={{ textAlign: "center", marginTop: 0 }}>Results</p>
                         <DataTable
@@ -249,7 +250,7 @@ function Page1({ width }) {
 
 
 
-                    <Grid item xs={3} style={{ backgroundColor: '#B6D1EE', borderRadius: "25px" }} >
+                    <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p>Result Statistics</p>
                             <Divider />
@@ -346,7 +347,7 @@ function Page1({ width }) {
                     </Grid>
 
 
-                </Grid>
+                </div>
 
 
 
