@@ -1,59 +1,92 @@
+import './Page2.css'
 
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getData, getFilterData } from '../api/routes';
+
 
 function Page1({ width }) {
+   
+    const [filters, setFilters] = useState({
+        dimension: [],
+        degree: [],
+        customDegree: [],
+        customDimension: []
+    });
+
+    const [data, setData] = useState(null);
+
+    const fetchData = async () => {
+        try {
+            
+            //todo filters need to have right names to work for backend
+            const result = await getFilterData(filters)
+
+            let displayData = result.data.map(x =>
+                [
+                    x.label,
+                    <>P<sup>{x.N}</sup> {String.fromCharCode(8594)} P<sup>{x.N}</sup></>,
+                    x.degree,
+                    x.models_original_polys_val,
+                    x.base_field_latex
+                ]
+            )
+            setData(displayData);
+        } catch (error) {
+            setData(null)
+            console.log(error)
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+
+    }, [filters]);
+
 
     const toggleTree = (event) => {
         let el = event.target;
         el.parentElement.querySelector(".nested").classList.toggle("active");
         el.classList.toggle("caret-down");
-        console.log(el)
     }
 
 
     //used to set a filter property, replacing it with the old value
     const replaceFilter = (filterName, filterValue) => {
 
-        if (filterName in filters && filters[filterName].includes(filterValue)) {
+        if (filters[filterName].includes(filterValue)) {
             setFilters({ ...filters, [filterName]: [] })
         }
         else {
             setFilters({ ...filters, [filterName]: [filterValue] })
         }
+
+        fetchData();
     }
 
-    //used to add to a filter property, adding to it if any other values exist
+
+    //used to add to a filter property that can contain multiple values
     const appendFilter = (filterName, filterValue) => {
 
-        if (filterName in filters) {
-
-            //remove it from list
-            if (filters[filterName].includes(filterValue)) {
-                setFilters({ ...filters, [filterName]: filters[filterName].filter(item => item !== filterValue) })
-            }
-            //add it to list
-            else {
-                filters[filterName].push(filterValue)
-            }
-
+        //remove it from list
+        if (filters[filterName].includes(filterValue)) {
+            setFilters({ ...filters, [filterName]: filters[filterName].filter(item => item !== filterValue) })
         }
+        //add it to list
         else {
-            setFilters({ ...filters, [filterName]: [filterValue] })
+            filters[filterName].push(filterValue)
         }
+        fetchData();
     }
-
 
 
     const textBoxStyle = {
         width: "60px",
         marginRight: "12px"
     }
-    const [filters, setFilters] = useState({});
-
 
 
     return (
@@ -61,10 +94,10 @@ function Page1({ width }) {
             <div style={{ marginLeft: width }}>
                 <button onClick={() => console.log(filters)}>Log Filters</button>
 
-                <Grid container style={{ height: "600px", padding: "20px" }} >
+                <div className="results-container" container>
 
 
-                    <Grid item xs={3} style={{ backgroundColor: '#B6D1EE', borderRadius: "25px" }}  >
+                    <Grid className="sidebar" item xs={3}>
 
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p>Filters</p>
@@ -99,7 +132,7 @@ function Page1({ width }) {
                                         <input type="checkbox" onClick={() => appendFilter('degree', 3)} />
                                         <label>3</label>
                                         <br />
-                                        <input type="checkbox" onClick={() => appendFilter('degree', 2)} />
+                                        <input type="checkbox" onClick={() => appendFilter('degree', 4)} />
                                         <label>4</label>
                                         <br />
                                         <input type="text" style={textBoxStyle}
@@ -203,24 +236,21 @@ function Page1({ width }) {
                     </Grid>
 
 
-                    <Grid item xs={6} style={{ padding: "20px" }}>
+                    <Grid className="results-table" item xs={6} >
                         <span style={{ float: "right", color: "red" }}>Download</span>
                         <p style={{ textAlign: "center", marginTop: 0 }}>Results</p>
                         <DataTable
                             labels={['Label', 'Domain', 'Degree', 'Polynomials', 'Field']}
-                            data={
-                                [
-                                    ['1.2.f4075c4e.1', <>P<sup>1</sup> {String.fromCharCode(8594)} P<sup>1</sup></>, '2', '[x^2 : y^2]', 'QQ'],
-                                    ['1.2.3cf16159.1', <>P<sup>1</sup> {String.fromCharCode(8594)} P<sup>1</sup></>, '2', '[x^2 + y^2 : y^2]', 'QQ']
-                                ]
-                            }
+                            data={data == null ? [] : data}
                         />
+
+                        {data == null ? <p>Loading Data</p> : <></>}
                     </Grid>
 
 
 
 
-                    <Grid item xs={3} style={{ backgroundColor: '#B6D1EE', borderRadius: "25px" }} >
+                    <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p>Result Statistics</p>
                             <Divider />
@@ -317,7 +347,7 @@ function Page1({ width }) {
                     </Grid>
 
 
-                </Grid>
+                </div>
 
 
 
