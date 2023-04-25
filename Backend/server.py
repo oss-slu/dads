@@ -1,51 +1,27 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from static.test_dict import test_data
-import csv
+from Connector import getAllSystems, getFilteredSystems, getSystem
 
 app = Flask(__name__)
 CORS(app)
 
+@app.route("/getSystem", methods=['POST', 'GET'])
+def data1():
+    input = request.get_json()
+    print(input)
+    data = getSystem(input['label'])
+    return jsonify(data)
 
-@app.route("/data", methods=['POST', 'GET'])
-def data():
-    with open('./static/test_data.csv', encoding='utf-8') as csv_file:
-        csvReader = csv.DictReader(csv_file)
+@app.route("/getAllSystems", methods=['POST', 'GET'])
+def data2():
+    data = getAllSystems()
+    return jsonify(data)
 
-        jsonData = []
-
-        for row in csvReader:
-            print(row)
-            jsonData.append(row)
-
-        user = request.get_json()
-        print(user)
-    return jsonify(jsonData)
-
-
-@app.route("/filterData", methods=['POST', 'GET'])
-def filterData():
-    try:
-        filters = request.get_json()
-
-        filtered = []
-
-        for item in test_data:
-            add = True
-            for filter in filters:
-                if (filters[filter] != []):
-                    if(filter in item and not str(item[filter]) in str(filters[filter])):
-                        add = False
-                        break
-            if(add):
-                filtered.append(item)
-
-        return filtered
-    
-    except Exception as error:
-        print("An exception occurred:", error)
-        return 
-
+@app.route("/getFilteredSystems", methods=['POST', 'GET'])
+def data3():
+    filters = request.get_json()
+    data = getFilteredSystems(filters)
+    return jsonify(data)
 
 
 if __name__ == "__main__":

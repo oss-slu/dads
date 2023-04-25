@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
 import { useState, useEffect } from 'react';
-import { getData, getFilterData } from '../api/routes';
+import { getData, getFilterData, getSystems, getFilteredSystems } from '../api/routes';
 
 
 function Page1({ width }) {
@@ -23,15 +23,15 @@ function Page1({ width }) {
         try {
             
             //todo filters need to have right names to work for backend
-            const result = await getFilterData(filters)
-
+            const result = await getFilteredSystems(filters)
+            console.log(result)
             let displayData = result.data.map(x =>
                 [
-                    x.label,
-                    <>P<sup>{x.N}</sup> {String.fromCharCode(8594)} P<sup>{x.N}</sup></>,
-                    x.degree,
-                    x.models_original_polys_val,
-                    x.base_field_latex
+                    x[0],
+                    <>P<sup>{x[1]}</sup> {String.fromCharCode(8594)} P<sup>{x[1]}</sup></>,
+                    x[2],
+                    x[3],
+                    x[4]
                 ]
             )
             setData(displayData);
