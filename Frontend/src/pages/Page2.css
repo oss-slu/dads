@@ -19,7 +19,7 @@
     padding: 10px;
 }
 
-@media (max-width: 1250px) {
+@media (max-width: 1150px) {
     .results-container {
         flex-direction: column;
         flex-wrap: nowrap;
