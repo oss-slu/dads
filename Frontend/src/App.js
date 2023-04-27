@@ -5,7 +5,7 @@ import Page2 from './pages/Page2';
 import Sidebar from "./components/Sidebar";
 import Tobpbar from "./components/Topbar"
 import Toolbar from '@mui/material/Toolbar';
-import Data from "./pages/Data";
+
 
 function App() {
 
@@ -26,8 +26,6 @@ function App() {
           <Route index element={<p style={{ marginLeft: drawerWidth }}> home page</p>} />
           <Route path="page1" element={<Page1 width={drawerWidth} />} />
           <Route path="page2" element={<Page2 width={drawerWidth} />} />
-          <Route path="data" element={<Data width={drawerWidth} />} />
-
         </Routes>
       </BrowserRouter>
 

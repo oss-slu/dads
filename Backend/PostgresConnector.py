@@ -27,7 +27,8 @@ def getSystem(label):
 def getFilteredSystems(filters):
     conn = psycopg2.connect("dbname=dynamSystems user=postgres password=docker")
     cur = conn.cursor()
-    columns = 'label, degree, degree, models_original_polys_val, base_field_latex'
+    columns = 'label, degree, degree, models_original_polys_val, base_field_latex' 
+    #TODO cant use dimension (N) from some database for some reason, used degree twice for columns, need to fix
     whereText = buildWhereText(filters)
     sql = "SELECT " + columns + " FROM public.data" + whereText
 

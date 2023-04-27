@@ -7,24 +7,27 @@ import DataTable from '../components/DataTable';
 import { useState, useEffect } from 'react';
 import { getData, getFilterData, getSystems, getFilteredSystems } from '../api/routes';
 
+function Page2({ width }) {
 
-function Page1({ width }) {
-   
     const [filters, setFilters] = useState({
         dimension: [],
         degree: [],
-        customDegree: [],
-        customDimension: []
+        customDegree: "",
+        customDimension: ""
     });
 
     const [data, setData] = useState(null);
 
     const fetchData = async () => {
         try {
-            
-            //todo filters need to have right names to work for backend
-            const result = await getFilteredSystems(filters)
-            console.log(result)
+
+            //filters need to have right names to work for backend
+            const result = await getFilteredSystems(
+                {
+                    degree: filters.customDegree == "" ? filters.degree : [...filters.degree, Number(filters.customDegree)]
+                }
+            )
+
             let displayData = result.data.map(x =>
                 [
                     x[0],
@@ -44,7 +47,7 @@ function Page1({ width }) {
     useEffect(() => {
         fetchData();
 
-    }, [filters]);
+    }, [filters]); //TODO only gets called when removing a filter and not adding it
 
 
     const toggleTree = (event) => {
@@ -56,14 +59,7 @@ function Page1({ width }) {
 
     //used to set a filter property, replacing it with the old value
     const replaceFilter = (filterName, filterValue) => {
-
-        if (filters[filterName].includes(filterValue)) {
-            setFilters({ ...filters, [filterName]: [] })
-        }
-        else {
-            setFilters({ ...filters, [filterName]: [filterValue] })
-        }
-
+        setFilters({ ...filters, [filterName]: filterValue })
         fetchData();
     }
 
@@ -79,7 +75,8 @@ function Page1({ width }) {
         else {
             filters[filterName].push(filterValue)
         }
-        fetchData();
+
+        fetchData(); //calling fetch data here probably isn't best practice... might want to fix use effect
     }
 
 
@@ -88,14 +85,11 @@ function Page1({ width }) {
         marginRight: "12px"
     }
 
-
     return (
         <>
             <div style={{ marginLeft: width }}>
-                <button onClick={() => console.log(filters)}>Log Filters</button>
 
                 <div className="results-container" container>
-
 
                     <Grid className="sidebar" item xs={3}>
 
@@ -245,6 +239,7 @@ function Page1({ width }) {
                         />
 
                         {data == null ? <p>Loading Data</p> : <></>}
+                        {data != null && data.length == 0  ? <p>No data meets that criteria</p> : <></>}
                     </Grid>
 
 
@@ -362,4 +357,4 @@ function Page1({ width }) {
     )
 }
 
-export default Page1;
+export default Page2;
