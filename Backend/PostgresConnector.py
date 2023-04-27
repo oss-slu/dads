@@ -1,8 +1,11 @@
 import psycopg2
 
+# important do not store password when dealing with real database
+# might want to consider SQL injection down the line
+# might want to use database entry ID instead of label for identifying specific systems
 
-#important do not store password when dealing with real database
 
+#gets all systems from the database
 def getAllSystems():
     conn = psycopg2.connect("dbname=dynamSystems user=postgres password=docker")
     cur = conn.cursor()
@@ -11,33 +14,40 @@ def getAllSystems():
     cur.execute(sql)
     return cur.fetchall()
 
+#gets a system identified by its label, input is string
 def getSystem(label):
     conn = psycopg2.connect("dbname=dynamSystems user=postgres password=docker")
     cur = conn.cursor()
-    columns = 'label, degree, degree, models_original_polys_val, base_field_latex'
+    columns = '*'
     sql = "SELECT " + columns + " FROM public.data WHERE label = '" + label + "'"
     cur.execute(sql)
     return cur.fetchall()
 
-
+#gets systems that match the passed in filters, input should be json object
 def getFilteredSystems(filters):
     conn = psycopg2.connect("dbname=dynamSystems user=postgres password=docker")
     cur = conn.cursor()
-
     columns = 'label, degree, degree, models_original_polys_val, base_field_latex'
-    whereText = filterText(filters)
-
+    whereText = buildWhereText(filters)
     sql = "SELECT " + columns + " FROM public.data" + whereText
 
     cur.execute(sql)
     return cur.fetchall()
 
 
+#gets a subset of the systems identified by the labels, input should be json list
+def getSelectedSystems(labels):
+    conn = psycopg2.connect("dbname=dynamSystems user=postgres password=docker")
+    cur = conn.cursor()
+    labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
+    columns = '*'
+    sql = "SELECT " + columns + " FROM public.data WHERE label in " + labels  
+    cur.execute(sql)
+    return cur.fetchall()
 
 
-def filterText(filters):
-
-    filterText = " WHERE "
+#function that builds the WHERE part of SQL query to filter the results
+def buildWhereText(filters):
 
     #remove empty filters
     for filter in filters.copy():
@@ -46,11 +56,11 @@ def filterText(filters):
 
     if len(filters) == 0:
         return ""
+    
+    filterText = " WHERE "
 
+    #go through each non-empty filter and add it to the list for the WHERE clause
     for index, filter in enumerate(filters):    
-        if(len(filters[filter]) == 0):
-            continue
-
         filterText += filter + " in " + "(" + ', '.join(str(e) for e in filters[filter]) + ")"
 
         if(index != len(filters)-1):

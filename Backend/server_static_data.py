@@ -3,6 +3,8 @@ from flask_cors import CORS
 from static.test_dict import test_data
 import csv
 
+#old test server to use with static data
+
 app = Flask(__name__)
 CORS(app)
 
