@@ -26,6 +26,8 @@ function App() {
           <Route index element={<p style={{ marginLeft: drawerWidth }}> home page</p>} />
           <Route path="page1" element={<Page1 width={drawerWidth} />} />
           <Route path="page2" element={<Page2 width={drawerWidth} />} />
+          <Route path="page2" element={<Page2 width={drawerWidth} />} />
+          <Route path="system/:label" element={<p style={{ marginLeft: drawerWidth }}>permalink for system</p>}/>
         </Routes>
       </BrowserRouter>
 
