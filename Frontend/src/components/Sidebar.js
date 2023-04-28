@@ -55,7 +55,7 @@ export default function Sidebar({width}) {
                     <List>
                         <PageLink text="Home" link="/" icon={<HomeIcon />} />
                         {/* <PageLink text="Family" link="/page1" icon={<CalculateIcon />} /> */}
-                        <PageLink text="Dynamical Systems" link="/page2" icon={<FunctionsIcon />} />
+                        <PageLink text="Dynamical Systems" link="/exploreSystems" icon={<FunctionsIcon />} />
                     </List>
                 </Box>
             </Drawer>

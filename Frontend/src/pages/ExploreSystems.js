@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { getData, getFilterData, getSystems, getFilteredSystems } from '../api/routes';
 
-function Page2({ width }) {
+function ExploreSystems({ width }) {
 
     const [filters, setFilters] = useState({
         dimension: [],
@@ -396,4 +396,4 @@ function Page2({ width }) {
     )
 }
 
-export default Page2;
+export default ExploreSystems;
