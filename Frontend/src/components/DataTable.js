@@ -23,7 +23,7 @@ export default function DataTable({ labels, data }) {
                                 {
                                     item.map((element, id) =>
                                         <td>
-                                            <span style={id === 0 | id === 4 ? { color: "red" } : {}}>
+                                            <span>
                                                 {element}
                                             </span>
                                         </td>

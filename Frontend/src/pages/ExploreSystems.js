@@ -4,19 +4,44 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
+import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { getData, getFilterData, getSystems, getFilteredSystems } from '../api/routes';
 
-function Page2({ width }) {
+function ExploreSystems({ width }) {
 
     const [filters, setFilters] = useState({
         dimension: [],
         degree: [],
+        is_polynomial: [],
         customDegree: "",
         customDimension: ""
     });
 
-    const [data, setData] = useState(null);
+    const [systems, setSystems] = useState(null);
+
+    
+    const downloadCSV = () => {
+        let csvData = ''
+        for (let i = 0; i < systems.length; i++) {
+            for (let j = 0; j < systems[i].length; j++) {
+                if(typeof systems[i][j] === 'string') {
+                    csvData += "\"" + systems[i][j] + "\"" +  ","
+                }
+                else{
+                    csvData += systems[i][j] + ","
+                }
+                
+            }
+            csvData += '\n'
+        }
+        const blob = new Blob([csvData], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.setAttribute('href', url)
+        a.setAttribute('download', 'results.csv');
+        a.click()
+    }
 
     const fetchData = async () => {
         try {
@@ -24,22 +49,14 @@ function Page2({ width }) {
             //filters need to have right names to work for backend
             const result = await getFilteredSystems(
                 {
-                    degree: filters.customDegree == "" ? filters.degree : [...filters.degree, Number(filters.customDegree)]
+                    degree: filters.customDegree == "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
+                    is_polynomial: filters.is_polynomial
                 }
             )
-
-            let displayData = result.data.map(x =>
-                [
-                    x[0],
-                    <>P<sup>{x[1]}</sup> {String.fromCharCode(8594)} P<sup>{x[1]}</sup></>,
-                    x[2],
-                    x[3],
-                    x[4]
-                ]
-            )
-            setData(displayData);
+            console.log(result)
+            setSystems(result.data);
         } catch (error) {
-            setData(null)
+            setSystems(null)
             console.log(error)
         }
     };
@@ -56,6 +73,18 @@ function Page2({ width }) {
         el.classList.toggle("caret-down");
     }
 
+
+    //used to update a boolean filter, filter is [] if false so that it doesn't matter
+    //assumes defaulted to false (UNCHECKED)
+    const booleanFilter = (filterName) => {
+        if (filters[filterName].length == 0) {
+            setFilters({ ...filters, [filterName]: [true] })
+        }
+        else {
+            setFilters({ ...filters, [filterName]: [] })
+        }
+        fetchData();
+    }
 
     //used to set a filter property, replacing it with the old value
     const replaceFilter = (filterName, filterValue) => {
@@ -155,7 +184,7 @@ function Page2({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Type</span>
                                     <ul className="nested">
-                                        <input type="checkbox" />
+                                        <input type="checkbox" onClick={() => booleanFilter('is_polynomial')} />
                                         <label>Polynomial</label>
                                         <br />
                                         <input type="checkbox" />
@@ -231,15 +260,25 @@ function Page2({ width }) {
 
 
                     <Grid className="results-table" item xs={6} >
-                        <span style={{ float: "right", color: "red" }}>Download</span>
+                        <span style={{ float: "right", color: "red", cursor: 'pointer' }} onClick={() => downloadCSV()}>Download</span>
                         <p style={{ textAlign: "center", marginTop: 0 }}>Results</p>
                         <DataTable
                             labels={['Label', 'Domain', 'Degree', 'Polynomials', 'Field']}
-                            data={data == null ? [] : data}
+                            data={systems == null ? [] :
+                                systems.map(x =>
+                                    [
+                                        <Link to={`/system/${x[0]}/`} style={{ color: "red", textDecoration: "none" }}>{x[0]}</Link>,
+                                        <>P<sup>{x[1]}</sup> {String.fromCharCode(8594)} P<sup>{x[1]}</sup></>,
+                                        x[2],
+                                        x[3],
+                                        <span style = {{color: "red"}}>{x[4]}</span>
+                                    ]
+                                )
+                            }
                         />
 
-                        {data == null ? <p>Loading Data</p> : <></>}
-                        {data != null && data.length == 0  ? <p>No data meets that criteria</p> : <></>}
+                        {systems == null ? <p>Loading Data</p> : <></>}
+                        {systems != null && systems.length == 0 ? <p>No data meets that criteria</p> : <></>}
                     </Grid>
 
 
@@ -357,4 +396,4 @@ function Page2({ width }) {
     )
 }
 
-export default Page2;
+export default ExploreSystems;
