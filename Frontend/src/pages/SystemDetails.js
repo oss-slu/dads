@@ -13,7 +13,6 @@ import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPoi
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
 import CitationsTable from '../components/FunctionDetail/CitationsTable'
 
-
 function SystemDetails({ width }) {
 
     const [data, setData] = useState([]);
@@ -73,8 +72,6 @@ function SystemDetails({ width }) {
             </div>
         </>
     )
-
-
 }
 
 export default SystemDetails;
