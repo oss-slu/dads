@@ -14,19 +14,40 @@ import ModelsTable from '../components/FunctionDetail/ModelsTable'
 import CitationsTable from '../components/FunctionDetail/CitationsTable'
 
 
-function ExploreSystems({ width }) {
+function SystemDetails({ width }) {
 
-    const [data, setData] = useState();
+    const [data, setData] = useState([]);
     const label = useParams().label;
 
+    useEffect(() => {
+      fetchDataForCSV();
+  },[]); 
+
+  const fetchDataForCSV = async () => {
+      try {
+          const result = await getSystem(
+              {
+                  label: label
+              }
+          )
+          setData(result.data[0])
+
+      } catch (error) {
+          console.log(error)
+          return []
+      }
+
+      
+  };
+  console.log(data)
     return (
         <>
             <div style={{ marginLeft: width }}>
-                <p>Use details for system {label} here</p>
                 <div className="info-container">
             <div className="row">
-              <InfoTable/>
+              <InfoTable data = {data}/>
             </div>
+            <p>Data below here is all static</p>
             <div className="row">
               <InfoTable2 />
               <InfoTable3 />
@@ -56,4 +77,4 @@ function ExploreSystems({ width }) {
 
 }
 
-export default ExploreSystems;
+export default SystemDetails;

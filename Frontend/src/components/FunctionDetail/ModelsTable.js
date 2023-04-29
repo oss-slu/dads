@@ -24,7 +24,7 @@ export default function ModelsTable() {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Models:</h3>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell><b>Name</b></TableCell>

@@ -21,7 +21,7 @@ export default function InfoTable3() {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Automorphism Group</h3>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableBody>
           {rows.map((row) => (
             <TableRow

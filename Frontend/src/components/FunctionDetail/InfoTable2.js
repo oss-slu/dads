@@ -26,7 +26,7 @@ export default function InfoTable2() {
     <TableContainer className='table-component' component={Paper}>
       <h4>Keywords: Quadratic Polynomial</h4>
       <h4>Member of families: 1</h4>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell><b>Label</b></TableCell>
@@ -47,7 +47,7 @@ export default function InfoTable2() {
         </TableBody>
       </Table>
       <h4>Rational Twists: None</h4>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table  aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell><b>Label</b></TableCell>

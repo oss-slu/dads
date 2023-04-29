@@ -25,7 +25,7 @@ export default function CitationsTable() {
   return (
     <TableContainer className='table-component' component={Paper}>
         <h3>Citations:</h3>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableBody>
           {rows.map((row) => (
             <TableRow

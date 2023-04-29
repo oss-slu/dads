@@ -23,7 +23,7 @@ export default function InfoTable() {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Multiplier Invariants (Sigma)</h3>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell align="right"><b>Period</b></TableCell>

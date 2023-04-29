@@ -21,7 +21,7 @@ export default function CriticalPointPortraitTable() {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Critical Point Portrait</h3>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableBody>
           {rows.map((row) => (
             <TableRow
