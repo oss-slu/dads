@@ -107,15 +107,16 @@ function ExploreSystems({ width }) {
         else {
             setFilters({ ...filters, [filterName]: [] })
         }
+        setSystems(null)
         fetchFilteredSystems();
     }
 
     //used to set a filter property, replacing it with the old value
     const replaceFilter = (filterName, filterValue) => {
         setFilters({ ...filters, [filterName]: filterValue })
+        setSystems(null)
         fetchFilteredSystems();
     }
-
 
     //used to add to a filter property that can contain multiple values
     const appendFilter = (filterName, filterValue) => {
@@ -128,7 +129,7 @@ function ExploreSystems({ width }) {
         else {
             filters[filterName].push(filterValue)
         }
-
+        setSystems(null)
         fetchFilteredSystems(); //calling fetch data here probably isn't best practice... might want to fix use effect
     }
 
