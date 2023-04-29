@@ -1,4 +1,4 @@
-import './DetailPage.css'
+import './SystemDetails.css'
 import { getData, getFilterData, getSystems, getFilteredSystems, getSystem } from '../api/routes';
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
