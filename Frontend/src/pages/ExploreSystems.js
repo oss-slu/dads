@@ -4,6 +4,7 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
+import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { getData, getFilterData, getSystems, getFilteredSystems } from '../api/routes';
 
@@ -24,7 +25,7 @@ function Page2({ width }) {
             //filters need to have right names to work for backend
             const result = await getFilteredSystems(
                 {
-                    degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)]
+                    degree: filters.customDegree == "" ? filters.degree : [...filters.degree, Number(filters.customDegree)]
                 }
             )
 
@@ -238,8 +239,8 @@ function Page2({ width }) {
                             data={data == null ? [] : data}
                         />
 
-                        {data === null ? <p>Loading Data</p> : <></>}
-                        {data != null && data.length === 0  ? <p>No data meets that criteria</p> : <></>}
+                        {data == null ? <p>Loading Data</p> : <></>}
+                        {data != null && data.length == 0  ? <p>No data meets that criteria</p> : <></>}
                     </Grid>
 
 
