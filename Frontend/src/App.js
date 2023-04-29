@@ -25,8 +25,6 @@ function App() {
 
         <Routes>
           <Route index element={<p style={{ marginLeft: drawerWidth }}> home page</p>} />
-          <Route path="page1" element={<Page1 width={drawerWidth} />} />
-          <Route path="page2" element={<Page2 width={drawerWidth} />} />
           <Route path="detailpage" element={<DetailPage width={drawerWidth} />} />
           <Route path="exploreSystems" element={<ExploreSystems width={drawerWidth} />} />
           <Route path="system/:label" element={<SystemDetails width={drawerWidth}/>}/>

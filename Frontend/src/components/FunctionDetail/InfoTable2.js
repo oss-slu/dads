@@ -13,27 +13,28 @@ function createData(label, domain, standardModel, degree, fieldOfDef, minFieldOf
   return { label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull };
 }
 
-const rows = [
-  createData('1.2.f4075c4e', 'P1 -> P1', '[16x3-21y2: 16y2]', 2, 'QQ', 'QQ', 'QQ'),
+const familiesRows = [
+  createData('1.2.09adbd9d.1', '[x + ty : y ]'),
 ];
 
-export default function InfoTable() {
+const twistsRows = [
+  createData(' ', ' '),
+];
+
+export default function InfoTable2() {
   return (
     <TableContainer className='table-component' component={Paper}>
+      <h4>Keywords: Quadratic Polynomial</h4>
+      <h4>Member of families: 1</h4>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell><b>Label</b></TableCell>
-            <TableCell align="right"><b>Domain</b></TableCell>
-            <TableCell align="right"><b>Standard Model</b></TableCell>
-            <TableCell align="right"><b>Degree</b></TableCell>
-            <TableCell align="right"><b>Field of Definition</b></TableCell>
-            <TableCell align="right"><b>Min Field of Definition</b></TableCell>
-            <TableCell align="right"><b>Field of Modull</b></TableCell>
+            <TableCell align="right"><b>Model</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {familiesRows.map((row) => (
             <TableRow
               key={row.label}
             >
@@ -41,11 +42,27 @@ export default function InfoTable() {
                 {row.label}
               </TableCell>
               <TableCell align="right">{row.domain}</TableCell>
-              <TableCell align="right">{row.standardModel}</TableCell>
-              <TableCell align="right">{row.degree}</TableCell>
-              <TableCell align="right">{row.fieldOfDef}</TableCell>
-              <TableCell align="right">{row.minFieldOfDef}</TableCell>
-              <TableCell align="right">{row.fieldOfModull}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <h4>Rational Twists: None</h4>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell><b>Label</b></TableCell>
+            <TableCell align="right"><b>Model</b></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {twistsRows.map((row) => (
+            <TableRow
+              key={row.label}
+            >
+              <TableCell component="th" scope="row">
+                {row.label}
+              </TableCell>
+              <TableCell align="right">{row.domain}</TableCell>
             </TableRow>
           ))}
         </TableBody>
