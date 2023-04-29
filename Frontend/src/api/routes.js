@@ -11,6 +11,12 @@ export const getSystem = (label) => axios({
     data: label
 })
 
+export const getSelectedSystems = (labels) => axios({
+    method: "post",
+    url: "http://localhost:5000/getSelectedSystems",
+    data: labels
+})
+
 export const getFilteredSystems = (filters) => axios({
     method: "post",
     url: "http://localhost:5000/getFilteredSystems",

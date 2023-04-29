@@ -9,16 +9,14 @@ app = Flask(__name__)
 CORS(app)
 
 # return all dynamical systems
-
-
+# TODO postgres seems to be converting number (0,1) into boolean when returning as JSON, not desired behavior
 @app.route("/getAllSystems", methods=['POST', 'GET'])
 def data1():
     data = getAllSystems()
     return jsonify(data)
 
+
 # expects json with attribute 'label' and value as the label of the system
-
-
 @app.route("/getSystem", methods=['POST', 'GET'])
 def data2():
     input = request.get_json()
@@ -26,8 +24,6 @@ def data2():
     return jsonify(data)
 
 # expects json with attribute 'labels' and value as list of labels
-
-
 @app.route("/getSelectedSystems", methods=['POST', 'GET'])
 def data3():
     input = request.get_json()
