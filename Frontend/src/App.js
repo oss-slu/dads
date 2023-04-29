@@ -5,7 +5,6 @@ import SystemDetails from './pages/SystemDetails'
 import Sidebar from "./components/Sidebar";
 import Tobpbar from "./components/Topbar"
 import Toolbar from '@mui/material/Toolbar';
-import DetailPage from "./pages/DetailPage";
 
 
 function App() {
@@ -25,7 +24,6 @@ function App() {
 
         <Routes>
           <Route index element={<p style={{ marginLeft: drawerWidth }}> home page</p>} />
-          <Route path="detailpage" element={<DetailPage width={drawerWidth} />} />
           <Route path="exploreSystems" element={<ExploreSystems width={drawerWidth} />} />
           <Route path="system/:label" element={<SystemDetails width={drawerWidth}/>}/>
         </Routes>

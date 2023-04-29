@@ -1,3 +1,5 @@
+import './table.css'
+
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,18 +9,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-function createData(label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull) {
-  return { label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull };
-}
-
-const rows = [
-  createData('1.2.f4075c4e', 'P1 -> P1', '[16x3-21y2: 16y2]', 2, 'QQ', 'QQ', 'QQ'),
-];
-
-export default function BasicTable() {
+export default function InfoTable({ data }) {
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer className='table-component' component={Paper}>
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell><b>Label</b></TableCell>
@@ -31,21 +25,16 @@ export default function BasicTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.label}
-            >
-              <TableCell component="th" scope="row">
-                {row.label}
-              </TableCell>
-              <TableCell align="right">{row.domain}</TableCell>
-              <TableCell align="right">{row.standardModel}</TableCell>
-              <TableCell align="right">{row.degree}</TableCell>
-              <TableCell align="right">{row.fieldOfDef}</TableCell>
-              <TableCell align="right">{row.minFieldOfDef}</TableCell>
-              <TableCell align="right">{row.fieldOfModull}</TableCell>
-            </TableRow>
-          ))}
+          <TableRow>
+            <TableCell component="th" scope="row">{data[10]} </TableCell>
+            <TableCell align="right"><>P<sup>{Number(data[1])}</sup> {String.fromCharCode(8594)} P<sup>{Number(data[1])}</sup></></TableCell>
+            <TableCell align="right">{data[14]}</TableCell>
+            <TableCell align="right">{data[0]}</TableCell>
+            <TableCell align="right">{data[5]}</TableCell>
+            <TableCell align="right">{data[5]}</TableCell>
+            <TableCell align="right">{data[5]}</TableCell>
+          </TableRow>
+
         </TableBody>
       </Table>
     </TableContainer>
