@@ -1,10 +1,14 @@
 import * as React from 'react';
 
+
+//component to render a dynamic tabel
+//labels is list of strings for column titles
+//data is a list of lists 
 export default function DataTable({ labels, data }) {
 
     return (
         <>
-            <table >
+            <table style={{ width: '500px' }}>
                 <thead>
                     <tr>
                         {
@@ -19,7 +23,7 @@ export default function DataTable({ labels, data }) {
                                 {
                                     item.map((element, id) =>
                                         <td>
-                                            <span style={id === 0 | id === 4 ? { color: "red" } : {}}>
+                                            <span>
                                                 {element}
                                             </span>
                                         </td>

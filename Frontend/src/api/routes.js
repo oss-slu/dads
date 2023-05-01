@@ -1,16 +1,24 @@
 import axios from 'axios';
 
-const json = JSON.stringify({ answer: 42 });
-
-
-export const getData = () => axios({
+export const getSystems = () => axios({
     method: "get",
-    url: "http://localhost:5000/data",
+    url: "http://localhost:5000/getAllSystems",
 })
 
-export const getFilterData = (filters) => axios({
+export const getSystem = (label) => axios({
     method: "post",
-    url: "http://localhost:5000/filterData",
+    url: "http://localhost:5000/getSystem",
+    data: label
+})
+
+export const getSelectedSystems = (labels) => axios({
+    method: "post",
+    url: "http://localhost:5000/getSelectedSystems",
+    data: labels
+})
+
+export const getFilteredSystems = (filters) => axios({
+    method: "post",
+    url: "http://localhost:5000/getFilteredSystems",
     data: filters
 })
-
