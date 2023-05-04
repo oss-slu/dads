@@ -1,15 +1,11 @@
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 from PostgresConnector import getAllSystems, getFilteredSystems, getSystem, getSelectedSystems
-import psycopg2
-import io
-import csv
 
 app = Flask(__name__)
 CORS(app)
 
 # return all dynamical systems
-# TODO postgres seems to be converting number (0,1) into boolean when returning as JSON, not desired behavior
 @app.route("/getAllSystems", methods=['POST', 'GET'])
 def data1():
     data = getAllSystems()
@@ -37,6 +33,7 @@ def data4():
     filters = request.get_json()
     data = getFilteredSystems(filters)
     return jsonify(data)
+
 
 if __name__ == "__main__":
     app.run()

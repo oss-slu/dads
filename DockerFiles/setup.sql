@@ -1,6 +1,6 @@
 CREATE TABLE data (
         degree DECIMAL NOT NULL,
-        "N" BOOLEAN NOT NULL,
+        N DECIMAL NOT NULL,
         keywords VARCHAR NOT NULL,
         base_field_type VARCHAR NOT NULL,
         base_field_label VARCHAR NOT NULL,
@@ -60,9 +60,9 @@ CREATE TABLE data (
         "models.Chebyshev_base_field_emb" BOOLEAN,
         "models.Chebyshev_base_field_latex" VARCHAR,
         "models.Chebyshev_num_parameters" BOOLEAN,
-        "is_Chebyshev" BOOLEAN NOT NULL,
-        "is_Newton" BOOLEAN NOT NULL,
-        "is_Lattes" BOOLEAN NOT NULL,
+        is_Chebyshev BOOLEAN NOT NULL,
+        is_Newton BOOLEAN NOT NULL,
+        is_Lattes BOOLEAN NOT NULL,
         is_pcf BOOLEAN NOT NULL,
         automorphism_group_cardinality DECIMAL NOT NULL,
         automorphism_group_matrices VARCHAR NOT NULL

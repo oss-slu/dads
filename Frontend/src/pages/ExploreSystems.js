@@ -14,6 +14,9 @@ function ExploreSystems({ width }) {
         dimension: [],
         degree: [],
         is_polynomial: [],
+        is_Lattes: [],
+        is_Chebyshev:  [],
+        is_Newton:  [],
         customDegree: "",
         customDimension: ""
     });
@@ -74,7 +77,11 @@ function ExploreSystems({ width }) {
             const result = await getFilteredSystems(
                 {
                     degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
-                    is_polynomial: filters.is_polynomial
+                    N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
+                    is_polynomial: filters.is_polynomial,
+                    is_Lattes: filters.is_Lattes,
+                    is_Chebyshev: filters.is_Chebyshev,
+                    is_Newton: filters.is_Newton
                 }
             )
             setSystems(result.data);
@@ -161,7 +168,7 @@ function ExploreSystems({ width }) {
                                         <input type="checkbox" onClick={() => appendFilter('dimension', 2)} />
                                         <label>P<sup>2</sup> {String.fromCharCode(8594)} P<sup>2</sup></label>
                                         <br />
-                                        <input type="text" style={textBoxStyle}
+                                        <input type="number" style={textBoxStyle}
                                             onChange={(event) => replaceFilter('customDimension', event.target.value)} />
                                         <label>Custom</label>
                                         <br />
@@ -183,7 +190,7 @@ function ExploreSystems({ width }) {
                                         <input type="checkbox" onClick={() => appendFilter('degree', 4)} />
                                         <label>4</label>
                                         <br />
-                                        <input type="text" style={textBoxStyle}
+                                        <input type="number" style={textBoxStyle}
                                             onChange={(event) => replaceFilter('customDegree', event.target.value)} />
                                         <label>Custom</label>
                                         <br />
@@ -212,13 +219,13 @@ function ExploreSystems({ width }) {
                                         <input type="checkbox" onClick={() => booleanFilter('is_polynomial')} />
                                         <label>Polynomial</label>
                                         <br />
-                                        <input type="checkbox" />
+                                        <input type="checkbox" onClick={() => booleanFilter('is_Lattes')}/>
                                         <label>Lattes</label>
                                         <br />
-                                        <input type="checkbox" />
+                                        <input type="checkbox" onClick={() => booleanFilter('is_Chebyshev')}/>
                                         <label>Chebyshev</label>
                                         <br />
-                                        <input type="checkbox" />
+                                        <input type="checkbox" onClick={() => booleanFilter('is_Newton')} />
                                         <label>Newton</label>
                                         <br />
                                     </ul>
