@@ -31,7 +31,7 @@ def getFilteredSystems(filters):
     conn = psycopg2.connect(
         "dbname=dynamSystems user=postgres password=docker")
     cur = conn.cursor()
-    columns = 'label, N, degree, models_original_polys_val, base_field_latex'
+    columns = 'label, degree, models_original_polys_val, base_field_latex'
     whereText = buildWhereText(filters)
     sql = "SELECT " + columns + " FROM public.data" + whereText
     cur.execute(sql)
