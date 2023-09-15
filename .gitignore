@@ -1,1 +1,4 @@
 .DS_Store
+DockerFiles/pgdata/data.csv
+venv
+DockerFiles/pgdata
