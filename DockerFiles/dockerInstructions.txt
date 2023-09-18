@@ -1,10 +1,12 @@
-Install Docker Desktop (https://docs.docker.com/desktop/install/windows-install/)
+Install Docker Desktop (https://docs.docker.com/desktop/install/windows-install/), or use the appropriate package manager on a UNIX based system. 
+(Homebrew will likely be the best for Mac, but research your linux distro to use the package manager it was installed with. 
+The command will likely look like this:    "sudo PACKAGE_MANAGER_NAME install docker"
 
-Open CMD as admin, navigate to folder with Dockerfile
+Open CMD as admin if you are running a Windows machine, or if using an apple or mac device use the sudo prefix before each command, navigate to folder with Dockerfile
 
-Run "docker build -t NAME_OF_IMAGE ./"
+Run "docker build -t NAME_OF_IMAGE ./" (this image name will be chosen by you)
 
-Run "docker run --name NAME_OF_CONTAINER -v SOME_FILE_PATH/pgdata:/var/lib/postgresql/data -p 5432:5432 NAME_OF_IMAGE"
+Run "docker run --name NAME_OF_CONTAINER -v SOME_FILE_PATH/pgdata:/var/lib/postgresql/data -p 5432:5432 NAME_OF_IMAGE" (the container name will be chosen by you)
 
 Navigate to the File path provided in the previous step, then into the new pgdata folder
 
