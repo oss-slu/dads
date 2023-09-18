@@ -6,9 +6,8 @@ import psycopg2
 
 # gets all systems from the database
 def getAllSystems():
-    conn = psycopg2.connect(
-        "dbname=dynamSystems user=postgres password=docker")
-    cur = conn.cursor()
+    #conn = psycopg2.connect( "dbname=dynamSystems user=postgres password=docker")
+    conn = psycopg2.connect( host='0.0.0.0', dbname='dynamSystems',user= 'postgres' , password= 'docker')    cur = conn.cursor()
     columns = '*'
     sql = "SELECT " + columns + " FROM public.data"
     cur.execute(sql)
@@ -17,9 +16,8 @@ def getAllSystems():
 
 # gets a system identified by its label, input is string
 def getSystem(label):
-    conn = psycopg2.connect(
-        "dbname=dynamSystems user=postgres password=docker")
-    cur = conn.cursor()
+    #conn = psycopg2.connect( "dbname=dynamSystems user=postgres password=docker")
+    conn = psycopg2.connect( host='0.0.0.0', dbname='dynamSystems',user= 'postgres' , password= 'docker')    cur = conn.cursor()
     columns = '*'
     sql = "SELECT " + columns + " FROM public.data WHERE label = '" + label + "'"
     cur.execute(sql)
@@ -28,8 +26,8 @@ def getSystem(label):
 
 # gets systems that match the passed in filters, input should be json object
 def getFilteredSystems(filters):
-    conn = psycopg2.connect(
-        "dbname=dynamSystems user=postgres password=docker")
+    #conn = psycopg2.connect( "dbname=dynamSystems user=postgres password=docker")
+    conn = psycopg2.connect( host='0.0.0.0', dbname='dynamSystems',user= 'postgres' , password= 'docker')
     cur = conn.cursor()
     columns = 'label, N, degree, models_original_polys_val, base_field_latex'
     whereText = buildWhereText(filters)
@@ -40,8 +38,8 @@ def getFilteredSystems(filters):
 
 # gets a subset of the systems identified by the labels, input should be json list
 def getSelectedSystems(labels):
-    conn = psycopg2.connect(
-        "dbname=dynamSystems user=postgres password=docker")
+    #conn = psycopg2.connect( "dbname=dynamSystems user=postgres password=docker")
+    conn = psycopg2.connect( host='0.0.0.0', dbname='dynamSystems',user= 'postgres' , password= 'docker')
     cur = conn.cursor()
     labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
     columns = '*'
