@@ -2,7 +2,7 @@ import React from 'react';
 
 function AboutPage() {
   return (
-    <div style={{ marginLeft: 250 }}> {/*Drawer width is 200px fixed, added 50px padding*/}
+    <div style={{ marginLeft: '13em' }}> {/*Scaling issues due to other static components, WIP*/}
       <h2>About Us</h2>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget augue at erat
