@@ -87,7 +87,7 @@ function ExploreSystems({ width }) {
             setSystems(result.data);
         } catch (error) {
             setSystems(null)
-            alert("Error: CANNOt CONNECT TO DATABASE: Make sure Docker is running correctly")
+            alert("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly")
             console.log(error)
         }
     };
