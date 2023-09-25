@@ -87,6 +87,7 @@ function ExploreSystems({ width }) {
             setSystems(result.data);
         } catch (error) {
             setSystems(null)
+            alert("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly")
             console.log(error)
         }
     };
@@ -309,7 +310,7 @@ function ExploreSystems({ width }) {
                             }
                         />
 
-                        {systems === null ? <p>Loading Data</p> : <></>}
+                        {systems === null ? <p style = {{color: 'red'}}>Unable to connect to database</p>: <></>}
                         {systems != null && systems.length === 0 ? <p>No data meets that criteria</p> : <></>}
                     </Grid>
 
