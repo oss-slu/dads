@@ -1,20 +1,24 @@
-Install Docker Desktop (https://docs.docker.com/desktop/install/windows-install/)
+Install Docker Desktop (https://docs.docker.com/desktop/install/windows-install/), or use the appropriate package manager on a UNIX based system. 
+(Homebrew will likely be the best for Mac, but research your linux distro to use the package manager it was installed with. 
+The command will likely look like this:    "sudo PACKAGE_MANAGER_NAME install docker"
 
-Open CMD as admin, navigate to folder with Dockerfile
+Open CMD as admin if you are running a Windows machine, or if using an apple or mac device use the sudo prefix before each command, navigate to folder with Dockerfile
 
-Run "docker build -t NAME_OF_IMAGE ./"
+Run "docker build -t NAME_OF_IMAGE ./" (this image name will be chosen by you)
 
-Run "docker run --name NAME_OF_CONTAINER -v SOME_FILE_PATH/pgdata:/var/lib/postgresql/data -p 5432:5432 NAME_OF_IMAGE"
+Run "docker run --name NAME_OF_CONTAINER -v SOME_FILE_PATH/pgdata:/var/lib/postgresql/data -p 5432:5432 NAME_OF_IMAGE" (the container name will be chosen by you, and 
+SOME_FILE_PATH, is the path by which you want to put the pgdata folder as this is the folder that the container will access. in a UNIX system you will not need to provide the path to the current directory you are in, but with windows you will.)
 
 Navigate to the File path provided in the previous step, then into the new pgdata folder
 
-Paste data.csv (Our test data) into this folder
+Now you will want to drop your .csv file into the pgdata folder, in our case this will likely be test_data.csv.
 
-In a new cmd window run "docker exec -it NAME_OF_CONTAINER psql -U postgres -d dynamSystems
+In a new cmd window run "docker exec -it NAME_OF_CONTAINER psql -U postgres -d dynamSystems"
 
-This should give a shell within the docker container
+This should give a shell within the docker container. The Docker container is a specialized environment that in our case is acting as a 
+dummy database. 
 
-In this shell, run "\copy data FROM '/var/lib/postgresql/data/data.csv' DELIMITER ',' CSV HEADER;"
+In this shell, run "\copy data FROM '/var/lib/postgresql/data/data.csv' DELIMITER ',' CSV HEADER;" this is going to call upon the docker containers internal file path which we set as a reference to the pgdata folder earlier on, and will allow us to access the .csv data.
 
 
 This should get the database setup and populated. Now you should be able to connect using this info
@@ -25,8 +29,6 @@ Password: docker
 Database Name: dynamSystems
 Table Name: public.data
 
-You'll only need to follow these inital steps the very first time you set it up, after that you should be able to just restart the container by using 
+You'll only need to follow these inital steps the very first time you set it up, after that you should be able to just restart the container by using    "docker start NAME_OF_CONTAINER"
 
-docker start NAME_OF_CONTAINER 
-
-in a cmd, and the database should persist
+in a cmd, and the database should persist 
