@@ -33,10 +33,10 @@ elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
     #docker-compose up -d database
     # Start Python backend
     cd Backend
-    start cmd /c "python3 server.py"
+    start python server.py
     # Start React frontend
     cd ../Frontend
-    start cmd /c "npm run start"
+    start npm run start
 else
     echo "Unsupported operating system"
     exit 1
