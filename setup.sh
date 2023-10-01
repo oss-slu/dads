@@ -36,6 +36,7 @@ elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
     start python server.py
     # Start React frontend
     cd ../Frontend
+    start npm install
     start npm run start
 else
     echo "Unsupported operating system"
