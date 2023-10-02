@@ -48,3 +48,48 @@ ul, #myUL {
   display: block;
   padding: 0px;
 }
+
+/*used in SystemDetails.js taken from SystemDetails.css*/
+.info-container {
+  padding: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+
+/*from page2 used in ExploreSystems*/
+.sidebar {
+  background-color: #B6D1EE;
+  border-radius: 25px;
+  min-width: 250px;
+  height: fit-content;
+}
+
+.results-container {
+  height: fit-content;
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.results-table {
+  padding: 10px;
+}
+
+@media (max-width: 1150px) {
+  .results-container {
+      flex-direction: column;
+      flex-wrap: nowrap;
+  }
+}
+
+/*From table.css. Used in src/components/functiondetail*/
+.table-component {
+  margin: 10px;
+}
