@@ -5,49 +5,45 @@ import psycopg2
 # might want to use database entry ID instead of label for identifying specific systems
 
 # gets all systems from the database
+
+def __init__(self):
+    self.connection = psycopg2.connect(
+            "dbname=dynamSystems user=postgres password=docker")
+    self.cursor = self.connection.cursor()
+
+
+
 def getAllSystems():
-    conn = psycopg2.connect(
-        "dbname=dynamSystems user=postgres password=docker")
-    cur = conn.cursor()
     columns = '*'
     sql = "SELECT " + columns + " FROM public.data"
-    cur.execute(sql)
-    return cur.fetchall()
+    self.cursor.execute(sql)
+    return self.cursor.fetchall()
 
 
 # gets a system identified by its label, input is string
 def getSystem(label):
-    conn = psycopg2.connect(
-        "dbname=dynamSystems user=postgres password=docker")
-    cur = conn.cursor()
     columns = '*'
     sql = "SELECT " + columns + " FROM public.data WHERE label = '" + label + "'"
-    cur.execute(sql)
-    return cur.fetchall()
+    self.cursor.execute(sql)
+    return self.cursor.fetchall()
 
 
 # gets systems that match the passed in filters, input should be json object
 def getFilteredSystems(filters):
-    conn = psycopg2.connect(
-        "dbname=dynamSystems user=postgres password=docker")
-    cur = conn.cursor()
     columns = 'label, N, degree, models_original_polys_val, base_field_latex'
     whereText = buildWhereText(filters)
     sql = "SELECT " + columns + " FROM public.data" + whereText
-    cur.execute(sql)
-    return cur.fetchall()
+    self.cursor.execute(sql)
+    return self.cursor.fetchall()
 
 
 # gets a subset of the systems identified by the labels, input should be json list
 def getSelectedSystems(labels):
-    conn = psycopg2.connect(
-        "dbname=dynamSystems user=postgres password=docker")
-    cur = conn.cursor()
     labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
     columns = '*'
     sql = "SELECT " + columns + " FROM public.data WHERE label in " + labels
-    cur.execute(sql)
-    return cur.fetchall()
+    self.cursor.execute(sql)
+    return self.cursor.fetchall()
 
 
 # function that builds the WHERE part of SQL query to filter the results
