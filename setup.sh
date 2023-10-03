@@ -5,36 +5,44 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Linux detected
     echo "Detected Linux OS" 
     # Run appropriate commands for Linux
+
     # Start Docker database
     #docker-compose up -d database
+
     # Start Python backend
     cd Backend
     python server.py &
-    # Start React frontend
+    # Start React frontend and install dependencies 
     cd ../Frontend
+    npm install
     npm run start
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS detected 
     echo "Detected macOS"
     # Run appropriate commands for macOS
+
     # Start Docker database
     #docker-compose up -d database
+
     # Start Python backend
     cd Backend
     python server.py &
-    # Start React frontend
+    # Start React frontend and install dependencies 
     cd ../Frontend
+    npm install
     npm run start
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
     # Windows detected
     echo "Detected Windows OS"
     # Run appropriate commands for Windows
+
     # Start Docker database
     #docker-compose up -d database
+    
     # Start Python backend
     cd Backend
     start python server.py
-    # Start React frontend
+    # Start React frontend and install dependencies 
     cd ../Frontend
     start npm install
     start npm run start
