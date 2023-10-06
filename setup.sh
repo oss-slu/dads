@@ -1,14 +1,9 @@
 #!/bin/bash
 
-# Detect the user's operating system
+# Detecting the user's operating system
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Linux detected
     echo "Detected Linux OS" 
-    # Run appropriate commands for Linux
-
-    # Start Docker database
-    #docker-compose up -d database
-
     # Start Python backend
     cd Backend
     python server.py &
@@ -19,11 +14,6 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS detected 
     echo "Detected macOS"
-    # Run appropriate commands for macOS
-
-    # Start Docker database
-    #docker-compose up -d database
-
     # Start Python backend
     cd Backend
     python server.py &
@@ -34,11 +24,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
     # Windows detected
     echo "Detected Windows OS"
-    # Run appropriate commands for Windows
-
-    # Start Docker database
-    #docker-compose up -d database
-    
     # Start Python backend
     cd Backend
     start python server.py
