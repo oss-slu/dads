@@ -48,3 +48,64 @@ ul, #myUL {
   display: block;
   padding: 0px;
 }
+
+/*index.js*/
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*index.js*/
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/*Used in SystemDetails.js*/
+.info-container {
+  padding: 10px;
+}
+
+/*Used in SystemDetails.js*/
+.row {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/*Page2.css*/
+.sidebar {
+  background-color: #B6D1EE;
+  border-radius: 25px;
+  min-width: 250px;
+  height: fit-content;
+}
+
+.results-container {
+  height: fit-content;
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.results-table {
+  padding: 10px;
+}
+
+@media (max-width: 1150px) {
+  .results-container {
+      flex-direction: column;
+      flex-wrap: nowrap;
+  }
+}
+
+/*Used in InfoTable.js ModelTable.js MultiplierInvariants.js rationalpointstable.js*/
+.table-component {
+  margin: 10px;
+}
