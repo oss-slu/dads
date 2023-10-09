@@ -19,8 +19,9 @@ class PostgresConnector:
         sql = "SELECT " + columns + " FROM public.data"
         cur = self.connection.cursor()
         cur.execute(sql)
-        
-        return cur.fetchall()
+        result = cur.fetchall()
+        cur.close()
+        return result
 
 
 # gets a system identified by its label, input is string
@@ -29,8 +30,9 @@ class PostgresConnector:
         sql = "SELECT " + columns + " FROM public.data WHERE label = '" + label + "'"
         cur = self.connection.cursor()
         cur.execute(sql)
-
-        return cur.fetchall()
+        result = cur.fetchall()
+        cur.close()
+        return result
 
 
 # gets systems that match the passed in filters, input should be json object
@@ -40,8 +42,9 @@ class PostgresConnector:
         sql = "SELECT " + columns + " FROM public.data" + whereText
         cur = self.connection.cursor()
         cur.execute(sql)
-    
-        return cur.fetchall()
+        result = cur.fetchall()
+        cur.close()
+        return result
 
 
 # gets a subset of the systems identified by the labels, input should be json list
@@ -51,8 +54,9 @@ class PostgresConnector:
         sql = "SELECT " + columns + " FROM public.data WHERE label in " + labels
         cur = connection.cursor()
         cur.execute(sql)
-
-        return cur.fetchall()
+        result = cur.fetchall()
+        cur.close
+        return result
 
 
 # function that builds the WHERE part of SQL query to filter the results
