@@ -36,7 +36,7 @@ class PostgresConnector:
 # gets systems that match the passed in filters, input should be json object
     def getFilteredSystems(self,filters):
         columns = 'label, N, degree, models_original_polys_val, base_field_latex'
-        whereText = buildWhereText(filters)
+        whereText = self.buildWhereText(filters)
         sql = "SELECT " + columns + " FROM public.data" + whereText
         cur = self.connection.cursor()
         cur.execute(sql)
