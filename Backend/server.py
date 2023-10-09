@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
-from PostgresConnector import getAllSystems, getFilteredSystems, getSystem, getSelectedSystems
+import PostgresConnector
 
 app = Flask(__name__)
 CORS(app)
