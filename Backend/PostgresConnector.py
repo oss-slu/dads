@@ -11,23 +11,26 @@ class PostgresConnector:
     def __init__(self):
         self.connection = psycopg2.connect(
                 "dbname=dynamSystems user=postgres password=docker")
-        self.cursor = self.connection.cursor()
 
 
 
     def getAllSystems(self):
         columns = '*'
         sql = "SELECT " + columns + " FROM public.data"
-        self.cursor.execute(sql)
-        return self.cursor.fetchall()
+        cur = self.connection.cursor()
+        cur.execute(sql)
+        
+        return cur.fetchall()
 
 
 # gets a system identified by its label, input is string
     def getSystem(self,label):
         columns = '*'
         sql = "SELECT " + columns + " FROM public.data WHERE label = '" + label + "'"
-        self.cursor.execute(sql)
-        return self.cursor.fetchall()
+        cur = self.connection.cursor()
+        cur.execute(sql)
+
+        return cur.fetchall()
 
 
 # gets systems that match the passed in filters, input should be json object
@@ -35,8 +38,10 @@ class PostgresConnector:
         columns = 'label, N, degree, models_original_polys_val, base_field_latex'
         whereText = buildWhereText(filters)
         sql = "SELECT " + columns + " FROM public.data" + whereText
-        self.cursor.execute(sql)
-        return self.cursor.fetchall()
+        cur = self.connection.cursor()
+        cur.execute(sql)
+    
+        return cur.fetchall()
 
 
 # gets a subset of the systems identified by the labels, input should be json list
@@ -44,8 +49,10 @@ class PostgresConnector:
         labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
         columns = '*'
         sql = "SELECT " + columns + " FROM public.data WHERE label in " + labels
-        self.cursor.execute(sql)
-        return self.cursor.fetchall()
+        cur = connection.cursor()
+        cur.execute(sql)
+
+        return cur.fetchall()
 
 
 # function that builds the WHERE part of SQL query to filter the results
