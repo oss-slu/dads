@@ -1,14 +1,16 @@
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
-from PostgresConnector import getAllSystems, getFilteredSystems, getSystem, getSelectedSystems
+from PostgresConnector import PostgresConnector
 
 app = Flask(__name__)
 CORS(app)
 
+connector = PostgresConnector()
+
 # return all dynamical systems
 @app.route("/getAllSystems", methods=['POST', 'GET'])
 def data1():
-    data = getAllSystems()
+    data = connector.getAllSystems()
     return jsonify(data)
 
 
@@ -16,14 +18,14 @@ def data1():
 @app.route("/getSystem", methods=['POST', 'GET'])
 def data2():
     input = request.get_json()
-    data = getSystem(input['label'])
+    data = connector.getSystem(input['label'])
     return jsonify(data)
 
 # expects json with attribute 'labels' and value as list of labels
 @app.route("/getSelectedSystems", methods=['POST', 'GET'])
 def data3():
     input = request.get_json()
-    data = getSelectedSystems(input['labels'])
+    data = connector.getSelectedSystems(input['labels'])
     return jsonify(data)
 
 # expects json describing filters, returns the systems that satisfy filters
@@ -31,7 +33,7 @@ def data3():
 @app.route("/getFilteredSystems", methods=['POST', 'GET'])
 def data4():
     filters = request.get_json()
-    data = getFilteredSystems(filters)
+    data = connector.getFilteredSystems(filters)
     return jsonify(data)
 
 
