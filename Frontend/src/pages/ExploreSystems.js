@@ -81,7 +81,9 @@ function ExploreSystems({ width }) {
                     is_polynomial: filters.is_polynomial,
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
-                    is_Newton: filters.is_Newton
+                    is_Newton: filters.is_Newton,
+                    base_field_label: filters.base_field_label,
+                    base_field_degree: filters.base_field_degree
                 }
             )
             setSystems(result.data);
