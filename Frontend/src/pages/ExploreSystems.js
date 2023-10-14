@@ -237,7 +237,7 @@ function ExploreSystems({ width }) {
                                 <li><span className="caret" onClick={toggleTree}>Field of Definition</span>
                                     <ul className="nested">
                                     <input 
-                                        type="text" 
+                                        type="number" 
                                         style={textBoxStyle} 
                                         onChange={(event) => replaceFilter('base_field_degree', event.target.value)}
                                     />
