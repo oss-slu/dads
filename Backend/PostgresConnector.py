@@ -13,7 +13,6 @@ class PostgresConnector:
                 "dbname=dynamSystems user=postgres password=docker")
 
 
-
     def getAllSystems(self):
         columns = '*'
         sql = "SELECT " + columns + " FROM public.data"
@@ -59,8 +58,6 @@ class PostgresConnector:
         return result
 
 
-
-
     def buildWhereText(self, filters):
         # remove empty filters
         for filter in filters.copy():
@@ -87,4 +84,3 @@ class PostgresConnector:
 
         filterText += " AND ".join(conditions)
         return filterText
-
