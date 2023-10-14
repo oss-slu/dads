@@ -16,7 +16,9 @@ function ExploreSystems({ width }) {
         is_Chebyshev:  [],
         is_Newton:  [],
         customDegree: "",
-        customDimension: ""
+        customDimension: "",
+        base_field_label: "",
+        base_field_degree: ""
     });
 
     const [systems, setSystems] = useState(null);
@@ -234,12 +236,20 @@ function ExploreSystems({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Field of Definition</span>
                                     <ul className="nested">
-                                        <input type="text" style={textBoxStyle} />
-                                        <label>Degree</label>
-                                        <br />
-                                        <input type="text" style={textBoxStyle} />
-                                        <label>Label</label>
-                                        <br />
+                                    <input 
+                                        type="text" 
+                                        style={textBoxStyle} 
+                                        onChange={(event) => replaceFilter('base_field_degree', event.target.value)}
+                                    />
+                                    <label>Degree</label>
+                                    <br />
+                                    <input 
+                                        type="text" 
+                                        style={textBoxStyle} 
+                                        onChange={(event) => replaceFilter('base_field_label', event.target.value)}
+                                    />
+                                    <label>Label</label>
+                                    <br />
                                     </ul>
                                 </li>
                             </ul>
