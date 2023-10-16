@@ -6,6 +6,10 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { getFilteredSystems, getSelectedSystems } from '../api/routes';
 
+function numMaps(){
+    return(<div><p>9</p></div>);
+}
+
 function ExploreSystems({ width }) {
 
     const [filters, setFilters] = useState({
@@ -80,7 +84,10 @@ function ExploreSystems({ width }) {
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton
+                    //get result.length
+                    
                 }
+                
             )
             setSystems(result.data);
         } catch (error) {
@@ -140,10 +147,13 @@ function ExploreSystems({ width }) {
     }
 
 
+
+
     const textBoxStyle = {
         width: "60px",
         marginRight: "12px"
     }
+    
 
     return (
         <>
@@ -317,13 +327,14 @@ function ExploreSystems({ width }) {
 
                     <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-                            <p>Result Statistics</p>
+                            <p>Result Statistics </p>
                             <Divider />
-
                             <br />
-
-                            <label>Number of Maps</label>
-                            <input type="text" style={{ float: "right", ...textBoxStyle }} />
+                           
+                            <label>Number of Maps <numMaps/></label>
+                            
+                            
+                            <input type="text" style={{ float: "right", ...textBoxStyle }}/>
 
 
 
