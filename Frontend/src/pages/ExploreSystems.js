@@ -6,9 +6,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { getFilteredSystems, getSelectedSystems } from '../api/routes';
 
-function numMaps(){
-    return(<div><p>9</p></div>);
-}
+
 
 function ExploreSystems({ width }) {
 
@@ -145,8 +143,14 @@ function ExploreSystems({ width }) {
         setSystems(null)
         fetchFilteredSystems(); //calling fetch data here probably isn't best practice... might want to fix use effect
     }
-
-
+    const mapCount = () =>{
+        var result = fetchFilteredSystems();
+        var num = result.length;
+        return(num);
+    }
+    function numMaps(){
+        return(<div><p>{mapCount()}</p></div>);
+    }
 
 
     const textBoxStyle = {
