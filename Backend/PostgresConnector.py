@@ -10,7 +10,10 @@ class PostgresConnector:
 
     def __init__(self):
         self.connection = psycopg2.connect(
-                "dbname=dynamSystems user=postgres password=docker")
+                host="localhost",
+                dbname="dynamSystems",
+                user="postgres",
+                password="docker")
 
 
 
