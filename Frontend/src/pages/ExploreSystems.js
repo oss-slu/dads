@@ -9,7 +9,7 @@ import { getFilteredSystems, getSelectedSystems } from '../api/routes';
 
 
 function ExploreSystems({ width }) {
-
+    const [numMaps, setNum] = useState(0);
     const [filters, setFilters] = useState({
         dimension: [],
         degree: [],
@@ -82,10 +82,10 @@ function ExploreSystems({ width }) {
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton
-                    
                 }
                 
             )
+            setNum(result.data.length)
             setSystems(result.data);
         } catch (error) {
             setSystems(null)
@@ -143,15 +143,7 @@ function ExploreSystems({ width }) {
         fetchFilteredSystems(); //calling fetch data here probably isn't best practice... might want to fix use effect
     }
 
-    const mapCount = () =>{
-        fetchFilteredSystems();
-        let num = setSystems.length;
-        return(num);
-    }
-
-    function numMaps(){
-        return(<div><p>{mapCount()}</p></div>);
-    }
+    
     const textBoxStyle = {
         width: "60px",
         marginRight: "12px"
@@ -334,11 +326,7 @@ function ExploreSystems({ width }) {
                             <Divider />
                             <br />
                            
-                            <label>Number of Maps: {setSystems.length}</label>
-                            
-                            
-                            <input type="text" style={{ float: "right", ...textBoxStyle }}/>
-
+                            <label>Number of Maps: {numMaps}</label>
 
 
                             <br />
