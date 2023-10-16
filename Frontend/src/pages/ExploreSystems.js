@@ -82,7 +82,6 @@ function ExploreSystems({ width }) {
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton
-                    //get result.length
                     
                 }
                 
@@ -143,16 +142,16 @@ function ExploreSystems({ width }) {
         setSystems(null)
         fetchFilteredSystems(); //calling fetch data here probably isn't best practice... might want to fix use effect
     }
+
     const mapCount = () =>{
-        var result = fetchFilteredSystems();
-        var num = result.length;
+        fetchFilteredSystems();
+        let num = setSystems.length;
         return(num);
     }
+
     function numMaps(){
         return(<div><p>{mapCount()}</p></div>);
     }
-
-
     const textBoxStyle = {
         width: "60px",
         marginRight: "12px"
@@ -335,7 +334,7 @@ function ExploreSystems({ width }) {
                             <Divider />
                             <br />
                            
-                            <label>Number of Maps <numMaps/></label>
+                            <label>Number of Maps: {setSystems.length}</label>
                             
                             
                             <input type="text" style={{ float: "right", ...textBoxStyle }}/>
