@@ -52,7 +52,7 @@ class PostgresConnector:
         labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
         columns = '*'
         sql = "SELECT " + columns + " FROM public.data WHERE label in " + labels
-        cur = connection.cursor()
+        cur = self.connection.cursor()
         cur.execute(sql)
         result = cur.fetchall()
         cur.close
@@ -63,7 +63,7 @@ class PostgresConnector:
     def buildWhereText(self,filters):
     # remove empty filters
         for filter in filters.copy():
-            if filters[filter] == []:
+            if not filters[filters] or filters[filter] == []:
                 del filters[filter]
 
         if len(filters) == 0:

@@ -16,7 +16,8 @@ function ExploreSystems({ width }) {
         is_Chebyshev:  [],
         is_Newton:  [],
         customDegree: "",
-        customDimension: ""
+        customDimension: "",
+	automorphism_Cardinality: "",	
     });
 
     const [systems, setSystems] = useState(null);
@@ -79,7 +80,8 @@ function ExploreSystems({ width }) {
                     is_polynomial: filters.is_polynomial,
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
-                    is_Newton: filters.is_Newton
+                    is_Newton: filters.is_Newton,
+		    automorphism_Cardinality: filters.automorphism_Cardinality
                 }
             )
             setSystems(result.data);
@@ -377,7 +379,13 @@ function ExploreSystems({ width }) {
                                 <li><span className="caret" onClick={toggleTree}>Average #Aut</span>
                                     <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
-                                    </ul>
+	    				// hey Jelliss, this is where you should implement the inputs
+	    				<input type="number" style={textBoxStyle} 
+	    					onChange={(event) => replaceFilter('automorphism_Cardinality', event.target.value)} />
+	    				<label>Cardinality </label>
+	    				<br />
+	    				// this is going to be where matrice filter will be implemented, however, need to figure out what kind of input
+	    			    </ul>
                                 </li>
                             </ul>
 
