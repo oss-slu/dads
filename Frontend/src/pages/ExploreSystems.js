@@ -17,7 +17,7 @@ function ExploreSystems({ width }) {
         is_Newton:  [],
         customDegree: "",
         customDimension: "",
-	automorphism_Cardinality: "",	
+	automorphism_group_cardinality: [],	
     });
 
     const [systems, setSystems] = useState(null);
@@ -81,7 +81,7 @@ function ExploreSystems({ width }) {
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
-		    automorphism_Cardinality: filters.automorphism_Cardinality
+		    automorphism_group_cardinality: filters.automorphism_group_cardinality
                 }
             )
             setSystems(result.data);
@@ -269,6 +269,10 @@ function ExploreSystems({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Automorphism Group</span>
                                     <ul className="nested">
+	    				<input type="number" style={textBoxStyle} onChange={(event) => replaceFilter('automorphism_group_cardinality', event.target.value)} />
+	    				<label>Cardinality</label>
+	    				<br />
+
                                     </ul>
                                 </li>
                             </ul>
@@ -379,12 +383,6 @@ function ExploreSystems({ width }) {
                                 <li><span className="caret" onClick={toggleTree}>Average #Aut</span>
                                     <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
-	    				// hey Jelliss, this is where you should implement the inputs
-	    				<input type="number" style={textBoxStyle} 
-	    					onChange={(event) => replaceFilter('automorphism_Cardinality', event.target.value)} />
-	    				<label>Cardinality </label>
-	    				<br />
-	    				// this is going to be where matrice filter will be implemented, however, need to figure out what kind of input
 	    			    </ul>
                                 </li>
                             </ul>

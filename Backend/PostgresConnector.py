@@ -66,7 +66,7 @@ class PostgresConnector:
     def buildWhereText(self,filters):
     # remove empty filters
         for filter in filters.copy():
-            if not filters[filters] or filters[filter] == []:
+            if filters[filter] == []:
                 del filters[filter]
 
         if len(filters) == 0:
