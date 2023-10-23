@@ -17,7 +17,10 @@ function ExploreSystems({ width }) {
         is_Newton:  [],
         customDegree: "",
         customDimension: "",
-	automorphism_group_cardinality: [],	
+	      automorphism_group_cardinality: [],
+        base_field_label: "",
+        base_field_degree: ""
+
     });
 
     const [systems, setSystems] = useState(null);
@@ -81,7 +84,9 @@ function ExploreSystems({ width }) {
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
-		    automorphism_group_cardinality: filters.automorphism_group_cardinality
+		                automorphism_group_cardinality: filters.automorphism_group_cardinality,
+                    base_field_label: filters.base_field_label,
+                    base_field_degree: filters.base_field_degree
                 }
             )
             setSystems(result.data);
@@ -236,12 +241,20 @@ function ExploreSystems({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Field of Definition</span>
                                     <ul className="nested">
-                                        <input type="text" style={textBoxStyle} />
-                                        <label>Degree</label>
-                                        <br />
-                                        <input type="text" style={textBoxStyle} />
-                                        <label>Label</label>
-                                        <br />
+                                    <input 
+                                        type="number" 
+                                        style={textBoxStyle} 
+                                        onChange={(event) => replaceFilter('base_field_degree', event.target.value)}
+                                    />
+                                    <label>Degree</label>
+                                    <br />
+                                    <input 
+                                        type="text" 
+                                        style={textBoxStyle} 
+                                        onChange={(event) => replaceFilter('base_field_label', event.target.value)}
+                                    />
+                                    <label>Label</label>
+                                    <br />
                                     </ul>
                                 </li>
                             </ul>
