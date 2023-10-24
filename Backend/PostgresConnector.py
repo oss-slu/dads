@@ -9,8 +9,7 @@ import psycopg2
 class PostgresConnector:
 
     def __init__(self):
-        self.connection = psycopg2.connect(
-                "dbname=dynamSystems user=postgres password=docker")
+        self.connection = psycopg2.connect( host='0.0.0.0', dbname='dynamSystems', user='postgres', password='docker')
 
 
     def getAllSystems(self):
