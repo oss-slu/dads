@@ -81,8 +81,11 @@ class PostgresConnector:
         if 'base_field_label' in filters:
             conditions.append("base_field_label LIKE '%" + filters['base_field_label'] + "%'")
 
+        if 'automorphism_group_cardinality' in filters:
+            conditions.append("CAST(automorphism_group_cardinality AS integer) IN (" + str(filters['automorphism_group_cardinality']) + ")")
+
         for filter, values in filters.items():
-            if filter not in ['base_field_degree', 'base_field_label']:
+            if filter not in ['base_field_degree', 'base_field_label', 'automorphism_group_cardinality']:
                 conditions.append(filter + " IN (" + ', '.join(str(e) for e in values) + ")")
 
         filterText += " AND ".join(conditions)
