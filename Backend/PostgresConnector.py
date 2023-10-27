@@ -57,8 +57,9 @@ class PostgresConnector:
         cur.close
         return result
 
-
     def buildWhereText(self, filters):
+        # TESTING, REMOVE:
+        print(filters)
         # remove empty filters
         for filter in filters.copy():
             if not filters[filter] or filters[filter] == []:
@@ -74,12 +75,16 @@ class PostgresConnector:
             # CASTING ERROR, for some reason base_field degree is being evaluated as boolean, even though it has the
             # same formating as the other integer query fields like degree. TO FIX before merge
             conditions.append("CAST(base_field_degree AS integer) IN (" + str(filters['base_field_degree']) + ")")
+            
+        if 'indeterminacy_locus_dimension' in filters:
+            conditions.append("CAST(indeterminacy_locus_dimension AS integer) IN (" + int(filters['indeterminacy_locus_dimension']) + ")")
+
 
         if 'base_field_label' in filters:
             conditions.append("base_field_label LIKE '%" + filters['base_field_label'] + "%'")
 
         for filter, values in filters.items():
-            if filter not in ['base_field_degree', 'base_field_label']:
+            if filter not in ['base_field_degree', 'base_field_label', 'indeterminacy_locus_dimension']:
                 conditions.append(filter + " IN (" + ', '.join(str(e) for e in values) + ")")
 
         filterText += " AND ".join(conditions)
