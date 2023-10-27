@@ -77,7 +77,7 @@ class PostgresConnector:
             conditions.append("CAST(base_field_degree AS integer) IN (" + str(filters['base_field_degree']) + ")")
             
         if 'indeterminacy_locus_dimension' in filters:
-            conditions.append("CAST(indeterminacy_locus_dimension AS integer) IN (" + int(filters['indeterminacy_locus_dimension']) + ")")
+            conditions.append("CAST(indeterminacy_locus_dimension AS integer) IN (" + str(filters['indeterminacy_locus_dimension']) + ")")
 
 
         if 'base_field_label' in filters:
