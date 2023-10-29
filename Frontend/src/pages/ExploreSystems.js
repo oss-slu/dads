@@ -9,7 +9,12 @@ import { getFilteredSystems, getSelectedSystems } from '../api/routes';
 
 
 function ExploreSystems({ width }) {
-    const [numMaps, setNum] = useState(0);
+    //const [numMaps, setNum] = useState(0);
+    const [stat, setStat] = useState({
+        numMaps: 0, 
+        avgHeight:0
+        }
+    )
     const [filters, setFilters] = useState({
         dimension: [],
         degree: [],
@@ -22,8 +27,6 @@ function ExploreSystems({ width }) {
     });
 
     const [systems, setSystems] = useState(null);
-
-
 
     const downloadCSV = async () => {
         let csvSystems = await fetchDataForCSV()
@@ -85,7 +88,15 @@ function ExploreSystems({ width }) {
                 }
                 
             )
-            setNum(result.data.length)
+            let averageH = 0;
+            
+            let sum = 0;
+            sum  += result.models_original_height
+         
+            setStat((previousState => {
+                return { ...previousState, numMaps:result.data.length, avgHeight:sum }
+              }))
+
             setSystems(result.data);
         } catch (error) {
             setSystems(null)
@@ -97,7 +108,6 @@ function ExploreSystems({ width }) {
 
     useEffect(() => {
         fetchFilteredSystems();
-
     }, [filters]); //TODO only gets called when removing a filter and not adding it
 
 
@@ -317,16 +327,13 @@ function ExploreSystems({ width }) {
                         {systems != null && systems.length === 0 ? <p>No data meets that criteria</p> : <></>}
                     </Grid>
 
-
-
-
                     <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p>Result Statistics </p>
                             <Divider />
                             <br />
                            
-                            <label>Number of Maps: {numMaps}</label>
+                            <label>Number of Maps: {stat.numMaps}</label>
 
 
                             <br />
@@ -384,7 +391,7 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average Height</span>
+                                <li><span className="caret" onClick={toggleTree}>Average Height {stat.avgHeight}</span>
                                     <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
                                     </ul>
