@@ -10,8 +10,10 @@ class PostgresConnector:
 
     def __init__(self):
         self.connection = psycopg2.connect(
-                "dbname=dynamSystems user=postgres password=docker")
-
+                host="localhost",
+                dbname="dynamSystems",
+                user="postgres",
+                password="docker")
 
 
     def getAllSystems(self):
@@ -52,31 +54,39 @@ class PostgresConnector:
         labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
         columns = '*'
         sql = "SELECT " + columns + " FROM public.data WHERE label in " + labels
-        cur = connection.cursor()
+        cur = self.connection.cursor()
         cur.execute(sql)
         result = cur.fetchall()
         cur.close
         return result
 
 
-# function that builds the WHERE part of SQL query to filter the results
-    def buildWhereText(self,filters):
-    # remove empty filters
+    def buildWhereText(self, filters):
+        # remove empty filters
         for filter in filters.copy():
-            if filters[filter] == []:
+            if not filters[filter] or filters[filter] == []:
                 del filters[filter]
 
         if len(filters) == 0:
             return ""
 
         filterText = " WHERE "
+        conditions = []
 
-    # go through each non-empty filter and add it to the list for the WHERE clause
-        for index, filter in enumerate(filters):
-            filterText += filter + " in " + \
-                    "(" + ', '.join(str(e) for e in filters[filter]) + ")"
+        if 'base_field_degree' in filters:
+            # CASTING ERROR, for some reason base_field degree is being evaluated as boolean, even though it has the
+            # same formating as the other integer query fields like degree. TO FIX before merge
+            conditions.append("CAST(base_field_degree AS integer) IN (" + str(filters['base_field_degree']) + ")")
 
-            if (index != len(filters)-1):
-                filterText += " AND "
+        if 'base_field_label' in filters:
+            conditions.append("base_field_label LIKE '%" + filters['base_field_label'] + "%'")
 
+        if 'automorphism_group_cardinality' in filters:
+            conditions.append("CAST(automorphism_group_cardinality AS integer) IN (" + str(filters['automorphism_group_cardinality']) + ")")
+
+        for filter, values in filters.items():
+            if filter not in ['base_field_degree', 'base_field_label', 'automorphism_group_cardinality']:
+                conditions.append(filter + " IN (" + ', '.join(str(e) for e in values) + ")")
+
+        filterText += " AND ".join(conditions)
         return filterText
