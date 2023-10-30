@@ -7,9 +7,6 @@ import { useState, useEffect } from 'react';
 import { getFilteredSystems, getSelectedSystems } from '../api/routes';
 
 
-function sendFilters() {
-	alert('this button is working');
-}
 
 function ExploreSystems({ width }) {
     const [numMaps, setNum] = useState(0);
@@ -105,10 +102,10 @@ function ExploreSystems({ width }) {
     };
 
 
-    useEffect(() => {
-        fetchFilteredSystems();
+    //useEffect(() => {
+    //    fetchFilteredSystems();
 
-    }, [filters]); //TODO only gets called when removing a filter and not adding it
+    //}, [filters]); //TODO only gets called when removing a filter and not adding it
 
 
     const toggleTree = (event) => {
@@ -127,15 +124,15 @@ function ExploreSystems({ width }) {
         else {
             setFilters({ ...filters, [filterName]: [] })
         }
-        setSystems(null)
-        fetchFilteredSystems();
+        //setSystems(null)
+        //fetchFilteredSystems();
     }
 
     //used to set a filter property, replacing it with the old value
     const replaceFilter = (filterName, filterValue) => {
         setFilters({ ...filters, [filterName]: filterValue })
-        setSystems(null)
-        fetchFilteredSystems();
+        //setSystems(null)
+        //fetchFilteredSystems();
     }
 
     //used to add to a filter property that can contain multiple values
@@ -149,8 +146,8 @@ function ExploreSystems({ width }) {
         else {
             filters[filterName].push(filterValue)
         }
-        setSystems(null)
-        fetchFilteredSystems(); //calling fetch data here probably isn't best practice... might want to fix use effect
+        //setSystems(null)
+        //fetchFilteredSystems(); //calling fetch data here probably isn't best practice... might want to fix use effect
     }
 
     
@@ -159,6 +156,10 @@ function ExploreSystems({ width }) {
         marginRight: "12px"
     }
 
+    const sendFilters = () => {
+	setSystems(null);
+	fetchFilteredSystems();
+    };
     
 
     return (
