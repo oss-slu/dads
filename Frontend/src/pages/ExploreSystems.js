@@ -7,6 +7,9 @@ import { useState, useEffect } from 'react';
 import { getFilteredSystems, getSelectedSystems } from '../api/routes';
 
 
+function sendFilters() {
+	alert('this button is working');
+}
 
 function ExploreSystems({ width }) {
     const [numMaps, setNum] = useState(0);
@@ -155,6 +158,7 @@ function ExploreSystems({ width }) {
         width: "60px",
         marginRight: "12px"
     }
+
     
 
     return (
@@ -308,6 +312,11 @@ function ExploreSystems({ width }) {
                                     </ul>
                                 </li>
                             </ul>
+	    			
+	    		    <ul id="myUL">
+	    			<li><button onClick={sendFilters}>Get Results</button>
+	    			</li>
+	    		    </ul>
                             <br />
 
                         </div>
