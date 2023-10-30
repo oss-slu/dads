@@ -9,6 +9,7 @@ import psycopg2
 class PostgresConnector:
 
     def __init__(self):
+
         self.connection = psycopg2.connect(
                 host="localhost",
                 dbname="dynamSystems",
