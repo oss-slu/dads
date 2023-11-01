@@ -155,6 +155,16 @@ function ExploreSystems({ width }) {
         width: "60px",
         marginRight: "12px"
     }
+    
+    const buttonStyle = {
+	border: "none",
+	backgroundColor: "#376dc4",
+	color: "white",
+	cursor: "pointer",
+	fontSize: "15px",
+	padding: "6px 75px",
+	borderRadius: "4px",
+    }
 
     const sendFilters = () => {
 	setSystems(null);
@@ -315,7 +325,7 @@ function ExploreSystems({ width }) {
                             </ul>
 	    			
 	    		    <ul id="myUL">
-	    			<li><button onClick={sendFilters}>Get Results</button>
+	    			<li><button style={buttonStyle} onClick={sendFilters}>Get Results</button>
 	    			</li>
 	    		    </ul>
                             <br />
