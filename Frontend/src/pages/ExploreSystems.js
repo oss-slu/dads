@@ -17,7 +17,7 @@ function ExploreSystems({ width }) {
         is_Newton:  [],
         customDegree: "",
         customDimension: "",
-	    automorphism_group_cardinality: [],
+	    automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: ""
 
@@ -82,7 +82,7 @@ function ExploreSystems({ width }) {
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
-		            automorphism_group_cardinality: Number(filters.automorphism_group_cardinality),
+		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
                     base_field_degree: filters.base_field_degree
                 }
