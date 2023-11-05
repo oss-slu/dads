@@ -36,6 +36,14 @@ def data4():
     data = connector.getFilteredSystems(filters)
     return jsonify(data)
 
+# expects json describing filters, returns the systems that satisfy filters
+# example call json data that would return systems with degree of 2 and 3, dimension = 4: {"degree": [2,3], "N": [4]}
+@app.route("/getStatistics", methods=['POST', 'GET'])
+def data5():
+    filters = request.get_json()
+    data = connector.getStatistics(filters)
+    return jsonify(data)
+
 
 if __name__ == "__main__":
     app.run()

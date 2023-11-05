@@ -4,15 +4,16 @@ import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { getFilteredSystems, getSelectedSystems } from '../api/routes';
-
-
+import { getFilteredSystems, getSelectedSystems, getStatistics } from '../api/routes';
 
 function ExploreSystems({ width }) {
     //const [numMaps, setNum] = useState(0);
     const [stat, setStat] = useState({
         numMaps: 0, 
-        avgHeight:0
+        numPCF: 0, 
+        avgHeight:0,
+        numNewton:0,
+        avgResultant:0
         }
     )
     const [filters, setFilters] = useState({
@@ -95,21 +96,77 @@ function ExploreSystems({ width }) {
                 }
                 
             )
-            let averageH = 0;
-            
-            let sum = 0;
-            sum  += result.models_original_height
-         
-            setStat((previousState => {
-                return { ...previousState, numMaps:result.data.length, avgHeight:sum }
-              }))
+
+            // Calculate the average height
+            // Avoid division by zero
+            const averageHeight = 6;
+
+             // Calculate the number of pcfs
+             let sumPCF = 0;
+             for (const system of result.data) {
+                 if (system.is_pcf !== null && system.is_pcf) {
+                     sumPCF += 1;
+                 }
+             }
+
+             // Calculate the number of newtonian systems
+             let sumNewton = 0;
+             for (const system of result.data) {
+                 if (system.is_Newton !== null && system.is_Newton) {
+                     sumNewton += 1;
+                 }
+             }
+
+             // Calculate the average resuktant
+            let sumResultant = 0;
+            for (const system of result.data) {
+                if (system.models_original_resultant !== null) {
+                    sumResultant += system.models_original_resultant;
+                }
+            }
+            fetchStatistics();
+            // Avoid division by zero
+            //const averageResultant = result.data.length > 0 ? sum / result.data.length : 0;
+            //console.log(result.data);
+            // Update the state with the average height and number of maps         
+            // setStat((previousState => {
+            //     return { ...previousState, numMaps:result.data.length, numPCF:sumPCF, avgHeight:averageHeight, numNewton:sumNewton, avgResultant:8 }
+            //   }))
 
             setSystems(result.data);
-        } catch (error) {
+            } catch (error) {
             setSystems(null)
             alert("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly")
             console.log(error)
         }
+            
+    };
+
+    const fetchStatistics = async () => {
+        
+        try {
+            const result = await getStatistics({
+                degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
+                N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
+                is_polynomial: filters.is_polynomial,
+                is_Lattes: filters.is_Lattes,
+                is_Chebyshev: filters.is_Chebyshev,
+                is_Newton: filters.is_Newton,
+                automorphism_group_cardinality: Number(filters.automorphism_group_cardinality),
+                base_field_label: filters.base_field_label,
+                base_field_degree: filters.base_field_degree
+            })
+        setStat((previousState => {
+            return { ...previousState, numMaps:result.data[0], numPCF:result.data[1], avgHeight:result.data[2], numNewton:result.data[3], avgResultant:result.data[4] }
+          }))
+        }
+        catch (error) {
+            setStat((previousState => {
+                return { ...previousState, numMaps:7, numPCF:7, avgHeight:7, numNewton:7, avgResultant:7 }
+              }))
+            console.log(error)
+        }
+            
     };
 
 
@@ -358,8 +415,7 @@ function ExploreSystems({ width }) {
                             <br />
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Number PCF</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
+                                <li><span className="caret" onClick={toggleTree}>Number PCF: {stat.numPCF}</span>
                                     <ul className="nested">
                                         <input type="text" style={textBoxStyle} />
                                         <label>Average Size of PC Set</label>
@@ -410,8 +466,7 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average Height {stat.avgHeight}</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
+                                <li><span className="caret" onClick={toggleTree}>Average Height: {stat.avgHeight}</span>
                                     <ul className="nested">
                                     </ul>
                                 </li>
@@ -425,10 +480,15 @@ function ExploreSystems({ width }) {
                                     </ul>
                                 </li>
                             </ul>
+                            <ul id="myUL">
+                                <li><span className="caret" onClick={toggleTree}>Number Newton: {stat.numNewton}</span>
+                                    <ul className="nested">
+                                    </ul>
+                                </li>
+                            </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average Resultant</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
+                                <li><span className="caret" onClick={toggleTree}>Average Resultant: {stat.avgResultant}</span>
                                     <ul className="nested">
                                     </ul>
                                 </li>

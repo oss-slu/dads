@@ -22,3 +22,9 @@ export const getFilteredSystems = (filters) => axios({
     url: "http://localhost:5000/getFilteredSystems",
     data: filters
 })
+
+export const getStatistics = (filters) => axios({
+    method: "post",
+    url: "http://localhost:5000/getStatistics",
+    data: filters
+})

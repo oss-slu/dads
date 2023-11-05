@@ -15,7 +15,6 @@ class PostgresConnector:
                 user="postgres",
                 password="docker")
 
-
     def getAllSystems(self):
         columns = '*'
         sql = "SELECT " + columns + " FROM public.data"
@@ -24,7 +23,6 @@ class PostgresConnector:
         result = cur.fetchall()
         cur.close()
         return result
-
 
 # gets a system identified by its label, input is string
     def getSystem(self,label):
@@ -46,7 +44,36 @@ class PostgresConnector:
         cur.execute(sql)
         result = cur.fetchall()
         cur.close()
+        avg = 1
         return result
+
+    def getStatistics(self,filters):
+        whereText = self.buildWhereText(filters)
+        #number of maps
+        sql0 = "SELECT COUNT( models_original_height) FROM public.data" + whereText 
+        cur = self.connection.cursor()
+        cur.execute(sql0)
+        result0 = cur.fetchall()
+        #number of PCF
+        sql1 = "SELECT SUM(is_PCF::int) FROM public.data" + whereText 
+        cur = self.connection.cursor()
+        cur.execute(sql1)
+        result1 = cur.fetchall()
+        #Average Height
+        sql2 = "SELECT AVG( models_original_height) FROM public.data" + whereText 
+        cur.execute(sql2)
+        result2 = cur.fetchall()
+        #number of Newtonian
+        sql3 = "SELECT SUM(is_Newton::int) FROM public.data" + whereText 
+        cur = self.connection.cursor()
+        cur.execute(sql3)
+        result3 = cur.fetchall()
+        #Average Resultant
+        sql4 = "SELECT AVG( models_original_resultant) FROM public.data" + whereText 
+        cur.execute(sql4)
+        result4 = cur.fetchall()
+        cur.close()
+        return [result0, result1, result2, result3, result4]
 
 
 # gets a subset of the systems identified by the labels, input should be json list
@@ -59,7 +86,6 @@ class PostgresConnector:
         result = cur.fetchall()
         cur.close
         return result
-
 
     def buildWhereText(self, filters):
         # remove empty filters
