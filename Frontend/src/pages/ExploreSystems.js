@@ -97,42 +97,7 @@ function ExploreSystems({ width }) {
                 
             )
 
-            // Calculate the average height
-            // Avoid division by zero
-            const averageHeight = 6;
-
-             // Calculate the number of pcfs
-             let sumPCF = 0;
-             for (const system of result.data) {
-                 if (system.is_pcf !== null && system.is_pcf) {
-                     sumPCF += 1;
-                 }
-             }
-
-             // Calculate the number of newtonian systems
-             let sumNewton = 0;
-             for (const system of result.data) {
-                 if (system.is_Newton !== null && system.is_Newton) {
-                     sumNewton += 1;
-                 }
-             }
-
-             // Calculate the average resuktant
-            let sumResultant = 0;
-            for (const system of result.data) {
-                if (system.models_original_resultant !== null) {
-                    sumResultant += system.models_original_resultant;
-                }
-            }
             fetchStatistics();
-            // Avoid division by zero
-            //const averageResultant = result.data.length > 0 ? sum / result.data.length : 0;
-            //console.log(result.data);
-            // Update the state with the average height and number of maps         
-            // setStat((previousState => {
-            //     return { ...previousState, numMaps:result.data.length, numPCF:sumPCF, avgHeight:averageHeight, numNewton:sumNewton, avgResultant:8 }
-            //   }))
-
             setSystems(result.data);
             } catch (error) {
             setSystems(null)
@@ -143,7 +108,6 @@ function ExploreSystems({ width }) {
     };
 
     const fetchStatistics = async () => {
-        
         try {
             const result = await getStatistics({
                 degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
@@ -157,7 +121,7 @@ function ExploreSystems({ width }) {
                 base_field_degree: filters.base_field_degree
             })
         setStat((previousState => {
-            return { ...previousState, numMaps:result.data[0], numPCF:result.data[1], avgHeight:result.data[2], numNewton:result.data[3], avgResultant:result.data[4] }
+            return { ...previousState, numMaps:result.data[0], numPCF:result.data[1], avgHeight:Math.round(result.data[2]*100)/100, numNewton:result.data[3], avgResultant:Math.round(result.data[4]*100)/100}
           }))
         }
         catch (error) {
@@ -166,7 +130,6 @@ function ExploreSystems({ width }) {
               }))
             console.log(error)
         }
-            
     };
 
 
@@ -275,8 +238,6 @@ function ExploreSystems({ width }) {
                                     </ul>
                                 </li>
                             </ul>
-
-
 
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Class</span>
@@ -426,8 +387,6 @@ function ExploreSystems({ width }) {
                                     </ul>
                                 </li>
                             </ul>
-
-
 
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Average #Periodic</span>
