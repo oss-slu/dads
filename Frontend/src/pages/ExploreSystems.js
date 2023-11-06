@@ -25,7 +25,7 @@ function ExploreSystems({ width }) {
         is_Newton:  [],
         customDegree: "",
         customDimension: "",
-	automorphism_group_cardinality: "",
+	    automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
         indeterminacy_locus_dimension: ""
@@ -46,7 +46,6 @@ function ExploreSystems({ width }) {
                 else {
                     csvData += csvSystems[i][j] + ","
                 }
-
             }
             csvData += '\n'
         }
@@ -111,15 +110,16 @@ function ExploreSystems({ width }) {
     const fetchStatistics = async () => {
         try {
             const result = await getStatistics({
-                degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
-                N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
-                is_polynomial: filters.is_polynomial,
-                is_Lattes: filters.is_Lattes,
-                is_Chebyshev: filters.is_Chebyshev,
-                is_Newton: filters.is_Newton,
-                automorphism_group_cardinality: Number(filters.automorphism_group_cardinality),
-                base_field_label: filters.base_field_label,
-                base_field_degree: filters.base_field_degree
+                    degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
+                    N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
+                    is_polynomial: filters.is_polynomial,
+                    is_Lattes: filters.is_Lattes,
+                    is_Chebyshev: filters.is_Chebyshev,
+                    is_Newton: filters.is_Newton,
+		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
+                    base_field_label: filters.base_field_label,
+                    base_field_degree: filters.base_field_degree,
+                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
             })
         setStat((previousState => {
             return { ...previousState, numMaps:result.data[0], numPCF:result.data[1], avgHeight:Math.round(result.data[2]*100)/100, numNewton:result.data[3], avgResultant:Math.round(result.data[4]*100)/100}
