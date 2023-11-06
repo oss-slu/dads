@@ -4,10 +4,16 @@ import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { getFilteredSystems, getSelectedSystems } from '../api/routes';
+import { getFilteredSystems, getSelectedSystems, getStatistics } from '../api/routes';
 
 function ExploreSystems({ width }) {
-    const [numMaps, setNum] = useState(0);
+    const [stats, setStat] = useState({
+        numMaps:"",
+        numPCF:"", 
+        avgHeight:"",
+        numNewton:"", 
+        avgResultant:""
+    });
     const [filters, setFilters] = useState({
         dimension: [],
         degree: [],
@@ -91,7 +97,7 @@ function ExploreSystems({ width }) {
                 }
                 
             )
-            setNum(result.data.length)
+            fetchStatistics();
             setSystems(result.data);
         } catch (error) {
             setSystems(null)
@@ -104,16 +110,16 @@ function ExploreSystems({ width }) {
     const fetchStatistics = async () => {
         try {
             const result = await getStatistics({
-                    degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
-                    N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
-                    is_polynomial: filters.is_polynomial,
-                    is_Lattes: filters.is_Lattes,
-                    is_Chebyshev: filters.is_Chebyshev,
-                    is_Newton: filters.is_Newton,
-		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
-                    base_field_label: filters.base_field_label,
-                    base_field_degree: filters.base_field_degree,
-                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
+                degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
+                N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
+                is_polynomial: filters.is_polynomial,
+                is_Lattes: filters.is_Lattes,
+                is_Chebyshev: filters.is_Chebyshev,
+                is_Newton: filters.is_Newton,
+                automorphism_group_cardinality: filters.automorphism_group_cardinality,
+                base_field_label: filters.base_field_label,
+                base_field_degree: filters.base_field_degree,
+                indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
             })
         setStat((previousState => {
             return { ...previousState, numMaps:result.data[0], numPCF:result.data[1], avgHeight:Math.round(result.data[2]*100)/100, numNewton:result.data[3], avgResultant:Math.round(result.data[4]*100)/100}
@@ -377,12 +383,12 @@ function ExploreSystems({ width }) {
                             <Divider />
                             
                             <br />
-                            <label>Number of Maps: {numMaps}</label>
+                            <label>Number of Maps: {stats.numMaps}</label>
                             <br />
                             
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Number PCF</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
+                                <li>
+                                    <label >Number PCF: {stats.numPCF}</label>
                                     <ul className="nested">
                                         <input type="text" style={textBoxStyle} />
                                         <label>Average Size of PC Set</label>
@@ -431,10 +437,8 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average Height</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
-                                    <ul className="nested">
-                                    </ul>
+                                <li>
+                                    <label className="caret" onClick={toggleTree}>Average Height: {stats.avgHeight}</label>
                                 </li>
                             </ul>
 
@@ -448,10 +452,14 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average Resultant</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
-                                    <ul className="nested">
-                                    </ul>
+                                <li>
+                                    <label className="">Number Newtonian: {stats.numNewton}</label>
+                                </li>
+                            </ul>
+
+                            <ul id="myUL">
+                                <li>
+                                    <label className="">Average Resultant: {stats.avgResultant}</label>
                                 </li>
                             </ul>
                             <br />
