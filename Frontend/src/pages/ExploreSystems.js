@@ -102,7 +102,11 @@ function ExploreSystems({ width }) {
         }
     };
 
-
+    useEffect(() => {
+        fetchFilteredSystems();
+     
+     }, []); 
+     
     const toggleTree = (event) => {
         let el = event.target;
         el.parentElement.querySelector(".nested").classList.toggle("active");
