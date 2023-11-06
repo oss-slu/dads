@@ -17,7 +17,7 @@ function ExploreSystems({ width }) {
         is_Newton:  [],
         customDegree: "",
         customDimension: "",
-	    automorphism_group_cardinality: "",
+	automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
         indeterminacy_locus_dimension: ""
@@ -344,7 +344,7 @@ function ExploreSystems({ width }) {
                             }
                         />
 
-                        {systems === null ? <p style = {{color: 'red'}}>Unable to connect to database</p>: <></>}
+                        {systems === null ? <p style = {{color: 'red'}}></p>: <></>}
                         {systems != null && systems.length === 0 ? <p>No data meets that criteria</p> : <></>}
                     </Grid>
 
