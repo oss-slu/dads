@@ -70,7 +70,7 @@ class PostgresConnector:
         conditions = []
 
         for filter, values in filters.items():
-            if filter in ['base_field_degree', 'automorphism_group_cardinality']:
+            if filter in ['base_field_degree', 'automorphism_group_cardinality','indeterminacy_locus_dimension']:
                 conditions.append("CAST(" + filter + " AS integer) IN (" + values + ")")
 
             elif filter in ['base_field_label']:

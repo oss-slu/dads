@@ -19,7 +19,8 @@ function ExploreSystems({ width }) {
         customDimension: "",
 	    automorphism_group_cardinality: "",
         base_field_label: "",
-        base_field_degree: ""
+        base_field_degree: "",
+        indeterminacy_locus_dimension: ""
 
     });
 
@@ -84,7 +85,8 @@ function ExploreSystems({ width }) {
                     is_Newton: filters.is_Newton,
 		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
-                    base_field_degree: filters.base_field_degree
+                    base_field_degree: filters.base_field_degree,
+                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
                 }
                 
             )
@@ -305,6 +307,12 @@ function ExploreSystems({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Indeterminacy Locus</span>
                                     <ul className="nested">
+                                    <input 
+                                        type="number" 
+                                        style={textBoxStyle} 
+                                        onChange={(event) => replaceFilter('indeterminacy_locus_dimension', event.target.value)}
+                                    />
+                                    <label>Dimension</label>
                                     </ul>
                                 </li>
                             </ul>
