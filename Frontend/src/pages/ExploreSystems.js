@@ -25,12 +25,14 @@ function ExploreSystems({ width }) {
         is_Newton:  [],
         customDegree: "",
         customDimension: "",
-	automorphism_group_cardinality: [],
+	automorphism_group_cardinality: "",
         base_field_label: "",
-        base_field_degree: ""
+        base_field_degree: "",
+        indeterminacy_locus_dimension: ""
 
     });
 
+	  let connectionStatus = true;
     const [systems, setSystems] = useState(null);
 
     const downloadCSV = async () => {
@@ -89,9 +91,10 @@ function ExploreSystems({ width }) {
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
-		    automorphism_group_cardinality: Number(filters.automorphism_group_cardinality),
+		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
-                    base_field_degree: filters.base_field_degree
+                    base_field_degree: filters.base_field_degree,
+                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
                 }
             )
             fetchStatistics();
@@ -99,9 +102,11 @@ function ExploreSystems({ width }) {
             } catch (error) {
             setSystems(null)
             alert("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly")
+		connectionStatus = false;
             console.log(error)
         }
     };
+
 
     const fetchStatistics = async () => {
         try {
@@ -131,14 +136,13 @@ function ExploreSystems({ width }) {
     useEffect(() => {
         fetchFilteredSystems();
     }, [filters]); //TODO only gets called when removing a filter and not adding it
-
+     
 
     const toggleTree = (event) => {
         let el = event.target;
         el.parentElement.querySelector(".nested").classList.toggle("active");
         el.classList.toggle("caret-down");
     }
-
 
     //used to update a boolean filter, filter is [] if false so that it doesn't matter
     //assumes defaulted to false (UNCHECKED)
@@ -149,15 +153,11 @@ function ExploreSystems({ width }) {
         else {
             setFilters({ ...filters, [filterName]: [] })
         }
-        setSystems(null)
-        fetchFilteredSystems();
     }
 
     //used to set a filter property, replacing it with the old value
     const replaceFilter = (filterName, filterValue) => {
         setFilters({ ...filters, [filterName]: filterValue })
-        setSystems(null)
-        fetchFilteredSystems();
     }
 
     //used to add to a filter property that can contain multiple values
@@ -171,17 +171,28 @@ function ExploreSystems({ width }) {
         else {
             filters[filterName].push(filterValue)
         }
-        setSystems(null)
-        fetchFilteredSystems(); //calling fetch data here probably isn't best practice... might want to fix use effect
     }
 
-    
     const textBoxStyle = {
         width: "60px",
         marginRight: "12px"
     }
     
+    const buttonStyle = {
+	border: "none",
+	backgroundColor: "#376dc4",
+	color: "white",
+	cursor: "pointer",
+	fontSize: "15px",
+	padding: "6px 75px",
+	borderRadius: "4px",
+    }
 
+    const sendFilters = () => {
+	setSystems(null);
+	fetchFilteredSystems();
+    };
+    
     return (
         <>
             <div style={{ marginLeft: width }}>
@@ -193,7 +204,6 @@ function ExploreSystems({ width }) {
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p>Filters</p>
                             <Divider />
-
 
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Dimension</span>
@@ -211,8 +221,6 @@ function ExploreSystems({ width }) {
                                     </ul>
                                 </li>
                             </ul>
-
-
 
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Degree</span>
@@ -310,10 +318,9 @@ function ExploreSystems({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Automorphism Group</span>
                                     <ul className="nested">
-	    				<input type="number" style={textBoxStyle} onChange={(event) => replaceFilter('automorphism_group_cardinality', event.target.value)} />
-	    				<label>Cardinality</label>
-	    				<br />
-
+	    				                <input type="number" style={textBoxStyle} onChange={(event) => replaceFilter('automorphism_group_cardinality', event.target.value)} />
+	    				                <label>Cardinality</label>
+	    				                <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -328,14 +335,24 @@ function ExploreSystems({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Indeterminacy Locus</span>
                                     <ul className="nested">
+                                    <input 
+                                        type="number" 
+                                        style={textBoxStyle} 
+                                        onChange={(event) => replaceFilter('indeterminacy_locus_dimension', event.target.value)}
+                                    />
+                                    <label>Dimension</label>
                                     </ul>
                                 </li>
                             </ul>
+	    			
+	    		            <ul id="myUL">
+	    			            <li><button style={buttonStyle} onClick={sendFilters}>Get Results</button>
+	    			            </li>
+	    		            </ul>
                             <br />
 
                         </div>
                     </Grid>
-
 
                     <Grid className="results-table" item xs={6} >
                         <span style={{ float: "right", color: "red", cursor: 'pointer' }} onClick={() => downloadCSV()}>Download</span>
@@ -355,7 +372,7 @@ function ExploreSystems({ width }) {
                             }
                         />
 
-                        {systems === null ? <p style = {{color: 'red'}}>Unable to connect to database</p>: <></>}
+                        {connectionStatus === false ? <p style = {{color: 'red'}}>DATABASE CONNECTION ERROR</p>: <></>}
                         {systems != null && systems.length === 0 ? <p>No data meets that criteria</p> : <></>}
                     </Grid>
 
@@ -363,12 +380,13 @@ function ExploreSystems({ width }) {
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p>Result Statistics </p>
                             <Divider />
+                            
                             <br />
                            
                             <label>Number of Maps: {stat.numMaps}</label>
 
                             <br />
-
+                            
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Number PCF: {stat.numPCF}</span>
                                     <ul className="nested">
@@ -414,7 +432,7 @@ function ExploreSystems({ width }) {
                                 <li><span className="caret" onClick={toggleTree}>Average #Aut</span>
                                     <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
-	    			    </ul>
+	    			                </ul>
                                 </li>
                             </ul>
 
@@ -446,22 +464,11 @@ function ExploreSystems({ width }) {
                                     </ul>
                                 </li>
                             </ul>
-
                             <br />
-
                         </div>
                     </Grid>
-
-
                 </div>
-
-
-
-
             </div>
-
-
-
         </>
     )
 }
