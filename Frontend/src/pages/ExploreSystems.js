@@ -4,18 +4,10 @@ import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { getFilteredSystems, getSelectedSystems, getStatistics } from '../api/routes';
+import { getFilteredSystems, getSelectedSystems } from '../api/routes';
 
 function ExploreSystems({ width }) {
-    //const [numMaps, setNum] = useState(0);
-    const [stat, setStat] = useState({
-        numMaps: 0, 
-        numPCF: 0, 
-        avgHeight:0,
-        numNewton:0,
-        avgResultant:0
-        }
-    )
+    const [numMaps, setNum] = useState(0);
     const [filters, setFilters] = useState({
         dimension: [],
         degree: [],
@@ -32,7 +24,8 @@ function ExploreSystems({ width }) {
 
     });
 
-	  let connectionStatus = true;
+	let connectionStatus = true;
+
     const [systems, setSystems] = useState(null);
 
     const downloadCSV = async () => {
@@ -65,6 +58,7 @@ function ExploreSystems({ width }) {
             labels.push(systems[i][0])
         }
         try {
+
             //filters need to have right names to work for backend
             const result = await getSelectedSystems(
                 {
@@ -95,10 +89,11 @@ function ExploreSystems({ width }) {
                     base_field_degree: filters.base_field_degree,
                     indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
                 }
+                
             )
-            fetchStatistics();
+            setNum(result.data.length)
             setSystems(result.data);
-            } catch (error) {
+        } catch (error) {
             setSystems(null)
             alert("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly")
 		connectionStatus = false;
@@ -135,9 +130,9 @@ function ExploreSystems({ width }) {
 
     useEffect(() => {
         fetchFilteredSystems();
-    }, [filters]); //TODO only gets called when removing a filter and not adding it
      
-
+     }, []); 
+     
     const toggleTree = (event) => {
         let el = event.target;
         el.parentElement.querySelector(".nested").classList.toggle("active");
@@ -382,13 +377,12 @@ function ExploreSystems({ width }) {
                             <Divider />
                             
                             <br />
-                           
-                            <label>Number of Maps: {stat.numMaps}</label>
-
+                            <label>Number of Maps: {numMaps}</label>
                             <br />
                             
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Number PCF: {stat.numPCF}</span>
+                                <li><span className="caret" onClick={toggleTree}>Number PCF</span>
+                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
                                         <input type="text" style={textBoxStyle} />
                                         <label>Average Size of PC Set</label>
@@ -437,7 +431,8 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average Height: {stat.avgHeight}</span>
+                                <li><span className="caret" onClick={toggleTree}>Average Height</span>
+                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
                                     </ul>
                                 </li>
@@ -451,15 +446,10 @@ function ExploreSystems({ width }) {
                                     </ul>
                                 </li>
                             </ul>
-                            <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Number Newton: {stat.numNewton}</span>
-                                    <ul className="nested">
-                                    </ul>
-                                </li>
-                            </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average Resultant: {stat.avgResultant}</span>
+                                <li><span className="caret" onClick={toggleTree}>Average Resultant</span>
+                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
                                     <ul className="nested">
                                     </ul>
                                 </li>
