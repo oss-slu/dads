@@ -24,6 +24,8 @@ function ExploreSystems({ width }) {
 
     });
 
+	let connectionStatus = true;
+
     const [systems, setSystems] = useState(null);
 
     const downloadCSV = async () => {
@@ -95,14 +97,11 @@ function ExploreSystems({ width }) {
         } catch (error) {
             setSystems(null)
             alert("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly")
+		connectionStatus = false;
             console.log(error)
         }
     };
 
-    //useEffect(() => {
-    //    fetchFilteredSystems();
-
-    //}, [filters]); //TODO only gets called when removing a filter and not adding it
 
     const toggleTree = (event) => {
         let el = event.target;
@@ -119,15 +118,11 @@ function ExploreSystems({ width }) {
         else {
             setFilters({ ...filters, [filterName]: [] })
         }
-        //setSystems(null)
-        //fetchFilteredSystems();
     }
 
     //used to set a filter property, replacing it with the old value
     const replaceFilter = (filterName, filterValue) => {
         setFilters({ ...filters, [filterName]: filterValue })
-        //setSystems(null)
-        //fetchFilteredSystems();
     }
 
     //used to add to a filter property that can contain multiple values
@@ -141,8 +136,6 @@ function ExploreSystems({ width }) {
         else {
             filters[filterName].push(filterValue)
         }
-        //setSystems(null)
-        //fetchFilteredSystems(); //calling fetch data here probably isn't best practice... might want to fix use effect
     }
 
     const textBoxStyle = {
@@ -344,7 +337,7 @@ function ExploreSystems({ width }) {
                             }
                         />
 
-                        {systems === null ? <p style = {{color: 'red'}}></p>: <></>}
+                        {connectionStatus === false ? <p style = {{color: 'red'}}>DATABASE CONNECTION ERROR</p>: <></>}
                         {systems != null && systems.length === 0 ? <p>No data meets that criteria</p> : <></>}
                     </Grid>
 
