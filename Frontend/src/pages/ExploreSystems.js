@@ -64,7 +64,6 @@ function ExploreSystems({ width }) {
             labels.push(systems[i][0])
         }
         try {
-
             //filters need to have right names to work for backend
             const result = await getSelectedSystems(
                 {
@@ -94,9 +93,7 @@ function ExploreSystems({ width }) {
                     base_field_label: filters.base_field_label,
                     base_field_degree: filters.base_field_degree
                 }
-                
             )
-
             fetchStatistics();
             setSystems(result.data);
             } catch (error) {
@@ -104,7 +101,6 @@ function ExploreSystems({ width }) {
             alert("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly")
             console.log(error)
         }
-            
     };
 
     const fetchStatistics = async () => {
@@ -131,7 +127,6 @@ function ExploreSystems({ width }) {
             console.log(error)
         }
     };
-
 
     useEffect(() => {
         fetchFilteredSystems();
@@ -371,7 +366,6 @@ function ExploreSystems({ width }) {
                             <br />
                            
                             <label>Number of Maps: {stat.numMaps}</label>
-
 
                             <br />
 

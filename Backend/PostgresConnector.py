@@ -50,27 +50,27 @@ class PostgresConnector:
     def getStatistics(self,filters):
         whereText = self.buildWhereText(filters)
         #number of maps
-        sql0 = "SELECT COUNT( models_original_height) FROM public.data" + whereText 
+        sql = "SELECT COUNT( models_original_height) FROM public.data" + whereText 
         cur = self.connection.cursor()
-        cur.execute(sql0)
+        cur.execute(sql)
         result0 = cur.fetchall()
         #number of PCF
-        sql1 = "SELECT SUM(is_PCF::int) FROM public.data" + whereText 
+        sql = "SELECT SUM(is_PCF::int) FROM public.data" + whereText 
         cur = self.connection.cursor()
-        cur.execute(sql1)
+        cur.execute(sql)
         result1 = cur.fetchall()
         #Average Height
-        sql2 = "SELECT AVG( models_original_height) FROM public.data" + whereText 
-        cur.execute(sql2)
+        sql = "SELECT AVG( models_original_height) FROM public.data" + whereText 
+        cur.execute(sql)
         result2 = cur.fetchall()
         #number of Newtonian
-        sql3 = "SELECT SUM(is_Newton::int) FROM public.data" + whereText 
+        sql = "SELECT SUM(is_Newton::int) FROM public.data" + whereText 
         cur = self.connection.cursor()
-        cur.execute(sql3)
+        cur.execute(sql)
         result3 = cur.fetchall()
         #Average Resultant
-        sql4 = "SELECT AVG( models_original_resultant) FROM public.data" + whereText 
-        cur.execute(sql4)
+        sql = "SELECT AVG( models_original_resultant) FROM public.data" + whereText 
+        cur.execute(sql)
         result4 = cur.fetchall()
         cur.close()
         return [result0, result1, result2, result3, result4]
