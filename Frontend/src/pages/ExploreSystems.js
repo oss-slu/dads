@@ -127,7 +127,7 @@ function ExploreSystems({ width }) {
         }
         catch (error) {
             setStat((previousState => {
-                return { ...previousState, numMaps:7, numPCF:7, avgHeight:7, numNewton:7, avgResultant:7 }
+                return { ...previousState, numMaps:0, numPCF:0, avgHeight:0, numNewton:0, avgResultant:0 }
               }))
             console.log(error)
         }
