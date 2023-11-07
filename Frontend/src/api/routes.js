@@ -25,6 +25,6 @@ export const getFilteredSystems = (filters) => axios({
 
 export const getStatistics = (filters) => axios({
     method: "post",
-    url: "http://localhost:5000/getStatistics",
+    url: "http://127.0.0.1:5000/getStatistics",
     data: filters
 })
