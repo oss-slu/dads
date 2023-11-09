@@ -135,10 +135,8 @@ function ExploreSystems({ width }) {
         }
     };
 
-
     useEffect(() => {
         fetchFilteredSystems();
-     
      }, []); 
      
     const toggleTree = (event) => {
@@ -195,7 +193,7 @@ function ExploreSystems({ width }) {
 	setSystems(null);
 	fetchFilteredSystems();
     };
-    
+
     return (
         <>
             <div style={{ marginLeft: width }}>
@@ -329,11 +327,40 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Postcritically Finite</span>
+                                <li>
+                                    <span className="caret" onClick={toggleTree}>Postcritically Finite</span>
                                     <ul className="nested">
-                                        <input type="checkbox" onClick={() => booleanFilter('is_pcf')} />
-                                        <label>Is Postcritically Finite</label>
-                                        <br />
+                                        <li>
+                                            <input 
+                                                type="radio" 
+                                                id="isPCFTrue"
+                                                name="isPCF" 
+                                                value="true"
+                                                onChange={() => replaceFilter('is_pcf', [true])} 
+                                            />
+                                            <label htmlFor="isPCFTrue">Is Postcritically Finite</label>
+                                        </li>
+                                        <li>
+                                            <input 
+                                                type="radio" 
+                                                id="isPCFFalse"
+                                                name="isPCF" 
+                                                value="false"
+                                                onChange={() => replaceFilter('is_pcf', [false])} 
+                                            />
+                                            <label htmlFor="isPCFFalse">Not Postcritically Finite</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="radio"
+                                                id="showAll"
+                                                name="isPCF"
+                                                value="all"
+                                                onChange={() => replaceFilter('is_pcf', [])}
+                                                defaultChecked
+                                            />
+                                            <label htmlFor="showAll">Show all</label>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
