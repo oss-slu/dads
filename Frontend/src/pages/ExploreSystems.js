@@ -21,13 +21,13 @@ function ExploreSystems({ width }) {
         is_Lattes: [],
         is_Chebyshev:  [],
         is_Newton:  [],
+        is_pcf: [],
         customDegree: "",
         customDimension: "",
 	    automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
         indeterminacy_locus_dimension: ""
-
     });
 
 	let connectionStatus = true;
@@ -90,6 +90,7 @@ function ExploreSystems({ width }) {
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
+                    is_pcf: filters.is_pcf,
 		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
                     base_field_degree: filters.base_field_degree,
@@ -116,6 +117,7 @@ function ExploreSystems({ width }) {
                 is_Lattes: filters.is_Lattes,
                 is_Chebyshev: filters.is_Chebyshev,
                 is_Newton: filters.is_Newton,
+                is_pcf: filters.is_pcf,
                 automorphism_group_cardinality: filters.automorphism_group_cardinality,
                 base_field_label: filters.base_field_label,
                 base_field_degree: filters.base_field_degree,
@@ -329,6 +331,9 @@ function ExploreSystems({ width }) {
                             <ul id="myUL">
                                 <li><span className="caret" onClick={toggleTree}>Postcritically Finite</span>
                                     <ul className="nested">
+                                        <input type="checkbox" onClick={() => booleanFilter('is_pcf')} />
+                                        <label>Is Postcritically Finite</label>
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
