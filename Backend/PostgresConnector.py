@@ -63,27 +63,25 @@ class PostgresConnector:
         sql = "SELECT COUNT( models_original_height) FROM public.data" + whereText 
         cur = self.connection.cursor()
         cur.execute(sql)
-        result0 = cur.fetchall()
+        maps = cur.fetchall()
+         #AUT
+        sql = "SELECT AVG(automorphism_group_cardinality::int) FROM public.data" + whereText 
+        cur.execute(sql)
+        aut = cur.fetchall()
         #number of PCF
         sql = "SELECT SUM(is_PCF::int) FROM public.data" + whereText 
-        cur = self.connection.cursor()
         cur.execute(sql)
-        result1 = cur.fetchall()
+        pcf = cur.fetchall()
         #Average Height
         sql = "SELECT AVG( models_original_height) FROM public.data" + whereText 
         cur.execute(sql)
-        result2 = cur.fetchall()
-        #number of Newtonian
-        sql = "SELECT SUM(is_Newton::int) FROM public.data" + whereText 
-        cur = self.connection.cursor()
-        cur.execute(sql)
-        result3 = cur.fetchall()
+        height = cur.fetchall()
         #Average Resultant
         sql = "SELECT AVG( models_original_resultant) FROM public.data" + whereText 
         cur.execute(sql)
-        result4 = cur.fetchall()
+        resultant = cur.fetchall()
         cur.close()
-        return [result0, result1, result2, result3, result4]
+        return [maps, aut, pcf, height, resultant]
 
     def buildWhereText(self, filters):
         # remove empty filters

@@ -82,7 +82,22 @@ code {
   border-radius: 25px;
   min-width: 250px;
   height: fit-content;
+  padding: 10px;
+  font-family: "Lucida Console", "Courier New", monospace;
+  border: 5px solid;
+  border-color: #2E3B55;
 }
+
+p.sidebarHead {
+  color: black;
+  text-align: center;
+  font-weight: bold;
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-size: large;
+
+}
+
+
 
 .results-container {
   height: fit-content;
