@@ -367,7 +367,7 @@ function ExploreSystems({ width }) {
 							x[3],
 							<span style={{ color: "red" }}>{x[4]}</span>
 						    ])}
-						    itemsPerPage={10} // You can adjust the number of items per page as needed
+						    itemsPerPage={20} // You can adjust the number of items per page as needed
 						/>						
 
 		
