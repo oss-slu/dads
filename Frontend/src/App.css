@@ -109,3 +109,37 @@ code {
 .table-component {
   margin: 10px;
 }
+
+/* Pagination Container Styles */
+.custom-pagination {
+  display: flex;
+  justify-content: center;
+  padding-left: 0;
+  list-style: none;
+}
+
+/* Pagination Item Styles */
+.custom-pagination .page-item {
+  margin: 0 2px;
+}
+
+.custom-pagination .page-item .page-link {
+  color: #007bff;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+}
+
+.custom-pagination .page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.custom-pagination .page-item.disabled .page-link {
+  color: #6c757d;
+  pointer-events: none;
+  background-color: #fff;
+  border-color: #ddd;
+}
