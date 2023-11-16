@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Pagination from 'react-bootstrap/Pagination';
-import 'bootstrap/dist/css/bootstrap.css';
 export default function PaginatedDataTable({ labels, data, itemsPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -11,7 +10,7 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage }) {
 
   const handlePageChange = (pageNumber) => {
     if(pageNumber <= totalPages && pageNumber >= 1) {
-	setCurrentPage(pageNumber);
+	    setCurrentPage(pageNumber);
     }
   };
 
@@ -37,15 +36,24 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage }) {
           ))}
         </tbody>
       </table>
-      <Pagination size="lg">
-        <Pagination.First onClick={() => handlePageChange(1)} />
-        <Pagination.Prev onClick={()  => handlePageChange(currentPage - 1)} />
-	<Pagination.Item active={true} onClick={() => handlePageChange(currentPage)}>
-	    {currentPage}
-	</Pagination.Item>
-        <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} />
-        <Pagination.Last onClick={() => handlePageChange(totalPages)} />
-      </Pagination>
+      <Pagination size="lg" className="custom-pagination">
+                <Pagination.Item onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                    {'<<'}
+                </Pagination.Item>
+                <Pagination.Item onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                    {'<'}
+                </Pagination.Item>
+
+                {/* Current Page Number */}
+                <Pagination.Item>{currentPage}</Pagination.Item>
+
+                <Pagination.Item onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                    {'>'}
+                </Pagination.Item>
+                <Pagination.Item onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>
+                    {'>>'}
+                </Pagination.Item>
+        </Pagination>
     </>
   );
 }
