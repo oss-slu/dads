@@ -434,15 +434,16 @@ function ExploreSystems({ width }) {
                             <Divider />
                             
                             <br />
-                            <ul>
-                                <label class = "">Number of Maps: </label>
-                                <label class = "">{stats.numMaps}</label>
-                            </ul>
-                            <br />
-                            
-                            <ul id="myUL">
+                            <div className = 'statcontainer'>
+                                <label>Number of Maps: </label>
+                                {stats.numMaps}
+                            </div>
+
+                            <div className = "statcontainer">
+                                <ul id="myUL">
                                 <li>
-                                    <label >Number PCF: {stats.numPCF}</label>
+                                    <label className="caret" onClick={toggleTree}>Number PCF</label>
+
                                     <ul className="nested">
                                         <label>Average Size of PC Set</label>
                                         <br />
@@ -450,59 +451,53 @@ function ExploreSystems({ width }) {
                                         <br />
                                     </ul>
                                 </li>
-                            </ul>
+                                </ul>
+                                {stats.numPCF}
+                            </div>
 
-                            <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average #Periodic</span>
-                                    <ul className="nested">
-                                        <label>Most Periodic</label>
-                                        <br />
-                                        <label>Largest Cycle</label>
-                                        <br />
-                                    </ul>
-                                </li>
-                            </ul>
+                            <div className = "statcontainer">
+                                <ul id="myUL">
+                                    <li><span className="caret" onClick={toggleTree}>Average #Periodic</span>
+                                        <ul className="nested">
+                                            <label>Most Periodic</label>
+                                            <br />
+                                            <label>Largest Cycle</label>
+                                            <br />
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
 
-                            <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average #Preperiodic</span>
-                                    <ul className="nested">
-                                        <label>Most Preperiodic </label>
-                                        <br />
-                                        <label>Largest Comp.</label>
-                                        <br />
-                                    </ul>
-                                </li>
-                            </ul>
+                            <div className='statcontainer'>
+                                <ul id="myUL">
+                                    <li><span className="caret" onClick={toggleTree}>Average #Preperiodic</span>
+                                        <ul className="nested">
+                                            <label>Most Preperiodic </label>
+                                            <br />
+                                            <label>Largest Comp.</label>
+                                            <br />
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
 
-                            <ul id="myUL">
-                                <li><span onClick={toggleTree}>Average #Aut: {stats.avgAUT}</span>
-                                    <ul className="nested">
-	    			                </ul>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <label>stat</label>
-                                <label>value</label>
-                                <li>
-                                    <label onClick={toggleTree}>Average Height: {stats.avgHeight}</label>
-                            
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li><span  onClick={toggleTree}>Average smallest <br />
-                                    canonical height</span>
-                                    <ul className="nested">
-                                    </ul>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <label className="">Average Resultant: {stats.avgResultant}</label>
-                                </li>
-                            </ul>
+                           
+                            <div className = 'statcontainer'>
+                                <label>Average #Aut: </label>
+                                {stats.avgAUT}
+                            </div>
+                            <div className = 'statcontainer'>
+                                <label>Average Height: </label>
+                                {stats.avgHeight}
+                            </div>
+                            <div className = 'statcontainer'>
+                                <label>Avg smallest cannonical height: </label>
+                                NA
+                            </div>
+                            <div className = 'statcontainer'>
+                                <label>Average Resultant: </label>
+                                {stats.avgResultant}
+                            </div>
                             <br />
                         </div>
                     </Grid>
