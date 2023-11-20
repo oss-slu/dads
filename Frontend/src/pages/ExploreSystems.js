@@ -3,12 +3,11 @@ import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import PaginatedDataTable from "../components/newDataTable";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import {
-    getFilteredSystems,
-    getSelectedSystems,
-    getStatistics,
-} from "../api/routes";
+import { useState, useEffect } from 'react';
+import { getFilteredSystems, getSelectedSystems, getStatistics } from '../api/routes';
+import ReportGeneralError from '../errorreport/ReportGeneralError';
+import ReportMajorError from '../errorreport/ReportMajorError';
+
 
 function ExploreSystems({ width }) {
     const [stats, setStat] = useState({
@@ -32,39 +31,90 @@ function ExploreSystems({ width }) {
         base_field_degree: "",
         indeterminacy_locus_dimension: "",
     });
+    //add for error notice
+    // State for error modals and snackbars
+    const [majorError, setMajorError] = useState('');
+    const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
+    const [generalError, setGeneralError] = useState('');
+    const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
+
+    // Function to close the major error modal
+    const handleMajorErrorClose = () => {
+        setOpenMajorErrorModal(false);
+    };
+
+    // Function to close the general error snackbar
+    const handleGeneralErrorClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenGeneralErrorSnackbar(false);
+    };
+
+    // Function to report major errors
+    const reportMajorError = (message) => {
+        setMajorError(message);
+        setOpenMajorErrorModal(true);
+    };
+
+    // Function to report general errors
+    const reportGeneralError = (message) => {
+        setGeneralError(message);
+        setOpenGeneralErrorSnackbar(true);
+    };
+    //add for error notice
 
     let connectionStatus = true;
 
     const [systems, setSystems] = useState(null);
 
     const downloadCSV = async () => {
-        let csvSystems = await fetchDataForCSV();
-        let csvData =
-            "degree,N,keywords,base_field_type,base_field_label,base_field_latex,base_field_degree,sigma_inv_1,sigma_inv_2,sigma_inv_3,label,citations,family,models_original_polys_vars,models_original_polys_val,models_original_polys_latex,models_original_resultant,models_original_name,models_original_bad_primes,models_original_height,models_original_base_field_label,models_original_base_field_latex,models_original_num_parameters,models_original_conjugation_from_original_latex,models_original_conjugation_from_original_val,models_original_conjugation_from_original_base_field_label,models_original_conjugation_from_original_num_parameters,display_model,is_morphism,indeterminacy_locus_dimension,is_polynomial,models.monic_centered_polys_vars,models.monic_centered_polys_val,models.monic_centered_polys_latex,models.monic_centered_resultant,models.monic_centered_name,models.monic_centered_num_parameters,models.monic_centered_bad_primes,models.monic_centered_height,models.monic_centered_conjugation_from_original_latex,models.monic_centered_conjugation_from_original_val,models.monic_centered_conjugation_from_original_base_field_label,models.monic_centered_conjugation_from_original_base_field_emb,models.monic_centered_base_field_label,models.monic_centered_base_field_emb,models.monic_centered_base_field_latex,models.Chebyshev_polys_vars,models.Chebyshev_polys_val,models.Chebyshev_polys_latex,models.Chebyshev_name,models.Chebyshev_height,models.Chebyshev_resultant,models.Chebyshev_conjugation_from_original_latex,models.Chebyshev_conjugation_from_original_val,models.Chebyshev_conjugation_from_original_base_field_label,models.Chebyshev_conjugation_from_original_base_field_emb,models.Chebyshev_conjugation_from_original_num_parameters,models.Chebyshev_base_field_label,models.Chebyshev_base_field_emb,models.Chebyshev_base_field_latex,models.Chebyshev_num_parameters,is_Chebyshev,is_Newton,is_Lattes,is_pcf,automorphism_group_cardinality,automorphism_group_matrices\n";
-        for (let i = 0; i < csvSystems.length; i++) {
-            for (let j = 0; j < csvSystems[i].length; j++) {
-                if (isNaN(csvSystems[i][j])) {
-                    csvData += '"' + csvSystems[i][j] + '"' + ",";
-                } else {
-                    csvData += csvSystems[i][j] + ",";
-                }
+        try {
+            let csvSystems = await fetchDataForCSV();
+            // Check if the fetched data is empty
+            if (csvSystems.length == 0) {
+                reportGeneralError('There is nothing to download.');
             }
-            csvData += "\n";
-        }
+            else{
+                // For handing non-empty data
+                let csvData = 'degree,N,keywords,base_field_type,base_field_label,base_field_latex,base_field_degree,sigma_inv_1,sigma_inv_2,sigma_inv_3,label,citations,family,models_original_polys_vars,models_original_polys_val,models_original_polys_latex,models_original_resultant,models_original_name,models_original_bad_primes,models_original_height,models_original_base_field_label,models_original_base_field_latex,models_original_num_parameters,models_original_conjugation_from_original_latex,models_original_conjugation_from_original_val,models_original_conjugation_from_original_base_field_label,models_original_conjugation_from_original_num_parameters,display_model,is_morphism,indeterminacy_locus_dimension,is_polynomial,models.monic_centered_polys_vars,models.monic_centered_polys_val,models.monic_centered_polys_latex,models.monic_centered_resultant,models.monic_centered_name,models.monic_centered_num_parameters,models.monic_centered_bad_primes,models.monic_centered_height,models.monic_centered_conjugation_from_original_latex,models.monic_centered_conjugation_from_original_val,models.monic_centered_conjugation_from_original_base_field_label,models.monic_centered_conjugation_from_original_base_field_emb,models.monic_centered_base_field_label,models.monic_centered_base_field_emb,models.monic_centered_base_field_latex,models.Chebyshev_polys_vars,models.Chebyshev_polys_val,models.Chebyshev_polys_latex,models.Chebyshev_name,models.Chebyshev_height,models.Chebyshev_resultant,models.Chebyshev_conjugation_from_original_latex,models.Chebyshev_conjugation_from_original_val,models.Chebyshev_conjugation_from_original_base_field_label,models.Chebyshev_conjugation_from_original_base_field_emb,models.Chebyshev_conjugation_from_original_num_parameters,models.Chebyshev_base_field_label,models.Chebyshev_base_field_emb,models.Chebyshev_base_field_latex,models.Chebyshev_num_parameters,is_Chebyshev,is_Newton,is_Lattes,is_pcf,automorphism_group_cardinality,automorphism_group_matrices\n'
+                for (let i = 0; i < csvSystems.length; i++) {
+                    for (let j = 0; j < csvSystems[i].length; j++) {
+                        if (isNaN(csvSystems[i][j])) {
+                            csvData += "\"" + csvSystems[i][j] + "\"" + ","
+                        }
+                        else {
+                            csvData += csvSystems[i][j] + ","
+                        }
+                    }
+                    csvData += '\n'
+                }
 
-        const blob = new Blob([csvData], { type: "text/csv" });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.setAttribute("href", url);
-        a.setAttribute("download", "results.csv");
-        a.click();
-    };
+                const blob = new Blob([csvData], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.setAttribute('href', url)
+                a.setAttribute('download', 'results.csv');
+                a.click()
+            }
+
+        }catch (error) {
+            reportMajorError('An error occurred while fetching the data.');
+            console.error(error);
+        }
+    }
 
     //gets data with all of the columns for exporting to csv
     const fetchDataForCSV = async () => {
-        let labels = [];
-        for (let i = 0; i < systems.length; i++) {
-            labels.push(systems[i][0]);
+        let labels = []
+        //check if systems is null
+        if (!systems){
+            return []
+        }
+        else if(systems){
+            for (let i = 0; i < systems.length; i++) {
+                labels.push(systems[i][0])
+            }
         }
         try {
             //filters need to have right names to work for backend
@@ -108,11 +158,9 @@ function ExploreSystems({ width }) {
             setSystems(result.data);
         } catch (error) {
             setSystems(null);
-            alert(
-                "Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly"
-            );
-            connectionStatus = false;
-            console.log(error);
+            reportMajorError("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly");
+		    connectionStatus = false;
+            console.log(error)
         }
     };
 
@@ -803,6 +851,16 @@ function ExploreSystems({ width }) {
                     </Grid>
                 </div>
             </div>
+            <ReportMajorError
+                open={openMajorErrorModal}
+                onClose={handleMajorErrorClose}
+                errorMessage={majorError}
+            />
+            <ReportGeneralError
+                open={openGeneralErrorSnackbar}
+                onClose={handleGeneralErrorClose}
+                errorMessage={generalError}
+            />
         </>
     );
 }
