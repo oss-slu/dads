@@ -16,7 +16,7 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage }) {
 
   return (
     <>
-      <table id="resultstable" className="table table-sm table-bordered table-striped" style={{ width: '1000px' }}>
+      <table id="resultstable" className="table table-sm table-bordered table-striped" style={{ width: '700px' }}>
         <thead>
           <tr>
             {labels.map((label, index) => (
