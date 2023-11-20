@@ -3,10 +3,11 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
 import { Link } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { getFilteredSystems, getSelectedSystems, getStatistics } from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
+import PaginatedTable from '../components/PaginatedTable';
 
 function ExploreSystems({ width }) {
     const [stats, setStat] = useState({
@@ -410,7 +411,7 @@ function ExploreSystems({ width }) {
                     <Grid className="results-table" item xs={6} >
                         <span style={{ float: "right", color: "red", cursor: 'pointer' }} onClick={() => downloadCSV()}>Download</span>
                         <p style={{ textAlign: "center", marginTop: 0 }}>Results</p>
-                        <DataTable
+                        {/* <DataTable
                             labels={['Label', 'Domain', 'Degree', 'Polynomials', 'Field']}
                             data={systems === null ? [] :
                                 systems.map(x =>
@@ -423,8 +424,22 @@ function ExploreSystems({ width }) {
                                     ]
                                 )
                             }
-                        />
-
+                        /> */}
+                        {console.log(systems)}
+                        
+                        <PaginatedTable 
+                        systemsdata= {systems === null ? [] :
+                            systems.map(x =>
+                                [
+                                    <Link to={`/system/${x[0]}/`} style={{ color: "red", textDecoration: "none" }}>{x[0]}</Link>,
+                                    <>P<sup>{x[1]}</sup> {String.fromCharCode(8594)} P<sup>{x[1]}</sup></>,
+                                    x[2],
+                                    x[3],
+                                    <span style={{ color: "red" }}>{x[4]}</span>
+                                ]
+                            )
+                        }
+                         />
                         {connectionStatus === false ? <p style = {{color: 'red'}}>DATABASE CONNECTION ERROR</p>: <></>}
                         {systems != null && systems.length === 0 ? <p>No data meets that criteria</p> : <></>}
                     </Grid>
