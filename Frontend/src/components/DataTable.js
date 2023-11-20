@@ -1,5 +1,4 @@
 import * as React from 'react';
-import $ from 'jquery';
 import Pagination from 'react-bootstrap/Pagination';
 
 //component to render a dynamic tabel
