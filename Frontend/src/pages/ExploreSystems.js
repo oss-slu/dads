@@ -481,7 +481,6 @@ function ExploreSystems({ width }) {
                                 </ul>
                             </div>
 
-                           
                             <div className = 'statcontainer'>
                                 <label>Average #Aut: </label>
                                 {stats.avgAUT}
@@ -491,7 +490,7 @@ function ExploreSystems({ width }) {
                                 {stats.avgHeight}
                             </div>
                             <div className = 'statcontainer'>
-                                <label>Avg smallest cannonical height: </label>
+                                <label>Avg min height: </label>
                                 NA
                             </div>
                             <div className = 'statcontainer'>

@@ -133,6 +133,8 @@ code {
   font-family: "Lucida Console", "Courier New", monospace;
   border: 5px solid;
   border-color: #2E3B55;
+  font-weight: bold;
+  font-size: large;
 }
 
 p.sidebarHead {
@@ -143,15 +145,14 @@ p.sidebarHead {
   font-size: large;
 }
 
-
-
 .results-container {
   height: fit-content;
   padding-top: 20px;
   padding-left: 10px;
   padding-right: 10px;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: space-evenly;
 }
 
