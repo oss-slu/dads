@@ -11,9 +11,9 @@ import ReportMajorError from '../errorreport/ReportMajorError';
 function ExploreSystems({ width }) {
     const [stats, setStat] = useState({
         numMaps:"",
+        avgAUT:"",
         numPCF:"", 
         avgHeight:"",
-        numNewton:"", 
         avgResultant:""
     });
     const [filters, setFilters] = useState({
@@ -148,7 +148,6 @@ function ExploreSystems({ width }) {
                     base_field_degree: filters.base_field_degree,
                     indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
                 }
-                
             )
             fetchStatistics();
             setSystems(result.data);
@@ -176,7 +175,7 @@ function ExploreSystems({ width }) {
                 indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
             })
         setStat((previousState => {
-            return { ...previousState, numMaps:result.data[0], numPCF:result.data[1], avgHeight:Math.round(result.data[2]*100)/100, numNewton:result.data[3], avgResultant:Math.round(result.data[4]*100)/100}
+            return { ...previousState, numMaps:result.data[0], avgAUT:Math.round(result.data[1]*100)/100, numPCF:result.data[2], avgHeight:Math.round(result.data[3]*100)/100, avgResultant:Math.round(result.data[4]*100)/100}
           }))
         }
         catch (error) {
@@ -255,7 +254,7 @@ function ExploreSystems({ width }) {
                     <Grid className="sidebar" item xs={3}>
 
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-                            <p>Filters</p>
+                            <p class = "sidebarHead">Filters</p>
                             <Divider />
 
                             <ul id="myUL">
@@ -463,89 +462,73 @@ function ExploreSystems({ width }) {
 
                     <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-                            <p>Result Statistics </p>
+                            <p class = "sidebarHead" >RESULT STATISTICS </p>
                             <Divider />
                             
                             <br />
-                            <label>Number of Maps: {stats.numMaps}</label>
-                            <br />
-                            
-                            <ul id="myUL">
+                            <div className = 'statcontainer'>
+                                <label>Number of Maps: </label>
+                                {stats.numMaps}
+                            </div>
+
+                            <div className = "statcontainer">
+                                <ul id="myUL">
                                 <li>
-                                    <label >Number PCF: {stats.numPCF}</label>
+                                    <label className="caret" onClick={toggleTree}>Number PCF</label>
+
                                     <ul className="nested">
-                                        <input type="text" style={textBoxStyle} />
                                         <label>Average Size of PC Set</label>
                                         <br />
-                                        <input type="text" style={textBoxStyle} />
                                         <label>Largest PC Set</label>
                                         <br />
                                     </ul>
                                 </li>
-                            </ul>
+                                </ul>
+                                {stats.numPCF}
+                            </div>
 
-                            <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average #Periodic</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
-                                    <ul className="nested">
-                                        <input type="text" style={textBoxStyle} />
-                                        <label>Most Periodic</label>
-                                        <br />
-                                        <input type="text" style={textBoxStyle} />
-                                        <label>Largest Cycle</label>
-                                        <br />
-                                    </ul>
-                                </li>
-                            </ul>
+                            <div className = "statcontainer">
+                                <ul id="myUL">
+                                    <li><span className="caret" onClick={toggleTree}>Average #Periodic</span>
+                                        <ul className="nested">
+                                            <label>Most Periodic</label>
+                                            <br />
+                                            <label>Largest Cycle</label>
+                                            <br />
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
 
-                            <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average #Preperiodic</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
-                                    <ul className="nested">
-                                        <input type="text" style={textBoxStyle} />
-                                        <label>Most Preperiodic </label>
-                                        <br />
-                                        <input type="text" style={textBoxStyle} />
-                                        <label>Largest Comp.</label>
-                                        <br />
-                                    </ul>
-                                </li>
-                            </ul>
+                            <div className='statcontainer'>
+                                <ul id="myUL">
+                                    <li><span className="caret" onClick={toggleTree}>Average #Preperiodic</span>
+                                        <ul className="nested">
+                                            <label>Most Preperiodic </label>
+                                            <br />
+                                            <label>Largest Comp.</label>
+                                            <br />
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
 
-                            <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average #Aut</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
-                                    <ul className="nested">
-	    			                </ul>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <label className="caret" onClick={toggleTree}>Average Height: {stats.avgHeight}</label>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Average smallest <br />
-                                    canonical height</span>
-                                    <input type="text" style={{ float: "right", ...textBoxStyle }} />
-                                    <ul className="nested">
-                                    </ul>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <label className="">Number Newtonian: {stats.numNewton}</label>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <label className="">Average Resultant: {stats.avgResultant}</label>
-                                </li>
-                            </ul>
+                            <div className = 'statcontainer'>
+                                <label>Average #Aut: </label>
+                                {stats.avgAUT}
+                            </div>
+                            <div className = 'statcontainer'>
+                                <label>Average Height: </label>
+                                {stats.avgHeight}
+                            </div>
+                            <div className = 'statcontainer'>
+                                <label>Avg min height: </label>
+                                NA
+                            </div>
+                            <div className = 'statcontainer'>
+                                <label>Average Resultant: </label>
+                                {stats.avgResultant}
+                            </div>
                             <br />
                         </div>
                     </Grid>
