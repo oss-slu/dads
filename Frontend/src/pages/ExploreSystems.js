@@ -23,13 +23,13 @@ function ExploreSystems({ width }) {
         is_Lattes: [],
         is_Chebyshev:  [],
         is_Newton:  [],
+        is_pcf: [],
         customDegree: "",
         customDimension: "",
 	    automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
         indeterminacy_locus_dimension: ""
-
     });
     //add for error notice
     // State for error modals and snackbars
@@ -142,6 +142,7 @@ function ExploreSystems({ width }) {
                     is_Lattes: filters.is_Lattes,
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
+                    is_pcf: filters.is_pcf,
 		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
                     base_field_degree: filters.base_field_degree,
@@ -168,6 +169,7 @@ function ExploreSystems({ width }) {
                 is_Lattes: filters.is_Lattes,
                 is_Chebyshev: filters.is_Chebyshev,
                 is_Newton: filters.is_Newton,
+                is_pcf: filters.is_pcf,
                 automorphism_group_cardinality: filters.automorphism_group_cardinality,
                 base_field_label: filters.base_field_label,
                 base_field_degree: filters.base_field_degree,
@@ -185,10 +187,8 @@ function ExploreSystems({ width }) {
         }
     };
 
-
     useEffect(() => {
         fetchFilteredSystems();
-     
      }, []); 
      
     const toggleTree = (event) => {
@@ -245,7 +245,7 @@ function ExploreSystems({ width }) {
 	setSystems(null);
 	fetchFilteredSystems();
     };
-    
+
     return (
         <>
             <div style={{ marginLeft: width }}>
@@ -379,8 +379,40 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Postcritically Finite</span>
+                                <li>
+                                    <span className="caret" onClick={toggleTree}>Postcritically Finite</span>
                                     <ul className="nested">
+                                        <li>
+                                            <input 
+                                                type="radio" 
+                                                id="isPCFTrue"
+                                                name="isPCF" 
+                                                value="true"
+                                                onChange={() => replaceFilter('is_pcf', [true])} 
+                                            />
+                                            <label htmlFor="isPCFTrue">Is Postcritically Finite</label>
+                                        </li>
+                                        <li>
+                                            <input 
+                                                type="radio" 
+                                                id="isPCFFalse"
+                                                name="isPCF" 
+                                                value="false"
+                                                onChange={() => replaceFilter('is_pcf', [false])} 
+                                            />
+                                            <label htmlFor="isPCFFalse">Not Postcritically Finite</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="radio"
+                                                id="showAll"
+                                                name="isPCF"
+                                                value="all"
+                                                onChange={() => replaceFilter('is_pcf', [])}
+                                                defaultChecked
+                                            />
+                                            <label htmlFor="showAll">Show all</label>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
