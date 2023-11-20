@@ -26,7 +26,7 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage }) {
         </thead>
         <tbody>
           {currentData.map((item, key) => (
-            <tr key={key} style={{ textAlign: 'center' }}>
+            <tr key={key} className={key % 2 === 0 ? 'even-row' : 'odd-row'} style={{ textAlign: 'center' }}>
               {item.map((element, id) => (
                 <td key={id}>
                   <span>{element}</span>

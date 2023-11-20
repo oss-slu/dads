@@ -227,6 +227,21 @@ function ExploreSystems({ width }) {
         setSystems(null);
         fetchFilteredSystems();
     };
+    
+    const [pagesPer, setPagesPer] = useState('20');
+
+    const [pagesDisplay, setPagesDisplay] = useState('20');
+
+    const handlePagePerChange = (event) => {
+    // Update the state with the selected value
+    if (event.target.value == 'All'){
+	setPagesPer(systems.length);
+	setPagesDisplay("All");
+    } else {
+	setPagesPer(event.target.value);
+	setPagesDisplay(event.target.value);
+    }
+  };
 
     return (
         <>
@@ -564,6 +579,15 @@ function ExploreSystems({ width }) {
                         <p style={{ textAlign: "center", marginTop: 0 }}>
                             Results
                         </p>
+			<label for="pages">Results Per Page:</label>	
+			<select id="pages" name="pages"  value={pagesDisplay} onChange={handlePagePerChange}>
+			    <option value="10">10</option>
+			    <option value="20">20</option>
+			    <option value="50">50</option>
+			    <option value="100">100</option>
+			    <option value="All">All</option>
+			</select>
+			<p></p>
                         <PaginatedDataTable
                             labels={[
                                 "Label",
@@ -597,7 +621,7 @@ function ExploreSystems({ width }) {
                                           </span>,
                                       ])
                             }
-                            itemsPerPage={20} // You can adjust the number of items per page as needed
+                            itemsPerPage={pagesPer} // You can adjust the number of items per page as needed
                         />
 
                         {connectionStatus === false ? (
