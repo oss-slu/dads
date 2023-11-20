@@ -11,25 +11,29 @@ import ReportMajorError from '../errorreport/ReportMajorError';
 
 function ExploreSystems({ width }) {
     const [stats, setStat] = useState({
-        numMaps: "",
-        numPCF: "",
-        avgHeight: "",
-        numNewton: "",
-        avgResultant: "",
+
+        numMaps:"",
+        avgAUT:"",
+        numPCF:"", 
+        avgHeight:"",
+        avgResultant:""
     });
     const [filters, setFilters] = useState({
         dimension: [],
         degree: [],
         is_polynomial: [],
         is_Lattes: [],
-        is_Chebyshev: [],
-        is_Newton: [],
+
+        is_Chebyshev:  [],
+        is_Newton:  [],
+        is_pcf: [],
         customDegree: "",
         customDimension: "",
         automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
-        indeterminacy_locus_dimension: "",
+
+        indeterminacy_locus_dimension: ""
     });
     //add for error notice
     // State for error modals and snackbars
@@ -131,29 +135,22 @@ function ExploreSystems({ width }) {
     const fetchFilteredSystems = async () => {
         try {
             //filters need to have right names to work for backend
-            const result = await getFilteredSystems({
-                degree:
-                    filters.customDegree === ""
-                        ? filters.degree
-                        : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
-                N:
-                    filters.customDimension === ""
-                        ? filters.dimension
-                        : [
-                              ...filters.dimension,
-                              Number(filters.customDimension),
-                          ],
-                is_polynomial: filters.is_polynomial,
-                is_Lattes: filters.is_Lattes,
-                is_Chebyshev: filters.is_Chebyshev,
-                is_Newton: filters.is_Newton,
-                automorphism_group_cardinality:
-                    filters.automorphism_group_cardinality,
-                base_field_label: filters.base_field_label,
-                base_field_degree: filters.base_field_degree,
-                indeterminacy_locus_dimension:
-                    filters.indeterminacy_locus_dimension,
-            });
+
+            const result = await getFilteredSystems(
+                {
+                    degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
+                    N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
+                    is_polynomial: filters.is_polynomial,
+                    is_Lattes: filters.is_Lattes,
+                    is_Chebyshev: filters.is_Chebyshev,
+                    is_Newton: filters.is_Newton,
+                    is_pcf: filters.is_pcf,
+		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
+                    base_field_label: filters.base_field_label,
+                    base_field_degree: filters.base_field_degree,
+                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
+                }
+            )
             fetchStatistics();
             setSystems(result.data);
         } catch (error) {
@@ -182,42 +179,28 @@ function ExploreSystems({ width }) {
                 is_Lattes: filters.is_Lattes,
                 is_Chebyshev: filters.is_Chebyshev,
                 is_Newton: filters.is_Newton,
-                automorphism_group_cardinality:
-                    filters.automorphism_group_cardinality,
+                is_pcf: filters.is_pcf,
+                automorphism_group_cardinality: filters.automorphism_group_cardinality,
                 base_field_label: filters.base_field_label,
                 base_field_degree: filters.base_field_degree,
-                indeterminacy_locus_dimension:
-                    filters.indeterminacy_locus_dimension,
-            });
-            setStat((previousState) => {
-                return {
-                    ...previousState,
-                    numMaps: result.data[0],
-                    numPCF: result.data[1],
-                    avgHeight: Math.round(result.data[2] * 100) / 100,
-                    numNewton: result.data[3],
-                    avgResultant: Math.round(result.data[4] * 100) / 100,
-                };
-            });
-        } catch (error) {
-            setStat((previousState) => {
-                return {
-                    ...previousState,
-                    numMaps: 0,
-                    numPCF: 0,
-                    avgHeight: 0,
-                    numNewton: 0,
-                    avgResultant: 0,
-                };
-            });
-            console.log(error);
+                indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
+            })
+        setStat((previousState => {
+            return { ...previousState, numMaps:result.data[0], avgAUT:Math.round(result.data[1]*100)/100, numPCF:result.data[2], avgHeight:Math.round(result.data[3]*100)/100, avgResultant:Math.round(result.data[4]*100)/100}
+          }))
+        }
+        catch (error) {
+            setStat((previousState => {
+                return { ...previousState, numMaps:0, numPCF:0, avgHeight:0, numNewton:0, avgResultant:0 }
+              }))
+            console.log(error)
         }
     };
 
     useEffect(() => {
         fetchFilteredSystems();
-    }, []);
-
+     }, []); 
+     
     const toggleTree = (event) => {
         let el = event.target;
         el.parentElement.querySelector(".nested").classList.toggle("active");
@@ -291,16 +274,17 @@ function ExploreSystems({ width }) {
     }
   };
 
+
     return (
         <>
             <div style={{ marginLeft: width }}>
                 <div className="results-container" container>
                     <Grid className="sidebar" item xs={3}>
-                        <div
-                            style={{ marginLeft: "10px", marginRight: "10px" }}
-                        >
-                            <p>Filters</p>
-                            <Divider />
+
+
+                        <div style={{ marginLeft: "10px", marginRight: "10px" }}>
+                            <p class = "sidebarHead">Filters</p>
+                             <Divider />
 
                             <ul id="myUL">
                                 <li>
@@ -565,13 +549,40 @@ function ExploreSystems({ width }) {
 
                             <ul id="myUL">
                                 <li>
-                                    <span
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
-                                        Postcritically Finite
-                                    </span>
-                                    <ul className="nested"></ul>
+                                    <span className="caret" onClick={toggleTree}>Postcritically Finite</span>
+                                    <ul className="nested">
+                                        <li>
+                                            <input 
+                                                type="radio" 
+                                                id="isPCFTrue"
+                                                name="isPCF" 
+                                                value="true"
+                                                onChange={() => replaceFilter('is_pcf', [true])} 
+                                            />
+                                            <label htmlFor="isPCFTrue">Is Postcritically Finite</label>
+                                        </li>
+                                        <li>
+                                            <input 
+                                                type="radio" 
+                                                id="isPCFFalse"
+                                                name="isPCF" 
+                                                value="false"
+                                                onChange={() => replaceFilter('is_pcf', [false])} 
+                                            />
+                                            <label htmlFor="isPCFFalse">Not Postcritically Finite</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="radio"
+                                                id="showAll"
+                                                name="isPCF"
+                                                value="all"
+                                                onChange={() => replaceFilter('is_pcf', [])}
+                                                defaultChecked
+                                            />
+                                            <label htmlFor="showAll">Show all</label>
+                                        </li>
+                                    </ul>
                                 </li>
                             </ul>
 
@@ -687,165 +698,74 @@ function ExploreSystems({ width }) {
                     </Grid>
 
                     <Grid className="sidebar" item xs={3}>
-                        <div
-                            style={{ marginLeft: "10px", marginRight: "10px" }}
-                        >
-                            <p>Result Statistics </p>
+                        <div style={{ marginLeft: "10px", marginRight: "10px" }}>
+                            <p class = "sidebarHead" >RESULT STATISTICS </p>
                             <Divider />
 
                             <br />
-                            <label>Number of Maps: {stats.numMaps}</label>
-                            <br />
+                            <div className = 'statcontainer'>
+                                <label>Number of Maps: </label>
+                                {stats.numMaps}
+                            </div>
 
-                            <ul id="myUL">
+                            <div className = "statcontainer">
+                                <ul id="myUL">
                                 <li>
-                                    <label>Number PCF: {stats.numPCF}</label>
+                                    <label className="caret" onClick={toggleTree}>Number PCF</label>
+
                                     <ul className="nested">
-                                        <input
-                                            type="text"
-                                            style={textBoxStyle}
-                                        />
                                         <label>Average Size of PC Set</label>
                                         <br />
-                                        <input
-                                            type="text"
-                                            style={textBoxStyle}
-                                        />
                                         <label>Largest PC Set</label>
                                         <br />
                                     </ul>
                                 </li>
-                            </ul>
+                                </ul>
+                                {stats.numPCF}
+                            </div>
 
-                            <ul id="myUL">
-                                <li>
-                                    <span
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
-                                        Average #Periodic
-                                    </span>
-                                    <input
-                                        type="text"
-                                        style={{
-                                            float: "right",
-                                            ...textBoxStyle,
-                                        }}
-                                    />
-                                    <ul className="nested">
-                                        <input
-                                            type="text"
-                                            style={textBoxStyle}
-                                        />
-                                        <label>Most Periodic</label>
-                                        <br />
-                                        <input
-                                            type="text"
-                                            style={textBoxStyle}
-                                        />
-                                        <label>Largest Cycle</label>
-                                        <br />
-                                    </ul>
-                                </li>
-                            </ul>
+                            <div className = "statcontainer">
+                                <ul id="myUL">
+                                    <li><span className="caret" onClick={toggleTree}>Average #Periodic</span>
+                                        <ul className="nested">
+                                            <label>Most Periodic</label>
+                                            <br />
+                                            <label>Largest Cycle</label>
+                                            <br />
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
 
-                            <ul id="myUL">
-                                <li>
-                                    <span
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
-                                        Average #Preperiodic
-                                    </span>
-                                    <input
-                                        type="text"
-                                        style={{
-                                            float: "right",
-                                            ...textBoxStyle,
-                                        }}
-                                    />
-                                    <ul className="nested">
-                                        <input
-                                            type="text"
-                                            style={textBoxStyle}
-                                        />
-                                        <label>Most Preperiodic </label>
-                                        <br />
-                                        <input
-                                            type="text"
-                                            style={textBoxStyle}
-                                        />
-                                        <label>Largest Comp.</label>
-                                        <br />
-                                    </ul>
-                                </li>
-                            </ul>
+                            <div className='statcontainer'>
+                                <ul id="myUL">
+                                    <li><span className="caret" onClick={toggleTree}>Average #Preperiodic</span>
+                                        <ul className="nested">
+                                            <label>Most Preperiodic </label>
+                                            <br />
+                                            <label>Largest Comp.</label>
+                                            <br />
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
 
-                            <ul id="myUL">
-                                <li>
-                                    <span
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
-                                        Average #Aut
-                                    </span>
-                                    <input
-                                        type="text"
-                                        style={{
-                                            float: "right",
-                                            ...textBoxStyle,
-                                        }}
-                                    />
-                                    <ul className="nested"></ul>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <label
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
-                                        Average Height: {stats.avgHeight}
-                                    </label>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <span
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
-                                        Average smallest <br />
-                                        canonical height
-                                    </span>
-                                    <input
-                                        type="text"
-                                        style={{
-                                            float: "right",
-                                            ...textBoxStyle,
-                                        }}
-                                    />
-                                    <ul className="nested"></ul>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <label className="">
-                                        Number Newtonian: {stats.numNewton}
-                                    </label>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <label className="">
-                                        Average Resultant: {stats.avgResultant}
-                                    </label>
-                                </li>
-                            </ul>
+                            <div className = 'statcontainer'>
+                                <label>Average #Aut: </label>
+                                {stats.avgAUT}
+                            </div>
+                            <div className = 'statcontainer'>
+                                <label>Average Height: </label>
+                                {stats.avgHeight}
+                            </div>
+                            <div className = 'statcontainer'>
+                                <label>Avg min height: </label>
+                                NA
+                            </div>
+                            <div className = 'statcontainer'>
+                                <label>Average Resultant: </label>
+                                {stats.avgResultant}
+                            </div>
                             <br />
                         </div>
                     </Grid>
