@@ -4,7 +4,7 @@ import Divider from '@mui/material/Divider';
 import DataTable from '../components/DataTable';
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { getFilteredSystems, getSelectedSystems, getStatistics } from '../api/routes';
+import { getFilteredSystems, getSelectedSystems} from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 
