@@ -43,8 +43,29 @@ class PostgresConnector:
         cur = self.connection.cursor()
         cur.execute(sql)
         result = cur.fetchall()
+        #number of maps
+        sql = "SELECT COUNT( models_original_height) FROM public.data" + whereText 
+        cur.execute(sql)
+        maps = cur.fetchall()
+         #AUT
+        sql = "SELECT AVG(automorphism_group_cardinality::int) FROM public.data" + whereText 
+        cur.execute(sql)
+        aut = cur.fetchall()
+        #number of PCF
+        sql = "SELECT SUM(is_PCF::int) FROM public.data" + whereText 
+        cur.execute(sql)
+        pcf = cur.fetchall()
+        #Average Height
+        sql = "SELECT AVG( models_original_height) FROM public.data" + whereText 
+        cur.execute(sql)
+        height = cur.fetchall()
+        #Average Resultant
+        sql = "SELECT AVG( models_original_resultant) FROM public.data" + whereText 
+        cur.execute(sql)
+        resultant = cur.fetchall()
         cur.close()
-        return result
+        cur.close()
+        return [result, maps, aut, pcf, height, resultant]
 
     # gets a subset of the systems identified by the labels, input should be json list
     def getSelectedSystems(self,labels):

@@ -148,8 +148,10 @@ function ExploreSystems({ width }) {
                     indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
                 }
             )
-            fetchStatistics();
-            setSystems(result.data);
+            setSystems(result.data[0]);
+            setStat((previousState => {
+                return { ...previousState, numMaps:result.data[1], avgAUT:Math.round(result.data[2]*100)/100, numPCF:result.data[3], avgHeight:Math.round(result.data[4]*100)/100, avgResultant:Math.round(result.data[5]*100)/100}
+              }))
         } catch (error) {
             setSystems(null);
             reportMajorError("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly");
@@ -158,31 +160,6 @@ function ExploreSystems({ width }) {
         }
     };
 
-    const fetchStatistics = async () => {
-        try {
-            const result = await getStatistics({
-                degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
-                N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
-                is_polynomial: filters.is_polynomial,
-                is_Lattes: filters.is_Lattes,
-                is_Chebyshev: filters.is_Chebyshev,
-                is_Newton: filters.is_Newton,
-                automorphism_group_cardinality: filters.automorphism_group_cardinality,
-                base_field_label: filters.base_field_label,
-                base_field_degree: filters.base_field_degree,
-                indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
-            })
-        setStat((previousState => {
-            return { ...previousState, numMaps:result.data[0], avgAUT:Math.round(result.data[1]*100)/100, numPCF:result.data[2], avgHeight:Math.round(result.data[3]*100)/100, avgResultant:Math.round(result.data[4]*100)/100}
-          }))
-        }
-        catch (error) {
-            setStat((previousState => {
-                return { ...previousState, numMaps:0, numPCF:0, avgHeight:0, numNewton:0, avgResultant:0 }
-              }))
-            console.log(error)
-        }
-    };
 
 
     useEffect(() => {
