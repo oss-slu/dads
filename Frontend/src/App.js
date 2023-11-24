@@ -3,7 +3,7 @@ import './App.css'
 import ExploreSystems from './pages/ExploreSystems';
 import SystemDetails from './pages/SystemDetails'
 import Sidebar from "./components/Sidebar";
-import Tobpbar from "./components/Topbar"
+import Topbar from "./components/Topbar"
 import Toolbar from '@mui/material/Toolbar';
 import AboutPage from './pages/AboutPage';
 
@@ -17,9 +17,7 @@ function App() {
       <BrowserRouter>
 
         {showMenu && <>
-          <Sidebar width={drawerWidth} />
-          <Toolbar />
-          <Tobpbar />
+	    <Topbar />
         </>}
 
         <Routes>
