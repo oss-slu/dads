@@ -38,32 +38,39 @@ class PostgresConnector:
 
     # gets systems that match the passed in filters, input should be json object
     def getFilteredSystems(self,filters):
+        # return a list of strings of the form:
+        #    label, dimension, degree, polynomials, field_label
         columns = 'label, degree, (original_model).coeffs, base_field_label'
         whereText = self.buildWhereText(filters)
         sql = "SELECT " + columns + " FROM functions_dim_1_NF" + whereText
         cur = self.connection.cursor()
         cur.execute(sql)
-        result = cur.fetchall()
-        cur.close()
-        new_result = []
-        for row in result:
+        # TODO: limit the total number that can be returned
+        result = []
+        mon_dict = {}
+        for row in cur:
             d = int(row[1])
-            mon=[]
-            for i in range(d+1):
-                if i == 0:
-                    mon.append('x^'+str(d))
-                elif i == d:
-                    mon.append('y^'+str(d))
-                else:
-                    if (d-i) == 1 and i == 1:
-                        mon.append('xy')
-                    elif i ==1:
-                        mon.append('x^'+str(d-i) + 'y')
-                    elif (d-i) == 1:
-                        mon.append('x' + 'y^' + str(i))
+            if d in mon_dict.keys():
+                mon = mon_dict[d]
+            else:
+                #create the monomial list
+                mon = []
+                for i in range(d+1):
+                    if i == 0:
+                        mon.append('x^'+str(d))
+                    elif i == d:
+                        mon.append('y^'+str(d))
                     else:
-                        mon.append('x^'+str(d-i) + 'y^'+str(i))
-            poly='['
+                        if (d-i) == 1 and i == 1:
+                            mon.append('xy')
+                        elif i ==1:
+                            mon.append('x^'+str(d-i) + 'y')
+                        elif (d-i) == 1:
+                            mon.append('x' + 'y^' + str(i))
+                        else:
+                            mon.append('x^'+str(d-i) + 'y^'+str(i))
+                mon_dict[d] = mon
+            poly = '['
             c = row[2]
             for j in range(2):
                 first_term = True
@@ -81,8 +88,9 @@ class PostgresConnector:
                 if j == 0:
                     poly += ' : '
             poly += ']'
-            new_result.append([row[0], '1', row[1], poly, row[3]])
-        return new_result
+            result.append([row[0], '1', row[1], poly, row[3]])
+        cur.close()
+        return result
 
     # gets a subset of the systems identified by the labels, input should be json list
     def getSelectedSystems(self,labels):
