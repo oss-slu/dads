@@ -8,7 +8,7 @@ export default function DataTable({ labels, data }) {
 
     return (
         <>
-            <table style={{ width: '500px' }}>
+            <table style={{ width: '900px' }}>
                 <thead>
                     <tr>
                         {

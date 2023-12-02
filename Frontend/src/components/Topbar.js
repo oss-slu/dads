@@ -37,7 +37,7 @@ export default function Topbar() {
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
 		<AppBar style={{ background: '#2E3B55' }}
-		    position="" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+		    position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
 		    <Toolbar>
 			<Typography style = {{textAlign: "center"}}variant="h7" noWrap component="div">
 			    Arithmetic Dynamical <br></br>Systems

@@ -2,7 +2,7 @@ import React from 'react';
 
 function AboutPage() {
   return (
-    <div style={{ marginLeft: '13em', padding: '25px'}}> {/*Scaling issues due to other static components, WIP*/}
+    <div className="padded-page"> {/*Scaling issues due to other static components, WIP*/}
       <div className = "header"><h2>About Us</h2></div>
       <div class="container">
 

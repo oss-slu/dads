@@ -247,7 +247,7 @@ function ExploreSystems({ width }) {
 
     return (
         <>
-            <div style={{ marginLeft: width }}>
+            <div style={{ marginLeft: "30px", marginTop: "70px"}}>
 
                 <div className="results-container" container>
 

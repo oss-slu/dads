@@ -171,3 +171,8 @@ p.sidebarHead {
 .table-component {
   margin: 10px;
 }
+.padded-page {
+    margin-top: 50px;
+    margin-left: 13px;
+    padding: 25px;
+}
