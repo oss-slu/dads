@@ -43,25 +43,8 @@ class PostgresConnector:
         cur = self.connection.cursor()
         cur.execute(sql)
         result = cur.fetchall()
-        cur.close()
-        return result
-
-    # gets a subset of the systems identified by the labels, input should be json list
-    def getSelectedSystems(self,labels):
-        labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
-        columns = '*'
-        sql = "SELECT " + columns + " FROM public.data WHERE label in " + labels
-        cur = self.connection.cursor()
-        cur.execute(sql)
-        result = cur.fetchall()
-        cur.close
-        return result
-    
-    def getStatistics(self,filters):
-        whereText = self.buildWhereText(filters)
         #number of maps
         sql = "SELECT COUNT( models_original_height) FROM public.data" + whereText 
-        cur = self.connection.cursor()
         cur.execute(sql)
         maps = cur.fetchall()
          #AUT
@@ -81,7 +64,19 @@ class PostgresConnector:
         cur.execute(sql)
         resultant = cur.fetchall()
         cur.close()
-        return [maps, aut, pcf, height, resultant]
+        cur.close()
+        return [result, maps, aut, pcf, height, resultant]
+
+    # gets a subset of the systems identified by the labels, input should be json list
+    def getSelectedSystems(self,labels):
+        labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
+        columns = '*'
+        sql = "SELECT " + columns + " FROM public.data WHERE label in " + labels
+        cur = self.connection.cursor()
+        cur.execute(sql)
+        result = cur.fetchall()
+        cur.close
+        return result
 
     def buildWhereText(self, filters):
         # remove empty filters

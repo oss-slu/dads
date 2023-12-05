@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import Pagination from 'react-bootstrap/Pagination';
 
 //component to render a dynamic tabel
 //labels is list of strings for column titles
@@ -8,7 +8,7 @@ export default function DataTable({ labels, data }) {
 
     return (
         <>
-            <table style={{ width: '900px' }}>
+            <table id="resultstable" className="table table-sm table-bordered table-striped" style={{ width: '700px' }}>
                 <thead>
                     <tr>
                         {
@@ -34,8 +34,17 @@ export default function DataTable({ labels, data }) {
                     }
                 </tbody>
             </table>
+	<Pagination size="lg">
+      		<Pagination.First />
+      		<Pagination.Prev />
+      		<Pagination.Item>{1}</Pagination.Item>
 
+      		<Pagination.Item active>{12}</Pagination.Item>
 
+      		<Pagination.Item>{20}</Pagination.Item>
+      		<Pagination.Next />
+      		<Pagination.Last />
+    	</Pagination>
         </>
     );
 }
