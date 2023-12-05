@@ -48,4 +48,3 @@ export default function DataTable({ labels, data }) {
         </>
     );
 }
-

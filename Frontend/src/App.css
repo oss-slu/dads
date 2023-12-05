@@ -172,6 +172,11 @@ p.sidebarHead {
   margin: 10px;
 }
 
+.padded-page {
+    margin-top: 50px;
+    margin-left: 13px;
+    padding: 25px;
+
 /* Pagination Container Styles */
 .custom-pagination {
   display: flex;
