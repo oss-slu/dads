@@ -21,9 +21,9 @@ function App() {
         </>}
 
         <Routes>
-          <Route index element={<AboutPage style={{ marginLeft: drawerWidth*2 }}/>} />
-          <Route path="exploreSystems" element={<ExploreSystems width={drawerWidth} />} />
-          <Route path="system/:label" element={<SystemDetails width={drawerWidth}/>}/>
+          <Route index element={<AboutPage/>} />
+          <Route path="exploreSystems" element={<ExploreSystems />} />
+          <Route path="system/:label" element={<SystemDetails/>}/>
         </Routes>
       </BrowserRouter>
 

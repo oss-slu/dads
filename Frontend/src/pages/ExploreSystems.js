@@ -9,7 +9,7 @@ import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 
 
-function ExploreSystems({ width }) {
+function ExploreSystems() {
     const [stats, setStat] = useState({
 
         numMaps:"",
@@ -243,7 +243,7 @@ function ExploreSystems({ width }) {
 
     return (
         <>
-            <div style={{ marginLeft: width }}>
+            <div>
                 <div className="results-container" container>
                     <Grid className="sidebar" item xs={3}>
 

@@ -115,6 +115,7 @@ code {
 /*Used in SystemDetails.js*/
 .info-container {
   padding: 10px;
+  padding-top: 80px;
 }
 
 /*Used in SystemDetails.js*/
@@ -147,7 +148,7 @@ p.sidebarHead {
 
 .results-container {
   height: fit-content;
-  padding-top: 20px;
+  padding-top: 80px;
   padding-left: 10px;
   padding-right: 10px;
   display: flex;
@@ -174,9 +175,9 @@ p.sidebarHead {
 
 .padded-page {
     margin-top: 50px;
-    margin-left: 13px;
+    margin-left: 1px;
     padding: 25px;
-
+}
 /* Pagination Container Styles */
 .custom-pagination {
   display: flex;

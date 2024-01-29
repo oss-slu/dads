@@ -44,7 +44,6 @@ export default function Topbar() {
 			</Typography>
 		    
 			<PageLink text="Home" link="/" icon={<HomeIcon />} />
-		        {/* <PageLink text="Family" link="/page1" icon={<CalculateIcon />} /> */}
 			<PageLink text="Dynamical Systems" link="/exploreSystems" icon={<FunctionsIcon />} />
 
 		    </Toolbar>
