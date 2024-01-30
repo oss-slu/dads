@@ -1,15 +1,17 @@
-import * as React from 'react';
-import Grid from '@mui/material/Grid';
-import Divider from '@mui/material/Divider';
-import DataTable from '../components/DataTable';
+import * as React from "react";
+import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
+import PaginatedDataTable from "../components/newDataTable";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { getFilteredSystems, getSelectedSystems, getStatistics } from '../api/routes';
+import { getFilteredSystems, getSelectedSystems} from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 
-function ExploreSystems({ width }) {
+
+function ExploreSystems() {
     const [stats, setStat] = useState({
+
         numMaps:"",
         avgAUT:"",
         numPCF:"", 
@@ -21,14 +23,16 @@ function ExploreSystems({ width }) {
         degree: [],
         is_polynomial: [],
         is_Lattes: [],
+
         is_Chebyshev:  [],
         is_Newton:  [],
         is_pcf: [],
         customDegree: "",
         customDimension: "",
-	    automorphism_group_cardinality: "",
+        automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
+
         indeterminacy_locus_dimension: ""
     });
     //add for error notice
@@ -64,7 +68,7 @@ function ExploreSystems({ width }) {
     };
     //add for error notice
 
-	let connectionStatus = true;
+    let connectionStatus = true;
 
     const [systems, setSystems] = useState(null);
 
@@ -97,6 +101,7 @@ function ExploreSystems({ width }) {
                 a.setAttribute('download', 'results.csv');
                 a.click()
             }
+
         }catch (error) {
             reportMajorError('An error occurred while fetching the data.');
             console.error(error);
@@ -116,24 +121,21 @@ function ExploreSystems({ width }) {
             }
         }
         try {
-
             //filters need to have right names to work for backend
-            const result = await getSelectedSystems(
-                {
-                    labels: labels
-                }
-            )
-            return result.data
-
+            const result = await getSelectedSystems({
+                labels: labels,
+            });
+            return result.data;
         } catch (error) {
-            console.log(error)
-            return []
+            console.log(error);
+            return [];
         }
     };
 
     const fetchFilteredSystems = async () => {
         try {
             //filters need to have right names to work for backend
+
             const result = await getFilteredSystems(
                 {
                     degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
@@ -149,39 +151,14 @@ function ExploreSystems({ width }) {
                     indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
                 }
             )
-            fetchStatistics();
-            setSystems(result.data);
+            setSystems(result.data[0]);
+            setStat((previousState => {
+                return { ...previousState, numMaps:result.data[1], avgAUT:Math.round(result.data[2]*100)/100, numPCF:result.data[3], avgHeight:Math.round(result.data[4]*100)/100, avgResultant:Math.round(result.data[5]*100)/100}
+              }))
         } catch (error) {
             setSystems(null);
             reportMajorError("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly");
 		    connectionStatus = false;
-            console.log(error)
-        }
-    };
-
-    const fetchStatistics = async () => {
-        try {
-            const result = await getStatistics({
-                degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
-                N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
-                is_polynomial: filters.is_polynomial,
-                is_Lattes: filters.is_Lattes,
-                is_Chebyshev: filters.is_Chebyshev,
-                is_Newton: filters.is_Newton,
-                is_pcf: filters.is_pcf,
-                automorphism_group_cardinality: filters.automorphism_group_cardinality,
-                base_field_label: filters.base_field_label,
-                base_field_degree: filters.base_field_degree,
-                indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
-            })
-        setStat((previousState => {
-            return { ...previousState, numMaps:result.data[0], avgAUT:Math.round(result.data[1]*100)/100, numPCF:result.data[2], avgHeight:Math.round(result.data[3]*100)/100, avgResultant:Math.round(result.data[4]*100)/100}
-          }))
-        }
-        catch (error) {
-            setStat((previousState => {
-                return { ...previousState, numMaps:0, numPCF:0, avgHeight:0, numNewton:0, avgResultant:0 }
-              }))
             console.log(error)
         }
     };
@@ -194,80 +171,130 @@ function ExploreSystems({ width }) {
         let el = event.target;
         el.parentElement.querySelector(".nested").classList.toggle("active");
         el.classList.toggle("caret-down");
-    }
+    };
 
     //used to update a boolean filter, filter is [] if false so that it doesn't matter
     //assumes defaulted to false (UNCHECKED)
     const booleanFilter = (filterName) => {
         if (filters[filterName].length === 0) {
-            setFilters({ ...filters, [filterName]: [true] })
+            setFilters({ ...filters, [filterName]: [true] });
+        } else {
+            setFilters({ ...filters, [filterName]: [] });
         }
-        else {
-            setFilters({ ...filters, [filterName]: [] })
-        }
-    }
+    };
 
     //used to set a filter property, replacing it with the old value
     const replaceFilter = (filterName, filterValue) => {
-        setFilters({ ...filters, [filterName]: filterValue })
-    }
+        setFilters({ ...filters, [filterName]: filterValue });
+    };
 
     //used to add to a filter property that can contain multiple values
     const appendFilter = (filterName, filterValue) => {
-
         //remove it from list
         if (filters[filterName].includes(filterValue)) {
-            setFilters({ ...filters, [filterName]: filters[filterName].filter(item => item !== filterValue) })
+            setFilters({
+                ...filters,
+                [filterName]: filters[filterName].filter(
+                    (item) => item !== filterValue
+                ),
+            });
         }
         //add it to list
         else {
-            filters[filterName].push(filterValue)
+            filters[filterName].push(filterValue);
         }
-    }
+    };
 
     const textBoxStyle = {
         width: "60px",
-        marginRight: "12px"
-    }
-    
+        marginRight: "12px",
+    };
+
     const buttonStyle = {
-	border: "none",
-	backgroundColor: "#376dc4",
-	color: "white",
-	cursor: "pointer",
-	fontSize: "15px",
-	padding: "6px 75px",
-	borderRadius: "4px",
-    }
+        border: "none",
+        backgroundColor: "#376dc4",
+        color: "white",
+        cursor: "pointer",
+        fontSize: "15px",
+        padding: "6px 75px",
+        borderRadius: "4px",
+    };
 
     const sendFilters = () => {
-	setSystems(null);
-	fetchFilteredSystems();
+        setSystems(null);
+        fetchFilteredSystems();
     };
+    
+    const [pagesPer, setPagesPer] = useState('20');
+
+    const [pagesDisplay, setPagesDisplay] = useState('20');
+
+    const handlePagePerChange = (event) => {
+    // Update the state with the selected value
+    if (event.target.value == 'All'){
+	setPagesPer(systems.length);
+	setPagesDisplay("All");
+    } else {
+	setPagesPer(event.target.value);
+	setPagesDisplay(event.target.value);
+    }
+  };
+
 
     return (
         <>
-            <div style={{ marginLeft: width }}>
-
+            <div>
                 <div className="results-container" container>
-
                     <Grid className="sidebar" item xs={3}>
+
 
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p class = "sidebarHead">Filters</p>
-                            <Divider />
+                             <Divider />
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Dimension</span>
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Dimension
+                                    </span>
                                     <ul className="nested">
-                                        <input type="checkbox" onClick={() => appendFilter('dimension', 1)} />
-                                        <label>P<sup>1</sup> {String.fromCharCode(8594)} P<sup>1</sup></label>
+                                        <input
+                                            type="checkbox"
+                                            onClick={() =>
+                                                appendFilter("dimension", 1)
+                                            }
+                                        />
+                                        <label>
+                                            P<sup>1</sup>{" "}
+                                            {String.fromCharCode(8594)} P
+                                            <sup>1</sup>
+                                        </label>
                                         <br />
-                                        <input type="checkbox" onClick={() => appendFilter('dimension', 2)} />
-                                        <label>P<sup>2</sup> {String.fromCharCode(8594)} P<sup>2</sup></label>
+                                        <input
+                                            type="checkbox"
+                                            onClick={() =>
+                                                appendFilter("dimension", 2)
+                                            }
+                                        />
+                                        <label>
+                                            P<sup>2</sup>{" "}
+                                            {String.fromCharCode(8594)} P
+                                            <sup>2</sup>
+                                        </label>
                                         <br />
-                                        <input type="number" style={textBoxStyle}
-                                            onChange={(event) => replaceFilter('customDimension', event.target.value)} />
+                                        <input
+                                            type="number"
+                                            style={textBoxStyle}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "customDimension",
+                                                    event.target.value
+                                                )
+                                            }
+                                        />
                                         <label>Custom</label>
                                         <br />
                                     </ul>
@@ -275,19 +302,48 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Degree</span>
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Degree
+                                    </span>
                                     <ul className="nested">
-                                        <input type="checkbox" onClick={() => appendFilter('degree', 2)} />
+                                        <input
+                                            type="checkbox"
+                                            onClick={() =>
+                                                appendFilter("degree", 2)
+                                            }
+                                        />
                                         <label>2</label>
                                         <br />
-                                        <input type="checkbox" onClick={() => appendFilter('degree', 3)} />
+                                        <input
+                                            type="checkbox"
+                                            onClick={() =>
+                                                appendFilter("degree", 3)
+                                            }
+                                        />
                                         <label>3</label>
                                         <br />
-                                        <input type="checkbox" onClick={() => appendFilter('degree', 4)} />
+                                        <input
+                                            type="checkbox"
+                                            onClick={() =>
+                                                appendFilter("degree", 4)
+                                            }
+                                        />
                                         <label>4</label>
                                         <br />
-                                        <input type="number" style={textBoxStyle}
-                                            onChange={(event) => replaceFilter('customDegree', event.target.value)} />
+                                        <input
+                                            type="number"
+                                            style={textBoxStyle}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "customDegree",
+                                                    event.target.value
+                                                )
+                                            }
+                                        />
                                         <label>Custom</label>
                                         <br />
                                     </ul>
@@ -295,7 +351,13 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Class</span>
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Class
+                                    </span>
                                     <ul className="nested">
                                         <input type="checkbox" />
                                         <label>Function</label>
@@ -308,18 +370,44 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Type</span>
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Type
+                                    </span>
                                     <ul className="nested">
-                                        <input type="checkbox" onClick={() => booleanFilter('is_polynomial')} />
+                                        <input
+                                            type="checkbox"
+                                            onClick={() =>
+                                                booleanFilter("is_polynomial")
+                                            }
+                                        />
                                         <label>Polynomial</label>
                                         <br />
-                                        <input type="checkbox" onClick={() => booleanFilter('is_Lattes')}/>
+                                        <input
+                                            type="checkbox"
+                                            onClick={() =>
+                                                booleanFilter("is_Lattes")
+                                            }
+                                        />
                                         <label>Lattes</label>
                                         <br />
-                                        <input type="checkbox" onClick={() => booleanFilter('is_Chebyshev')}/>
+                                        <input
+                                            type="checkbox"
+                                            onClick={() =>
+                                                booleanFilter("is_Chebyshev")
+                                            }
+                                        />
                                         <label>Chebyshev</label>
                                         <br />
-                                        <input type="checkbox" onClick={() => booleanFilter('is_Newton')} />
+                                        <input
+                                            type="checkbox"
+                                            onClick={() =>
+                                                booleanFilter("is_Newton")
+                                            }
+                                        />
                                         <label>Newton</label>
                                         <br />
                                     </ul>
@@ -327,33 +415,61 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Field of Definition</span>
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Field of Definition
+                                    </span>
                                     <ul className="nested">
-                                    <input 
-                                        type="number" 
-                                        style={textBoxStyle} 
-                                        onChange={(event) => replaceFilter('base_field_degree', event.target.value)}
-                                    />
-                                    <label>Degree</label>
-                                    <br />
-                                    <input 
-                                        type="text" 
-                                        style={textBoxStyle} 
-                                        onChange={(event) => replaceFilter('base_field_label', event.target.value)}
-                                    />
-                                    <label>Label</label>
-                                    <br />
+                                        <input
+                                            type="number"
+                                            style={textBoxStyle}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "base_field_degree",
+                                                    event.target.value
+                                                )
+                                            }
+                                        />
+                                        <label>Degree</label>
+                                        <br />
+                                        <input
+                                            type="text"
+                                            style={textBoxStyle}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "base_field_label",
+                                                    event.target.value
+                                                )
+                                            }
+                                        />
+                                        <label>Label</label>
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Rational Periodic Points</span>
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Rational Periodic Points
+                                    </span>
                                     <ul className="nested">
-                                        <input type="text" style={textBoxStyle} />
+                                        <input
+                                            type="text"
+                                            style={textBoxStyle}
+                                        />
                                         <label>Cardinality</label>
                                         <br />
-                                        <input type="text" style={textBoxStyle} />
+                                        <input
+                                            type="text"
+                                            style={textBoxStyle}
+                                        />
                                         <label>Largest Cycle</label>
                                         <br />
                                     </ul>
@@ -361,18 +477,38 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Rational Preperiodic Points</span>
-                                    <ul className="nested">
-                                    </ul>
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Rational Preperiodic Points
+                                    </span>
+                                    <ul className="nested"></ul>
                                 </li>
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Automorphism Group</span>
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Automorphism Group
+                                    </span>
                                     <ul className="nested">
-	    				                <input type="number" style={textBoxStyle} onChange={(event) => replaceFilter('automorphism_group_cardinality', event.target.value)} />
-	    				                <label>Cardinality</label>
-	    				                <br />
+                                        <input
+                                            type="number"
+                                            style={textBoxStyle}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "automorphism_group_cardinality",
+                                                    event.target.value
+                                                )
+                                            }
+                                        />
+                                        <label>Cardinality</label>
+                                        <br />
                                     </ul>
                                 </li>
                             </ul>
@@ -417,54 +553,121 @@ function ExploreSystems({ width }) {
                             </ul>
 
                             <ul id="myUL">
-                                <li><span className="caret" onClick={toggleTree}>Indeterminacy Locus</span>
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Indeterminacy Locus
+                                    </span>
                                     <ul className="nested">
-                                    <input 
-                                        type="number" 
-                                        style={textBoxStyle} 
-                                        onChange={(event) => replaceFilter('indeterminacy_locus_dimension', event.target.value)}
-                                    />
-                                    <label>Dimension</label>
+                                        <input
+                                            type="number"
+                                            style={textBoxStyle}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "indeterminacy_locus_dimension",
+                                                    event.target.value
+                                                )
+                                            }
+                                        />
+                                        <label>Dimension</label>
                                     </ul>
                                 </li>
                             </ul>
-	    			
-	    		            <ul id="myUL">
-	    			            <li><button style={buttonStyle} onClick={sendFilters}>Get Results</button>
-	    			            </li>
-	    		            </ul>
-                            <br />
 
+                            <ul id="myUL">
+                                <li>
+                                    <button
+                                        style={buttonStyle}
+                                        onClick={sendFilters}
+                                    >
+                                        Get Results
+                                    </button>
+                                </li>
+                            </ul>
+                            <br />
                         </div>
                     </Grid>
 
-                    <Grid className="results-table" item xs={6} >
-                        <span style={{ float: "right", color: "red", cursor: 'pointer' }} onClick={() => downloadCSV()}>Download</span>
-                        <p style={{ textAlign: "center", marginTop: 0 }}>Results</p>
-                        <DataTable
-                            labels={['Label', 'Domain', 'Degree', 'Polynomials', 'Field']}
-                            data={systems === null ? [] :
-                                systems.map(x =>
-                                    [
-                                        <Link to={`/system/${x[0]}/`} style={{ color: "red", textDecoration: "none" }}>{x[0]}</Link>,
-                                        <>P<sup>{x[1]}</sup> {String.fromCharCode(8594)} P<sup>{x[1]}</sup></>,
-                                        x[2],
-                                        x[3],
-                                        <span style={{ color: "red" }}>{x[4]}</span>
-                                    ]
-                                )
+                    <Grid className="results-table" item xs={6}>
+                        <span
+                            style={{
+                                float: "right",
+                                color: "red",
+                                cursor: "pointer",
+                            }}
+                            onClick={() => downloadCSV()}
+                        >
+                            Download
+                        </span>
+                        <p style={{ textAlign: "center", marginTop: 0 }}>
+                            Results
+                        </p>
+			<label for="pages">Results Per Page:</label>	
+			<select id="pages" name="pages"  value={pagesDisplay} onChange={handlePagePerChange}>
+			    <option value="10">10</option>
+			    <option value="20">20</option>
+			    <option value="50">50</option>
+			    <option value="100">100</option>
+			    <option value="All">All</option>
+			</select>
+			<p></p>
+                        <PaginatedDataTable
+                            labels={[
+                                "Label",
+                                "Domain",
+                                "Degree",
+                                "Polynomials",
+                                "Field",
+                            ]}
+                            data={
+                                systems === null
+                                    ? []
+                                    : systems.map((x) => [
+                                          <Link
+                                              to={`/system/${x[0]}/`}
+                                              style={{
+                                                  color: "red",
+                                                  textDecoration: "none",
+                                              }}
+                                          >
+                                              {x[0]}
+                                          </Link>,
+                                          <>
+                                              P<sup>{x[1]}</sup>{" "}
+                                              {String.fromCharCode(8594)} P
+                                              <sup>{x[1]}</sup>
+                                          </>,
+                                          x[2],
+                                          x[3],
+                                          <span style={{ color: "red" }}>
+                                              {x[4]}
+                                          </span>,
+                                      ])
                             }
+                            itemsPerPage={pagesPer} // You can adjust the number of items per page as needed
                         />
 
-                        {connectionStatus === false ? <p style = {{color: 'red'}}>DATABASE CONNECTION ERROR</p>: <></>}
-                        {systems != null && systems.length === 0 ? <p>No data meets that criteria</p> : <></>}
+                        {connectionStatus === false ? (
+                            <p style={{ color: "red" }}>
+                                DATABASE CONNECTION ERROR
+                            </p>
+                        ) : (
+                            <></>
+                        )}
+                        {systems != null && systems.length === 0 ? (
+                            <p>No data meets that criteria</p>
+                        ) : (
+                            <></>
+                        )}
                     </Grid>
 
                     <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p class = "sidebarHead" >RESULT STATISTICS </p>
                             <Divider />
-                            
+
                             <br />
                             <div className = 'statcontainer'>
                                 <label>Number of Maps: </label>
@@ -545,7 +748,7 @@ function ExploreSystems({ width }) {
                 errorMessage={generalError}
             />
         </>
-    )
+    );
 }
 
 export default ExploreSystems;
