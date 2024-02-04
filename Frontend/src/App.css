@@ -115,7 +115,6 @@ code {
 /*Used in SystemDetails.js*/
 .info-container {
   padding: 10px;
-  padding-top: 80px;
 }
 
 /*Used in SystemDetails.js*/
@@ -148,7 +147,7 @@ p.sidebarHead {
 
 .results-container {
   height: fit-content;
-  padding-top: 80px;
+  padding-top: 20px;
   padding-left: 10px;
   padding-right: 10px;
   display: flex;
@@ -171,51 +170,4 @@ p.sidebarHead {
 /*Used in InfoTable.js ModelTable.js MultiplierInvariants.js rationalpointstable.js*/
 .table-component {
   margin: 10px;
-}
-
-.padded-page {
-    margin-top: 50px;
-    margin-left: 1px;
-    padding: 25px;
-}
-/* Pagination Container Styles */
-.custom-pagination {
-  display: flex;
-  justify-content: center;
-  padding-left: 0;
-  list-style: none;
-}
-
-/* Pagination Item Styles */
-.custom-pagination .page-item {
-  margin: 0 2px;
-}
-
-.custom-pagination .page-item .page-link {
-  color: #007bff;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 5px 10px;
-}
-
-.custom-pagination .page-item.active .page-link {
-  z-index: 3;
-  color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-.custom-pagination .page-item.disabled .page-link {
-  color: #6c757d;
-  pointer-events: none;
-  background-color: #fff;
-  border-color: #ddd;
-}
-
-.even-row {
-  background-color: #d0d6db; /* Set the background color for even rows */
-}
-
-.odd-row {
-  background-color: #ffffff; /* Set the background color for odd rows */
 }

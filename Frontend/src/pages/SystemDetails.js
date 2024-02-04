@@ -12,7 +12,7 @@ import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPoi
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
 import CitationsTable from '../components/FunctionDetail/CitationsTable'
 
-function SystemDetails() {
+function SystemDetails({ width }) {
 
     const [data, setData] = useState([]);
     const label = useParams().label;
@@ -40,7 +40,7 @@ function SystemDetails() {
   console.log(data)
     return (
         <>
-            <div>
+            <div style={{ marginLeft: width }}>
                 <div className="info-container">
             <div className="row">
               <InfoTable data = {data}/>
