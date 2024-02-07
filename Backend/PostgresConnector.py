@@ -12,13 +12,14 @@ class PostgresConnector:
 
         self.connection = psycopg2.connect(
                 host="localhost",
-                dbname="dynamSystems",
-                user="postgres",
-                password="docker")
+                dbname="dad",
+                user="dad_user",
+                password="dad_pass",
+                port = "5432")
 
     def getAllSystems(self):
         columns = '*'
-        sql = "SELECT " + columns + " FROM public.data"
+        sql = "SELECT " + columns + " FROM functions_dim_1_NF"
         cur = self.connection.cursor()
         cur.execute(sql)
         result = cur.fetchall()
@@ -28,7 +29,7 @@ class PostgresConnector:
     # gets a system identified by its label, input is string
     def getSystem(self,label):
         columns = '*'
-        sql = "SELECT " + columns + " FROM public.data WHERE label = '" + label + "'"
+        sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label = '" + label + "'"
         cur = self.connection.cursor()
         cur.execute(sql)
         result = cur.fetchall()
@@ -37,46 +38,106 @@ class PostgresConnector:
 
     # gets systems that match the passed in filters, input should be json object
     def getFilteredSystems(self,filters):
-        columns = 'label, N, degree, models_original_polys_val, base_field_latex'
+        # return a list of strings of the form:
+        #    label, dimension, degree, polynomials, field_label
+        # new_filters=filters
+        # stats= self.getStatistics(new_filters)
+        # #
+
+        columns = 'label, degree, (original_model).coeffs, base_field_label'
+        dims = filters['N']
+        del filters['N']
         whereText = self.buildWhereText(filters)
-        sql = "SELECT " + columns + " FROM public.data" + whereText
-        cur = self.connection.cursor()
-        cur.execute(sql)
-        result = cur.fetchall()
-        #number of maps
-        sql = "SELECT COUNT( models_original_height) FROM public.data" + whereText 
-        cur.execute(sql)
-        maps = cur.fetchall()
-         #AUT
-        sql = "SELECT AVG(automorphism_group_cardinality::int) FROM public.data" + whereText 
-        cur.execute(sql)
-        aut = cur.fetchall()
-        #number of PCF
-        sql = "SELECT SUM(is_PCF::int) FROM public.data" + whereText 
-        cur.execute(sql)
-        pcf = cur.fetchall()
-        #Average Height
-        sql = "SELECT AVG( models_original_height) FROM public.data" + whereText 
-        cur.execute(sql)
-        height = cur.fetchall()
-        #Average Resultant
-        sql = "SELECT AVG( models_original_resultant) FROM public.data" + whereText 
-        cur.execute(sql)
-        resultant = cur.fetchall()
-        cur.close()
-        cur.close()
-        return [result, maps, aut, pcf, height, resultant]
+        stats= self.getStatistics(whereText)
+        result = []
+        if dims == [] or 1 in dims:
+            sql = "SELECT " + columns + " FROM functions_dim_1_NF" + whereText
+            cur = self.connection.cursor()
+            cur.execute(sql)
+            # TODO: limit the total number that can be returned
+            mon_dict = {}
+            for row in cur:
+                d = int(row[1])
+                if d in mon_dict.keys():
+                    mon = mon_dict[d]
+                else:
+                    #create the monomial list
+                    mon = []
+                    for i in range(d+1):
+                        if i == 0:
+                            mon.append('x^'+str(d))
+                        elif i == d:
+                            mon.append('y^'+str(d))
+                        else:
+                            if (d-i) == 1 and i == 1:
+                                mon.append('xy')
+                            elif i ==1:
+                                mon.append('x^'+str(d-i) + 'y')
+                            elif (d-i) == 1:
+                                mon.append('x' + 'y^' + str(i))
+                            else:
+                                mon.append('x^'+str(d-i) + 'y^'+str(i))
+                    mon_dict[d] = mon
+                poly = '['
+                c = row[2]
+                for j in range(2):
+                    first_term = True
+                    for i in range(d+1):
+                        if c[j][i] != '0':
+                            if c[j][i][0] != '-' and not first_term:
+                                poly += '+'
+                            if c[j][i] == '1':
+                                poly += mon[i]
+                            elif c[j][i] == '-1':
+                                poly += '-'+ mon[i]
+                            else:
+                                poly += c[j][i] + mon[i]
+                            first_term = False
+                    if j == 0:
+                        poly += ' : '
+                poly += ']'
+                result.append([row[0], '1', row[1], poly, row[3]])
+            cur.close()
+
+        return result,stats
 
     # gets a subset of the systems identified by the labels, input should be json list
     def getSelectedSystems(self,labels):
         labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
         columns = '*'
-        sql = "SELECT " + columns + " FROM public.data WHERE label in " + labels
+        sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label in " + labels
         cur = self.connection.cursor()
         cur.execute(sql)
         result = cur.fetchall()
         cur.close
         return result
+    
+    def getStatistics(self,whereText):
+
+        # whereText = self.buildWhereText(filters)
+        #number of maps
+        sql = "SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF" + whereText 
+        cur = self.connection.cursor()
+        cur.execute(sql)
+        maps = cur.fetchall()
+         #AUT
+        sql = "SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF" + whereText 
+        cur.execute(sql)
+        aut = cur.fetchall()
+        #number of PCF
+        sql = "SELECT SUM(is_PCF::int) FROM functions_dim_1_NF" + whereText 
+        cur.execute(sql)
+        pcf = cur.fetchall()
+        #Average Height
+        sql = "SELECT AVG( (original_model).height ) FROM functions_dim_1_NF" + whereText 
+        cur.execute(sql)
+        height = cur.fetchall()
+        #Average Resultant
+        #sql = "SELECT AVG( (original_model).resultant ) FROM functions_dim_1_NF" + whereText 
+        #cur.execute(sql)
+        resultant = 0 #cur.fetchall()
+        #cur.close()
+        return [maps, aut, pcf, height, resultant]
 
     def buildWhereText(self, filters):
         # remove empty filters
