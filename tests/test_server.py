@@ -1,7 +1,7 @@
 import pytest
 from flask import json
 from unittest.mock import patch
-from server import app  # Make sure this import matches the structure of your project
+from server import app  
 
 @pytest.fixture
 def client():
