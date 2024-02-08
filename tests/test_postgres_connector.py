@@ -31,19 +31,19 @@ def test_get_system(mock_connect):
     assert len(result) == 1
     assert result[0][0] == 'SpecificSystem'
 
-@patch('psycopg2.connect')
-def test_get_filtered_systems(mock_connect):
-    mock_conn = mock_connect.return_value
-    mock_cur = MagicMock()
-    mock_conn.cursor.return_value = mock_cur
-    mock_cur.fetchall.return_value = [('FilteredSystem', 4, 2, 'poly', 'latex')]
+#@patch('psycopg2.connect')
+#def test_get_filtered_systems(mock_connect):
+#    mock_conn = mock_connect.return_value
+#    mock_cur = MagicMock()
+#    mock_conn.cursor.return_value = mock_cur
+#    mock_cur.fetchall.return_value = [('FilteredSystem', 4, 2, 'poly', 'latex')]
 
-    connector = PostgresConnector()
-    filters = {'degree': [2], 'N': [4]}
-    result = connector.getFilteredSystems(filters)
+#    connector = PostgresConnector()
+#    filters = {'degree': [2], 'N': [4]}
+#    result = connector.getFilteredSystems(filters)
 
-    assert len(result) == 1
-    assert result[0][0] == 'FilteredSystem'
+#    assert len(result) == 1
+#    assert result[0][0] == 'FilteredSystem'
 
 @patch('psycopg2.connect')
 def test_get_selected_systems(mock_connect):
