@@ -40,10 +40,15 @@ class PostgresConnector:
     def getFilteredSystems(self,filters):
         # return a list of strings of the form:
         #    label, dimension, degree, polynomials, field_label
+        # new_filters=filters
+        # stats= self.getStatistics(new_filters)
+        # #
+
         columns = 'label, degree, (original_model).coeffs, base_field_label'
         dims = filters['N']
         del filters['N']
         whereText = self.buildWhereText(filters)
+        stats= self.getStatistics(whereText)
         result = []
         if dims == [] or 1 in dims:
             sql = "SELECT " + columns + " FROM functions_dim_1_NF" + whereText
@@ -93,7 +98,8 @@ class PostgresConnector:
                 poly += ']'
                 result.append([row[0], '1', row[1], poly, row[3]])
             cur.close()
-        return result
+
+        return result,stats
 
     # gets a subset of the systems identified by the labels, input should be json list
     def getSelectedSystems(self,labels):
@@ -106,11 +112,9 @@ class PostgresConnector:
         cur.close
         return result
     
-    def getStatistics(self,filters):
-        dims = filters['N']
-        del filters['N']
-        # TODO: deal with dimensions
-        whereText = self.buildWhereText(filters)
+    def getStatistics(self,whereText):
+
+        # whereText = self.buildWhereText(filters)
         #number of maps
         sql = "SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF" + whereText 
         cur = self.connection.cursor()

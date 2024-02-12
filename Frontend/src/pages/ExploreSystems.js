@@ -151,9 +151,12 @@ function ExploreSystems() {
                     indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
                 }
             )
-            setSystems(result.data[0]);
+            console.log(result.data['results'])
+            console.log(result.data['statistics'])
+            console.log(result.data)
+            setSystems(result.data['results']);
             setStat((previousState => {
-                return { ...previousState, numMaps:result.data[1], avgAUT:Math.round(result.data[2]*100)/100, numPCF:result.data[3], avgHeight:Math.round(result.data[4]*100)/100, avgResultant:Math.round(result.data[5]*100)/100}
+                return { ...previousState, numMaps:result.data['statistics'][0], avgAUT:Math.round(result.data['statistics'][1]*100)/100, numPCF:result.data['statistics'][2], avgHeight:Math.round(result.data['statistics'][3]*100)/100, avgResultant:Math.round(result.data['statistics'][4]*100)/100}
               }))
         } catch (error) {
             setSystems(null);
