@@ -29,12 +29,16 @@ class PostgresConnector:
     # gets a system identified by its label, input is string
     def getSystem(self,label):
         columns = '*'
-        sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label = '" + label + "'"
-        cur = self.connection.cursor()
-        cur.execute(sql)
-        result = cur.fetchall()
-        cur.close()
-        return result
+        try:
+            sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label = '" + label + "'"
+            cur = self.connection.cursor()
+            cur.execute(sql)
+            result = cur.fetchall()
+        except Exception as e: 
+            return null
+        else:
+            cur.close()
+            return result
 
     # gets systems that match the passed in filters, input should be json object
     def getFilteredSystems(self,filters):
