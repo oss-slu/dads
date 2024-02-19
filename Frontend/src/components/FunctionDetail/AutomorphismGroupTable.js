@@ -6,8 +6,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-function createData(label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull) {
-  return { label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull };
+function createData(label, value) {
+  return { label, value };
 }
 
 const rows = [
