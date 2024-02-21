@@ -11,7 +11,7 @@ class PostgresConnector:
     def __init__(self):
 
         self.connection = psycopg2.connect(
-                host="localhost",
+                host="db",
                 dbname="dad",
                 user="dad_user",
                 password="dad_pass",
