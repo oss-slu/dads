@@ -160,7 +160,7 @@ function ExploreSystems() {
               }))
         } catch (error) {
             setSystems(null);
-            reportMajorError("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly");
+            reportMajorError("Error: Cannot execute requested filters");
 		    connectionStatus = false;
             console.log(error)
         }
