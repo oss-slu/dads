@@ -169,7 +169,8 @@ class PostgresConnector:
             height = 0
             resultant = 0
         finally:
-            cur.close()
+            if(cur):
+                cur.close()
             return [maps, aut, pcf, height, resultant]
 
     def buildWhereText(self, filters):
