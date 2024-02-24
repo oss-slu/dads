@@ -16,6 +16,14 @@ class PostgresConnector:
                 user="dad_user",
                 password="dad_pass",
                 port = "5432")
+                
+    def reconnect(self):
+        self.connection = psycopg2.connect(
+                host="localhost",
+                dbname="dad",
+                user="dad_user",
+                password="dad_pass",
+                port = "5432")
 
     def getAllSystems(self):
         columns = '*'
@@ -26,7 +34,7 @@ class PostgresConnector:
             result = cur.fetchall()
         except Exception as e:
             cur.close()
-            return NULL
+            return None
         else:
             cur.close()
             return result
@@ -40,9 +48,10 @@ class PostgresConnector:
             cur.execute(sql)
             result = cur.fetchall()
         except Exception as e:
-            result = NULL
-        cur.close()
-        return result
+            result = None
+        finally:
+            cur.close()
+            return result
 
     # gets systems that match the passed in filters, input should be json object
     def getFilteredSystems(self,filters):
@@ -53,6 +62,7 @@ class PostgresConnector:
         dims = filters['N']
         del filters['N']
         whereText = self.buildWhereText(filters)
+        cur = None
         try:
             stats= self.getStatistics(whereText)
             result = []
@@ -105,8 +115,14 @@ class PostgresConnector:
                     result.append([row[0], '1', row[1], poly, row[3]])
                 
         except Exception as e:
+            self.reconnect()
             result = []
-        cur.close()
+            stats = []
+        
+        finally:
+            if(cur):
+                cur.close()
+
         return result,stats
 
     # gets a subset of the systems identified by the labels, input should be json list
@@ -117,12 +133,13 @@ class PostgresConnector:
         cur = self.connection.cursor()
         cur.execute(sql)
         result = cur.fetchall()
-        cur.close
+        cur.close()
         return result
     
     def getStatistics(self,whereText):
         # whereText = self.buildWhereText(filters)
         #number of maps
+        cur = None
         try:
             sql = "SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF" + whereText 
             cur = self.connection.cursor()
@@ -144,19 +161,22 @@ class PostgresConnector:
             #sql = "SELECT AVG( (original_model).resultant ) FROM functions_dim_1_NF" + whereText 
             #cur.execute(sql)
             resultant = 0 #cur.fetchall()
-        #cur.close()
         except Exception as e:
+            reconnect()
             maps = 0
             aut = 0
             pcf = 0
             height = 0
             resultant = 0
-        return [maps, aut, pcf, height, resultant]
+        finally:
+            cur.close()
+            return [maps, aut, pcf, height, resultant]
 
     def buildWhereText(self, filters):
         # remove empty filters
+        #remove ILD because not currently in use
         for filter in filters.copy():
-            if not filters[filter] or filters[filter] == []:
+            if not filters[filter] or filters[filter] == [] or (filter =='indeterminacy_locus_dimension' and filters[filter] == "1"):
                 del filters[filter]
 
         if len(filters) == 0:
@@ -166,7 +186,10 @@ class PostgresConnector:
         conditions = []
 
         for filter, values in filters.items():
-            if filter in ['base_field_degree', 'automorphism_group_cardinality','indeterminacy_locus_dimension']:
+            if filter in ['indeterminacy_locus_dimension']:
+                    conditions.append("CAST(" + filter + " AS integer) IN (" + values + ")")
+
+            elif filter in ['base_field_degree', 'automorphism_group_cardinality']:
                 conditions.append("CAST(" + filter + " AS integer) IN (" + values + ")")
 
             elif filter in ['base_field_label']:
