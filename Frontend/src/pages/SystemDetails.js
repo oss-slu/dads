@@ -54,8 +54,8 @@ function SystemDetails() {
               <MultiplierInvariantsTable />
             </div>
             <div className="row">
-              <RationalPointsTable />
-              <AutomorphismGroupTable />
+              <RationalPointsTable data = {data}/>
+              <AutomorphismGroupTable data = {data}/>
             </div>
             <div className="row">
               <CriticalPointsTable />
