@@ -16,7 +16,7 @@ class PostgresConnector:
                 user="dad_user",
                 password="dad_pass",
                 port = "5432")
-                
+
     def reconnect(self):
         self.connection = psycopg2.connect(
                 host="localhost",
@@ -162,7 +162,7 @@ class PostgresConnector:
             #cur.execute(sql)
             resultant = 0 #cur.fetchall()
         except Exception as e:
-            reconnect()
+            self.reconnect()
             maps = 0
             aut = 0
             pcf = 0
