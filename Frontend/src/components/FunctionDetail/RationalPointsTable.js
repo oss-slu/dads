@@ -15,23 +15,23 @@ export default function RationalPointsTable({ data }) {
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
-            <TableCell align="right">{data[0]}</TableCell>
+            <TableCell align="right">{"N/A"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Cycle Sizes</b></TableCell>
-            <TableCell align="right">{data[0]}</TableCell>
+            <TableCell align="right">{"P1 -> P1"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Component Sizes</b></TableCell>
-            <TableCell align="right">{data[1]}</TableCell>
+            <TableCell align="right">{"N/A"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
-            <TableCell align="right">{data[1]}</TableCell>
+            <TableCell align="right">{"N/A"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
-            <TableCell align="right">{data[1]}</TableCell>
+            <TableCell align="right">{"N/A"}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

@@ -19,15 +19,15 @@ export default function AutomorphismGroupTable({ data }) {
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Structure</b></TableCell>
-            <TableCell align="right">{data[0]}</TableCell>
+            <TableCell align="right">{"trivial"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>As Matrices</b></TableCell>
-            <TableCell align="right">{data[1]}</TableCell>
+            <TableCell align="right">{"link"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Field of Definition</b></TableCell>
-            <TableCell align="right">{data[1]}</TableCell>
+            <TableCell align="right">{"QQ"}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
