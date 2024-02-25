@@ -8,6 +8,18 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default function AutomorphismGroupTable({ data }) {
+function createData(label, value) {
+  return { label, value };
+}
+
+const rows = [
+  createData('Cardinality', 1),
+  createData('Structure', 'trivial'),
+  createData('As Matrices', 'link'),
+  createData('Field of Definition', 'QQ'),
+];
+
+export default function InfoTable3() {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Automorphism Group</h3>
