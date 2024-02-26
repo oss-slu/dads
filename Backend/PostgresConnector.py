@@ -68,57 +68,57 @@ class PostgresConnector:
             result = []
             if dims == [] or 1 in dims:
                 sql = "SELECT " + columns + " FROM functions_dim_1_NF" + whereText
-                cur = self.connection.cursor()
-                cur.execute(sql)
-                # TODO: limit the total number that can be returned
-                mon_dict = {}
-                for row in cur:
-                    d = int(row[1])
-                    if d in mon_dict.keys():
-                        mon = mon_dict[d]
-                    else:
-                        #create the monomial list
-                        mon = []
-                        for i in range(d+1):
-                            if i == 0:
-                                mon.append('x^'+str(d))
-                            elif i == d:
-                                mon.append('y^'+str(d))
-                            else:
-                                if (d-i) == 1 and i == 1:
-                                    mon.append('xy')
-                                elif i ==1:
-                                    mon.append('x^'+str(d-i) + 'y')
-                                elif (d-i) == 1:
-                                    mon.append('x' + 'y^' + str(i))
+                with self.connection.cursor() as cur:
+                    cur.execute(sql)
+                    # TODO: limit the total number that can be returned
+                    mon_dict = {}
+                    for row in cur:
+                        d = int(row[1])
+                        if d in mon_dict.keys():
+                            mon = mon_dict[d]
+                        else:
+                            #create the monomial list
+                            mon = []
+                            for i in range(d+1):
+                                if i == 0:
+                                    mon.append('x^'+str(d))
+                                elif i == d:
+                                    mon.append('y^'+str(d))
                                 else:
-                                    mon.append('x^'+str(d-i) + 'y^'+str(i))
-                        mon_dict[d] = mon
-                    poly = '['
-                    c = row[2]
-                    for j in range(2):
-                        first_term = True
-                        for i in range(d+1):
-                            if c[j][i] != '0':
-                                if c[j][i][0] != '-' and not first_term:
-                                    poly += '+'
-                                if c[j][i] == '1':
-                                    poly += mon[i]
-                                elif c[j][i] == '-1':
-                                    poly += '-'+ mon[i]
-                                else:
-                                    poly += c[j][i] + mon[i]
-                                first_term = False
-                        if j == 0:
-                            poly += ' : '
-                    poly += ']'
-                    result.append([row[0], '1', row[1], poly, row[3]])
-                
+                                    if (d-i) == 1 and i == 1:
+                                        mon.append('xy')
+                                    elif i ==1:
+                                        mon.append('x^'+str(d-i) + 'y')
+                                    elif (d-i) == 1:
+                                        mon.append('x' + 'y^' + str(i))
+                                    else:
+                                        mon.append('x^'+str(d-i) + 'y^'+str(i))
+                            mon_dict[d] = mon
+                        poly = '['
+                        c = row[2]
+                        for j in range(2):
+                            first_term = True
+                            for i in range(d+1):
+                                if c[j][i] != '0':
+                                    if c[j][i][0] != '-' and not first_term:
+                                        poly += '+'
+                                    if c[j][i] == '1':
+                                        poly += mon[i]
+                                    elif c[j][i] == '-1':
+                                        poly += '-'+ mon[i]
+                                    else:
+                                        poly += c[j][i] + mon[i]
+                                    first_term = False
+                            if j == 0:
+                                poly += ' : '
+                        poly += ']'
+                        result.append([row[0], '1', row[1], poly, row[3]])
+                    
         except Exception as e:
-            self.reconnect()
+            self.connection.rollback()
             result = []
             stats = []
-        
+            
         finally:
             if(cur):
                 cur.close()
@@ -162,7 +162,7 @@ class PostgresConnector:
             #cur.execute(sql)
             resultant = 0 #cur.fetchall()
         except Exception as e:
-            self.reconnect()
+            self.connection.rollback()
             maps = 0
             aut = 0
             pcf = 0
