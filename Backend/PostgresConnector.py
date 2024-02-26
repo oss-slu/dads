@@ -25,15 +25,22 @@ class PostgresConnector:
         result = cur.fetchall()
         cur.close()
         return result
-
-    # gets a system identified by its label, input is string
-    def getSystem(self,label):
+    
+    def getSystem(self, label):
         columns = '*'
-        sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label = '" + label + "'"
-        cur = self.connection.cursor()
-        cur.execute(sql)
-        result = cur.fetchall()
-        cur.close()
+        sql = f"""
+            SELECT {columns}
+            FROM functions_dim_1_NF
+            JOIN rational_preperiodic_dim_1_nf ON functions_dim_1_NF.label = rational_preperiodic_dim_1_nf.function_label
+            JOIN graphs_dim_1_nf ON rational_preperiodic_dim_1_nf.graph_id = graphs_dim_1_nf.graph_id
+            WHERE functions_dim_1_NF.label = %s
+            """
+        
+        with self.connection.cursor() as cur:
+            cur.execute(sql, (label,))  
+            result = cur.fetchall()
+            print(result)
+
         return result
 
     # gets systems that match the passed in filters, input should be json object
