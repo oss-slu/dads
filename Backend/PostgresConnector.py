@@ -17,14 +17,6 @@ class PostgresConnector:
                 password="dad_pass",
                 port = "5432")
 
-    def reconnect(self):
-        self.connection = psycopg2.connect(
-                host="localhost",
-                dbname="dad",
-                user="dad_user",
-                password="dad_pass",
-                port = "5432")
-
     def getAllSystems(self):
         columns = '*'
         sql = "SELECT " + columns + " FROM functions_dim_1_NF"
