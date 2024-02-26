@@ -21,9 +21,9 @@ class PostgresConnector:
         columns = '*'
         sql = "SELECT " + columns + " FROM functions_dim_1_NF"
         try:
-            cur = self.connection.cursor()
-            cur.execute(sql)
-            result = cur.fetchall()
+            with self.connection.cursor() as cur:
+                cur.execute(sql)
+                result = cur.fetchall()
         except Exception as e:
             cur.close()
             return None
@@ -35,15 +35,14 @@ class PostgresConnector:
     def getSystem(self,label):
         columns = '*'
         sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label = '" + label + "'"
-        cur = self.connection.cursor()
         try:
-            cur.execute(sql)
-            result = cur.fetchall()
+            with self.connection.cursor() as cur:
+                cur.execute(sql)
+                result = cur.fetchall()
         except Exception as e:
             result = None
-        finally:
-            cur.close()
-            return result
+            self.connection.rollback()
+        return result
 
     # gets systems that match the passed in filters, input should be json object
     def getFilteredSystems(self,filters):
@@ -114,7 +113,6 @@ class PostgresConnector:
         finally:
             if(cur):
                 cur.close()
-
         return result,stats
 
     # gets a subset of the systems identified by the labels, input should be json list
@@ -122,37 +120,41 @@ class PostgresConnector:
         labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
         columns = '*'
         sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label in " + labels
-        cur = self.connection.cursor()
-        cur.execute(sql)
-        result = cur.fetchall()
-        cur.close()
-        return result
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute(sql)
+                result = cur.fetchall()
+        except:
+            self.connection.rollback()
+            result = None
+        finally:
+            return result
     
     def getStatistics(self,whereText):
         # whereText = self.buildWhereText(filters)
         #number of maps
         cur = None
         try:
-            sql = "SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF" + whereText 
-            cur = self.connection.cursor()
-            cur.execute(sql)
-            maps = cur.fetchall()
-            #AUT
-            sql = "SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF" + whereText 
-            cur.execute(sql)
-            aut = cur.fetchall()
-            #number of PCF
-            sql = "SELECT SUM(is_PCF::int) FROM functions_dim_1_NF" + whereText 
-            cur.execute(sql)
-            pcf = cur.fetchall()
-            #Average Height
-            sql = "SELECT AVG( (original_model).height ) FROM functions_dim_1_NF" + whereText 
-            cur.execute(sql)
-            height = cur.fetchall()
-            #Average Resultant
-            #sql = "SELECT AVG( (original_model).resultant ) FROM functions_dim_1_NF" + whereText 
-            #cur.execute(sql)
-            resultant = 0 #cur.fetchall()
+            with self.connection.cursor() as cur:
+                sql = "SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF" + whereText 
+                cur.execute(sql)
+                maps = cur.fetchall()
+                #AUT
+                sql = "SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF" + whereText 
+                cur.execute(sql)
+                aut = cur.fetchall()
+                #number of PCF
+                sql = "SELECT SUM(is_PCF::int) FROM functions_dim_1_NF" + whereText 
+                cur.execute(sql)
+                pcf = cur.fetchall()
+                #Average Height
+                sql = "SELECT AVG( (original_model).height ) FROM functions_dim_1_NF" + whereText 
+                cur.execute(sql)
+                height = cur.fetchall()
+                #Average Resultant
+                #sql = "SELECT AVG( (original_model).resultant ) FROM functions_dim_1_NF" + whereText 
+                #cur.execute(sql)
+                resultant = 0 #cur.fetchall()
         except Exception as e:
             self.connection.rollback()
             maps = 0
@@ -161,8 +163,6 @@ class PostgresConnector:
             height = 0
             resultant = 0
         finally:
-            if(cur):
-                cur.close()
             return [maps, aut, pcf, height, resultant]
 
     def buildWhereText(self, filters):
