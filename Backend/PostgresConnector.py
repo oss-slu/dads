@@ -25,10 +25,11 @@ class PostgresConnector:
                 cur.execute(sql)
                 result = cur.fetchall()
         except Exception as e:
-            cur.close()
-            return None
-        else:
-            cur.close()
+            self.connection.rollback()
+            result = None
+        finally:
+            if cur:
+                cur.close()
             return result
 
     # gets a system identified by its label, input is string
