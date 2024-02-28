@@ -1,4 +1,5 @@
 import psycopg2
+import psycopg2.extras
 
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
@@ -33,9 +34,9 @@ class PostgresConnector:
             return result
 
     # gets a system identified by its label, input is string
-    def getSystem(self,label):
+    def getSystem(self, id):
         columns = '*'
-        sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label = '" + label + "'"
+        sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE function_id = '" + id + "'"
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
@@ -50,7 +51,7 @@ class PostgresConnector:
         # return a list of strings of the form:
         #    label, dimension, degree, polynomials, field_label
 
-        columns = 'label, degree, (original_model).coeffs, base_field_label'
+        columns = 'function_id, sigma_one, sigma_two, sigma_three, ordinal, degree, (original_model).coeffs, base_field_label'
         dims = filters['N']
         del filters['N']
         whereText = self.buildWhereText(filters)
@@ -60,12 +61,13 @@ class PostgresConnector:
             result = []
             if dims == [] or 1 in dims:
                 sql = "SELECT " + columns + " FROM functions_dim_1_NF" + whereText
-                with self.connection.cursor() as cur:
+                with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
                     cur.execute(sql)
                     # TODO: limit the total number that can be returned
                     mon_dict = {}
                     for row in cur:
-                        d = int(row[1])
+                        print(row)
+                        d = int(row['degree'])
                         if d in mon_dict.keys():
                             mon = mon_dict[d]
                         else:
@@ -86,8 +88,8 @@ class PostgresConnector:
                                     else:
                                         mon.append('x^'+str(d-i) + 'y^'+str(i))
                             mon_dict[d] = mon
-                        poly = '['
-                        c = row[2]
+                        poly = []
+                        c = row['coeffs']
                         for j in range(2):
                             first_term = True
                             for i in range(d+1):
@@ -104,7 +106,8 @@ class PostgresConnector:
                             if j == 0:
                                 poly += ' : '
                         poly += ']'
-                        result.append([row[0], '1', row[1], poly, row[3]])
+                        label = '1.' + row['sigma_one'] + '.' + row['sigma_two'] + '.' + row['sigma_three'] + '.' + str(row['ordinal'])
+                        result.append([label, '1', d, poly, row['base_field_label'], row['function_id']])
                     
         except Exception as e:
             self.connection.rollback()
@@ -114,6 +117,7 @@ class PostgresConnector:
         finally:
             if(cur):
                 cur.close()
+
         return result,stats
 
     # gets a subset of the systems identified by the labels, input should be json list

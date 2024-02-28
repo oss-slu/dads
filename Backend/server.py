@@ -18,7 +18,7 @@ def data1():
 @app.route("/getSystem", methods=['POST', 'GET'])
 def data2():
     input = request.get_json()
-    data = connector.getSystem(input['label'])
+    data = connector.getSystem(input['id'])
     return jsonify(data)
 
 # expects json with attribute 'labels' and value as list of labels

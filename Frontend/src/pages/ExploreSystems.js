@@ -629,7 +629,7 @@ function ExploreSystems() {
                                     ? []
                                     : systems.map((x) => [
                                           <Link
-                                              to={`/system/${x[0]}/`}
+                                              to={`/system/${x[5]}/`}
                                               style={{
                                                   color: "red",
                                                   textDecoration: "none",

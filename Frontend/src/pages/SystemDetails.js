@@ -25,7 +25,7 @@ function SystemDetails() {
       try {
           const result = await getSystem(
               {
-                  label: label
+                  id: label
               }
           )
           setData(result.data[0])
