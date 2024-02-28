@@ -160,7 +160,7 @@ function ExploreSystems() {
               }))
         } catch (error) {
             setSystems(null);
-            reportMajorError("Error: CANNOT CONNECT TO DATABASE: Make sure Docker is running correctly");
+            reportMajorError("There was an error while fetching the information requested. Please contact the system administrator.");
 		    connectionStatus = false;
             console.log(error)
         }
