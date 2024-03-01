@@ -10,24 +10,24 @@ export const getSystems = () => axios({
 
 export const getSystem = (label) => axios({
     method: "post",
-    url: `http://${BASEURL}:5000/getSystem`,
+    url: `http://${BASEURL}:${BASEURL_PORT}/getSystem`,
     data: label
 })
     
 export const getSelectedSystems = (labels) => axios({
     method: "post",
-    url: `http://${BASEURL}:5000/getSelectedSystems`,
+    url: `http://${BASEURL}:${BASEURL_PORT}/getSelectedSystems`,
     data: labels
 })
 
 export const getFilteredSystems = (filters) => axios({
     method: "post",
-    url: `http://${BASEURL}:5000/getFilteredSystems`,
+    url: `http://${BASEURL}:${BASEURL_PORT}/getFilteredSystems`,
     data: filters
 })
 
 export const getStatistics = (filters) => axios({
     method: "post",
-    url: `http://${BASEURL}:5000/getStatistics`,
+    url: `http://${BASEURL}:${BASEURL_PORT}/getStatistics`,
     data: filters
 })
