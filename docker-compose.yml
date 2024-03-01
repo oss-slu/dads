@@ -8,19 +8,18 @@ services:
     container_name: dads_db
     # set shared memory limit when using docker-compose
     shm_size: 128mb
+    env_file:
+      - ./config.env
     environment:
-      POSTGRES_PASSWORD: dad_pass
-      POSTGRES_DB: dad
-      POSTGRES_USER: dad_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
     volumes:
-      - type: bind
-        source: ./pgdata
-        target: /var/lib/postgresql
-      # - ./pgdata:/var/lib/postgresql
+      - ./pgdata:/var/lib/postgresql
     ports:
-      - 5432:5432
+      - ${DB_PORT_FOR_BACKEND}:${DB_PORT_FOR_BACKEND}
     expose:
-      - 5432
+      - ${DB_PORT_FOR_BACKEND}
     networks:
       - backend_network
 
@@ -29,41 +28,46 @@ services:
       context: ./Backend
       dockerfile: Dockerfile
     restart: always
+    env_file:
+      - ./config.env
     container_name: dads_backend
     ports:
-      - 5000:5000
+      - ${BACKEND_PORT}:${BACKEND_PORT}
     networks:
       - frontend_network
       - backend_network
     depends_on:
       - db
     expose:
-      - 5000
+      - ${BACKEND_PORT}
+
 
   frontend:
     build:
       context: ./Frontend
       dockerfile: Dockerfile
     restart: always
+    env_file:
+      - ./config.env
     container_name: dads_frontend
     ports:
-      - 3000:3000
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
     networks:
       - frontend_network
       - backend_network
     expose:
-      - 3000
+      - ${FRONTEND_PORT}
     depends_on:
       - db
       - backend
 
-volumes:
-  pgdata:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: ./pgdata
+# volumes:
+#   pgdata:
+#     driver: local
+#     driver_opts:
+#       type: 'none'
+#       o: 'bind'
+#       device: ./pgdata
 
 networks:
   backend_network:

@@ -8,6 +8,9 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app
 COPY package-lock.json /usr/src/app
 
+ENV BACKEND_PORT=${BACKEND_PORT}
+ENV BACKEND_URL=${BACKEND_URL}
+
 # Install dependecies
 #RUN npm set progress=false \
 #    && npm config set depth 0 \
@@ -18,7 +21,7 @@ RUN npm ci
 COPY . /usr/src/app
 
 # Expose the port the app runs in
-EXPOSE 3000
+EXPOSE ${FRONTEND_PORT}
 
 # Serve the app
 CMD ["npm", "start"]

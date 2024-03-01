@@ -1,13 +1,37 @@
-from flask import Flask, jsonify, request, Response
+from flask import Flask, request, Response
 from flask_cors import CORS
 from PostgresConnector import PostgresConnector
 from flask_restful import Resource, Api
+from DBConnector import DB_URL, db
+from sqlalchemy import text
+from models.users_model import User
+from models.citation_model import CitationsModel
+# from models.families_dim_nf_1_model import FamiliesDimNF1Model
 
 app = Flask(__name__)
 CORS(app, origins=["*", "http://frontend:3000"])
 api = Api(app)
-connector = PostgresConnector()
+app.config["SQLALCHEMY_DATABASE_URI"] = DB_URL
+# connector = PostgresConnector()
+db.init_app(app)
 
+
+class Users(Resource):
+    
+    def get(self):
+        record = CitationsModel(label = "BFHJY2018",
+                                authors = ['Robert Benedetto', 'Xander Faber', 'Benjamin Hutz', 'Jamie Juul', 'Yu Yasafuku'],
+                                journal = 'Research in Number Theory',
+                                year = 2017,
+                                citation = "Robert Benedetto, Xander Faber, Benjamin Hutz, Jamie Juul, Yu Yasafuku. A large arboreal Galois representation for a cubic postcritically finite polynomial.",
+                                mathscinet = "MR3736808")
+        db.session.add(record)
+        db.session.commit()
+        # res = FamiliesDimNF1Model.query.all()
+        res = CitationsModel.query.all()
+        for i in res:
+            print(i)
+        return {"data" : "hello"}
 
 class Data1(Resource):
     
@@ -145,7 +169,11 @@ api.add_resource(Data2, "/getSystem")
 api.add_resource(Data3, "/getSelectedSystems")
 api.add_resource(Data4, "/getFilteredSystems")
 api.add_resource(Data5, "/getStatistics")
+api.add_resource(Users, "/users")
 
+
+with app.app_context():
+    db.create_all()
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug = True)

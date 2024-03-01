@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const BASEURL = "backend"
+const BASEURL = process.env.BACKEND_URL;
+const BASEURL_PORT = process.env.BACKEND_PORT;
 
 export const getSystems = () => axios({
     method: "get",
-    url: `http://${BASEURL}:5000/getAllSystems`,
+    url: `http://${BASEURL}:${BASEURL_PORT}/getAllSystems`,
 })
 
 export const getSystem = (label) => axios({
