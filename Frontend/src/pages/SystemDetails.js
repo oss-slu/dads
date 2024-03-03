@@ -14,7 +14,7 @@ import CitationsTable from '../components/FunctionDetail/CitationsTable'
 
 function SystemDetails() {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({});
     const label = useParams().label;
 
     useEffect(() => {
@@ -28,7 +28,7 @@ function SystemDetails() {
                   id: label
               }
           )
-          setData(result.data[0])
+          setData(result.data)
 
       } catch (error) {
           console.log(error)
@@ -54,8 +54,8 @@ function SystemDetails() {
               <MultiplierInvariantsTable />
             </div>
             <div className="row">
-              <RationalPointsTable />
-              <AutomorphismGroupTable />
+              <RationalPointsTable data = {data}/>
+              <AutomorphismGroupTable data = {data}/>
             </div>
             <div className="row">
               <CriticalPointsTable />
