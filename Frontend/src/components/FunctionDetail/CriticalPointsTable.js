@@ -6,33 +6,28 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-function createData(label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull) {
-  return { label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull };
-}
-
-const rows = [
-  createData('Cardinality', 2),
-  createData('Postcritically Finite?', 'False'),
-  createData('# Post Critical Set', 'Infinite'),
-  createData('Field of Definition', 'QQ'),
-];
-
-export default function CriticalPointsTable() {
+export default function RationalPointsTable({ data }) {
   return (
     <TableContainer className='table-component' component={Paper}>
-      <h3>Critical Points</h3>
+      <h3>Rational Preperiodic Points</h3>
       <Table aria-label="simple table">
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.label}
-            >
-              <TableCell component="th" scope="row">
-                <b>{row.label}</b>
-              </TableCell>
-              <TableCell align="right">{row.domain}</TableCell>
-            </TableRow>
-          ))}
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
+            <TableCell align="right">{"tmp"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Postcritically Finite?</b></TableCell>
+            <TableCell align="right">{String(data.is_pcf)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b># Post Critical Set</b></TableCell>
+            <TableCell align="right">{"tmp"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Field of Definition</b></TableCell>
+            <TableCell align="right">{"tmp"}</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

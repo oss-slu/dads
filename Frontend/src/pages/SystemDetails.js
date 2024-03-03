@@ -58,7 +58,7 @@ function SystemDetails() {
               <AutomorphismGroupTable data = {data}/>
             </div>
             <div className="row">
-              <CriticalPointsTable />
+              <CriticalPointsTable data = {data}/>
               <CriticalPointPortraitTable />
             </div>
             <div className="row">
