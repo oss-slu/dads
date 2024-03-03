@@ -35,15 +35,32 @@ class PostgresConnector:
 
     # gets a system identified by its label, input is string
     def getSystem(self, id):
-        columns = '*'
-        sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE function_id = '" + id + "'"
+        cur = None
         try:
-            with self.connection.cursor() as cur:
-                cur.execute(sql)
-                result = cur.fetchall()
+            sql = f"""
+                SELECT *
+                FROM functions_dim_1_NF
+                JOIN rational_preperiodic_dim_1_nf ON functions_dim_1_NF.function_id = rational_preperiodic_dim_1_nf.function_id
+                JOIN graphs_dim_1_nf ON rational_preperiodic_dim_1_nf.graph_id = graphs_dim_1_nf.graph_id
+                WHERE functions_dim_1_NF.function_id = %s
+                """
+            with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+                cur.execute(sql, (id,))
+                temp = cur.fetchone()  # Assuming you're expecting one row
+                if temp:
+                    label = '1.' + temp['sigma_one'] + '.' + temp['sigma_two'] + '.' + temp['sigma_three'] + '.' + str(temp['ordinal'])
+                    result = {'label': label, **temp}
+                else:
+                    result = {} 
+                    
         except Exception as e:
-            result = None
             self.connection.rollback()
+            result = {}
+            
+        finally:
+            if(cur):
+                cur.close()
+        print(result)
         return result
 
     # gets systems that match the passed in filters, input should be json object
@@ -66,7 +83,7 @@ class PostgresConnector:
                     # TODO: limit the total number that can be returned
                     mon_dict = {}
                     for row in cur:
-                        print(row)
+                        #print(row)
                         d = int(row['degree'])
                         if d in mon_dict.keys():
                             mon = mon_dict[d]
