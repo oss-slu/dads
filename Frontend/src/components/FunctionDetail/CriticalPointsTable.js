@@ -6,10 +6,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-export default function RationalPointsTable({ data }) {
+export default function CriticalPointsTable({ data }) {
   return (
     <TableContainer className='table-component' component={Paper}>
-      <h3>Rational Preperiodic Points</h3>
+      <h3>Critical Points</h3>
       <Table aria-label="simple table">
         <TableBody>
           <TableRow>
