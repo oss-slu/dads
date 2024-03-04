@@ -194,3 +194,6 @@ class PostgresConnector:
 
         filterText += " AND ".join(conditions)
         return filterText
+
+    def getModel(self, label):
+        # use  w3schools to determine appropriate joins. 
