@@ -45,14 +45,6 @@ function SystemDetails() {
             <div className="row">
               <InfoTable data = {data}/>
             </div>
-            <p>Data below here is all static</p>
-            <div className="row">
-              <InfoTable2 />
-              <InfoTable3 />
-            </div>
-            <div className="row">
-              <MultiplierInvariantsTable />
-            </div>
             <div className="row">
               <RationalPointsTable data = {data}/>
               <AutomorphismGroupTable data = {data}/>
