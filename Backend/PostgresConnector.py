@@ -3,8 +3,6 @@ import psycopg2.extras
 
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
-# might want to use database entry ID instead of label for identifying specific systems
-
 # gets all systems from the database
 
 class PostgresConnector:
@@ -42,14 +40,16 @@ class PostgresConnector:
         try:
             sql = f"""
                 SELECT *
-                FROM functions_dim_1_NF
-                JOIN rational_preperiodic_dim_1_nf ON functions_dim_1_NF.function_id = rational_preperiodic_dim_1_nf.function_id
+                FROM functions_dim_1_nf
+                JOIN rational_preperiodic_dim_1_nf ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id
                 JOIN graphs_dim_1_nf ON rational_preperiodic_dim_1_nf.graph_id = graphs_dim_1_nf.graph_id
-                WHERE functions_dim_1_NF.function_id = %s
+                LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true
+                LEFT JOIN citations ON citations.id = citation_id
+                WHERE functions_dim_1_nf.function_id = %s
                 """
             with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
                 cur.execute(sql, (id,))
-                temp = cur.fetchone()  # Assuming you're expecting one row
+                temp = cur.fetchone()
                 if temp:
                     label = self.constructLabel(temp)
                     result = {'label': label, **temp}

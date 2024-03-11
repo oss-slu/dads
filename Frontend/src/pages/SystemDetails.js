@@ -2,21 +2,16 @@ import { getSystem } from '../api/routes';
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import InfoTable from '../components/FunctionDetail/InfoTable'
-//import InfoTable3 from '../components/FunctionDetail/InfoTable3'
-//import InfoTable2 from '../components/FunctionDetail/InfoTable2'
 import RationalPointsTable from '../components/FunctionDetail/RationalPointsTable'
 import AutomorphismGroupTable from '../components/FunctionDetail/AutomorphismGroupTable'
-//import MultiplierInvariantsTable from '../components/FunctionDetail/MultiplierInvariantsTable'
 import CriticalPointsTable from '../components/FunctionDetail/CriticalPointsTable'
 import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPointPortraitTable'
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
 import CitationsTable from '../components/FunctionDetail/CitationsTable'
 
 function SystemDetails() {
-
     const [data, setData] = useState({});
     const label = useParams().label;
-
     useEffect(() => {
       fetchDataForCSV();
   },[]); 
@@ -29,13 +24,10 @@ function SystemDetails() {
               }
           )
           setData(result.data)
-
       } catch (error) {
           console.log(error)
           return []
-      }
-
-      
+      } 
   };
   console.log(data)
     return (
@@ -54,10 +46,10 @@ function SystemDetails() {
               <CriticalPointPortraitTable data = {data}/>
             </div>
             <div className="row">
-              <ModelsTable />
+              <ModelsTable/>
             </div>
             <div className="row">
-              <CitationsTable />
+              <CitationsTable data = {data}/>
             </div>
         </div>
             </div>

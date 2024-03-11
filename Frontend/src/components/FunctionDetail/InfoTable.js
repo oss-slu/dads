@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -33,7 +32,6 @@ export default function InfoTable({ data }) {
             <TableCell align="right">{"tmp"}</TableCell>
             <TableCell align="right">{"tmp"}</TableCell>
           </TableRow>
-
         </TableBody>
       </Table>
     </TableContainer>
