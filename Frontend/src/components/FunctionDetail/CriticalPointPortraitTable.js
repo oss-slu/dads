@@ -6,33 +6,28 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-function createData(label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull) {
-  return { label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull };
-}
-
-const rows = [
-  createData('Cardinality', 'Infiniti'),
-  createData('Cycle Sizes', 'N/A'),
-  createData('As Directed Graph', 'N/A'),
-  createData('Adjacency Matrix', 'N/A'),
-];
-
-export default function CriticalPointPortraitTable() {
+export default function CriticalPointPortraitTable({ data }) {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Critical Point Portrait</h3>
       <Table aria-label="simple table">
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.label}
-            >
-              <TableCell component="th" scope="row">
-                <b>{row.label}</b>
-              </TableCell>
-              <TableCell align="right">{row.domain}</TableCell>
-            </TableRow>
-          ))}
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
+            <TableCell align="right">{"tmp"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Cycle Sizes</b></TableCell>
+            <TableCell align="right">{"tmp"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
+            <TableCell align="right">{"tmp"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
+            <TableCell align="right">{"tmp"}</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

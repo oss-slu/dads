@@ -1,12 +1,12 @@
-import { getData, getFilterData, getSystems, getFilteredSystems, getSystem } from '../api/routes';
+import { getSystem } from '../api/routes';
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import InfoTable from '../components/FunctionDetail/InfoTable'
-import InfoTable3 from '../components/FunctionDetail/InfoTable3'
-import InfoTable2 from '../components/FunctionDetail/InfoTable2'
+//import InfoTable3 from '../components/FunctionDetail/InfoTable3'
+//import InfoTable2 from '../components/FunctionDetail/InfoTable2'
 import RationalPointsTable from '../components/FunctionDetail/RationalPointsTable'
 import AutomorphismGroupTable from '../components/FunctionDetail/AutomorphismGroupTable'
-import MultiplierInvariantsTable from '../components/FunctionDetail/MultiplierInvariantsTable'
+//import MultiplierInvariantsTable from '../components/FunctionDetail/MultiplierInvariantsTable'
 import CriticalPointsTable from '../components/FunctionDetail/CriticalPointsTable'
 import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPointPortraitTable'
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
@@ -51,7 +51,7 @@ function SystemDetails() {
             </div>
             <div className="row">
               <CriticalPointsTable data = {data}/>
-              <CriticalPointPortraitTable />
+              <CriticalPointPortraitTable data = {data}/>
             </div>
             <div className="row">
               <ModelsTable />
