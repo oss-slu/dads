@@ -26,7 +26,7 @@ export default function InfoTable({ data }) {
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row">{data.label}</TableCell>
-            <TableCell align="right">{"tmp"}</TableCell>
+            <TableCell align="right">{data.base_field_label}</TableCell>
             <TableCell align="right">{"tmp"}</TableCell>
             <TableCell align="right">{data.degree}</TableCell>
             <TableCell align="right">{"tmp"}</TableCell>

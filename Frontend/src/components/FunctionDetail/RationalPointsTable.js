@@ -7,6 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default function RationalPointsTable({ data }) {
+  
   const formatData = (key) => {
     const items = data[key];
     if (items && items.length > 0) {
