@@ -17,6 +17,9 @@ class PostgresConnector:
                 user="dad_user",
                 password="dad_pass",
                 port = "5432")
+        
+    def constructLabel(self, data): 
+        return '1.' + data['sigma_one'] + '.' + data['sigma_two'] + '.' + data['sigma_three'] + '.' + str(data['ordinal'])
 
     def getAllSystems(self):
         columns = '*'
@@ -48,7 +51,7 @@ class PostgresConnector:
                 cur.execute(sql, (id,))
                 temp = cur.fetchone()  # Assuming you're expecting one row
                 if temp:
-                    label = '1.' + temp['sigma_one'] + '.' + temp['sigma_two'] + '.' + temp['sigma_three'] + '.' + str(temp['ordinal'])
+                    label = self.constructLabel(temp)
                     result = {'label': label, **temp}
                 else:
                     result = {} 
@@ -123,7 +126,7 @@ class PostgresConnector:
                             if j == 0:
                                 poly += ' : '
                         poly += ']'
-                        label = '1.' + row['sigma_one'] + '.' + row['sigma_two'] + '.' + row['sigma_three'] + '.' + str(row['ordinal'])
+                        label = self.constructLabel(row)
                         result.append([label, '1', d, poly, row['base_field_label'], row['function_id']])
                     
         except Exception as e:

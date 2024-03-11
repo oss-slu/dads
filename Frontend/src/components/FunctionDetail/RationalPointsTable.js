@@ -7,6 +7,18 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default function RationalPointsTable({ data }) {
+  const formatData = (key) => {
+    const items = data[key];
+    if (items && items.length > 0) {
+      if (Array.isArray(items[0])) {
+        return `[${items[0].join(', ')}]`;
+      } else {
+        return `[${items.join(', ')}]`;
+      }
+    }
+    return '[]';
+  };
+
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Rational Preperiodic Points</h3>
@@ -22,11 +34,11 @@ export default function RationalPointsTable({ data }) {
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Preperiodic Components</b></TableCell>
-            <TableCell align="right">{data.preperiodic_components && data.preperiodic_components.length > 0 ? `[${data.preperiodic_components.join(', ')}]` : '[]'}</TableCell>
+            <TableCell align="right">{formatData('preperiodic_components')}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Rational Preperiodic Points</b></TableCell>
-            <TableCell align="right">{data.rational_periodic_points && data.rational_periodic_points.length > 0 ? `[${data.rational_periodic_points[0].join(', ')}]` : '[]'}</TableCell>
+            <TableCell align="right">{formatData('rational_periodic_points')}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
