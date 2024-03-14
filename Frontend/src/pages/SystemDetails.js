@@ -46,7 +46,7 @@ function SystemDetails() {
               <CriticalPointPortraitTable data = {data}/>
             </div>
             <div className="row">
-              <ModelsTable/>
+              <ModelsTable data = {data}/>
             </div>
             <div className="row">
               <CitationsTable data = {data}/>
