@@ -13,6 +13,7 @@ export default function ModelsTable({ data }) {
 
   return (
     <TableContainer className='table-component' component={Paper}>
+      <h3>Models:</h3>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>

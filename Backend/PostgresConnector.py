@@ -51,8 +51,8 @@ class PostgresConnector:
                 cur.execute(sql, (id,))
                 temp = cur.fetchone()
                 if temp:
-                    label = self.constructLabel(temp)
-                    result = {'label': label, **temp}
+                    modelLabel = self.constructLabel(temp)
+                    result = {'modelLabel': modelLabel, **temp}
                 else:
                     result = {} 
                     
