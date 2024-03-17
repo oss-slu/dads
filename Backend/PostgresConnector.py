@@ -183,12 +183,12 @@ class PostgresConnector:
         filtertext = ' WHERE '
         conditions = []
 
+        searchFields = {'base_field_degree', 'automorphism_group_cardinality'}
         for filter, values in filters.items():
             if filter in ['indeterminacy_locus_dimension']:
                 addtext = 'CAST(' + filter + ' AS integer) IN (' + values + ')'
                 conditions.append(addtext)
 
-            searchFields = {'base_field_degree', 'automorphism_group_cardinality'}
             elif filter in searchFields:
                 addtext = 'CAST(' + filter + ' AS integer) IN (' + values + ')'
                 conditions.append(addtext)
