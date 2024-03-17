@@ -25,13 +25,12 @@ class PostgresConnector:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
                 result = cur.fetchall()
-        except Exception as e:
+        except Exception:
             self.connection.rollback()
             result = None
-        finally:
-            if cur:
-                cur.close()
-            return result
+        if cur:
+            cur.close()
+        return result
 
     # gets a system identified by its label, input is string
     def getSystem(self,label):
@@ -41,7 +40,7 @@ class PostgresConnector:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
                 result = cur.fetchall()
-        except Exception as e:
+        except Exception:
             result = None
             self.connection.rollback()
         return result
@@ -107,13 +106,13 @@ class PostgresConnector:
                         poly += ']'
                         result.append([row[0], '1', row[1], poly, row[3]])
 
-        except Exception as e:
+        except Exception:
             self.connection.rollback()
             result = []
             stats = []
 
         finally:
-            if(cur):
+            if cur:
                 cur.close()
         return result,stats
 
@@ -129,8 +128,7 @@ class PostgresConnector:
         except:
             self.connection.rollback()
             result = None
-        finally:
-            return result
+        return result
 
     def getStatistics(self,whereText):
         # whereText = self.buildWhereText(filters)
@@ -157,15 +155,14 @@ class PostgresConnector:
                 #sql = 'SELECT AVG( (original_model).resultant ) FROM functions_dim_1_NF' + whereText
                 #cur.execute(sql)
                 resultant = 0 #cur.fetchall()
-        except Exception as e:
+        except Exception:
             self.connection.rollback()
             maps = 0
             aut = 0
             pcf = 0
             height = 0
             resultant = 0
-        finally:
-            return [maps, aut, pcf, height, resultant]
+        return [maps, aut, pcf, height, resultant]
 
     def buildWhereText(self, filters):
         # remove empty filters
@@ -175,7 +172,7 @@ class PostgresConnector:
                 del filters[filter]
         if len(filters) == 0:
             return ''
-        filterText = ' WHERE '
+        filtertext = ' WHERE '
         conditions = []
 
         for filter, values in filters.items():
@@ -191,5 +188,5 @@ class PostgresConnector:
             else:
                 conditions.append(filter + ' IN (' + ', '.join(str(e) for e in values) + ')')
 
-        filterText += ' AND '.join(conditions)
-        return filterText
+        filtertext += ' AND '.join(conditions)
+        return filtertext
