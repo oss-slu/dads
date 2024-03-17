@@ -121,10 +121,7 @@ class PostgresConnector:
     # gets a subset of the systems identified by the labels, 
     # input should be json list
     def getSelectedSystems(self,labels):
-        labels = (
-            '(' + ', '.join(["'" + str(item) "'" 
-            for item in labels])+ ')'
-        )
+        labels = '(' + ', '.join(["'" + str(item) "'" for item in labels])+ ')'
         columns = '*'
         sql = 'SELECT ' + columns 
         sql += ' FROM functions_dim_1_NF WHERE label in ' + labels
