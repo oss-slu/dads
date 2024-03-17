@@ -2,7 +2,8 @@ import psycopg2
 
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
-# might want to use database entry ID instead of label for identifying specific systems
+# might want to use database entry ID instead of label
+# for identifying specific systems
 
 # gets all systems from the database
 
@@ -105,12 +106,12 @@ class PostgresConnector:
                                 poly += ' : '
                         poly += ']'
                         result.append([row[0], '1', row[1], poly, row[3]])
-                    
+
         except Exception as e:
             self.connection.rollback()
             result = []
             stats = []
-            
+
         finally:
             if(cur):
                 cur.close()
@@ -130,30 +131,30 @@ class PostgresConnector:
             result = None
         finally:
             return result
-    
+
     def getStatistics(self,whereText):
         # whereText = self.buildWhereText(filters)
         #number of maps
         cur = None
         try:
             with self.connection.cursor() as cur:
-                sql = 'SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF' + whereText 
+                sql = 'SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF' + whereText
                 cur.execute(sql)
                 maps = cur.fetchall()
                 #AUT
-                sql = 'SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF' + whereText 
+                sql = 'SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF' + whereText
                 cur.execute(sql)
                 aut = cur.fetchall()
                 #number of PCF
-                sql = 'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF' + whereText 
+                sql = 'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF' + whereText
                 cur.execute(sql)
                 pcf = cur.fetchall()
                 #Average Height
-                sql = 'SELECT AVG( (original_model).height ) FROM functions_dim_1_NF' + whereText 
+                sql = 'SELECT AVG( (original_model).height ) FROM functions_dim_1_NF' + whereText
                 cur.execute(sql)
                 height = cur.fetchall()
                 #Average Resultant
-                #sql = 'SELECT AVG( (original_model).resultant ) FROM functions_dim_1_NF' + whereText 
+                #sql = 'SELECT AVG( (original_model).resultant ) FROM functions_dim_1_NF' + whereText
                 #cur.execute(sql)
                 resultant = 0 #cur.fetchall()
         except Exception as e:
