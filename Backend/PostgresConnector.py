@@ -35,8 +35,13 @@ class PostgresConnector:
     # gets a system identified by its label, input is string
     def getSystem(self,label):
         columns = '*'
-        sql = 'SELECT ' + columns 
-        sql +=' FROM functions_dim_1_NF WHERE label = ' + label + "'"
+        sql = (
+            'SELECT '
+            + columns
+            + ' FROM functions_dim_1_NF WHERE label = '
+            + label
+            + "'"
+        )
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
@@ -60,8 +65,11 @@ class PostgresConnector:
             stats= self.getStatistics(whereText)
             result = []
             if dims == [] or 1 in dims:
-                sql = 'SELECT ' + columns 
-                sql += ' FROM functions_dim_1_NF' + whereText
+                sql = (
+                    'SELECT ' + columns
+                    + ' FROM functions_dim_1_NF'
+                    + whereText
+                )
                 with self.connection.cursor() as cur:
                     cur.execute(sql)
                     # TODO: limit the total number that can be returned
@@ -118,13 +126,21 @@ class PostgresConnector:
                 cur.close()
         return result,stats
 
-    # gets a subset of the systems identified by the labels, 
+    # gets a subset of the systems identified by the labels,
     # input should be json list
     def getSelectedSystems(self,labels):
-        labels = '(' + ', '.join(["'" + str(item) + "'" for item in labels])+ ')'
+        labels = (
+            '(' 
+            + ', '.join(["'" + str(item) + "'" for item in labels])
+            + ')'
+        )
         columns = '*'
-        sql = 'SELECT ' + columns 
-        sql += ' FROM functions_dim_1_NF WHERE label in ' + labels
+        sql = (
+            'SELECT '
+            + columns
+            + ' FROM functions_dim_1_NF WHERE label in '
+            + labels
+        )
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
@@ -140,13 +156,19 @@ class PostgresConnector:
         cur = None
         try:
             with self.connection.cursor() as cur:
-                text = 'SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF'
-                sql = text + whereText
+                sql =(
+                    'SELECT COUNT( (original_model).height )'
+                    + ' FROM functions_dim_1_NF'
+                    + whereText
+                )
                 cur.execute(sql)
                 maps = cur.fetchall()
                 #AUT
-                text = 'SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF'
-                sql = text + whereText
+                sql = (
+                    'SELECT AVG(automorphism_group_cardinality::int)'
+                    + ' FROM functions_dim_1_NF'
+                    + whereText
+                )
                 cur.execute(sql)
                 aut = cur.fetchall()
                 #number of PCF
@@ -155,8 +177,10 @@ class PostgresConnector:
                 cur.execute(sql)
                 pcf = cur.fetchall()
                 #Average Height
-                sqlText = 'SELECT AVG( (original_model).height ) FROM functions_dim_1_NF'
-                sql = sqlText + whereText
+                sql = (
+                    'SELECT AVG( (original_model).height ) FROM functions_dim_1_NF'
+                    + whereText
+                )
                 cur.execute(sql)
                 height = cur.fetchall()
                 resultant = 0 #cur.fetchall()
@@ -173,10 +197,11 @@ class PostgresConnector:
         # remove empty filters
         #remove ILD because not currently in use
         for filter in filters.copy():
-            condition1 = filters[filter]
-            condition2 = filters[filter] == [] 
-            condition3 = (filter =='indeterminacy_locus_dimension' and filters[filter] == '1')
-            if not condition1 or condition2 or condition3:
+            if not(
+                filters[filter] or
+                filters[filter] == [] or
+                (filter =='indeterminacy_locus_dimension' and filters[filter] == '1')
+            ):
                 del filters[filter]
         if len(filters) == 0:
             return ''
@@ -197,8 +222,9 @@ class PostgresConnector:
                 conditions.append(filter + ' LIKE '%' + values + '%'')
 
             else:
-                addtext = filter + ' IN (' + ', '.join(str(e) for e in values) + ')'
-                conditions.append(addtext)
+                conditions.append((
+                    filter + ' IN (' + ', '
+                    .join(str(e) for e in values) + ')'))
 
         filtertext += ' AND '.join(conditions)
         return filtertext
