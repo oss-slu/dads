@@ -170,10 +170,10 @@ include-naming-hint=no
 property-classes=abc.abstractproperty,cached_property.cached_property,cached_property.threaded_cached_property,cached_property.cached_property_with_ttl,cached_property.threaded_cached_property_with_ttl
 
 # Regular expression matching correct function names
-function-rgx=^(?P<snake_case>_?[a-z][a-z0-9_]*)$
+function-rgx=^(?P<snake_case>_?[a-z][a-zA-Z0-9_]*)$
 
 # Regular expression matching correct variable names
-variable-rgx=^[a-z][a-z0-9_]*$
+variable-rgx=^[a-z][a-zA-Z0-9_]*$
 
 # Regular expression matching correct constant names
 const-rgx=^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$
