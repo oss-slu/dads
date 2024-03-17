@@ -188,7 +188,7 @@ class PostgresConnector:
                 addtext = 'CAST(' + filter + ' AS integer) IN (' + values + ')'
                 conditions.append(addtext)
 
-            searchFields = ['base_field_degree', 'automorphism_group_cardinality']
+            searchFields = {'base_field_degree', 'automorphism_group_cardinality'}
             elif filter in searchFields:
                 addtext = 'CAST(' + filter + ' AS integer) IN (' + values + ')'
                 conditions.append(addtext)
