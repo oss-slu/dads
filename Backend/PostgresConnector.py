@@ -10,18 +10,18 @@ class PostgresConnector:
     def __init__(self):
 
         self.connection = psycopg2.connect(
-                host="localhost",
-                dbname="dad",
-                user="dad_user",
-                password="dad_pass",
-                port="5432")
+                host='localhost',
+                dbname='dad',
+                user='dad_user',
+                password='dad_pass',
+                port='5432')
     
     def constructLabel(self, data):
         return '1.' + data['sigma_one'] + '.' + data['sigma_two'] + '.' + data['sigma_three'] + '.' + str(data['ordinal'])
 
     def getAllSystems(self):
         columns = '*'
-        sql = "SELECT " + columns + " FROM functions_dim_1_NF"
+        sql = 'SELECT ' + columns + ' FROM functions_dim_1_NF'
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
@@ -81,7 +81,7 @@ class PostgresConnector:
             stats= self.getStatistics(whereText)
             result = []
             if dims == [] or 1 in dims:
-                sql = "SELECT " + columns + " FROM functions_dim_1_NF" + whereText
+                sql = 'SELECT ' + columns + ' FROM functions_dim_1_NF' + whereText
                 with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
                     cur.execute(sql)
                     # TODO: limit the total number that can be returned
@@ -142,9 +142,9 @@ class PostgresConnector:
 
     # gets a subset of the systems identified by the labels, input should be json list
     def getSelectedSystems(self, labels):
-        labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
+        labels = '(' + ', '.join(["'" + str(item) + "'" for item in labels]) + ')'
         columns = '*'
-        sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label in " + labels
+        sql = 'SELECT ' + columns + ' FROM functions_dim_1_NF WHERE label in ' + labels
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
@@ -160,19 +160,19 @@ class PostgresConnector:
         cur = None
         try:
             with self.connection.cursor() as cur:
-                sql = "SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF" + whereText
+                sql = 'SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF' + whereText
                 cur.execute(sql)
                 maps = cur.fetchall()
                 # AUT
-                sql = "SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF" + whereText
+                sql = 'SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF' + whereText
                 cur.execute(sql)
                 aut = cur.fetchall()
                 # number of PCF
-                sql = "SELECT SUM(is_PCF::int) FROM functions_dim_1_NF" + whereText
+                sql = 'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF' + whereText
                 cur.execute(sql)
                 pcf = cur.fetchall()
                 # Average Height
-                sql = "SELECT AVG( (original_model).height ) FROM functions_dim_1_NF" + whereText
+                sql = 'SELECT AVG( (original_model).height ) FROM functions_dim_1_NF' + whereText
                 cur.execute(sql)
                 height = cur.fetchall()
                 resultant = 0
@@ -192,28 +192,28 @@ class PostgresConnector:
             if (
                 not filters[filter]
                 or filters[filter] == []
-                or (filter =='indeterminacy_locus_dimension' and filters[filter] == "1")
+                or (filter =='indeterminacy_locus_dimension' and filters[filter] == '1')
             ) :
                 del filters[filter]
 
         if len(filters) == 0:
-            return ""
+            return ''
 
-        filterText = " WHERE "
+        filterText = ' WHERE '
         conditions = []
 
         for filter, values in filters.items():
             if filter in ['indeterminacy_locus_dimension']:
-                conditions.append("CAST(" + filter + " AS integer) IN (" + values + ")")
+                conditions.append('CAST(' + filter + ' AS integer) IN (' + values + ')')
 
             elif filter in ['base_field_degree', 'automorphism_group_cardinality']:
-                conditions.append("CAST(" + filter + " AS integer) IN (" + values + ")")
+                conditions.append('CAST(' + filter + ' AS integer) IN (' + values + ')')
 
             elif filter in ['base_field_label']:
-                conditions.append(filter + " LIKE '%" + values + "%'")
+                conditions.append(filter + ' LIKE '%' + values + "%'")
 
             else:
-                conditions.append(filter + " IN (" + ', '.join(str(e) for e in values) + ")")
+                conditions.append(filter + ' IN (' + ', '.join(str(e) for e in values) + ')')
 
-        filterText += " AND ".join(conditions)
+        filterText += ' AND '.join(conditions)
         return filterText

@@ -2,7 +2,11 @@ test_data = [
     {
         "N": "1",
         "automorphism_group_cardinality": "2",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right), \\left(\\begin{array}{rr} 0 & 1 \\\\ 1 & 0 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        (
+            "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right), "
+            + "\\left(\\begin{array}{rr} 0 & 1 \\\\ 1 & 0 \\end{array}\\right)]"
+        ),
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -41,7 +45,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "0",
         "models.monic_centered_name": "monic centered",
@@ -54,7 +59,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "0",
@@ -71,7 +77,8 @@ test_data = [
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -110,7 +117,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "0",
         "models.monic_centered_name": "monic centered",
@@ -123,7 +131,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "0",
@@ -135,12 +144,14 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, 4, 0]",
         "sigma_inv_2": "[12, 16, 0, 1024, 0]",
-        "sigma_inv_3": "[56, 1600, 21504, 73728, -2555904, -30146560, -52428800, 2097152000, 0]"
+        "sigma_inv_3":
+        "[56, 1600, 21504, 73728, -2555904, -30146560, -52428800, 2097152000, 0]"
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -178,13 +189,17 @@ test_data = [
         "models.monic_centered_base_field_label": "1.1.1.1",
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
-        "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
-        "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
+        "models.monic_centered_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_val":
+        "[1, 0, 0, 1]",
         "models.monic_centered_height": "0",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} - y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} - y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 - y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "1",
@@ -192,7 +207,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "0",
@@ -204,12 +220,14 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, -4, 0]",
         "sigma_inv_2": "[12, 16, 0, 0, 0]",
-        "sigma_inv_3": "[56, 1088, 14336, 114688, 655360, 1835008, 2097152, -16777216, 0]"
+        "sigma_inv_3":
+        "[56, 1088, 14336, 114688, 655360, 1835008, 2097152, -16777216, 0]"
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -248,37 +266,46 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
-        "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_val":
+        "[1, 0, 0, 1]",
         "models.monic_centered_height": "0.693147181",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} + \\frac{1}{2} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} + \\frac{1}{2} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 + 1/2*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "16",
         "models_original_bad_primes": "[2]",
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
-        "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
-        "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
+        "models_original_conjugation_from_original_val":
+        "[1, 0, 0, 1]",
         "models_original_height": "0.693147181",
         "models_original_name": "original",
         "models_original_num_parameters": "0",
-        "models_original_polys_latex": "\\left[2 x^{2} + y^{2}, 2 y^{2}\\right]",
+        "models_original_polys_latex":
+        "\\left[2 x^{2} + y^{2}, 2 y^{2}\\right]",
         "models_original_polys_val": "[2*x^2 + y^2, 2*y^2]",
         "models_original_polys_vars": "('x', 'y')",
         "models_original_resultant": "16",
         "sigma_inv_1": "[2, 2, 0]",
         "sigma_inv_2": "[12, 40, 48, 144, 0]",
-        "sigma_inv_3": "[56, 1376, 18368, 134272, 429568, -174080, -1183744, 20123648, 0]"
+        "sigma_inv_3":
+        "[56, 1376, 18368, 134272, 429568, -174080, -1183744, 20123648, 0]"
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -316,13 +343,16 @@ test_data = [
         "models.monic_centered_base_field_label": "1.1.1.1",
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
-        "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "0.693147181",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} - \\frac{1}{2} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} - \\frac{1}{2} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 - 1/2*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "16",
@@ -330,7 +360,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "0.693147181",
@@ -347,7 +378,8 @@ test_data = [
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -385,8 +417,10 @@ test_data = [
         "models.monic_centered_base_field_label": "1.1.1.1",
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
-        "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "0.693147181",
         "models.monic_centered_name": "monic centered",
@@ -398,8 +432,10 @@ test_data = [
         "models_original_bad_primes": "[]",
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
-        "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "0.693147181",
@@ -411,12 +447,14 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, 8, 0]",
         "sigma_inv_2": "[12, -80, -192, 9216, 0]",
-        "sigma_inv_3": "[56, 3392, 46592, 962560, -48594944, 303824896, 757071872, 920599396352, 0]"
+        "sigma_inv_3":
+        "[56, 3392, 46592, 962560, -48594944, 303824896, 757071872, 920599396352, 0]"
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -439,7 +477,8 @@ test_data = [
         "models.Chebyshev_base_field_latex": "\\mathbb{Q}",
         "models.Chebyshev_conjugation_from_original_base_field_emb": "0",
         "models.Chebyshev_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.Chebyshev_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 2 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.Chebyshev_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 2 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.Chebyshev_conjugation_from_original_num_parameters": "0",
         "models.Chebyshev_conjugation_from_original_val": "[2, 0, 0, 1]",
         "models.Chebyshev_height": "0.693147181",
@@ -455,7 +494,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "0.693147181",
         "models.monic_centered_name": "monic centered",
@@ -468,7 +508,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "0.693147181",
@@ -480,12 +521,14 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, -8, 0]",
         "sigma_inv_2": "[12, -80, -192, 1024, 0]",
-        "sigma_inv_3": "[56, -704, -10752, 110592, 688128, -6553600, -14680064, 134217728, 0]"
+        "sigma_inv_3":
+        "[56, -704, -10752, 110592, 688128, -6553600, -14680064, 134217728, 0]"
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -524,12 +567,14 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.098612289",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} + \\frac{1}{3} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} + \\frac{1}{3} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 + 1/3*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "81",
@@ -537,7 +582,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.098612289",
@@ -549,12 +595,17 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, 4/3, 0]",
         "sigma_inv_2": "[12, 400/9, 512/9, 4096/81, 0]",
-        "sigma_inv_3": "[56, 36544/27, 487424/27, 34242560/243, 455081984/729, 27267432448/19683, 27143438336/19683, 1333906112512/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 36544/27, 487424/27, 34242560/243, 455081984/729, 27267432448/19683,"
+            " 27143438336/19683, 1333906112512/531441, 0]"
+        )
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -592,21 +643,26 @@ test_data = [
         "models.monic_centered_base_field_label": "1.1.1.1",
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
-        "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.098612289",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} - \\frac{1}{3} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} - \\frac{1}{3} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 - 1/3*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "81",
         "models_original_bad_primes": "[3]",
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
-        "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.098612289",
@@ -618,12 +674,17 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, -4/3, 0]",
         "sigma_inv_2": "[12, 400/9, 512/9, 1024/81, 0]",
-        "sigma_inv_3": "[56, 36032/27, 480256/27, 35004416/243, 518193152/729, 38858915840/19683, 45485129728/19683, -204128387072/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 36032/27, 480256/27, 35004416/243, 518193152/729,"
+            + "38858915840/19683, 45485129728/19683, -204128387072/531441, 0]"
+        )
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices": 
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -662,7 +723,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.098612289",
         "models.monic_centered_name": "monic centered",
@@ -675,7 +737,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.098612289",
@@ -687,12 +750,17 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, 12, 0]",
         "sigma_inv_2": "[12, -240, -512, 36864, 0]",
-        "sigma_inv_3": "[56, 8256, 114688, 16842752, -260308992, 32305315840, 65458405376, 53293212499968, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 8256, 114688, 16842752, -260308992, 32305315840, 65458405376,"
+            + " 53293212499968, 0]"
+        )
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -731,7 +799,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.098612289",
         "models.monic_centered_name": "monic centered",
@@ -744,7 +813,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.098612289",
@@ -756,12 +826,17 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, -12, 0]",
         "sigma_inv_2": "[12, -240, -512, 9216, 0]",
-        "sigma_inv_3": "[56, -5568, -78848, 7331840, 38731776, -3636199424, -7358906368, 602922811392, 0]"
+        "sigma_inv_3":
+        (
+            "[56, -5568, -78848, 7331840, 38731776, -3636199424, -7358906368,"
+            + " 602922811392, 0]"
+        )
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -799,13 +874,17 @@ test_data = [
         "models.monic_centered_base_field_label": "1.1.1.1",
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
-        "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
-        "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
+        "models.monic_centered_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_val":
+        "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.098612289",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} + \\frac{2}{3} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} + \\frac{2}{3} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 + 2/3*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "81",
@@ -813,7 +892,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.098612289",
@@ -825,12 +905,17 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, 8/3, 0]",
         "sigma_inv_2": "[12, 304/9, 320/9, 25600/81, 0]",
-        "sigma_inv_3": "[56, 38336/27, 512512/27, 29364224/243, -24739840/729, -85726068736/19683, -161642184704/19683, 61274822017024/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 38336/27, 512512/27, 29364224/243, -24739840/729,"
+            + " -85726068736/19683, -161642184704/19683, 61274822017024/531441, 0]"
+        )
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -868,38 +953,49 @@ test_data = [
         "models.monic_centered_base_field_label": "1.1.1.1",
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
-        "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.098612289",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} - \\frac{2}{3} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} - \\frac{2}{3} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 - 2/3*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "81",
         "models_original_bad_primes": "[3]",
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
-        "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.098612289",
         "models_original_name": "original",
         "models_original_num_parameters": "0",
-        "models_original_polys_latex": "\\left[3 x^{2} - 2 y^{2}, 3 y^{2}\\right]",
+        "models_original_polys_latex":
+        "\\left[3 x^{2} - 2 y^{2}, 3 y^{2}\\right]",
         "models_original_polys_val": "[3*x^2 - 2*y^2, 3*y^2]",
         "models_original_polys_vars": "('x', 'y')",
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, -8/3, 0]",
         "sigma_inv_2": "[12, 304/9, 320/9, 1024/81, 0]",
-        "sigma_inv_3": "[56, 34240/27, 455168/27, 34279424/243, 550928384/729, 45698252800/19683, 56360960000/19683, -2097152000000/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 34240/27, 455168/27, 34279424/243, 550928384/729,"
+            + " 45698252800/19683, 56360960000/19683, -2097152000000/531441, 0]"
+        )
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -937,13 +1033,16 @@ test_data = [
         "models.monic_centered_base_field_label": "1.1.1.1",
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
-        "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_base_field_label":
+        "1.1.1.1",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.098612289",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} + \\frac{3}{2} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} + \\frac{3}{2} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 + 3/2*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "16",
@@ -951,7 +1050,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.098612289",
@@ -963,12 +1063,14 @@ test_data = [
         "models_original_resultant": "16",
         "sigma_inv_1": "[2, 6, 0]",
         "sigma_inv_2": "[12, -24, -80, 3600, 0]",
-        "sigma_inv_3": "[56, 2208, 30016, 84608, -14891520, -121198592, -197521408, 63235067904, 0]"
+        "sigma_inv_3":
+        "[56, 2208, 30016, 84608, -14891520, -121198592, -197521408, 63235067904, 0]"
     },
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -1007,7 +1109,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.098612289",
         "models.monic_centered_name": "monic centered",
@@ -1020,7 +1123,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.098612289",
@@ -1037,7 +1141,8 @@ test_data = [
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -1076,12 +1181,14 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.386294361",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} + \\frac{1}{4} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} + \\frac{1}{4} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 + 1/4*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "256",
@@ -1089,7 +1196,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.386294361",
@@ -1106,7 +1214,8 @@ test_data = [
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -1145,12 +1254,14 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex"
+         "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.386294361",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} - \\frac{1}{4} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} - \\frac{1}{4} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 - 1/4*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "256",
@@ -1158,7 +1269,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.386294361",
@@ -1175,7 +1287,8 @@ test_data = [
     {
         "N": "1",
         "automorphism_group_cardinality": "1",
-        "automorphism_group_matrices": "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
+        "automorphism_group_matrices":
+        "[\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)]",
         "base_field_degree": "1",
         "base_field_label": "1.1.1.1",
         "base_field_latex": "\\QQ",
@@ -1214,7 +1327,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.386294361",
         "models.monic_centered_name": "monic centered",
@@ -1227,7 +1341,8 @@ test_data = [
         "models_original_base_field_label": "1.1.1.1",
         "models_original_base_field_latex": "\\QQ",
         "models_original_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models_original_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models_original_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models_original_conjugation_from_original_num_parameters": "0",
         "models_original_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models_original_height": "1.386294361",
@@ -1283,7 +1398,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.386294361",
         "models.monic_centered_name": "monic centered",
@@ -1352,7 +1468,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.386294361",
         "models.monic_centered_name": "monic centered",
@@ -1421,7 +1538,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.386294361",
         "models.monic_centered_name": "monic centered",
@@ -1490,7 +1608,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.386294361",
         "models.monic_centered_name": "monic centered",
@@ -1515,7 +1634,11 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, 16/3, 0]",
         "sigma_inv_2": "[12, -80/9, -448/9, 200704/81, 0]",
-        "sigma_inv_3": "[56, 52672/27, 713216/27, 10981376/243, -6649643008/729, -1782095544320/19683, -3024388882432/19683, 11907331897950208/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 52672/27, 713216/27, 10981376/243, -6649643008/729, -1782095544320/19683,"
+            + " -3024388882432/19683, 11907331897950208/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -1559,7 +1682,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.386294361",
         "models.monic_centered_name": "monic centered",
@@ -1584,7 +1708,11 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, -16/3, 0]",
         "sigma_inv_2": "[12, -80/9, -448/9, 4096/81, 0]",
-        "sigma_inv_3": "[56, 19904/27, 254464/27, 12554240/243, 220626944/729, 114556928/19683, -14422114304/19683, -13064216772608/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 19904/27, 254464/27, 12554240/243, 220626944/729, 114556928/19683, "
+            + "14422114304/19683, -13064216772608/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -1628,12 +1756,14 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} + \\frac{1}{5} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} + \\frac{1}{5} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 + 1/5*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "625",
@@ -1653,7 +1783,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, 4/5, 0]",
         "sigma_inv_2": "[12, 1168/25, 1536/25, 9216/625, 0]",
-        "sigma_inv_3": "[56, 168256/125, 2243584/125, 2232672256/15625, 10568531968/15625, 3433349513216/1953125, 3859579666432/1953125, 70016036765696/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 168256/125, 2243584/125, 2232672256/15625, 10568531968/15625,"
+            + " 3433349513216/1953125, 3859579666432/1953125, 70016036765696/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -1697,7 +1831,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -1722,7 +1857,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, -4/5, 0]",
         "sigma_inv_2": "[12, 1168/25, 1536/25, 4096/625, 0]",
-        "sigma_inv_3": "[56, 167744/125, 2236416/125, 2243690496/15625, 10851975168/15625, 3659118936064/1953125, 4210848432128/1953125, -21726981259264/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 167744/125, 2236416/125, 2243690496/15625, 10851975168/15625,"
+            + " 3659118936064/1953125, 4210848432128/1953125, -21726981259264/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -1766,7 +1905,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -1835,7 +1975,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -1904,7 +2045,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -1929,7 +2071,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, 8/5, 0]",
         "sigma_inv_2": "[12, 1072/25, 1344/25, 50176/625, 0]",
-        "sigma_inv_3": "[56, 170048/125, 2268672/125, 2170957824/15625, 8892874752/15625, 1883578826752/1953125, 1355760533504/1953125, 1488416487243776/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 170048/125, 2268672/125, 2170957824/15625, 8892874752/15625, 1883578826752/1953125,"
+            " 1355760533504/1953125, 1488416487243776/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -1973,7 +2119,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -1998,7 +2145,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, -8/5, 0]",
         "sigma_inv_2": "[12, 1072/25, 1344/25, 9216/625, 0]",
-        "sigma_inv_3": "[56, 165952/125, 2211328/125, 2253205504/15625, 11278385152/15625, 3995385724928/1953125, 4730027769856/1953125, -164422488162304/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 165952/125, 2211328/125, 2253205504/15625, 11278385152/15625, "
+            + "995385724928/1953125, 4730027769856/1953125, -164422488162304/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -2042,7 +2193,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2111,7 +2263,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2180,7 +2333,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2205,7 +2359,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, 12/5, 0]",
         "sigma_inv_2": "[12, 912/25, 1024/25, 147456/625, 0]",
-        "sigma_inv_3": "[56, 174912/125, 2336768/125, 1986412544/15625, 3034447872/15625, -4375113367552/1953125, -9061850415104/1953125, 14429837712162816/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 174912/125, 2336768/125, 1986412544/15625, 3034447872/15625, "
+            "-4375113367552/1953125, -9061850415104/1953125, 14429837712162816/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -2249,7 +2407,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2274,7 +2433,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, -12/5, 0]",
         "sigma_inv_2": "[12, 912/25, 1024/25, 9216/625, 0]",
-        "sigma_inv_3": "[56, 161088/125, 2143232/125, 2230820864/15625, 11749097472/15625, 4439815749632/1953125, 5436042379264/1953125, -653610455138304/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 161088/125, 2143232/125, 2230820864/15625, 11749097472/15625,"
+            + " 4439815749632/1953125, 5436042379264/1953125, -653610455138304/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -2318,7 +2481,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2343,7 +2507,11 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, 20/3, 0]",
         "sigma_inv_2": "[12, -368/9, -1024/9, 409600/81, 0]",
-        "sigma_inv_3": "[56, 68288/27, 931840/27, 50708480/243, -16754802688/729, -2326585409536/19683, -3282707677184/19683, 87623043383296000/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 68288/27, 931840/27, 50708480/243, -16754802688/729, "
+            + "-2326585409536/19683, -3282707677184/19683, 87623043383296000/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -2387,7 +2555,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2412,7 +2581,8 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, -20/3, 0]",
         "sigma_inv_2": "[12, -368/9, -1024/9, 25600/81, 0]",
-        "sigma_inv_3": "[56, 4288/27, 35840/27, -1515520/243, -18546688/729, -4710465536/19683, -8529117184/19683, -719323136000/531441, 0]"
+        "sigma_inv_3":
+        "[56, 4288/27, 35840/27, -1515520/243, -18546688/729, -4710465536/19683, -8529117184/19683, -719323136000/531441, 0]"
     },
     {
         "N": "1",
@@ -2456,7 +2626,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2481,7 +2652,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, 16/5, 0]",
         "sigma_inv_2": "[12, 688/25, 576/25, 331776/625, 0]",
-        "sigma_inv_3": "[56, 184384/125, 2469376/125, 1634185216/15625, -11238735872/15625, -21664468566016/1953125, -38473702572032/1953125, 97193874031640576/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 184384/125, 2469376/125, 1634185216/15625, -11238735872/15625, "
+            "-21664468566016/1953125, -38473702572032/1953125, 97193874031640576/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -2525,7 +2700,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2550,7 +2726,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, -16/5, 0]",
         "sigma_inv_2": "[12, 688/25, 576/25, 4096/625, 0]",
-        "sigma_inv_3": "[56, 151616/125, 2010624/125, 2103422976/15625, 11620220928/15625, 4503492100096/1953125, 5557496840192/1953125, -1902199139467264/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 151616/125, 2010624/125, 2103422976/15625, 11620220928/15625, "
+            "4503492100096/1953125, 5557496840192/1953125, -1902199139467264/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -2594,7 +2774,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2663,7 +2844,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.609437912",
         "models.monic_centered_name": "monic centered",
@@ -2732,7 +2914,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.791759469",
         "models.monic_centered_name": "monic centered",
@@ -2757,7 +2940,11 @@ test_data = [
         "models_original_resultant": "1296",
         "sigma_inv_1": "[2, 2/3, 0]",
         "sigma_inv_2": "[12, 424/9, 560/9, 784/81, 0]",
-        "sigma_inv_3": "[56, 36320/27, 484288/27, 34772864/243, 496899584/729, 35289282560/19683, 39982182400/19683, 76225024000/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 36320/27, 484288/27, 34772864/243, 496899584/729," 
+            + "35289282560/19683, 39982182400/19683, 76225024000/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -2801,7 +2988,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.791759469",
         "models.monic_centered_name": "monic centered",
@@ -2826,7 +3014,11 @@ test_data = [
         "models_original_resultant": "1296",
         "sigma_inv_1": "[2, -2/3, 0]",
         "sigma_inv_2": "[12, 424/9, 560/9, 400/81, 0]",
-        "sigma_inv_3": "[56, 36256/27, 483392/27, 34872704/243, 504512000/729, 36583204864/19683, 41988755456/19683, -28540399616/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 36256/27, 483392/27, 34872704/243, 504512000/729, 36583204864/19683,"
+            + " 41988755456/19683, -28540399616/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -2870,7 +3062,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.791759469",
         "models.monic_centered_name": "monic centered",
@@ -2939,7 +3132,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.791759469",
         "models.monic_centered_name": "monic centered",
@@ -3008,7 +3202,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.791759469",
         "models.monic_centered_name": "monic centered",
@@ -3033,7 +3228,11 @@ test_data = [
         "models_original_resultant": "1296",
         "sigma_inv_1": "[2, 10/3, 0]",
         "sigma_inv_2": "[12, 232/9, 176/9, 48400/81, 0]",
-        "sigma_inv_3": "[56, 40288/27, 539840/27, 24260480/243, -691890688/729, -264345921536/19683, -466587357184/19683, 283334482432000/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 40288/27, 539840/27, 24260480/243, -691890688/729, -264345921536/19683,"
+            + " -466587357184/19683, 283334482432000/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -3077,7 +3276,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.791759469",
         "models.monic_centered_name": "monic centered",
@@ -3102,7 +3302,11 @@ test_data = [
         "models_original_resultant": "1296",
         "sigma_inv_1": "[2, -10/3, 0]",
         "sigma_inv_2": "[12, 232/9, 176/9, 400/81, 0]",
-        "sigma_inv_3": "[56, 32288/27, 427840/27, 32132480/243, 536141312/729, 44666046464/19683, 54889762816/19683, -4809692672000/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 32288/27, 427840/27, 32132480/243, 536141312/729, 44666046464/19683,"
+            + " 54889762816/19683, -4809692672000/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -3146,7 +3350,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.791759469",
         "models.monic_centered_name": "monic centered",
@@ -3171,7 +3376,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, 24/5, 0]",
         "sigma_inv_2": "[12, 48/25, -704/25, 1115136/625, 0]",
-        "sigma_inv_3": "[56, 223296/125, 3014144/125, 736833536/15625, -91056340992/15625, -122703414820864/1953125, -211107581001728/1953125, 2233378481117331456/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 223296/125, 3014144/125, 736833536/15625, -91056340992/15625, "
+            + "-122703414820864/1953125, -211107581001728/1953125, 2233378481117331456/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -3215,7 +3424,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.791759469",
         "models.monic_centered_name": "monic centered",
@@ -3240,7 +3450,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, -24/5, 0]",
         "sigma_inv_2": "[12, 48/25, -704/25, 9216/625, 0]",
-        "sigma_inv_3": "[56, 112704/125, 1465856/125, 1258827776/15625, 7326302208/15625, 1541944377344/1953125, 861235314688/1953125, -6106811732066304/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 112704/125, 1465856/125, 1258827776/15625, 7326302208/15625, "
+            + "1541944377344/1953125, 861235314688/1953125, -6106811732066304/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -3284,7 +3498,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3309,7 +3524,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, 4/7, 0]",
         "sigma_inv_2": "[12, 2320/49, 3072/49, 16384/2401, 0]",
-        "sigma_inv_3": "[56, 461248/343, 878592/49, 16847290368/117649, 80490135552/117649, 73022021304320/40353607, 83026480463872/40353607, 1131105524645888/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 461248/343, 878592/49, 16847290368/117649, 80490135552/117649, "
+            "73022021304320/40353607, 83026480463872/40353607, 1131105524645888/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -3353,7 +3572,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3378,7 +3598,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, -4/7, 0]",
         "sigma_inv_2": "[12, 2320/49, 3072/49, 9216/2401, 0]",
-        "sigma_inv_3": "[56, 460736/343, 877568/49, 16877854720/117649, 81261297664/117649, 74674843942912/40353607, 85584389341184/40353607, -485439400050688/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 460736/343, 877568/49, 16877854720/117649, 81261297664/117649, "
+            + "74674843942912/40353607, 85584389341184/40353607, -485439400050688/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -3422,7 +3646,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3491,7 +3716,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3516,7 +3742,8 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, -28, 0]",
         "sigma_inv_2": "[12, -1520, -3072, 451584, 0]",
-        "sigma_inv_3": "[56, -86464, -1211392, 2316869632, 8486453248, -24897030717440, -49810247778304, 90998698397401088, 0]"
+        "sigma_inv_3":
+        "[56, -86464, -1211392, 2316869632, 8486453248, -24897030717440, -49810247778304, 90998698397401088, 0]"
     },
     {
         "N": "1",
@@ -3560,7 +3787,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3585,7 +3813,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, 8/7, 0]",
         "sigma_inv_2": "[12, 2224/49, 2880/49, 82944/2401, 0]",
-        "sigma_inv_3": "[56, 463040/343, 882176/49, 16691802112/117649, 76482248704/117649, 63521597685760/40353607, 67922925977600/40353607, 17285582422016000/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 463040/343, 882176/49, 16691802112/117649, 76482248704/117649, "
+            + "63521597685760/40353607, 67922925977600/40353607, 17285582422016000/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -3629,7 +3861,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3654,7 +3887,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, -8/7, 0]",
         "sigma_inv_2": "[12, 2224/49, 2880/49, 25600/2401, 0]",
-        "sigma_inv_3": "[56, 458944/343, 873984/49, 16928059392/117649, 82816696320/117649, 77921373126656/40353607, 90559316230144/40353607, -3376080115204096/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 458944/343, 873984/49, 16928059392/117649, 82816696320/117649, "
+            + "77921373126656/40353607, 90559316230144/40353607, -3376080115204096/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -3698,7 +3935,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3767,7 +4005,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3836,7 +4075,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3861,7 +4101,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, 12/7, 0]",
         "sigma_inv_2": "[12, 2064/49, 2560/49, 230400/2401, 0]",
-        "sigma_inv_3": "[56, 467904/343, 891904/49, 16215990272/117649, 63194726400/117649, 28704348307456/40353607, 11271850164224/40353607, 120424978892980224/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 467904/343, 891904/49, 16215990272/117649, 63194726400/117649, "
+            + "28704348307456/40353607, 11271850164224/40353607, 120424978892980224/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -3905,7 +4149,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3930,7 +4175,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, -12/7, 0]",
         "sigma_inv_2": "[12, 2064/49, 2560/49, 36864/2401, 0]",
-        "sigma_inv_3": "[56, 454080/343, 864256/49, 16966909952/117649, 85502459904/117649, 83893599600640/40353607, 99830045081600/40353607, -11629196476416000/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 454080/343, 864256/49, 16966909952/117649, 85502459904/117649, "
+            + "83893599600640/40353607, 99830045081600/40353607, -11629196476416000/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -3974,7 +4223,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -3999,7 +4249,11 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, 28/3, 0]",
         "sigma_inv_2": "[12, -1136/9, -2560/9, 1254400/81, 0]",
-        "sigma_inv_3": "[56, 124096/27, 1713152/27, 741515264/243, -66856222720/729, 50932726104064/19683, 107515347992576/19683, 2211145129136226304/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 124096/27, 1713152/27, 741515264/243, -66856222720/729, "
+            + "50932726104064/19683, 107515347992576/19683, 2211145129136226304/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -4043,7 +4297,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4068,7 +4323,11 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, -28/3, 0]",
         "sigma_inv_2": "[12, -1136/9, -2560/9, 200704/81, 0]",
-        "sigma_inv_3": "[56, -51520/27, -745472/27, 193593344/243, 3345219584/729, -2450221957120/19683, -5106198118400/19683, 3534034567168000/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, -51520/27, -745472/27, 193593344/243, 3345219584/729, "
+            + "-2450221957120/19683, -5106198118400/19683, 3534034567168000/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -4112,7 +4371,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4137,7 +4397,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, 16/7, 0]",
         "sigma_inv_2": "[12, 1840/49, 2112/49, 495616/2401, 0]",
-        "sigma_inv_3": "[56, 477376/343, 910848/49, 15229071360/117649, 32148455424/117649, -61755895840768/40353607, -139127397810176/40353607, 607318343199752192/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 477376/343, 910848/49, 15229071360/117649, 32148455424/117649,"
+            + "-61755895840768/40353607, -139127397810176/40353607, 607318343199752192/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -4181,7 +4445,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4206,7 +4471,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, -16/7, 0]",
         "sigma_inv_2": "[12, 1840/49, 2112/49, 36864/2401, 0]",
-        "sigma_inv_3": "[56, 444608/343, 845312/49, 16854888448/117649, 88108859392/117649, 90605183303680/40353607, 110488853676032/40353607, -31068121603244032/13841287201, 0]"
+        "sigma_inv_3": 
+        (
+            "[56, 444608/343, 845312/49, 16854888448/117649, 88108859392/117649, "
+            "90605183303680/40353607, 110488853676032/40353607, -31068121603244032/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -4250,7 +4519,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4319,7 +4589,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4388,7 +4659,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4413,7 +4685,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, 20/7, 0]",
         "sigma_inv_2": "[12, 1552/49, 1536/49, 921600/2401, 0]",
-        "sigma_inv_3": "[56, 492992/343, 942080/49, 13598064640/117649, -28229500928/117649, -255496093958144/40353607, -466834199412736/40353607, 2519008903430144000/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 492992/343, 942080/49, 13598064640/117649, -28229500928/117649,"
+            " -255496093958144/40353607, -466834199412736/40353607, 2519008903430144000/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -4457,7 +4733,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4482,7 +4759,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, -20/7, 0]",
         "sigma_inv_2": "[12, 1552/49, 1536/49, 25600/2401, 0]",
-        "sigma_inv_3": "[56, 428992/343, 814080/49, 16386416640/117649, 88809603072/117649, 94292410105856/40353607, 116617079947264/40353607, -70670388035584000/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 428992/343, 814080/49, 16386416640/117649, 88809603072/117649, "
+            "94292410105856/40353607, 116617079947264/40353607, -70670388035584000/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -4526,7 +4807,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4551,7 +4833,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, 28/5, 0]",
         "sigma_inv_2": "[12, -368/25, -1536/25, 1806336/625, 0]",
-        "sigma_inv_3": "[56, 255808/125, 3469312/125, 839286784/15625, -174777171968/15625, -203804413001728/1953125, -341895551123456/1953125, 8369581554774573056/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 255808/125, 3469312/125, 839286784/15625, -174777171968/15625, "
+            "-203804413001728/1953125, -341895551123456/1953125, 8369581554774573056/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -4595,12 +4881,14 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
         "models.monic_centered_num_parameters": "0",
-        "models.monic_centered_polys_latex": "\\left[x^{2} - \\frac{7}{5} y^{2}, y^{2}\\right]",
+        "models.monic_centered_polys_latex":
+        "\\left[x^{2} - \\frac{7}{5} y^{2}, y^{2}\\right]",
         "models.monic_centered_polys_val": "[x^2 - 7/5*y^2, y^2]",
         "models.monic_centered_polys_vars": "('x', 'y')",
         "models.monic_centered_resultant": "625",
@@ -4620,7 +4908,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, -28/5, 0]",
         "sigma_inv_2": "[12, -368/25, -1536/25, 50176/625, 0]",
-        "sigma_inv_3": "[56, 80192/125, 1010688/125, 572350464/15625, 3367698432/15625, -590411988992/1953125, -2229727657984/1953125, -5252054436020224/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 80192/125, 1010688/125, 572350464/15625, 3367698432/15625, "
+            "-590411988992/1953125, -2229727657984/1953125, -5252054436020224/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -4664,7 +4956,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4689,7 +4982,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, 24/7, 0]",
         "sigma_inv_2": "[12, 1200/49, 832/49, 1557504/2401, 0]",
-        "sigma_inv_3": "[56, 516288/343, 988672/49, 11330367488/117649, -132936204288/117649, -616889931530240/40353607, -1085165365362688/40353607, 9055515745827422208/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 516288/343, 988672/49, 11330367488/117649, -132936204288/117649, "
+            "-616889931530240/40353607, -1085165365362688/40353607, 9055515745827422208/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -4733,7 +5030,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4758,7 +5056,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, -24/7, 0]",
         "sigma_inv_2": "[12, 1200/49, 832/49, 9216/2401, 0]",
-        "sigma_inv_3": "[56, 405696/343, 767488/49, 15331143680/117649, 85657288704/117649, 90134909550592/40353607, 110273383890944/40353607, -138695812703059968/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 405696/343, 767488/49, 15331143680/117649, 85657288704/117649, "
+            "90134909550592/40353607, 110273383890944/40353607, -138695812703059968/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -4802,7 +5104,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4827,7 +5130,11 @@ test_data = [
         "models_original_resultant": "1296",
         "sigma_inv_1": "[2, 14/3, 0]",
         "sigma_inv_2": "[12, 40/9, -208/9, 132496/81, 0]",
-        "sigma_inv_3": "[56, 47264/27, 637504/27, 12225920/243, -3759325696/729, -1111166113792/19683, -1915990175744/19683, 3846867354652672/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 47264/27, 637504/27, 12225920/243, -3759325696/729, "
+            "-1111166113792/19683, -1915990175744/19683, 3846867354652672/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -4871,7 +5178,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.945910149",
         "models.monic_centered_name": "monic centered",
@@ -4896,7 +5204,11 @@ test_data = [
         "models_original_resultant": "1296",
         "sigma_inv_1": "[2, -14/3, 0]",
         "sigma_inv_2": "[12, 40/9, -208/9, 784/81, 0]",
-        "sigma_inv_3": "[56, 25312/27, 330176/27, 21182336/243, 369055232/729, 19490437120/19683, 14850142208/19683, -12826049933312/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 25312/27, 330176/27, 21182336/243, 369055232/729, 19490437120/19683,"
+            " 14850142208/19683, -12826049933312/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -4940,7 +5252,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5009,7 +5322,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5078,7 +5392,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5103,7 +5418,11 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, 32, 0]",
         "sigma_inv_2": "[12, -2000, -4032, 1327104, 0]",
-        "sigma_inv_3": "[56, 132416, 1852928, 6922842112, -14931034112, 191203087482880, 382478650966016, 2348139787015159808, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 132416, 1852928, 6922842112, -14931034112, 191203087482880, "
+            "382478650966016, 2348139787015159808, 0]"
+        )
     },
     {
         "N": "1",
@@ -5147,7 +5466,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5172,7 +5492,11 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, -32, 0]",
         "sigma_inv_2": "[12, -2000, -4032, 802816, 0]",
-        "sigma_inv_3": "[56, -129728, -1817088, 5358366720, 18422071296, -89594895007744, -179223614455808, 513475976030584832, 0]"
+        "sigma_inv_3":
+        (
+            "[56, -129728, -1817088, 5358366720, 18422071296, -89594895007744, "
+            "-179223614455808, 513475976030584832, 0]"
+        )
     },
     {
         "N": "1",
@@ -5216,7 +5540,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5285,7 +5610,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5354,7 +5680,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5379,7 +5706,11 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, 32/3, 0]",
         "sigma_inv_2": "[12, -1616/9, -3520/9, 1982464/81, 0]",
-        "sigma_inv_3": "[56, 167360/27, 2318848/27, 1874038784/243, -116234223616/729, 205730423767040/19683, 421475280486400/19683, 8461728744472576000/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 167360/27, 2318848/27, 1874038784/243, -116234223616/729, "
+            "205730423767040/19683, 421475280486400/19683, 8461728744472576000/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -5423,7 +5754,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5448,7 +5780,11 @@ test_data = [
         "models_original_resultant": "81",
         "sigma_inv_1": "[2, -32/3, 0]",
         "sigma_inv_2": "[12, -1616/9, -3520/9, 409600/81, 0]",
-        "sigma_inv_3": "[56, -94784/27, -1351168/27, 678662144/243, 11205509120/729, -16385420558336/19683, -33454097956864/19683, 44476250365886464/531441, 0]"
+        "sigma_inv_3":
+        (
+            "[56, -94784/27, -1351168/27, 678662144/243, 11205509120/729, "
+            "-16385420558336/19683, -33454097956864/19683, 44476250365886464/531441, 0]"
+        )
     },
     {
         "N": "1",
@@ -5492,7 +5828,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5561,7 +5898,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5630,7 +5968,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5655,7 +5994,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, 32/5, 0]",
         "sigma_inv_2": "[12, -848/25, -2496/25, 2768896/625, 0]",
-        "sigma_inv_3": "[56, 299072/125, 4075008/125, 2275651584/15625, -303619473408/15625, -247214441234432/1953125, -379724826148864/1953125, 27677785728154075136/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 299072/125, 4075008/125, 2275651584/15625, -303619473408/15625, "
+            "-247214441234432/1953125, -379724826148864/1953125, 27677785728154075136/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -5699,7 +6042,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5724,7 +6068,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, -32/5, 0]",
         "sigma_inv_2": "[12, -848/25, -2496/25, 147456/625, 0]",
-        "sigma_inv_3": "[56, 36928/125, 404992/125, -10244096/15625, 48136192/15625, -878202585088/1953125, -1808506290176/1953125, -1278843692253184/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 36928/125, 404992/125, -10244096/15625, 48136192/15625,"
+            " -878202585088/1953125, -1808506290176/1953125, -1278843692253184/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -5768,7 +6116,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5837,7 +6186,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5906,7 +6256,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -5931,7 +6282,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, 32/7, 0]",
         "sigma_inv_2": "[12, 304/49, -960/49, 3686400/2401, 0]",
-        "sigma_inv_3": "[56, 592064/343, 1140224/49, 6235697152/117649, -554261381120/117649, -2102754319007744/40353607, -3630910979178496/40353607, 84538856677566316544/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 592064/343, 1140224/49, 6235697152/117649, -554261381120/117649, "
+            "-2102754319007744/40353607, -3630910979178496/40353607, 84538856677566316544/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -5975,7 +6330,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.079441542",
         "models.monic_centered_name": "monic centered",
@@ -6000,7 +6356,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, -32/7, 0]",
         "sigma_inv_2": "[12, 304/49, -960/49, 16384/2401, 0]",
-        "sigma_inv_3": "[56, 329920/343, 615936/49, 10786516992/117649, 62536187904/117649, 45586711838720/40353607, 39303931494400/40353607, -322941812211712000/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 329920/343, 615936/49, 10786516992/117649, 62536187904/117649, "
+            "45586711838720/40353607, 39303931494400/40353607, -322941812211712000/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -6044,7 +6404,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6069,7 +6430,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, 4/9, 0]",
         "sigma_inv_2": "[12, 3856/81, 5120/81, 25600/6561, 0]",
-        "sigma_inv_3": "[56, 980032/729, 13067264/729, 25382936576/177147, 364747489280/531441, 706528561856512/387420489, 805658100236288/387420489, 9558362291175424/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 980032/729, 13067264/729, 25382936576/177147,
+            " 364747489280/531441, 706528561856512/387420489, 805658100236288/387420489, 9558362291175424/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -6113,7 +6478,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6138,7 +6504,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, -4/9, 0]",
         "sigma_inv_2": "[12, 3856/81, 5120/81, 16384/6561, 0]",
-        "sigma_inv_3": "[56, 979520/729, 13060096/729, 25404686336/177147, 366380711936/531441, 713907045662720/387420489, 817050891059200/387420489, -4933837389824000/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 979520/729, 13060096/729, 25404686336/177147, 366380711936/531441, "
+            "713907045662720/387420489, 817050891059200/387420489, -4933837389824000/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -6182,7 +6552,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6207,7 +6578,11 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, 36, 0]",
         "sigma_inv_2": "[12, -2544, -5120, 2073600, 0]",
-        "sigma_inv_3": "[56, 187968, 2630656, 13995450368, -23385538560, 537066250436608, 1074258627264512, 8945853817908363264, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 187968, 2630656, 13995450368, -23385538560, 537066250436608, 
+            "1074258627264512, 8945853817908363264, 0]"
+        )
     },
     {
         "N": "1",
@@ -6251,7 +6626,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6276,7 +6652,11 @@ test_data = [
         "models_original_resultant": "1",
         "sigma_inv_1": "[2, -36, 0]",
         "sigma_inv_2": "[12, -2544, -5120, 1327104, 0]",
-        "sigma_inv_3": "[56, -185280, -2594816, 11158765568, 36286365696, -274196076953600, -548456366080000, 2325149908992000000, 0]"
+        "sigma_inv_3":
+        (
+            "[56, -185280, -2594816, 11158765568, 36286365696, -274196076953600, "
+            "-548456366080000, 2325149908992000000, 0]"
+        )
     },
     {
         "N": "1",
@@ -6320,7 +6700,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6345,7 +6726,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, 8/9, 0]",
         "sigma_inv_2": "[12, 3760/81, 4928/81, 123904/6561, 0]",
-        "sigma_inv_3": "[56, 981824/729, 13092352/729, 25279238144/177147, 356896636928/531441, 668316104130560/387420489, 745434895089664/387420489, 122876143555575808/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 981824/729, 13092352/729, 25279238144/177147, "
+            "356896636928/531441, 668316104130560/387420489, 745434895089664/387420489, 122876143555575808/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -6389,7 +6774,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6414,7 +6800,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, -8/9, 0]",
         "sigma_inv_2": "[12, 3760/81, 4928/81, 50176/6561, 0]",
-        "sigma_inv_3": "[56, 977728/729, 13035008/729, 25449697280/177147, 370174754816/531441, 730562620555264/387420489, 842519174709248/387420489, -33720807087669248/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 977728/729, 13035008/729, 25449697280/177147, "
+            "370174754816/531441, 730562620555264/387420489, 842519174709248/387420489, -33720807087669248/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -6458,7 +6848,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6527,7 +6918,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6596,7 +6988,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6621,7 +7014,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, 16/9, 0]",
         "sigma_inv_2": "[12, 3376/81, 4160/81, 692224/6561, 0]",
-        "sigma_inv_3": "[56, 996160/729, 13293056/729, 24294526976/177147, 274670452736/531441, 212305165680640/387420489, 4139830476800/387420489, 2978028451790848000/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 996160/729, 13293056/729, 24294526976/177147, 274670452736/531441, "
+            "212305165680640/387420489, 4139830476800/387420489, 2978028451790848000/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -6665,7 +7062,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6690,7 +7088,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, -16/9, 0]",
         "sigma_inv_2": "[12, 3376/81, 4160/81, 102400/6561, 0]",
-        "sigma_inv_3": "[56, 963392/729, 12834304/729, 25544953856/177147, 387690168320/531441, 812766625267712/387420489, 969941878571008/387420489, -267209445774196736/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 963392/729, 12834304/729, 25544953856/177147, 387690168320/531441, "
+            "812766625267712/387420489, 969941878571008/387420489, -267209445774196736/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -6734,7 +7136,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6803,7 +7206,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6872,7 +7276,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6897,7 +7302,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, 20/9, 0]",
         "sigma_inv_2": "[12, 3088/81, 3584/81, 1254400/6561, 0]",
-        "sigma_inv_3": "[56, 1011776/729, 13511680/729, 23141457920/177147, 166261096448/531441, -457323925209088/387420489, -1108645272092672/387420489, 10467816408875008000/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 1011776/729, 13511680/729, 23141457920/177147, 166261096448/531441, "
+            "-457323925209088/387420489, -1108645272092672/387420489, 10467816408875008000/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -6941,7 +7350,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -6966,7 +7376,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, -20/9, 0]",
         "sigma_inv_2": "[12, 3088/81, 3584/81, 102400/6561, 0]",
-        "sigma_inv_3": "[56, 947776/729, 12615680/729, 25417809920/177147, 396956008448/531441, 863353680166912/387420489, 1050270475747328/387420489, -573276315189248000/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 947776/729, 12615680/729, 25417809920/177147, 396956008448/531441,"
+            " 863353680166912/387420489, 1050270475747328/387420489, -573276315189248000/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -7010,7 +7424,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -7035,7 +7450,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, 36/5, 0]",
         "sigma_inv_2": "[12, -1392/25, -3584/25, 4064256/625, 0]",
-        "sigma_inv_3": "[56, 354624/125, 4852736/125, 6357671936/15625, -492589350912/15625, -97518265040896/1953125, -7483311521792/1953125, 82441008909926793216/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 354624/125, 4852736/125, 6357671936/15625, -492589350912/15625,"
+            " -97518265040896/1953125, -7483311521792/1953125, 82441008909926793216/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -7079,7 +7498,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -7104,7 +7524,11 @@ test_data = [
         "models_original_resultant": "625",
         "sigma_inv_1": "[2, -36/5, 0]",
         "sigma_inv_2": "[12, -1392/25, -3584/25, 331776/625, 0]",
-        "sigma_inv_3": "[56, -18624/125, -372736/125, 57245696/15625, 695205888/15625, -108873908224/1953125, -423203176448/1953125, 83889619992576/244140625, 0]"
+        "sigma_inv_3":
+        (
+            "[56, -18624/125, -372736/125, 57245696/15625, 695205888/15625, "
+            "-108873908224/1953125, -423203176448/1953125, 83889619992576/244140625, 0]"
+        )
     },
     {
         "N": "1",
@@ -7148,7 +7572,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -7173,7 +7598,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, 28/9, 0]",
         "sigma_inv_2": "[12, 2320/81, 2048/81, 3211264/6561, 0]",
-        "sigma_inv_3": "[56, 1067584/729, 14292992/729, 19063783424/177147, -308385021952/531441, -3755315934003200/387420489, -6704147879428096/387420489, 92200346461791059968/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 1067584/729, 14292992/729, 19063783424/177147, -308385021952/531441,"
+            " -3755315934003200/387420489, -6704147879428096/387420489, 92200346461791059968/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -7217,7 +7646,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -7242,7 +7672,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, -28/9, 0]",
         "sigma_inv_2": "[12, 2320/81, 2048/81, 50176/6561, 0]",
-        "sigma_inv_3": "[56, 891968/729, 11834368/729, 24096235520/177147, 397473284096/531441, 899593299820544/387420489, 1111955454558208/387420489, -1982294015646629888/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 891968/729, 11834368/729, 24096235520/177147, 397473284096/531441,"
+            " 899593299820544/387420489, 1111955454558208/387420489, -1982294015646629888/282429536481, 0]"
+            )
     },
     {
         "N": "1",
@@ -7286,7 +7720,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -7311,7 +7746,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, 36/7, 0]",
         "sigma_inv_2": "[12, -240/49, -2048/49, 5308416/2401, 0]",
-        "sigma_inv_3": "[56, 647616/343, 1251328/49, 5116313600/117649, -920637014016/117649, -3244626743656448/40353607, -5539609377243136/40353607, 226834572938336796672/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 647616/343, 1251328/49, 5116313600/117649, -920637014016/117649, "
+            "-3244626743656448/40353607, -5539609377243136/40353607, 226834572938336796672/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -7355,7 +7794,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -7380,7 +7820,11 @@ test_data = [
         "models_original_resultant": "2401",
         "sigma_inv_1": "[2, -36/7, 0]",
         "sigma_inv_2": "[12, -240/49, -2048/49, 82944/2401, 0]",
-        "sigma_inv_3": "[56, 274368/343, 504832/49, 7331913728/117649, 42856415232/117649, 10953486499840/40353607, -14033467998208/40353607, -353885322636951552/13841287201, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 274368/343, 504832/49, 7331913728/117649, 42856415232/117649, "
+            "10953486499840/40353607, -14033467998208/40353607, -353885322636951552/13841287201, 0]"
+        )
     },
     {
         "N": "1",
@@ -7424,7 +7868,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -7449,7 +7894,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, 32/9, 0]",
         "sigma_inv_2": "[12, 1840/81, 1088/81, 4734976/6561, 0]",
-        "sigma_inv_3": "[56, 1110848/729, 14898688/729, 16199782400/177147, -740959289344/531441, -6981740661047296/387420489, -12237483196547072/387420489, 241567840724668383232/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 1110848/729, 14898688/729, 16199782400/177147, -740959289344/531441, "
+            "-6981740661047296/387420489, -12237483196547072/387420489, 241567840724668383232/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -7493,7 +7942,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -7518,7 +7968,11 @@ test_data = [
         "models_original_resultant": "6561",
         "sigma_inv_1": "[2, -32/9, 0]",
         "sigma_inv_2": "[12, 1840/81, 1088/81, 16384/6561, 0]",
-        "sigma_inv_3": "[56, 848704/729, 11228672/729, 22579318784/177147, 380631154688/531441, 841849895649280/387420489, 1021503900483584/387420489, -3219553535720947712/282429536481, 0]"
+        "sigma_inv_3":
+        (
+            "[56, 848704/729, 11228672/729, 22579318784/177147, 380631154688/531441, "
+            "841849895649280/387420489, 1021503900483584/387420489, -3219553535720947712/282429536481, 0]"
+        )
     },
     {
         "N": "1",
@@ -7562,7 +8016,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
@@ -7631,7 +8086,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex": "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "2.197224577",
         "models.monic_centered_name": "monic centered",
