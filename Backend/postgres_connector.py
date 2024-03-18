@@ -70,7 +70,7 @@ class PostgresConnector:
                 cur.execute(sql, (ip,))
                 temp = cur.fetchone()
                 if temp:
-                    model_label = self.constructLabel(temp)
+                    model_label = self.construct_label(temp)
                     result = {'modelLabel': model_label, **temp}
                 else:
                     result = {}
@@ -154,7 +154,7 @@ class PostgresConnector:
                             if j == 0:
                                 poly += ' : '
                         poly += ']'
-                        label = self.constructLabel(row)
+                        label = self.construct_label(row)
                         result.append(
                             [label, '1',
                             d,
