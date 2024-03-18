@@ -212,6 +212,7 @@ docstring-min-length=12
 
 
 [TYPECHECK]
+enable=broad-except
 
 # List of decorators that produce context managers, such as
 # contextlib.contextmanager. Add to this list to register other decorators that
