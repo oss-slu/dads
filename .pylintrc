@@ -47,6 +47,7 @@ confidence=
 # --disable=W"
 disable=R,
         abstract-method,
+        W0718
         apply-builtin,
         arguments-differ,
         attribute-defined-outside-init,
