@@ -54,7 +54,7 @@ class PostgresConnector:
     def getSystem(self, ip):
         cur = None
         try:
-            sql = f"""
+            sql = """
                 SELECT *
                 FROM functions_dim_1_nf
                 JOIN rational_preperiodic_dim_1_nf 
