@@ -29,7 +29,7 @@ export default function ModelsTable({ data }) {
             const modelData = data[key] ? splitOutermostCommas(data[key]) : ['', '', '', '', '']; // Split data[key] or set default values if null
             return (
               <TableRow key={index}>
-                <TableCell align="left">{key}</TableCell>
+                <TableCell align="left">{key.replace(/_/g, ' ').replace(/ model$/, '') + " model"}</TableCell>
                 <TableCell align="left">{modelData[0]}</TableCell>
                 <TableCell align="left">{modelData[1]}</TableCell>
                 <TableCell align="left">{modelData[2]}</TableCell>
@@ -61,4 +61,3 @@ const splitOutermostCommas = (str) => {
   parts.push(temp.trim().replace(/["()]/g, '')); // Push the last part and remove characters
   return parts;
 };
-
