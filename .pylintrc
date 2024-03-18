@@ -213,6 +213,9 @@ docstring-min-length=12
 
 [TYPECHECK]
 
+# Allow broad exception handling
+enable=broad-except
+
 # List of decorators that produce context managers, such as
 # contextlib.contextmanager. Add to this list to register other decorators that
 # produce valid context managers.
@@ -234,8 +237,7 @@ ignored-classes=optparse.Values,thread._local,_thread._local
 # expressions are accepted.
 generated-members=
 
-# Allow broad exception handling
-enable=broad-except
+
 
 [FORMAT]
 

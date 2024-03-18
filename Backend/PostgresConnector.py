@@ -1,5 +1,5 @@
 """
-Module Dockstring
+Module Docstring
 manages  server data queries
 """
 import psycopg2
@@ -248,7 +248,7 @@ class PostgresConnector:
                 not filters[fil]
                 or filters[fil] == []
                 or (
-                    fil =='indeterminacy_locus_dimension' 
+                    fil =='indeterminacy_locus_dimension'
                     and filters[fil] == '1'
                     )
             ) :
