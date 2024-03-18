@@ -10,7 +10,13 @@ import psycopg2.extras
 # gets all systems from the database
 
 class PostgresConnector:
+    """
+    Class Docstring
+    Manages connection to a PostgreSQL database and executes queries.
 
+    Attributes:
+        connection: A psycopg2 connection object to interact with the database.
+    """
     def __init__(self):
 
         self.connection = psycopg2.connect(
