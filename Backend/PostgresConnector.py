@@ -19,9 +19,15 @@ class PostgresConnector:
                 user='dad_user',
                 password='dad_pass',
                 port='5432')
-    
+
     def constructLabel(self, data):
-        return '1.' + data['sigma_one'] + '.' + data['sigma_two'] + '.' + data['sigma_three'] + '.' + str(data['ordinal'])
+        return (
+            '1.' +
+            data['sigma_one'] +
+            '.' + data['sigma_two'] +
+            '.' + data['sigma_three'] +
+            '.' + str(data['ordinal'])
+        )
 
     def getAllSystems(self):
         columns = '*'
@@ -52,7 +58,9 @@ class PostgresConnector:
                 LEFT JOIN citations ON citations.id = citation_id
                 WHERE functions_dim_1_nf.function_id = %s
                 """
-            with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+            with self.connection.cursor(
+                cursor_factory=psycopg2.extras.DictCursor
+                ) as cur:
                 cur.execute(sql, (id,))
                 temp = cur.fetchone()
                 if temp:
@@ -64,9 +72,9 @@ class PostgresConnector:
         except Exception:
             self.connection.rollback()
             result = {}
-    
+
         finally:
-            if(cur):
+            if cur:
                 cur.close()
         print(result)
         return result
@@ -76,7 +84,10 @@ class PostgresConnector:
         # return a list of strings of the form:
         #    label, dimension, degree, polynomials, field_label
 
-        columns = 'function_id, sigma_one, sigma_two, sigma_three, ordinal, degree, (original_model).coeffs, base_field_label'
+        columns = (
+            'function_id, sigma_one, sigma_two, sigma_three, ordinal,'
+            ' degree, (original_model).coeffs, base_field_label'
+        )
         dims = filters['N']
         del filters['N']
         whereText = self.buildWhereText(filters)
@@ -85,8 +96,15 @@ class PostgresConnector:
             stats= self.getStatistics(whereText)
             result = []
             if dims == [] or 1 in dims:
-                sql = 'SELECT ' + columns + ' FROM functions_dim_1_NF' + whereText
-                with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+                sql = (
+                    'SELECT ' +
+                    columns +
+                    ' FROM functions_dim_1_NF' +
+                    whereText
+                )
+                with self.connection.cursor(
+                    cursor_factory=psycopg2.extras.DictCursor
+                    ) as cur:
                     cur.execute(sql)
                     # TODO: limit the total number that can be returned
                     mon_dict = {}
@@ -131,13 +149,15 @@ class PostgresConnector:
                                 poly += ' : '
                         poly += ']'
                         label = self.constructLabel(row)
-                        result.append([label, '1', d, poly, row['base_field_label'], row['function_id']])
-             
+                        result.append(
+                            [label, '1', d, poly, row['base_field_label'], row['function_id']]
+                            )
+
         except Exception:
             self.connection.rollback()
             result = []
             stats = []
-  
+
         finally:
             if cur:
                 cur.close()
@@ -146,9 +166,20 @@ class PostgresConnector:
 
     # gets a subset of the systems identified by the labels, input should be json list
     def getSelectedSystems(self, labels):
-        labels = '(' + ', '.join(["'" + str(item) + "'" for item in labels]) + ')'
+        labels = (
+            '(' +
+            ', '.join(["'" +
+            str(item) +
+            "'" for item in labels]) +
+            ')'
+        )
         columns = '*'
-        sql = 'SELECT ' + columns + ' FROM functions_dim_1_NF WHERE label in ' + labels
+        sql = (
+            'SELECT '
+            + columns
+            + ' FROM functions_dim_1_NF WHERE label in '
+            + labels
+        )
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
@@ -164,19 +195,34 @@ class PostgresConnector:
         cur = None
         try:
             with self.connection.cursor() as cur:
-                sql = 'SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF' + whereText
+                sql = (
+                    'SELECT COUNT( (original_model).height )'
+                    ' FROM functions_dim_1_NF'
+                    + whereText
+                )
                 cur.execute(sql)
                 maps = cur.fetchall()
                 # AUT
-                sql = 'SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF' + whereText
+                sql = (
+                    'SELECT AVG(automorphism_group_cardinality::int)'
+                    ' FROM functions_dim_1_NF'
+                    + whereText
+                )
                 cur.execute(sql)
                 aut = cur.fetchall()
                 # number of PCF
-                sql = 'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF' + whereText
+                sql = (
+                    'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF'
+                    + whereText
+                )
                 cur.execute(sql)
                 pcf = cur.fetchall()
                 # Average Height
-                sql = 'SELECT AVG( (original_model).height ) FROM functions_dim_1_NF' + whereText
+                sql = (
+                    'SELECT AVG( (original_model).height ) ' 
+                    'FROM functions_dim_1_NF' +
+                    whereText
+                )
                 cur.execute(sql)
                 height = cur.fetchall()
                 resultant = 0
@@ -196,7 +242,10 @@ class PostgresConnector:
             if (
                 not filters[fil]
                 or filters[fil] == []
-                or (fil =='indeterminacy_locus_dimension' and filters[fil] == '1')
+                or (
+                    fil =='indeterminacy_locus_dimension' 
+                    and filters[fil] == '1'
+                    )
             ) :
                 del filters[fil]
 
@@ -208,16 +257,25 @@ class PostgresConnector:
 
         for fil, values in filters.items():
             if fil in ['indeterminacy_locus_dimension']:
-                conditions.append('CAST(' + fil + ' AS integer) IN (' + values + ')')
+                conditions.append(
+                    'CAST(' + fil + ' AS integer) IN (' + values + ')'
+                    )
 
             elif fil in ['base_field_degree', 'automorphism_group_cardinality']:
-                conditions.append('CAST(' + fil + ' AS integer) IN (' + values + ')')
+                conditions.append(
+                    'CAST(' + fil + ' AS integer) IN (' + values + ')'
+                    )
 
             elif fil in ['base_field_label']:
                 conditions.append(fil + ' LIKE "%" + values + "%"')
 
             else:
-                conditions.append(fil + ' IN (' + ', '.join(str(e) for e in values) + ')')
+                conditions.append(
+                    fil +
+                    ' IN (' +
+                    ', '.join(str(e) for e in values)
+                    + ')'
+                    )
 
         filterText += ' AND '.join(conditions)
         return filterText
