@@ -17,11 +17,11 @@ export default function ModelsTable({ data }) {
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell><b>Name</b></TableCell>
-            <TableCell align="right"><b>Polynomials</b></TableCell>
-            <TableCell align="right"><b>Resultant</b></TableCell>
-            <TableCell align="right"><b>Primes of Bad Reduction</b></TableCell>
-            <TableCell align="right"><b>Conjugation from Standard</b></TableCell>
+            <TableCell align="left"><b>Name</b></TableCell>
+            <TableCell align="left"><b>Polynomials</b></TableCell>
+            <TableCell align="left"><b>Resultant</b></TableCell>
+            <TableCell align="left"><b>Primes of Bad Reduction</b></TableCell>
+            <TableCell align="left"><b>Conjugation from Standard</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -29,11 +29,11 @@ export default function ModelsTable({ data }) {
             const modelData = data[key] ? splitOutermostCommas(data[key]) : ['', '', '', '', '']; // Split data[key] or set default values if null
             return (
               <TableRow key={index}>
-                <TableCell align="right"><b>{key}</b></TableCell>
-                <TableCell align="right"><b>{modelData[0]}</b></TableCell>
-                <TableCell align="right"><b>{modelData[1]}</b></TableCell>
-                <TableCell align="right"><b>{modelData[2]}</b></TableCell>
-                <TableCell align="right"><b>{modelData[3]}</b></TableCell>
+                <TableCell align="left">{key.replace(/_/g, ' ').replace(/ model$/, '') + " model"}</TableCell>
+                <TableCell align="left">{modelData[0]}</TableCell>
+                <TableCell align="left">{modelData[1]}</TableCell>
+                <TableCell align="left">{modelData[2]}</TableCell>
+                <TableCell align="left">{modelData[3]}</TableCell>
               </TableRow>
             );
           })}
@@ -61,4 +61,3 @@ const splitOutermostCommas = (str) => {
   parts.push(temp.trim().replace(/["()]/g, '')); // Push the last part and remove characters
   return parts;
 };
-
