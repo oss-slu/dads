@@ -45,7 +45,8 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=broad-except, R,
+disable=broad-except,
+        R,
         abstract-method,
         apply-builtin,
         arguments-differ,
@@ -166,9 +167,6 @@ name-group=
 # Include a hint for the correct naming format with invalid-name
 include-naming-hint=no
 
-# Allow broad exception hanfling
-disable=broad-except
-
 # List of decorators that produce properties, such as abc.abstractproperty. Add
 # to this list to register other decorators that produce valid properties.
 property-classes=abc.abstractproperty,cached_property.cached_property,cached_property.threaded_cached_property,cached_property.cached_property_with_ttl,cached_property.threaded_cached_property_with_ttl
@@ -213,9 +211,6 @@ docstring-min-length=12
 
 
 [TYPECHECK]
-
-# Allow broad exception handling
-enable=broad-except
 
 # List of decorators that produce context managers, such as
 # contextlib.contextmanager. Add to this list to register other decorators that
