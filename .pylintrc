@@ -45,8 +45,7 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=R,
-        W0718
+disable=broad-except, R,
         abstract-method,
         apply-builtin,
         arguments-differ,
@@ -127,6 +126,7 @@ disable=R,
         zip-builtin-not-iterating,
         W0237,
         C0202
+
 
 
 [REPORTS]
