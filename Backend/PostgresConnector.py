@@ -210,7 +210,7 @@ class PostgresConnector:
                 conditions.append('CAST(' + filter + ' AS integer) IN (' + values + ')')
 
             elif filter in ['base_field_label']:
-                conditions.append(filter + ' LIKE '%' + values + "%'")
+                conditions.append(filter + ' LIKE "%" + values + "%"')
 
             else:
                 conditions.append(filter + ' IN (' + ', '.join(str(e) for e in values) + ')')
