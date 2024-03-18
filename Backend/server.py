@@ -4,12 +4,12 @@ between frontend and backend
 """
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from PostgresConnector import PostgresConnector
+from postgres_connector import postgres_connector
 
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000', 'http://127.0.0.1:3000', '*'])
 
-connector = PostgresConnector()
+connector = postgres_connector()
 
 
 # return all dynamical systems

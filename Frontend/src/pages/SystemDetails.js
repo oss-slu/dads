@@ -1,4 +1,4 @@
-import { getSystem } from '../api/routes';
+import { get_system } from '../api/routes';
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import InfoTable from '../components/FunctionDetail/InfoTable'
@@ -18,7 +18,7 @@ function SystemDetails() {
 
   const fetchDataForCSV = async () => {
       try {
-          const result = await getSystem(
+          const result = await get_system(
               {
                   id: label
               }
