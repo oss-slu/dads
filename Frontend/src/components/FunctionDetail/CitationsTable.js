@@ -1,40 +1,28 @@
-
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-function createData(name, description, link) {
-  return { name, description, link };
-}
+export default function CitationsTable({ data }) {
+  const hasCitations = data.citation_id != null;
 
-const rows = [
-  createData(
-    'Bjorn Poonen',
-    'The complete classificiation of rational preperiodic points of quadratic polynomials over Q: a refined conjecture.',
-    'MathSciNet'
-    ),
-];
-
-export default function CitationsTable() {
   return (
     <TableContainer className='table-component' component={Paper}>
-        <h3>Citations:</h3>
+      <h3>Citations:</h3>
       <Table aria-label="simple table">
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.label}
-            >
-              <TableCell align="right">{row.name}</TableCell>
-              <TableCell align="right">{row.description}</TableCell>
-              <TableCell align="right">{row.link}</TableCell>
+          {hasCitations ? (
+              <TableRow>
+                <TableCell component="th" scope="row">{data.citation}</TableCell>
+              </TableRow>
+          ) : (
+            <TableRow>
+              <TableCell colSpan={3}>No citation available</TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </TableContainer>

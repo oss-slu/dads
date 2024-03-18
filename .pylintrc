@@ -45,7 +45,8 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=R,
+disable=broad-except,
+        R,
         abstract-method,
         apply-builtin,
         arguments-differ,
@@ -126,6 +127,7 @@ disable=R,
         zip-builtin-not-iterating,
         W0237,
         C0202
+
 
 
 [REPORTS]
@@ -230,6 +232,7 @@ ignored-classes=optparse.Values,thread._local,_thread._local
 # system, and so shouldn't trigger E1101 when accessed. Python regular
 # expressions are accepted.
 generated-members=
+
 
 
 [FORMAT]

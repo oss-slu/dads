@@ -6,34 +6,49 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-function createData(label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull) {
-  return { label, domain, standardModel, degree, fieldOfDef, minFieldOfDef, fieldOfModull };
-}
+export default function RationalPointsTable({ data }) {
+  
+  const formatData = (key) => {
+    const items = data[key];
+    if (items && items.length > 0) {
+      if (Array.isArray(items[0])) {
+        return `[${items[0].join(', ')}]`;
+      } else {
+        return `[${items.join(', ')}]`;
+      }
+    }
+    return '[]';
+  };
 
-const rows = [
-  createData('Cardinality', 9),
-  createData('Cycle Sizes', 'P1 -> P1'),
-  createData('Component Sizes', '[16x3-21y2: 16y2]'),
-  createData('As Directed Graph', '2'),
-  createData('Adjacency Matrix', 'QQ'),
-];
-
-export default function RationalPointsTable() {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Rational Preperiodic Points</h3>
       <Table aria-label="simple table">
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.label}
-            >
-              <TableCell component="th" scope="row">
-                <b>{row.label}</b>
-              </TableCell>
-              <TableCell align="right">{row.domain}</TableCell>
-            </TableRow>
-          ))}
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
+            <TableCell align="right">{data.cardinality}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Field Label</b></TableCell>
+            <TableCell align="right">{data.base_field_label}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Preperiodic Components</b></TableCell>
+            <TableCell align="right">{formatData('preperiodic_components')}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Rational Preperiodic Points</b></TableCell>
+            <TableCell align="right">{formatData('rational_periodic_points')}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
+            <TableCell align="right">{"link"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
+            <TableCell align="right">{"link"}</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
