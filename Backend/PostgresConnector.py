@@ -26,7 +26,7 @@ class PostgresConnector:
                 password='dad_pass',
                 port='5432')
 
-    def constructLabel(self, data):
+    def construct_label(self, data):
         return (
             '1.' +
             data['sigma_one'] +
@@ -35,7 +35,7 @@ class PostgresConnector:
             '.' + str(data['ordinal'])
         )
 
-    def getAllSystems(self):
+    def get_all_systems(self):
         columns = '*'
         sql = 'SELECT ' + columns + ' FROM functions_dim_1_NF'
         try:
@@ -51,7 +51,7 @@ class PostgresConnector:
         return result
 
     # gets a system identified by its label, input is string
-    def getSystem(self, ip):
+    def get_system(self, ip):
         cur = None
         try:
             sql = """
@@ -70,8 +70,8 @@ class PostgresConnector:
                 cur.execute(sql, (ip,))
                 temp = cur.fetchone()
                 if temp:
-                    modelLabel = self.constructLabel(temp)
-                    result = {'modelLabel': modelLabel, **temp}
+                    model_label = self.constructLabel(temp)
+                    result = {'modelLabel': model_label, **temp}
                 else:
                     result = {}
 
@@ -86,7 +86,7 @@ class PostgresConnector:
         return result
 
     # gets systems that match the passed in filters, input should be json object
-    def getFilteredSystems(self, filters):
+    def get_filtered_systems(self, filters):
         # return a list of strings of the form:
         #    label, dimension, degree, polynomials, field_label
 
@@ -96,17 +96,17 @@ class PostgresConnector:
         )
         dims = filters['N']
         del filters['N']
-        whereText = self.buildWhereText(filters)
+        where_text = self.build_where_text(filters)
         cur = None
         try:
-            stats= self.getStatistics(whereText)
+            stats= self.get_statistics(where_text)
             result = []
             if dims == [] or 1 in dims:
                 sql = (
                     'SELECT ' +
                     columns +
                     ' FROM functions_dim_1_NF' +
-                    whereText
+                    where_text
                 )
                 with self.connection.cursor(
                     cursor_factory=psycopg2.extras.DictCursor
@@ -176,7 +176,7 @@ class PostgresConnector:
 
     # gets a subset of the systems identified by the labels
     # input should be json list
-    def getSelectedSystems(self, labels):
+    def get_selected_systems(self, labels):
         labels = (
             '(' +
             ', '.join(["'" +
@@ -200,7 +200,7 @@ class PostgresConnector:
             result = None
         return result
 
-    def getStatistics(self, whereText):
+    def get_statistics(self, where_text):
         # whereText = self.buildWhereText(filters)
         # number of maps
         cur = None
@@ -209,7 +209,7 @@ class PostgresConnector:
                 sql = (
                     'SELECT COUNT( (original_model).height )'
                     ' FROM functions_dim_1_NF'
-                    + whereText
+                    + where_text
                 )
                 cur.execute(sql)
                 maps = cur.fetchall()
@@ -217,14 +217,14 @@ class PostgresConnector:
                 sql = (
                     'SELECT AVG(automorphism_group_cardinality::int)'
                     ' FROM functions_dim_1_NF'
-                    + whereText
+                    + where_text
                 )
                 cur.execute(sql)
                 aut = cur.fetchall()
                 # number of PCF
                 sql = (
                     'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF'
-                    + whereText
+                    + where_text
                 )
                 cur.execute(sql)
                 pcf = cur.fetchall()
@@ -232,7 +232,7 @@ class PostgresConnector:
                 sql = (
                     'SELECT AVG( (original_model).height ) ' 
                     'FROM functions_dim_1_NF' +
-                    whereText
+                    where_text
                 )
                 cur.execute(sql)
                 height = cur.fetchall()
@@ -246,7 +246,7 @@ class PostgresConnector:
             resultant = 0
         return [maps, aut, pcf, height, resultant]
 
-    def buildWhereText(self, filters):
+    def build_where_text(self, filters):
         # remove empty filters
         # remove ILD because not currently in use
         for fil in filters.copy():
@@ -263,7 +263,7 @@ class PostgresConnector:
         if len(filters) == 0:
             return ''
 
-        filterText = ' WHERE '
+        filter_text = ' WHERE '
         conditions = []
 
         for fil, values in filters.items():
@@ -288,5 +288,5 @@ class PostgresConnector:
                     + ')'
                     )
 
-        filterText += ' AND '.join(conditions)
-        return filterText
+        filter_text += ' AND '.join(conditions)
+        return filter_text
