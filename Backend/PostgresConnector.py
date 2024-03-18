@@ -45,7 +45,7 @@ class PostgresConnector:
         return result
 
     # gets a system identified by its label, input is string
-    def getSystem(self, id):
+    def getSystem(self, ip):
         cur = None
         try:
             sql = f"""
@@ -61,7 +61,7 @@ class PostgresConnector:
             with self.connection.cursor(
                 cursor_factory=psycopg2.extras.DictCursor
                 ) as cur:
-                cur.execute(sql, (id,))
+                cur.execute(sql, (ip,))
                 temp = cur.fetchone()
                 if temp:
                     modelLabel = self.constructLabel(temp)

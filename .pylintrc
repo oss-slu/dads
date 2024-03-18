@@ -165,6 +165,9 @@ name-group=
 # Include a hint for the correct naming format with invalid-name
 include-naming-hint=no
 
+# Allow broad exception hanfling
+disable=broad-except
+
 # List of decorators that produce properties, such as abc.abstractproperty. Add
 # to this list to register other decorators that produce valid properties.
 property-classes=abc.abstractproperty,cached_property.cached_property,cached_property.threaded_cached_property,cached_property.cached_property_with_ttl,cached_property.threaded_cached_property_with_ttl
@@ -231,6 +234,8 @@ ignored-classes=optparse.Values,thread._local,_thread._local
 # expressions are accepted.
 generated-members=
 
+# Allow broad exception handling
+enable=broad-except
 
 [FORMAT]
 
