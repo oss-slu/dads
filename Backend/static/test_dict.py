@@ -1254,8 +1254,8 @@ test_data = [
         "models.monic_centered_base_field_latex": "\\mathbb{Q}",
         "models.monic_centered_conjugation_from_original_base_field_emb": "0",
         "models.monic_centered_conjugation_from_original_base_field_label": "1.1.1.1",
-        "models.monic_centered_conjugation_from_original_latex"
-         "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
+        "models.monic_centered_conjugation_from_original_latex":
+        "\\left(\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\end{array}\\right)",
         "models.monic_centered_conjugation_from_original_val": "[1, 0, 0, 1]",
         "models.monic_centered_height": "1.386294361",
         "models.monic_centered_name": "monic centered",

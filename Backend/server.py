@@ -22,16 +22,16 @@ def data1():
 # expects json with attribute 'label' and value as the label of the system
 @app.route('/getSystem', methods=['POST', 'GET'])
 def data2():
-    input = request.get_json()
-    data = connector.getSystem(input['id'])
+    target = request.get_json()
+    data = connector.getSystem(target['id'])
     return jsonify(data)
 
 
 # expects json with attribute 'labels' and value as list of labels
 @app.route('/getSelectedSystems', methods=['POST', 'GET'])
 def data3():
-    input = request.get_json()
-    data = connector.getSelectedSystems(input['labels'])
+    target = request.get_json()
+    data = connector.getSelectedSystems(target['labels'])
     return jsonify(data)
 
 

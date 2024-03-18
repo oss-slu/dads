@@ -1,3 +1,7 @@
+"""
+Module Dockstring
+Description of file:
+"""
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from static.test_dict import test_data
@@ -9,7 +13,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/data", methods=['POST', 'GET'])
+@app.route('/data', methods=['POST', 'GET'])
 def data():
     with open('./static/test_data.csv', encoding='utf-8') as csv_file:
         csvReader = csv.DictReader(csv_file)
@@ -25,7 +29,7 @@ def data():
     return jsonify(jsonData)
 
 
-@app.route("/filterData", methods=['POST', 'GET'])
+@app.route('/filterData', methods=['POST', 'GET'])
 def filterData():
     try:
         filters = request.get_json()
@@ -34,9 +38,12 @@ def filterData():
 
         for item in test_data:
             add = True
-            for filter in filters:
-                if (filters[filter] != []):
-                    if (filter in item and not str(item[filter]) in str(filters[filter])):
+            for fil in filters:
+                if (filters[fil] != []):
+                    if (
+                        filter in item and
+                        str(item[fil]) not in str(filters[fil])
+                        ):
                         add = False
                         break
             if add:
@@ -45,8 +52,8 @@ def filterData():
         return filtered
 
     except Exception as error:
-        print("An exception occurred:", error)
+        print('An exception occurred:', error)
         return
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()

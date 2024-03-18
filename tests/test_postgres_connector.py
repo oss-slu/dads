@@ -62,7 +62,7 @@ def test_get_selected_systems(mock_connect):
     labels = ["Label1", "Label2"]
     result = connector.getSelectedSystems(labels)
 
-    labels_str = "("Label1", "Label2")"
+    labels_str = "('Label1', 'Label2')"
     mock_cur.execute.assert_called_once_with(
         f"SELECT * FROM public.data WHERE label in {labels_str}"
         )

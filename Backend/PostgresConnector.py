@@ -188,13 +188,13 @@ class PostgresConnector:
     def buildWhereText(self, filters):
         # remove empty filters
         # remove ILD because not currently in use
-        for filter in filters.copy():
+        for fil in filters.copy():
             if (
-                not filters[filter]
-                or filters[filter] == []
-                or (filter =='indeterminacy_locus_dimension' and filters[filter] == '1')
+                not filters[fil]
+                or filters[fil] == []
+                or (fil =='indeterminacy_locus_dimension' and filters[fil] == '1')
             ) :
-                del filters[filter]
+                del filters[fil]
 
         if len(filters) == 0:
             return ''
@@ -202,18 +202,18 @@ class PostgresConnector:
         filterText = ' WHERE '
         conditions = []
 
-        for filter, values in filters.items():
-            if filter in ['indeterminacy_locus_dimension']:
-                conditions.append('CAST(' + filter + ' AS integer) IN (' + values + ')')
+        for fil, values in filters.items():
+            if fil in ['indeterminacy_locus_dimension']:
+                conditions.append('CAST(' + fil + ' AS integer) IN (' + values + ')')
 
-            elif filter in ['base_field_degree', 'automorphism_group_cardinality']:
-                conditions.append('CAST(' + filter + ' AS integer) IN (' + values + ')')
+            elif fil in ['base_field_degree', 'automorphism_group_cardinality']:
+                conditions.append('CAST(' + fil + ' AS integer) IN (' + values + ')')
 
-            elif filter in ['base_field_label']:
-                conditions.append(filter + ' LIKE "%" + values + "%"')
+            elif fil in ['base_field_label']:
+                conditions.append(fil + ' LIKE "%" + values + "%"')
 
             else:
-                conditions.append(filter + ' IN (' + ', '.join(str(e) for e in values) + ')')
+                conditions.append(fil + ' IN (' + ', '.join(str(e) for e in values) + ')')
 
         filterText += ' AND '.join(conditions)
         return filterText
