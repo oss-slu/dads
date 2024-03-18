@@ -16,21 +16,21 @@ CORS(app)
 @app.route('/data', methods=['POST', 'GET'])
 def data():
     with open('./static/test_data.csv', encoding='utf-8') as csv_file:
-        csvReader = csv.DictReader(csv_file)
+        csv_reader = csv.DictReader(csv_file)
 
-        jsonData = []
+        json_data = []
 
-        for row in csvReader:
+        for row in csv_reader:
             print(row)
-            jsonData.append(row)
+            json_data.append(row)
 
         user = request.get_json()
         print(user)
-    return jsonify(jsonData)
+    return jsonify(json_data)
 
 
-@app.route('/filterData', methods=['POST', 'GET'])
-def filterData():
+@app.route('/filter_data', methods=['POST', 'GET'])
+def filter_data():
     try:
         filters = request.get_json()
 

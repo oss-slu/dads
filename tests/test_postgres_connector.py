@@ -2,7 +2,7 @@
 Module Dockstring
 tests postgres_connector
 """
-from PostgresConnector import PostgresConnector
+from postgres_connector import postgres_connector
 from unittest.mock import MagicMock, patch
 
 @patch("psycopg2.connect")
@@ -12,8 +12,8 @@ def test_get_all_systems(mock_connect):
     mock_conn.cursor.return_value = mock_cur
     mock_cur.fetchall.return_value = [("System1",), ("System2",)]
 
-    connector = PostgresConnector()
-    result = connector.getAllSystems()
+    connector = postgres_connector()
+    result = connector.get_all_systems()
 
     mock_cur.execute.assert_called_once_with("SELECT * FROM public.data")
     assert len(result) == 2
@@ -27,30 +27,14 @@ def test_get_system(mock_connect):
     mock_conn.cursor.return_value = mock_cur
     mock_cur.fetchall.return_value = [("SpecificSystem",)]
 
-    connector = PostgresConnector()
-    result = connector.getSystem("SpecificLabel")
+    connector = postgres_connector()
+    result = connector.get_system("SpecificLabel")
 
     mock_cur.execute.assert_called_once_with(
         "SELECT * FROM public.data WHERE label = 'SpecificLabel'"
         )
     assert len(result) == 1
     assert result[0][0] == "SpecificSystem"
-
-#@patch("psycopg2.connect")
-#def test_get_filtered_systems(mock_connect):
-#    mock_conn = mock_connect.return_value
-#    mock_cur = MagicMock()
-#    mock_conn.cursor.return_value = mock_cur
-#    mock_cur.fetchall.return_value = (
-#       [("FilteredSystem", 4, 2, "poly", "latex")]
-#   )
-
-#    connector = PostgresConnector()
-#    filters = {"degree": [2], "N": [4]}
-#    result = connector.getFilteredSystems(filters)
-
-#    assert len(result) == 1
-#    assert result[0][0] == "FilteredSystem"
 
 @patch("psycopg2.connect")
 def test_get_selected_systems(mock_connect):
@@ -61,9 +45,9 @@ def test_get_selected_systems(mock_connect):
         [("SelectedSystem1",), ("SelectedSystem2",)]
     )
 
-    connector = PostgresConnector()
+    connector = postgres_connector()
     labels = ["Label1", "Label2"]
-    result = connector.getSelectedSystems(labels)
+    result = connector.get_selected_systems(labels)
 
     labels_str = "('Label1', 'Label2')"
     mock_cur.execute.assert_called_once_with(
@@ -86,9 +70,9 @@ def test_get_statistics(mock_connect):
         [(100,)]  # Average Resultant
     ]
 
-    connector = PostgresConnector()
+    connector = postgres_connector()
     filters = {"degree": [2], "N": [4]}
-    result = connector.getStatistics(filters)
+    result = connector.get_statistics(filters)
 
     assert len(result) == 5
     assert result[0][0][0] == 10  # Maps count
@@ -99,7 +83,7 @@ def test_get_statistics(mock_connect):
 
 @patch("psycopg2.connect")
 def test_build_where_text():
-    connector = PostgresConnector()
+    connector = postgres_connector()
 
     filters = {
         "dimension": [2],
@@ -117,7 +101,7 @@ def test_build_where_text():
         "indeterminacy_locus_dimension": ""
     }
 
-    where_clause = connector.buildWhereText(filters)
+    where_clause = connector.build_where_text(filters)
     expected_clause = (
         " WHERE dimension IN (2) AND degree IN (3, 4) AND is_polynomial"
         " IN (True) AND is_Chebyshev IN (False) AND is_Newton IN (True) "
