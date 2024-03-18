@@ -136,7 +136,7 @@ class PostgresConnector:
                                     else:
                                         mon.append('x^'+str(d-i) + 'y^'+str(i))
                             mon_dict[d] = mon
-                        poly = []
+                        poly = '['
                         c = row['coeffs']
                         for j in range(2):
                             first_term = True
