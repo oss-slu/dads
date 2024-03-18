@@ -2,7 +2,7 @@
 Module Dockstring
 tests postgres_connector
 """
-from postgres_connector import postgres_connector
+from postgres_connector import PostgresConnector
 from unittest.mock import MagicMock, patch
 
 @patch("psycopg2.connect")
@@ -12,7 +12,7 @@ def test_get_all_systems(mock_connect):
     mock_conn.cursor.return_value = mock_cur
     mock_cur.fetchall.return_value = [("System1",), ("System2",)]
 
-    connector = postgres_connector()
+    connector = PostgresConnector()
     result = connector.get_all_systems()
 
     mock_cur.execute.assert_called_once_with("SELECT * FROM public.data")
@@ -27,7 +27,7 @@ def test_get_system(mock_connect):
     mock_conn.cursor.return_value = mock_cur
     mock_cur.fetchall.return_value = [("SpecificSystem",)]
 
-    connector = postgres_connector()
+    connector = PostgresConnector()
     result = connector.get_system("SpecificLabel")
 
     mock_cur.execute.assert_called_once_with(
@@ -45,7 +45,7 @@ def test_get_selected_systems(mock_connect):
         [("SelectedSystem1",), ("SelectedSystem2",)]
     )
 
-    connector = postgres_connector()
+    connector = PostgresConnector()
     labels = ["Label1", "Label2"]
     result = connector.get_selected_systems(labels)
 
@@ -70,7 +70,7 @@ def test_get_statistics(mock_connect):
         [(100,)]  # Average Resultant
     ]
 
-    connector = postgres_connector()
+    connector = PostgresConnector()
     filters = {"degree": [2], "N": [4]}
     result = connector.get_statistics(filters)
 
@@ -83,7 +83,7 @@ def test_get_statistics(mock_connect):
 
 @patch("psycopg2.connect")
 def test_build_where_text():
-    connector = postgres_connector()
+    connector = PostgresConnector()
 
     filters = {
         "dimension": [2],

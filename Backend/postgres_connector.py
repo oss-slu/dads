@@ -9,7 +9,7 @@ import psycopg2.extras
 # might want to consider SQL injection down the line
 # gets all systems from the database
 
-class postgres_connector:
+class PostgresConnector:
     """
     Class Docstring
     Manages connection to a PostgreSQL database and executes queries.
