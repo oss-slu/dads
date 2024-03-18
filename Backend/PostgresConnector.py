@@ -150,7 +150,11 @@ class PostgresConnector:
                         poly += ']'
                         label = self.constructLabel(row)
                         result.append(
-                            [label, '1', d, poly, row['base_field_label'], row['function_id']]
+                            [label, '1',
+                            d,
+                            poly,
+                            row['base_field_label'],
+                            row['function_id']]
                             )
 
         except Exception:
@@ -164,7 +168,8 @@ class PostgresConnector:
 
         return result,stats
 
-    # gets a subset of the systems identified by the labels, input should be json list
+    # gets a subset of the systems identified by the labels
+    # input should be json list
     def getSelectedSystems(self, labels):
         labels = (
             '(' +

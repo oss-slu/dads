@@ -98,7 +98,7 @@ def test_get_statistics(mock_connect):
     # assert result[4][0][0] == 100  # Average Resultant
 
 @patch("psycopg2.connect")
-def test_build_where_text(mock_connect):
+def test_build_where_text():
     connector = PostgresConnector()
 
     filters = {
