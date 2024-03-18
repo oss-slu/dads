@@ -46,8 +46,8 @@ confidence=
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 disable=R,
-        abstract-method,
         W0718
+        abstract-method,
         apply-builtin,
         arguments-differ,
         attribute-defined-outside-init,
