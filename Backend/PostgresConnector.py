@@ -116,7 +116,7 @@ class PostgresConnector:
                     mon_dict = {}
                     for row in cur:
                         d = int(row['degree'])
-                        if d in mon_dict.keys():
+                        if d in mon_dict:
                             mon = mon_dict[d]
                         else:
                             # create the monomial list
