@@ -14,9 +14,9 @@ class PostgresConnector:
                 dbname="dad",
                 user="dad_user",
                 password="dad_pass",
-                port = "5432")
-        
-    def constructLabel(self, data): 
+                port="5432")
+    
+    def constructLabel(self, data):
         return '1.' + data['sigma_one'] + '.' + data['sigma_two'] + '.' + data['sigma_three'] + '.' + str(data['ordinal'])
 
     def getAllSystems(self):
@@ -41,7 +41,8 @@ class PostgresConnector:
             sql = f"""
                 SELECT *
                 FROM functions_dim_1_nf
-                JOIN rational_preperiodic_dim_1_nf ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id
+                JOIN rational_preperiodic_dim_1_nf 
+                ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id
                 JOIN graphs_dim_1_nf ON rational_preperiodic_dim_1_nf.graph_id = graphs_dim_1_nf.graph_id
                 LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true
                 LEFT JOIN citations ON citations.id = citation_id
@@ -54,12 +55,12 @@ class PostgresConnector:
                     modelLabel = self.constructLabel(temp)
                     result = {'modelLabel': modelLabel, **temp}
                 else:
-                    result = {} 
-                    
-        except Exception as e:
+                    result = {}
+
+        except Exception:
             self.connection.rollback()
             result = {}
-            
+    
         finally:
             if(cur):
                 cur.close()
@@ -67,7 +68,7 @@ class PostgresConnector:
         return result
 
     # gets systems that match the passed in filters, input should be json object
-    def getFilteredSystems(self,filters):
+    def getFilteredSystems(self, filters):
         # return a list of strings of the form:
         #    label, dimension, degree, polynomials, field_label
 
@@ -86,12 +87,11 @@ class PostgresConnector:
                     # TODO: limit the total number that can be returned
                     mon_dict = {}
                     for row in cur:
-                        #print(row)
                         d = int(row['degree'])
                         if d in mon_dict.keys():
                             mon = mon_dict[d]
                         else:
-                            #create the monomial list
+                            # create the monomial list
                             mon = []
                             for i in range(d+1):
                                 if i == 0:
@@ -101,7 +101,7 @@ class PostgresConnector:
                                 else:
                                     if (d-i) == 1 and i == 1:
                                         mon.append('xy')
-                                    elif i ==1:
+                                    elif i == 1:
                                         mon.append('x^'+str(d-i) + 'y')
                                     elif (d-i) == 1:
                                         mon.append('x' + 'y^' + str(i))
@@ -119,7 +119,7 @@ class PostgresConnector:
                                     if c[j][i] == '1':
                                         poly += mon[i]
                                     elif c[j][i] == '-1':
-                                        poly += '-'+ mon[i]
+                                        poly += '-' + mon[i]
                                     else:
                                         poly += c[j][i] + mon[i]
                                     first_term = False
@@ -128,20 +128,20 @@ class PostgresConnector:
                         poly += ']'
                         label = self.constructLabel(row)
                         result.append([label, '1', d, poly, row['base_field_label'], row['function_id']])
-                    
-        except Exception as e:
+             
+        except Exception:
             self.connection.rollback()
             result = []
             stats = []
-            
+  
         finally:
-            if(cur):
+            if cur:
                 cur.close()
 
         return result,stats
 
     # gets a subset of the systems identified by the labels, input should be json list
-    def getSelectedSystems(self,labels):
+    def getSelectedSystems(self, labels):
         labels = "(" + ", ".join(["'" + str(item) + "'" for item in labels]) + ")"
         columns = '*'
         sql = "SELECT " + columns + " FROM functions_dim_1_NF WHERE label in " + labels
@@ -149,52 +149,51 @@ class PostgresConnector:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
                 result = cur.fetchall()
-        except:
+        except Exception:
             self.connection.rollback()
             result = None
-        finally:
-            return result
-    
-    def getStatistics(self,whereText):
+        return result
+
+    def getStatistics(self, whereText):
         # whereText = self.buildWhereText(filters)
-        #number of maps
+        # number of maps
         cur = None
         try:
             with self.connection.cursor() as cur:
-                sql = "SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF" + whereText 
+                sql = "SELECT COUNT( (original_model).height ) FROM functions_dim_1_NF" + whereText
                 cur.execute(sql)
                 maps = cur.fetchall()
-                #AUT
-                sql = "SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF" + whereText 
+                # AUT
+                sql = "SELECT AVG(automorphism_group_cardinality::int) FROM functions_dim_1_NF" + whereText
                 cur.execute(sql)
                 aut = cur.fetchall()
-                #number of PCF
-                sql = "SELECT SUM(is_PCF::int) FROM functions_dim_1_NF" + whereText 
+                # number of PCF
+                sql = "SELECT SUM(is_PCF::int) FROM functions_dim_1_NF" + whereText
                 cur.execute(sql)
                 pcf = cur.fetchall()
-                #Average Height
-                sql = "SELECT AVG( (original_model).height ) FROM functions_dim_1_NF" + whereText 
+                # Average Height
+                sql = "SELECT AVG( (original_model).height ) FROM functions_dim_1_NF" + whereText
                 cur.execute(sql)
                 height = cur.fetchall()
-                #Average Resultant
-                #sql = "SELECT AVG( (original_model).resultant ) FROM functions_dim_1_NF" + whereText 
-                #cur.execute(sql)
-                resultant = 0 #cur.fetchall()
-        except Exception as e:
+                resultant = 0
+        except Exception:
             self.connection.rollback()
             maps = 0
             aut = 0
             pcf = 0
             height = 0
             resultant = 0
-        finally:
-            return [maps, aut, pcf, height, resultant]
+        return [maps, aut, pcf, height, resultant]
 
     def buildWhereText(self, filters):
         # remove empty filters
-        #remove ILD because not currently in use
+        # remove ILD because not currently in use
         for filter in filters.copy():
-            if not filters[filter] or filters[filter] == [] or (filter =='indeterminacy_locus_dimension' and filters[filter] == "1"):
+            if (
+                not filters[filter]
+                or filters[filter] == []
+                or (filter =='indeterminacy_locus_dimension' and filters[filter] == "1")
+            ) :
                 del filters[filter]
 
         if len(filters) == 0:
@@ -205,7 +204,7 @@ class PostgresConnector:
 
         for filter, values in filters.items():
             if filter in ['indeterminacy_locus_dimension']:
-                    conditions.append("CAST(" + filter + " AS integer) IN (" + values + ")")
+                conditions.append("CAST(" + filter + " AS integer) IN (" + values + ")")
 
             elif filter in ['base_field_degree', 'automorphism_group_cardinality']:
                 conditions.append("CAST(" + filter + " AS integer) IN (" + values + ")")

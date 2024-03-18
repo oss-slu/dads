@@ -1,11 +1,12 @@
-from flask import Flask, jsonify, request, Response
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from PostgresConnector import PostgresConnector
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000","*"])
+CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000", "*"])
 
 connector = PostgresConnector()
+
 
 # return all dynamical systems
 @app.route("/getAllSystems", methods=['POST', 'GET'])
@@ -21,6 +22,7 @@ def data2():
     data = connector.getSystem(input['id'])
     return jsonify(data)
 
+
 # expects json with attribute 'labels' and value as list of labels
 @app.route("/getSelectedSystems", methods=['POST', 'GET'])
 def data3():
@@ -28,17 +30,19 @@ def data3():
     data = connector.getSelectedSystems(input['labels'])
     return jsonify(data)
 
+
 # expects json describing filters, returns the systems that satisfy filters
 # example call json data that would return systems with degree of 2 and 3, dimension = 4: {"degree": [2,3], "N": [4]}
 @app.route("/getFilteredSystems", methods=['POST', 'GET'])
 def data4():
     filters = request.get_json()
-    results,stats = connector.getFilteredSystems(filters)
+    results, stats = connector.getFilteredSystems(filters)
     data = {
         "results": results,
         "statistics": stats
     }
     return jsonify(data)
+
 
 # expects json describing filters, returns stats on the systems that satisfy those filters in an array
 @app.route("/getStatistics", methods=['POST', 'GET'])

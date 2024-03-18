@@ -3,7 +3,7 @@ from flask_cors import CORS
 from static.test_dict import test_data
 import csv
 
-#old test server to use with static data
+# old test server to use with static data
 
 app = Flask(__name__)
 CORS(app)
@@ -36,19 +36,17 @@ def filterData():
             add = True
             for filter in filters:
                 if (filters[filter] != []):
-                    if(filter in item and not str(item[filter]) in str(filters[filter])):
+                    if (filter in item and not str(item[filter]) in str(filters[filter])):
                         add = False
                         break
-            if(add):
+            if add:
                 filtered.append(item)
 
         return filtered
-    
+
     except Exception as error:
         print("An exception occurred:", error)
-        return 
-
-
+        return
 
 if __name__ == "__main__":
     app.run()

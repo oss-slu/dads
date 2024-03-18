@@ -2,13 +2,14 @@ import pytest
 from PostgresConnector import PostgresConnector
 from unittest.mock import MagicMock, patch
 
+
 @patch('psycopg2.connect')
 def test_get_all_systems(mock_connect):
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_conn.cursor.return_value = mock_cur
     mock_cur.fetchall.return_value = [('System1',), ('System2',)]
-
+    
     connector = PostgresConnector()
     result = connector.getAllSystems()
 
