@@ -4,7 +4,7 @@ import Divider from "@mui/material/Divider";
 import PaginatedDataTable from "../components/newDataTable";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { getFilteredSystems, getSelectedSystems} from '../api/routes';
+import { get_filtered_systems, get_selected_systems} from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 
@@ -122,7 +122,7 @@ function ExploreSystems() {
         }
         try {
             //filters need to have right names to work for backend
-            const result = await getSelectedSystems({
+            const result = await get_selected_systems({
                 labels: labels,
             });
             return result.data;
@@ -136,7 +136,7 @@ function ExploreSystems() {
         try {
             //filters need to have right names to work for backend
 
-            const result = await getFilteredSystems(
+            const result = await get_filtered_systems(
                 {
                     degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
                     N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
