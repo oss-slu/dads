@@ -39,7 +39,7 @@ def filterData():
         for item in test_data:
             add = True
             for fil in filters:
-                if (filters[fil] != []):
+                if filters[fil] != []:
                     if (
                         filter in item and
                         str(item[fil]) not in str(filters[fil])

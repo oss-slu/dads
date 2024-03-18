@@ -1,3 +1,7 @@
+"""
+Module Dockstring
+manages  server data queries
+"""
 import psycopg2
 import psycopg2.extras
 
@@ -26,13 +30,13 @@ class PostgresConnector:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
                 result = cur.fetchall()
-        except Exception as e:
+        except Exception:
             self.connection.rollback()
             result = None
         finally:
             if cur:
                 cur.close()
-            return result
+        return result
 
     # gets a system identified by its label, input is string
     def getSystem(self, id):
