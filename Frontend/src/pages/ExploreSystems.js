@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react';
 import { get_filtered_systems, get_selected_systems} from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
+import { useFilters } from '../context/FilterContext'; 
+
 
 
 function ExploreSystems() {
@@ -18,23 +20,24 @@ function ExploreSystems() {
         avgHeight:"",
         avgResultant:""
     });
-    const [filters, setFilters] = useState({
-        dimension: [],
-        degree: [],
-        is_polynomial: [],
-        is_Lattes: [],
+    const {filters, setFilters} = useFilters();
 
-        is_Chebyshev:  [],
-        is_Newton:  [],
-        is_pcf: [],
-        customDegree: "",
-        customDimension: "",
-        automorphism_group_cardinality: "",
-        base_field_label: "",
-        base_field_degree: "",
+    const handleCheckboxChange = (filterName, filterValue) => {
+        const updatedFilters = filters[filterName].includes(filterValue)
+            ? filters[filterName].filter(value => value !== filterValue)
+            : [...filters[filterName], filterValue];
 
-        indeterminacy_locus_dimension: ""
-    });
+        setFilters({ ...filters, [filterName]: updatedFilters });
+    };
+
+    const handleRadioChange = (filterName, value) => {
+        setFilters({ ...filters, [filterName]: value });
+    };
+
+    const handleTextChange = (filterName, value) => {
+        setFilters({ ...filters, [filterName]: value });
+    };
+    
     //add for error notice
     // State for error modals and snackbars
     const [majorError, setMajorError] = useState('');
@@ -167,8 +170,15 @@ function ExploreSystems() {
     };
 
     useEffect(() => {
+        const savedFilters = sessionStorage.getItem('filters');
+        if (savedFilters) {
+          const parsedFilters = JSON.parse(savedFilters);
+          setFilters(parsedFilters); 
+        }
+      
         fetchFilteredSystems();
-     }, []); 
+      }, []); 
+      
      
     const toggleTree = (event) => {
         let el = event.target;
@@ -266,9 +276,8 @@ function ExploreSystems() {
                                     <ul className="nested">
                                         <input
                                             type="checkbox"
-                                            onClick={() =>
-                                                appendFilter("dimension", 1)
-                                            }
+                                            checked={filters.dimension.includes(1)}
+                                            onChange={() => handleCheckboxChange("dimension", 1)}
                                         />
                                         <label>
                                             P<sup>1</sup>{" "}
@@ -277,10 +286,9 @@ function ExploreSystems() {
                                         </label>
                                         <br />
                                         <input
-                                            type="checkbox"
-                                            onClick={() =>
-                                                appendFilter("dimension", 2)
-                                            }
+                                        type="checkbox"
+                                        checked={filters.dimension.includes(2)}
+                                        onChange={() => handleCheckboxChange("dimension", 2)}
                                         />
                                         <label>
                                             P<sup>2</sup>{" "}
@@ -291,12 +299,8 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            onChange={(event) =>
-                                                replaceFilter(
-                                                    "customDimension",
-                                                    event.target.value
-                                                )
-                                            }
+                                            value={filters.customDimension}
+                                            onChange={(e) => handleTextChange("customDimension", e.target.value)}
                                         />
                                         <label>Custom</label>
                                         <br />
@@ -315,37 +319,30 @@ function ExploreSystems() {
                                     <ul className="nested">
                                         <input
                                             type="checkbox"
-                                            onClick={() =>
-                                                appendFilter("degree", 2)
-                                            }
+                                            checked={filters.degree.includes(2)}
+                                            onChange={() => handleCheckboxChange("degree", 2)}
                                         />
                                         <label>2</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            onClick={() =>
-                                                appendFilter("degree", 3)
-                                            }
+                                            checked={filters.degree.includes(3)}
+                                            onChange={() => handleCheckboxChange("degree", 3)}
                                         />
                                         <label>3</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            onClick={() =>
-                                                appendFilter("degree", 4)
-                                            }
+                                            checked={filters.degree.includes(4)}
+                                            onChange={() => handleCheckboxChange("degree", 4)}
                                         />
                                         <label>4</label>
                                         <br />
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            onChange={(event) =>
-                                                replaceFilter(
-                                                    "customDegree",
-                                                    event.target.value
-                                                )
-                                            }
+                                            value={filters.customDegree || ''}
+                                            onChange={(e) => handleTextChange("customDegree", e.target.value)}
                                         />
                                         <label>Custom</label>
                                         <br />
@@ -383,33 +380,29 @@ function ExploreSystems() {
                                     <ul className="nested">
                                         <input
                                             type="checkbox"
-                                            onClick={() =>
-                                                booleanFilter("is_polynomial")
-                                            }
+                                            checked={filters.is_polynomial.includes(true)}
+                                            onChange={() => handleCheckboxChange("is_polynomial", true)}
                                         />
                                         <label>Polynomial</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            onClick={() =>
-                                                booleanFilter("is_Lattes")
-                                            }
+                                            checked={filters.is_Lattes.includes(true)}
+                                            onChange={() => handleCheckboxChange("is_Lattes", true)}
                                         />
                                         <label>Lattes</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            onClick={() =>
-                                                booleanFilter("is_Chebyshev")
-                                            }
+                                            checked={filters.is_Chebyshev.includes(true)}
+                                            onChange={() => handleCheckboxChange("is_Chebyshev", true)}
                                         />
                                         <label>Chebyshev</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            onClick={() =>
-                                                booleanFilter("is_Newton")
-                                            }
+                                            checked={filters.is_Newton.includes(true)}
+                                            onChange={() => handleCheckboxChange("is_Newton", true)}
                                         />
                                         <label>Newton</label>
                                         <br />

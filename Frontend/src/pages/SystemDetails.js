@@ -1,6 +1,6 @@
 import { get_system } from '../api/routes';
 import { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import InfoTable from '../components/FunctionDetail/InfoTable'
 import RationalPointsTable from '../components/FunctionDetail/RationalPointsTable'
 import AutomorphismGroupTable from '../components/FunctionDetail/AutomorphismGroupTable'
@@ -8,6 +8,8 @@ import CriticalPointsTable from '../components/FunctionDetail/CriticalPointsTabl
 import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPointPortraitTable'
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
 import CitationsTable from '../components/FunctionDetail/CitationsTable'
+import { useFilters } from '../context/FilterContext';
+
 
 function SystemDetails() {
     const [data, setData] = useState({});
@@ -29,13 +31,26 @@ function SystemDetails() {
           return []
       } 
   };
+
+  const { filters } = useFilters(); 
+
+  const navigate = useNavigate(); // Initialize useHistory hook
+
+  const handleBack = () => {
+    navigate('/exploreSystems');
+  };
+
   console.log(data)
     return (
         <>
+            
             <div>
                 <div className="info-container">
             <div className="row">
               <InfoTable data = {data}/>
+            </div>
+            <div>
+              <button onClick={handleBack}>Back</button> 
             </div>
             <div className="row">
               <RationalPointsTable data = {data}/>
