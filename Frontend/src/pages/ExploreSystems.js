@@ -13,13 +13,33 @@ import { useFilters } from '../context/FilterContext';
 
 function ExploreSystems() {
     const [stats, setStat] = useState({
-
         numMaps:"",
         avgAUT:"",
         numPCF:"", 
         avgHeight:"",
         avgResultant:""
     });
+
+    const defaultFilters = {
+        dimension: [],
+        degree: [],
+        is_polynomial: [],
+        is_Lattes: [],
+        is_Chebyshev: [],
+        is_Newton: [],
+        is_pcf: [],
+        customDegree: "",
+        customDimension: "",
+        automorphism_group_cardinality: "",
+        base_field_label: "",
+        base_field_degree: "",
+        indeterminacy_locus_dimension: ""
+    };
+
+    const clearFilters = () => {
+        setFilters(defaultFilters);
+    };
+
     const {filters, setFilters} = useFilters();
 
     const handleCheckboxChange = (filterName, filterValue) => {
@@ -31,8 +51,10 @@ function ExploreSystems() {
     };
 
     const handleRadioChange = (filterName, value) => {
-        setFilters({ ...filters, [filterName]: value });
+        const updatedValue = value === '' ? [] : [String(value)];
+        setFilters({ ...filters, [filterName]: updatedValue });
     };
+    
 
     const handleTextChange = (filterName, value) => {
         setFilters({ ...filters, [filterName]: value });
@@ -422,24 +444,16 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            onChange={(event) =>
-                                                replaceFilter(
-                                                    "base_field_degree",
-                                                    event.target.value
-                                                )
-                                            }
+                                            value={filters.base_field_degree || ''}
+                                            onChange={(e) => handleTextChange("base_field_degree", e.target.value)}
                                         />
                                         <label>Degree</label>
                                         <br />
                                         <input
                                             type="text"
                                             style={textBoxStyle}
-                                            onChange={(event) =>
-                                                replaceFilter(
-                                                    "base_field_label",
-                                                    event.target.value
-                                                )
-                                            }
+                                            value={filters.base_field_label || ''}
+                                            onChange={(e) => handleTextChange("base_field_label", e.target.value)}
                                         />
                                         <label>Label</label>
                                         <br />
@@ -496,12 +510,8 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            onChange={(event) =>
-                                                replaceFilter(
-                                                    "automorphism_group_cardinality",
-                                                    event.target.value
-                                                )
-                                            }
+                                            value={filters.automorphism_group_cardinality || ''}
+                                            onChange={(e) => handleTextChange("automorphism_group_cardinality", e.target.value)}
                                         />
                                         <label>Cardinality</label>
                                         <br />
@@ -519,7 +529,8 @@ function ExploreSystems() {
                                                 id="isPCFTrue"
                                                 name="isPCF" 
                                                 value="true"
-                                                onChange={() => replaceFilter('is_pcf', [true])} 
+                                                checked={filters.is_pcf.includes("true")}
+                                                onChange={() => handleRadioChange('is_pcf', true)} 
                                             />
                                             <label htmlFor="isPCFTrue">Is Postcritically Finite</label>
                                         </li>
@@ -529,18 +540,19 @@ function ExploreSystems() {
                                                 id="isPCFFalse"
                                                 name="isPCF" 
                                                 value="false"
-                                                onChange={() => replaceFilter('is_pcf', [false])} 
+                                                checked={filters.is_pcf.includes("false")}
+                                                onChange={() => handleRadioChange('is_pcf', false)} 
                                             />
                                             <label htmlFor="isPCFFalse">Not Postcritically Finite</label>
                                         </li>
                                         <li>
-                                            <input
-                                                type="radio"
+                                            <input 
+                                                type="radio" 
                                                 id="showAll"
-                                                name="isPCF"
+                                                name="isPCF" 
                                                 value="all"
-                                                onChange={() => replaceFilter('is_pcf', [])}
-                                                defaultChecked
+                                                checked={filters.is_pcf.length === 0}
+                                                onChange={() => handleRadioChange('is_pcf', '')} 
                                             />
                                             <label htmlFor="showAll">Show all</label>
                                         </li>
@@ -560,12 +572,8 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            onChange={(event) =>
-                                                replaceFilter(
-                                                    "indeterminacy_locus_dimension",
-                                                    event.target.value
-                                                )
-                                            }
+                                            value={filters.indeterminacy_locus_dimension || ''}
+                                            onChange={(e) => handleTextChange("indeterminacy_locus_dimension", e.target.value)}
                                         />
                                         <label>Dimension</label>
                                     </ul>
@@ -573,12 +581,17 @@ function ExploreSystems() {
                             </ul>
 
                             <ul id="myUL">
-                                <li>
+                                <li  style={{ paddingBottom: '10px' }}>
                                     <button
                                         style={buttonStyle}
                                         onClick={sendFilters}
                                     >
                                         Get Results
+                                    </button>
+                                </li>
+                                <li>
+                                    <button style={buttonStyle} onClick={clearFilters}>
+                                        Clear Filters
                                     </button>
                                 </li>
                             </ul>
