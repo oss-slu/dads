@@ -234,6 +234,8 @@ function ExploreSystems() {
 
     const handlePagePerChange = (event) => {
     // Update the state with the selected value
+    //need to set this to update when filtered systems are queried
+    //update number of pages and current page
     if (event.target.value == 'All'){
 	setPagesPer(systems.length);
 	setPagesDisplay("All");
