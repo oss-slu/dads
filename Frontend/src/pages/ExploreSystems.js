@@ -241,6 +241,13 @@ function ExploreSystems() {
 	setPagesPer(event.target.value);
 	setPagesDisplay(event.target.value);
     }
+    
+    const [fLink, setFLink] = useState('');
+    
+    const generateLink = (field_label) => {
+	let linkPrefix = "this is where the link goes";
+	setFLink(linkPrefix.concat(field_label);
+    };
   };
 
 
