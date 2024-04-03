@@ -21,7 +21,7 @@ class PostgresConnector:
 
         self.connection = psycopg2.connect(
                 host='localhost',
-                dbname='dad',
+                dbname='dad_cloud',
                 user='dad_user',
                 password='dad_pass',
                 port='5432')
@@ -49,7 +49,21 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
-
+    def get_all_families(self):
+        columns = '*'
+        sql = 'SELECT ' + columns + ' FROM families_dim_1_NF'
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute(sql)
+                result = cur.fetchall()
+        except Exception:
+            self.connection.rollback()
+            result = None
+        finally:
+            if cur:
+                cur.close()
+        return result
+    
     # gets a system identified by its label, input is string
     def get_system(self, ip):
         cur = None
@@ -82,7 +96,6 @@ class PostgresConnector:
         finally:
             if cur:
                 cur.close()
-        print(result)
         return result
 
     # gets systems that match the passed in filters, input should be json object
@@ -97,6 +110,7 @@ class PostgresConnector:
         dims = filters['N']
         del filters['N']
         where_text = self.build_where_text(filters)
+        print(where_text)
         cur = None
         try:
             stats= self.get_statistics(where_text)
@@ -279,6 +293,13 @@ class PostgresConnector:
 
             elif fil in ['base_field_label']:
                 conditions.append(fil + ' LIKE "%" + values + "%"')
+            elif fil in ['family']:
+                print(values)
+                
+                query = f"""
+                family = ARRAY{psycopg2.extensions.AsIs(values)}
+                """
+                conditions.append(query)
 
             else:
                 conditions.append(
