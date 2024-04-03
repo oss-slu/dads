@@ -9,8 +9,6 @@ import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 import { useFilters } from '../context/FilterContext'; 
 
-
-
 function ExploreSystems() {
     const [stats, setStat] = useState({
         numMaps:"",
@@ -36,9 +34,13 @@ function ExploreSystems() {
         indeterminacy_locus_dimension: ""
     };
 
+    const [triggerFetch, setTriggerFetch] = useState(false);
+
     const clearFilters = () => {
         setFilters(defaultFilters);
+        setTriggerFetch(prev => !prev);
     };
+
 
     const {filters, setFilters} = useFilters();
 
@@ -201,7 +203,10 @@ function ExploreSystems() {
         fetchFilteredSystems();
       }, []); 
       
-     
+    useEffect(() => {
+        fetchFilteredSystems();
+    }, [triggerFetch]); 
+    
     const toggleTree = (event) => {
         let el = event.target;
         el.parentElement.querySelector(".nested").classList.toggle("active");
@@ -258,7 +263,9 @@ function ExploreSystems() {
     const sendFilters = () => {
         setSystems(null);
         fetchFilteredSystems();
+        setTriggerFetch(prev => !prev);
     };
+
     
     const [pagesPer, setPagesPer] = useState('20');
 
