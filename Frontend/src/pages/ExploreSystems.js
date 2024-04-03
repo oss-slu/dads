@@ -41,7 +41,6 @@ function ExploreSystems() {
         setTriggerFetch(prev => !prev);
     };
 
-
     const {filters, setFilters} = useFilters();
 
     const handleCheckboxChange = (filterName, filterValue) => {
@@ -193,15 +192,37 @@ function ExploreSystems() {
         }
     };
 
+    const [currentPage, setCurrentPage] = useState(() => {
+        return sessionStorage.getItem('currentPage') ? parseInt(sessionStorage.getItem('currentPage'), 10) : 1;
+    });
+      
+
+    useEffect(() => {
+        sessionStorage.setItem('currentPage', currentPage.toString());
+      }, [currentPage]); 
+      
     useEffect(() => {
         const savedFilters = sessionStorage.getItem('filters');
+        const savedPage = sessionStorage.getItem('currentPage');
+        const savedResultsPerPage = sessionStorage.getItem('resultsPerPage');
+      
         if (savedFilters) {
           const parsedFilters = JSON.parse(savedFilters);
-          setFilters(parsedFilters); 
+          setFilters(parsedFilters);
+        }
+      
+        if (savedPage) {
+          setCurrentPage(Number(savedPage));
+        }
+      
+        if (savedResultsPerPage) {
+          setPagesPer(savedResultsPerPage);
+          setPagesDisplay(savedResultsPerPage === systems?.length.toString() ? 'All' : savedResultsPerPage);
         }
       
         fetchFilteredSystems();
       }, []); 
+       
       
     useEffect(() => {
         fetchFilteredSystems();
@@ -213,38 +234,24 @@ function ExploreSystems() {
         el.classList.toggle("caret-down");
     };
 
-    //used to update a boolean filter, filter is [] if false so that it doesn't matter
-    //assumes defaulted to false (UNCHECKED)
-    const booleanFilter = (filterName) => {
-        if (filters[filterName].length === 0) {
-            setFilters({ ...filters, [filterName]: [true] });
-        } else {
-            setFilters({ ...filters, [filterName]: [] });
-        }
+    const sendFilters = () => {
+        setSystems(null);
+        fetchFilteredSystems();
+        setTriggerFetch(prev => !prev);
     };
 
-    //used to set a filter property, replacing it with the old value
-    const replaceFilter = (filterName, filterValue) => {
-        setFilters({ ...filters, [filterName]: filterValue });
-    };
+    const [pagesPer, setPagesPer] = useState('20');
 
-    //used to add to a filter property that can contain multiple values
-    const appendFilter = (filterName, filterValue) => {
-        //remove it from list
-        if (filters[filterName].includes(filterValue)) {
-            setFilters({
-                ...filters,
-                [filterName]: filters[filterName].filter(
-                    (item) => item !== filterValue
-                ),
-            });
-        }
-        //add it to list
-        else {
-            filters[filterName].push(filterValue);
-        }
-    };
+    const [pagesDisplay, setPagesDisplay] = useState('20');
 
+    const handlePagePerChange = (event) => {
+        const value = event.target.value === 'All' ? systems?.length.toString() : event.target.value;
+        setPagesPer(value);
+        setPagesDisplay(event.target.value === 'All' ? 'All' : value);
+      
+        sessionStorage.setItem('resultsPerPage', value);
+    };
+      
     const textBoxStyle = {
         width: "60px",
         marginRight: "12px",
@@ -269,29 +276,6 @@ function ExploreSystems() {
         padding: "6px 75px",
         borderRadius: "4px",
     };
-
-    const sendFilters = () => {
-        setSystems(null);
-        fetchFilteredSystems();
-        setTriggerFetch(prev => !prev);
-    };
-
-    
-    const [pagesPer, setPagesPer] = useState('20');
-
-    const [pagesDisplay, setPagesDisplay] = useState('20');
-
-    const handlePagePerChange = (event) => {
-    // Update the state with the selected value
-    if (event.target.value == 'All'){
-	setPagesPer(systems.length);
-	setPagesDisplay("All");
-    } else {
-	setPagesPer(event.target.value);
-	setPagesDisplay(event.target.value);
-    }
-  };
-
 
     return (
         <>
@@ -672,7 +656,9 @@ function ExploreSystems() {
                                           </span>,
                                       ])
                             }
-                            itemsPerPage={pagesPer} // You can adjust the number of items per page as needed
+                            itemsPerPage={pagesPer}
+                            currentPage={currentPage} 
+                            setCurrentPage={setCurrentPage}
                         />
 
                         {connectionStatus === false ? (
