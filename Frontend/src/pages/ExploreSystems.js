@@ -10,6 +10,16 @@ import ReportMajorError from '../errorreport/ReportMajorError';
 import { useFilters } from '../context/FilterContext'; 
 
 function ExploreSystems() {
+
+    // State Hooks
+    const [systems, setSystems] = useState(null);
+    const [pagesPer, setPagesPer] = useState('20');
+    const [pagesDisplay, setPagesDisplay] = useState('20');
+    const [triggerFetch, setTriggerFetch] = useState(false);
+    const [majorError, setMajorError] = useState('');
+    const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
+    const [generalError, setGeneralError] = useState('');
+    const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
     const [stats, setStat] = useState({
         numMaps:"",
         avgAUT:"",
@@ -17,32 +27,45 @@ function ExploreSystems() {
         avgHeight:"",
         avgResultant:""
     });
+    const [currentPage, setCurrentPage] = useState(() => {
+        return sessionStorage.getItem('currentPage') ? parseInt(sessionStorage.getItem('currentPage'), 10) : 1;
+    });
 
-    const defaultFilters = {
-        dimension: [],
-        degree: [],
-        is_polynomial: [],
-        is_Lattes: [],
-        is_Chebyshev: [],
-        is_Newton: [],
-        is_pcf: [],
-        customDegree: "",
-        customDimension: "",
-        automorphism_group_cardinality: "",
-        base_field_label: "",
-        base_field_degree: "",
-        indeterminacy_locus_dimension: ""
-    };
-
-    const [triggerFetch, setTriggerFetch] = useState(false);
-
-    const clearFilters = () => {
-        setFilters(defaultFilters);
-        setTriggerFetch(prev => !prev);
-    };
-
+    // Context Hooks
     const {filters, setFilters} = useFilters();
 
+    // Effect Hooks
+    useEffect(() => {
+        sessionStorage.setItem('currentPage', currentPage.toString());
+    }, [currentPage]);
+
+    useEffect(() => {
+        const savedFilters = sessionStorage.getItem('filters');
+        const savedPage = sessionStorage.getItem('currentPage');
+        const savedResultsPerPage = sessionStorage.getItem('resultsPerPage');
+      
+        if (savedFilters) {
+          const parsedFilters = JSON.parse(savedFilters);
+          setFilters(parsedFilters);
+        }
+      
+        if (savedPage) {
+          setCurrentPage(Number(savedPage));
+        }
+      
+        if (savedResultsPerPage) {
+          setPagesPer(savedResultsPerPage);
+          setPagesDisplay(savedResultsPerPage === systems?.length.toString() ? 'All' : savedResultsPerPage);
+        }
+      
+        fetchFilteredSystems();
+    }, []);
+
+    useEffect(() => {
+        fetchFilteredSystems();
+    }, [triggerFetch]); 
+
+    // Handler Functions
     const handleCheckboxChange = (filterName, filterValue) => {
         const updatedFilters = filters[filterName].includes(filterValue)
             ? filters[filterName].filter(value => value !== filterValue)
@@ -55,25 +78,23 @@ function ExploreSystems() {
         const updatedValue = value === '' ? [] : [String(value)];
         setFilters({ ...filters, [filterName]: updatedValue });
     };
-    
 
     const handleTextChange = (filterName, value) => {
         setFilters({ ...filters, [filterName]: value });
     };
-    
-    //add for error notice
-    // State for error modals and snackbars
-    const [majorError, setMajorError] = useState('');
-    const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
-    const [generalError, setGeneralError] = useState('');
-    const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
 
-    // Function to close the major error modal
+    const handlePagePerChange = (event) => {
+        const value = event.target.value === 'All' ? systems?.length.toString() : event.target.value;
+        setPagesPer(value);
+        setPagesDisplay(event.target.value === 'All' ? 'All' : value);
+      
+        sessionStorage.setItem('resultsPerPage', value);
+    };
+
     const handleMajorErrorClose = () => {
         setOpenMajorErrorModal(false);
     };
 
-    // Function to close the general error snackbar
     const handleGeneralErrorClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -81,27 +102,91 @@ function ExploreSystems() {
         setOpenGeneralErrorSnackbar(false);
     };
 
-    // Function to report major errors
+    const sendFilters = () => {
+        setSystems(null);
+        fetchFilteredSystems();
+        setTriggerFetch(prev => !prev);
+    };
+
+    const clearFilters = () => {
+        setFilters(defaultFilters);
+        setTriggerFetch(prev => !prev);
+    };
+
+    // API Call Functions
+    const fetchFilteredSystems = async () => {
+        try {
+            const result = await get_filtered_systems(
+                {
+                    degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)],
+                    N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
+                    is_polynomial: filters.is_polynomial,
+                    is_Lattes: filters.is_Lattes,
+                    is_Chebyshev: filters.is_Chebyshev,
+                    is_Newton: filters.is_Newton,
+                    is_pcf: filters.is_pcf,
+		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
+                    base_field_label: filters.base_field_label,
+                    base_field_degree: filters.base_field_degree,
+                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
+                }
+            )
+            console.log(result.data['results'])
+            console.log(result.data['statistics'])
+            console.log(result.data)
+            setSystems(result.data['results']);
+            setStat((previousState => {
+                return { ...previousState, numMaps:result.data['statistics'][0], avgAUT:Math.round(result.data['statistics'][1]*100)/100, numPCF:result.data['statistics'][2], avgHeight:Math.round(result.data['statistics'][3]*100)/100, avgResultant:Math.round(result.data['statistics'][4]*100)/100}
+            }))
+        } catch (error) {
+            setSystems(null);
+            reportMajorError("There was an error while fetching the information requested. Please contact the system administrator.");
+		    connectionStatus = false;
+            console.log(error)
+        }
+    };
+
+    const fetchDataForCSV = async () => {
+        let labels = []
+        if (!systems){
+            return []
+        }
+        else if(systems){
+            for (let i = 0; i < systems.length; i++) {
+                labels.push(systems[i][0])
+            }
+        }
+        try {
+            const result = await get_selected_systems({
+                labels: labels,
+            });
+            return result.data;
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    };
+
+    // Utility Functions
     const reportMajorError = (message) => {
         setMajorError(message);
         setOpenMajorErrorModal(true);
     };
 
-    // Function to report general errors
     const reportGeneralError = (message) => {
         setGeneralError(message);
         setOpenGeneralErrorSnackbar(true);
     };
-    //add for error notice
 
-    let connectionStatus = true;
-
-    const [systems, setSystems] = useState(null);
+    const toggleTree = (event) => {
+        let el = event.target;
+        el.parentElement.querySelector(".nested").classList.toggle("active");
+        el.classList.toggle("caret-down");
+    };
 
     const downloadCSV = async () => {
         try {
             let csvSystems = await fetchDataForCSV();
-            // Check if the fetched data is empty
             if (csvSystems.length == 0) {
                 reportGeneralError('There is nothing to download.');
             }
@@ -134,124 +219,25 @@ function ExploreSystems() {
         }
     }
 
-    //gets data with all of the columns for exporting to csv
-    const fetchDataForCSV = async () => {
-        let labels = []
-        //check if systems is null
-        if (!systems){
-            return []
-        }
-        else if(systems){
-            for (let i = 0; i < systems.length; i++) {
-                labels.push(systems[i][0])
-            }
-        }
-        try {
-            //filters need to have right names to work for backend
-            const result = await get_selected_systems({
-                labels: labels,
-            });
-            return result.data;
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
+    // True Constants
+    const defaultFilters = {
+        dimension: [],
+        degree: [],
+        is_polynomial: [],
+        is_Lattes: [],
+        is_Chebyshev: [],
+        is_Newton: [],
+        is_pcf: [],
+        customDegree: "",
+        customDimension: "",
+        automorphism_group_cardinality: "",
+        base_field_label: "",
+        base_field_degree: "",
+        indeterminacy_locus_dimension: ""
     };
 
-    const fetchFilteredSystems = async () => {
-        try {
-            //filters need to have right names to work for backend
+    let connectionStatus = true;
 
-            const result = await get_filtered_systems(
-                {
-                    degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
-                    N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
-                    is_polynomial: filters.is_polynomial,
-                    is_Lattes: filters.is_Lattes,
-                    is_Chebyshev: filters.is_Chebyshev,
-                    is_Newton: filters.is_Newton,
-                    is_pcf: filters.is_pcf,
-		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
-                    base_field_label: filters.base_field_label,
-                    base_field_degree: filters.base_field_degree,
-                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
-                }
-            )
-            console.log(result.data['results'])
-            console.log(result.data['statistics'])
-            console.log(result.data)
-            setSystems(result.data['results']);
-            setStat((previousState => {
-                return { ...previousState, numMaps:result.data['statistics'][0], avgAUT:Math.round(result.data['statistics'][1]*100)/100, numPCF:result.data['statistics'][2], avgHeight:Math.round(result.data['statistics'][3]*100)/100, avgResultant:Math.round(result.data['statistics'][4]*100)/100}
-              }))
-        } catch (error) {
-            setSystems(null);
-            reportMajorError("There was an error while fetching the information requested. Please contact the system administrator.");
-		    connectionStatus = false;
-            console.log(error)
-        }
-    };
-
-    const [currentPage, setCurrentPage] = useState(() => {
-        return sessionStorage.getItem('currentPage') ? parseInt(sessionStorage.getItem('currentPage'), 10) : 1;
-    });
-      
-
-    useEffect(() => {
-        sessionStorage.setItem('currentPage', currentPage.toString());
-      }, [currentPage]); 
-      
-    useEffect(() => {
-        const savedFilters = sessionStorage.getItem('filters');
-        const savedPage = sessionStorage.getItem('currentPage');
-        const savedResultsPerPage = sessionStorage.getItem('resultsPerPage');
-      
-        if (savedFilters) {
-          const parsedFilters = JSON.parse(savedFilters);
-          setFilters(parsedFilters);
-        }
-      
-        if (savedPage) {
-          setCurrentPage(Number(savedPage));
-        }
-      
-        if (savedResultsPerPage) {
-          setPagesPer(savedResultsPerPage);
-          setPagesDisplay(savedResultsPerPage === systems?.length.toString() ? 'All' : savedResultsPerPage);
-        }
-      
-        fetchFilteredSystems();
-      }, []); 
-       
-      
-    useEffect(() => {
-        fetchFilteredSystems();
-    }, [triggerFetch]); 
-    
-    const toggleTree = (event) => {
-        let el = event.target;
-        el.parentElement.querySelector(".nested").classList.toggle("active");
-        el.classList.toggle("caret-down");
-    };
-
-    const sendFilters = () => {
-        setSystems(null);
-        fetchFilteredSystems();
-        setTriggerFetch(prev => !prev);
-    };
-
-    const [pagesPer, setPagesPer] = useState('20');
-
-    const [pagesDisplay, setPagesDisplay] = useState('20');
-
-    const handlePagePerChange = (event) => {
-        const value = event.target.value === 'All' ? systems?.length.toString() : event.target.value;
-        setPagesPer(value);
-        setPagesDisplay(event.target.value === 'All' ? 'All' : value);
-      
-        sessionStorage.setItem('resultsPerPage', value);
-    };
-      
     const textBoxStyle = {
         width: "60px",
         marginRight: "12px",
