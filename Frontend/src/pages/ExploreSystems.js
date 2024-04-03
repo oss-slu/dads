@@ -256,6 +256,16 @@ function ExploreSystems() {
         color: "white",
         cursor: "pointer",
         fontSize: "15px",
+        padding: "6px 76.5px",
+        borderRadius: "4px",
+    };
+
+    const redButtonStyle = {
+        border: "none",
+        backgroundColor: "#cc0000",
+        color: "white",
+        cursor: "pointer",
+        fontSize: "15px",
         padding: "6px 75px",
         borderRadius: "4px",
     };
@@ -593,11 +603,11 @@ function ExploreSystems() {
                                         style={buttonStyle}
                                         onClick={sendFilters}
                                     >
-                                        Get Results
+                                        Get Results 
                                     </button>
                                 </li>
                                 <li>
-                                    <button style={buttonStyle} onClick={clearFilters}>
+                                    <button style={redButtonStyle} onClick={clearFilters}>
                                         Clear Filters
                                     </button>
                                 </li>
