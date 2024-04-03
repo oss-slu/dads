@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import HomeIcon from '@mui/icons-material/Home';
-import CalculateIcon from '@mui/icons-material/Calculate';
+import GrainIcon from '@mui/icons-material/Grain';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -45,6 +45,7 @@ export default function Topbar() {
 		    
 			<PageLink text="Home" link="/" icon={<HomeIcon />} />
 			<PageLink text="Dynamical Systems" link="/exploreSystems" icon={<FunctionsIcon />} />
+            <PageLink text="Families" link="/families" icon={<GrainIcon/>} />
 
 		    </Toolbar>
                 </AppBar>
