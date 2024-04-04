@@ -111,11 +111,13 @@ function ExploreSystems() {
     const clearFilters = () => {
         setFilters(defaultFilters);
         setTriggerFetch(prev => !prev);
+        setCurrentPage(1);
     };
 
     // API Call Functions
     const fetchFilteredSystems = async () => {
         try {
+            setCurrentPage(1);
             const result = await get_filtered_systems(
                 {
                     degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)],
