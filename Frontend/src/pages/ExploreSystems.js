@@ -7,94 +7,47 @@ import { useState, useEffect } from 'react';
 import { get_filtered_systems, get_selected_systems} from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
-import { useFilters } from '../context/FilterContext'; 
+
 
 function ExploreSystems() {
-
-    // State Hooks
-    const [systems, setSystems] = useState(null);
-    const [pagesPer, setPagesPer] = useState('20');
-    const [pagesDisplay, setPagesDisplay] = useState('20');
-    const [triggerFetch, setTriggerFetch] = useState(false);
-    const [majorError, setMajorError] = useState('');
-    const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
-    const [generalError, setGeneralError] = useState('');
-    const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
     const [stats, setStat] = useState({
+
         numMaps:"",
         avgAUT:"",
         numPCF:"", 
         avgHeight:"",
         avgResultant:""
     });
-    const [currentPage, setCurrentPage] = useState(() => {
-        return sessionStorage.getItem('currentPage') ? parseInt(sessionStorage.getItem('currentPage'), 10) : 1;
+    const [filters, setFilters] = useState({
+        dimension: [],
+        degree: [],
+        is_polynomial: [],
+        is_Lattes: [],
+
+        is_Chebyshev:  [],
+        is_Newton:  [],
+        is_pcf: [],
+        customDegree: "",
+        customDimension: "",
+        automorphism_group_cardinality: "",
+        base_field_label: "",
+        base_field_degree: "",
+
+        indeterminacy_locus_dimension: ""
     });
+    //add for error notice
+    // State for error modals and snackbars
+    const [majorError, setMajorError] = useState('');
+    const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
+    const [generalError, setGeneralError] = useState('');
+    const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
 
-    // Context Hooks
-    const {filters, setFilters} = useFilters();
-
-    // Effect Hooks
-    useEffect(() => {
-        sessionStorage.setItem('currentPage', currentPage.toString());
-    }, [currentPage]);
-
-    useEffect(() => {
-        const savedFilters = sessionStorage.getItem('filters');
-        const savedPage = sessionStorage.getItem('currentPage');
-        const savedResultsPerPage = sessionStorage.getItem('resultsPerPage');
-      
-        if (savedFilters) {
-          const parsedFilters = JSON.parse(savedFilters);
-          setFilters(parsedFilters);
-        }
-      
-        if (savedPage) {
-          setCurrentPage(Number(savedPage));
-        }
-      
-        if (savedResultsPerPage) {
-          setPagesPer(savedResultsPerPage);
-          setPagesDisplay(savedResultsPerPage === systems?.length.toString() ? 'All' : savedResultsPerPage);
-        }
-      
-        fetchFilteredSystems();
-    }, []);
-
-    useEffect(() => {
-        fetchFilteredSystems();
-    }, [triggerFetch]); 
-
-    // Handler Functions
-    const handleCheckboxChange = (filterName, filterValue) => {
-        const updatedFilters = filters[filterName].includes(filterValue)
-            ? filters[filterName].filter(value => value !== filterValue)
-            : [...filters[filterName], filterValue];
-
-        setFilters({ ...filters, [filterName]: updatedFilters });
-    };
-
-    const handleRadioChange = (filterName, value) => {
-        const updatedValue = value === '' ? [] : [String(value)];
-        setFilters({ ...filters, [filterName]: updatedValue });
-    };
-
-    const handleTextChange = (filterName, value) => {
-        setFilters({ ...filters, [filterName]: value });
-    };
-
-    const handlePagePerChange = (event) => {
-        const value = event.target.value === 'All' ? systems?.length.toString() : event.target.value;
-        setPagesPer(value);
-        setPagesDisplay(event.target.value === 'All' ? 'All' : value);
-      
-        sessionStorage.setItem('resultsPerPage', value);
-    };
-
+    // Function to close the major error modal
     const handleMajorErrorClose = () => {
         setOpenMajorErrorModal(false);
     };
 
+    // Function to close the general error snackbar
     const handleGeneralErrorClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -102,93 +55,27 @@ function ExploreSystems() {
         setOpenGeneralErrorSnackbar(false);
     };
 
-    const sendFilters = () => {
-        setSystems(null);
-        fetchFilteredSystems();
-        setTriggerFetch(prev => !prev);
-    };
-
-    const clearFilters = () => {
-        setFilters(defaultFilters);
-        setTriggerFetch(prev => !prev);
-        setCurrentPage(1);
-    };
-
-    // API Call Functions
-    const fetchFilteredSystems = async () => {
-        try {
-            setCurrentPage(1);
-            const result = await get_filtered_systems(
-                {
-                    degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)],
-                    N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
-                    is_polynomial: filters.is_polynomial,
-                    is_Lattes: filters.is_Lattes,
-                    is_Chebyshev: filters.is_Chebyshev,
-                    is_Newton: filters.is_Newton,
-                    is_pcf: filters.is_pcf,
-		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
-                    base_field_label: filters.base_field_label,
-                    base_field_degree: filters.base_field_degree,
-                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
-                }
-            )
-            console.log(result.data['results'])
-            console.log(result.data['statistics'])
-            console.log(result.data)
-            setSystems(result.data['results']);
-            setStat((previousState => {
-                return { ...previousState, numMaps:result.data['statistics'][0], avgAUT:Math.round(result.data['statistics'][1]*100)/100, numPCF:result.data['statistics'][2], avgHeight:Math.round(result.data['statistics'][3]*100)/100, avgResultant:Math.round(result.data['statistics'][4]*100)/100}
-            }))
-        } catch (error) {
-            setSystems(null);
-            reportMajorError("There was an error while fetching the information requested. Please contact the system administrator.");
-		    connectionStatus = false;
-            console.log(error)
-        }
-    };
-
-    const fetchDataForCSV = async () => {
-        let labels = []
-        if (!systems){
-            return []
-        }
-        else if(systems){
-            for (let i = 0; i < systems.length; i++) {
-                labels.push(systems[i][0])
-            }
-        }
-        try {
-            const result = await get_selected_systems({
-                labels: labels,
-            });
-            return result.data;
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
-    };
-
-    // Utility Functions
+    // Function to report major errors
     const reportMajorError = (message) => {
         setMajorError(message);
         setOpenMajorErrorModal(true);
     };
 
+    // Function to report general errors
     const reportGeneralError = (message) => {
         setGeneralError(message);
         setOpenGeneralErrorSnackbar(true);
     };
+    //add for error notice
 
-    const toggleTree = (event) => {
-        let el = event.target;
-        el.parentElement.querySelector(".nested").classList.toggle("active");
-        el.classList.toggle("caret-down");
-    };
+    let connectionStatus = true;
+
+    const [systems, setSystems] = useState(null);
 
     const downloadCSV = async () => {
         try {
             let csvSystems = await fetchDataForCSV();
+            // Check if the fetched data is empty
             if (csvSystems.length == 0) {
                 reportGeneralError('There is nothing to download.');
             }
@@ -221,24 +108,105 @@ function ExploreSystems() {
         }
     }
 
-    // True Constants
-    const defaultFilters = {
-        dimension: [],
-        degree: [],
-        is_polynomial: [],
-        is_Lattes: [],
-        is_Chebyshev: [],
-        is_Newton: [],
-        is_pcf: [],
-        customDegree: "",
-        customDimension: "",
-        automorphism_group_cardinality: "",
-        base_field_label: "",
-        base_field_degree: "",
-        indeterminacy_locus_dimension: ""
+    //gets data with all of the columns for exporting to csv
+    const fetchDataForCSV = async () => {
+        let labels = []
+        //check if systems is null
+        if (!systems){
+            return []
+        }
+        else if(systems){
+            for (let i = 0; i < systems.length; i++) {
+                labels.push(systems[i][0])
+            }
+        }
+        try {
+            //filters need to have right names to work for backend
+            const result = await get_selected_systems({
+                labels: labels,
+            });
+            return result.data;
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     };
 
-    let connectionStatus = true;
+    const fetchFilteredSystems = async () => {
+        try {
+            //filters need to have right names to work for backend
+
+            const result = await get_filtered_systems(
+                {
+                    degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)], //combine the custom field with checkboxes
+                    N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
+                    is_polynomial: filters.is_polynomial,
+                    is_Lattes: filters.is_Lattes,
+                    is_Chebyshev: filters.is_Chebyshev,
+                    is_Newton: filters.is_Newton,
+                    is_pcf: filters.is_pcf,
+		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
+                    base_field_label: filters.base_field_label,
+                    base_field_degree: filters.base_field_degree,
+                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
+                }
+            )
+            console.log(result.data['results'])
+            console.log(result.data['statistics'])
+            console.log(result.data)
+            setSystems(result.data['results']);
+            setStat((previousState => {
+                return { ...previousState, numMaps:result.data['statistics'][0], avgAUT:Math.round(result.data['statistics'][1]*100)/100, numPCF:result.data['statistics'][2], avgHeight:Math.round(result.data['statistics'][3]*100)/100, avgResultant:Math.round(result.data['statistics'][4]*100)/100}
+              }))
+        } catch (error) {
+            setSystems(null);
+            reportMajorError("There was an error while fetching the information requested. Please contact the system administrator.");
+		    connectionStatus = false;
+            console.log(error)
+        }
+    };
+
+    useEffect(() => {
+        fetchFilteredSystems();
+     }, []); 
+     
+    const toggleTree = (event) => {
+        let el = event.target;
+        el.parentElement.querySelector(".nested").classList.toggle("active");
+        el.classList.toggle("caret-down");
+    };
+
+    //used to update a boolean filter, filter is [] if false so that it doesn't matter
+    //assumes defaulted to false (UNCHECKED)
+    const booleanFilter = (filterName) => {
+        if (filters[filterName].length === 0) {
+            setFilters({ ...filters, [filterName]: [true] });
+        } else {
+            setFilters({ ...filters, [filterName]: [] });
+        }
+    };
+
+    //used to set a filter property, replacing it with the old value
+    const replaceFilter = (filterName, filterValue) => {
+        setFilters({ ...filters, [filterName]: filterValue });
+    };
+
+    //used to add to a filter property that can contain multiple values
+    const appendFilter = (filterName, filterValue) => {
+        //remove it from list
+        if (filters[filterName].includes(filterValue)) {
+            setFilters({
+                ...filters,
+                [filterName]: filters[filterName].filter(
+                    (item) => item !== filterValue
+                ),
+            });
+        }
+        //add it to list
+        else {
+            filters[filterName].push(filterValue);
+        }
+    };
 
     const textBoxStyle = {
         width: "60px",
@@ -251,19 +219,30 @@ function ExploreSystems() {
         color: "white",
         cursor: "pointer",
         fontSize: "15px",
-        padding: "6px 76.5px",
-        borderRadius: "4px",
-    };
-
-    const redButtonStyle = {
-        border: "none",
-        backgroundColor: "#cc0000",
-        color: "white",
-        cursor: "pointer",
-        fontSize: "15px",
         padding: "6px 75px",
         borderRadius: "4px",
     };
+
+    const sendFilters = () => {
+        setSystems(null);
+        fetchFilteredSystems();
+    };
+    
+    const [pagesPer, setPagesPer] = useState('20');
+
+    const [pagesDisplay, setPagesDisplay] = useState('20');
+
+    const handlePagePerChange = (event) => {
+    // Update the state with the selected value
+    if (event.target.value == 'All'){
+	setPagesPer(systems.length);
+	setPagesDisplay("All");
+    } else {
+	setPagesPer(event.target.value);
+	setPagesDisplay(event.target.value);
+    }
+  };
+
 
     return (
         <>
@@ -287,8 +266,9 @@ function ExploreSystems() {
                                     <ul className="nested">
                                         <input
                                             type="checkbox"
-                                            checked={filters.dimension.includes(1)}
-                                            onChange={() => handleCheckboxChange("dimension", 1)}
+                                            onClick={() =>
+                                                appendFilter("dimension", 1)
+                                            }
                                         />
                                         <label>
                                             P<sup>1</sup>{" "}
@@ -297,9 +277,10 @@ function ExploreSystems() {
                                         </label>
                                         <br />
                                         <input
-                                        type="checkbox"
-                                        checked={filters.dimension.includes(2)}
-                                        onChange={() => handleCheckboxChange("dimension", 2)}
+                                            type="checkbox"
+                                            onClick={() =>
+                                                appendFilter("dimension", 2)
+                                            }
                                         />
                                         <label>
                                             P<sup>2</sup>{" "}
@@ -310,8 +291,12 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            value={filters.customDimension}
-                                            onChange={(e) => handleTextChange("customDimension", e.target.value)}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "customDimension",
+                                                    event.target.value
+                                                )
+                                            }
                                         />
                                         <label>Custom</label>
                                         <br />
@@ -330,30 +315,37 @@ function ExploreSystems() {
                                     <ul className="nested">
                                         <input
                                             type="checkbox"
-                                            checked={filters.degree.includes(2)}
-                                            onChange={() => handleCheckboxChange("degree", 2)}
+                                            onClick={() =>
+                                                appendFilter("degree", 2)
+                                            }
                                         />
                                         <label>2</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            checked={filters.degree.includes(3)}
-                                            onChange={() => handleCheckboxChange("degree", 3)}
+                                            onClick={() =>
+                                                appendFilter("degree", 3)
+                                            }
                                         />
                                         <label>3</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            checked={filters.degree.includes(4)}
-                                            onChange={() => handleCheckboxChange("degree", 4)}
+                                            onClick={() =>
+                                                appendFilter("degree", 4)
+                                            }
                                         />
                                         <label>4</label>
                                         <br />
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            value={filters.customDegree || ''}
-                                            onChange={(e) => handleTextChange("customDegree", e.target.value)}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "customDegree",
+                                                    event.target.value
+                                                )
+                                            }
                                         />
                                         <label>Custom</label>
                                         <br />
@@ -391,29 +383,33 @@ function ExploreSystems() {
                                     <ul className="nested">
                                         <input
                                             type="checkbox"
-                                            checked={filters.is_polynomial.includes(true)}
-                                            onChange={() => handleCheckboxChange("is_polynomial", true)}
+                                            onClick={() =>
+                                                booleanFilter("is_polynomial")
+                                            }
                                         />
                                         <label>Polynomial</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            checked={filters.is_Lattes.includes(true)}
-                                            onChange={() => handleCheckboxChange("is_Lattes", true)}
+                                            onClick={() =>
+                                                booleanFilter("is_Lattes")
+                                            }
                                         />
                                         <label>Lattes</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            checked={filters.is_Chebyshev.includes(true)}
-                                            onChange={() => handleCheckboxChange("is_Chebyshev", true)}
+                                            onClick={() =>
+                                                booleanFilter("is_Chebyshev")
+                                            }
                                         />
                                         <label>Chebyshev</label>
                                         <br />
                                         <input
                                             type="checkbox"
-                                            checked={filters.is_Newton.includes(true)}
-                                            onChange={() => handleCheckboxChange("is_Newton", true)}
+                                            onClick={() =>
+                                                booleanFilter("is_Newton")
+                                            }
                                         />
                                         <label>Newton</label>
                                         <br />
@@ -433,16 +429,24 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            value={filters.base_field_degree || ''}
-                                            onChange={(e) => handleTextChange("base_field_degree", e.target.value)}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "base_field_degree",
+                                                    event.target.value
+                                                )
+                                            }
                                         />
                                         <label>Degree</label>
                                         <br />
                                         <input
                                             type="text"
                                             style={textBoxStyle}
-                                            value={filters.base_field_label || ''}
-                                            onChange={(e) => handleTextChange("base_field_label", e.target.value)}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "base_field_label",
+                                                    event.target.value
+                                                )
+                                            }
                                         />
                                         <label>Label</label>
                                         <br />
@@ -499,8 +503,12 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            value={filters.automorphism_group_cardinality || ''}
-                                            onChange={(e) => handleTextChange("automorphism_group_cardinality", e.target.value)}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "automorphism_group_cardinality",
+                                                    event.target.value
+                                                )
+                                            }
                                         />
                                         <label>Cardinality</label>
                                         <br />
@@ -518,8 +526,7 @@ function ExploreSystems() {
                                                 id="isPCFTrue"
                                                 name="isPCF" 
                                                 value="true"
-                                                checked={filters.is_pcf.includes("true")}
-                                                onChange={() => handleRadioChange('is_pcf', true)} 
+                                                onChange={() => replaceFilter('is_pcf', [true])} 
                                             />
                                             <label htmlFor="isPCFTrue">Is Postcritically Finite</label>
                                         </li>
@@ -529,19 +536,18 @@ function ExploreSystems() {
                                                 id="isPCFFalse"
                                                 name="isPCF" 
                                                 value="false"
-                                                checked={filters.is_pcf.includes("false")}
-                                                onChange={() => handleRadioChange('is_pcf', false)} 
+                                                onChange={() => replaceFilter('is_pcf', [false])} 
                                             />
                                             <label htmlFor="isPCFFalse">Not Postcritically Finite</label>
                                         </li>
                                         <li>
-                                            <input 
-                                                type="radio" 
+                                            <input
+                                                type="radio"
                                                 id="showAll"
-                                                name="isPCF" 
+                                                name="isPCF"
                                                 value="all"
-                                                checked={filters.is_pcf.length === 0}
-                                                onChange={() => handleRadioChange('is_pcf', '')} 
+                                                onChange={() => replaceFilter('is_pcf', [])}
+                                                defaultChecked
                                             />
                                             <label htmlFor="showAll">Show all</label>
                                         </li>
@@ -561,8 +567,12 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            value={filters.indeterminacy_locus_dimension || ''}
-                                            onChange={(e) => handleTextChange("indeterminacy_locus_dimension", e.target.value)}
+                                            onChange={(event) =>
+                                                replaceFilter(
+                                                    "indeterminacy_locus_dimension",
+                                                    event.target.value
+                                                )
+                                            }
                                         />
                                         <label>Dimension</label>
                                     </ul>
@@ -570,17 +580,12 @@ function ExploreSystems() {
                             </ul>
 
                             <ul id="myUL">
-                                <li  style={{ paddingBottom: '10px' }}>
+                                <li>
                                     <button
                                         style={buttonStyle}
                                         onClick={sendFilters}
                                     >
-                                        Get Results 
-                                    </button>
-                                </li>
-                                <li>
-                                    <button style={redButtonStyle} onClick={clearFilters}>
-                                        Clear Filters
+                                        Get Results
                                     </button>
                                 </li>
                             </ul>
@@ -644,9 +649,7 @@ function ExploreSystems() {
                                           </span>,
                                       ])
                             }
-                            itemsPerPage={pagesPer}
-                            currentPage={currentPage} 
-                            setCurrentPage={setCurrentPage}
+                            itemsPerPage={pagesPer} // You can adjust the number of items per page as needed
                         />
 
                         {connectionStatus === false ? (

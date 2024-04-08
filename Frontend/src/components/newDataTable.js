@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Pagination from 'react-bootstrap/Pagination';
-export default function PaginatedDataTable({ labels, data, itemsPerPage, currentPage, setCurrentPage }) {
+export default function PaginatedDataTable({ labels, data, itemsPerPage }) {
+  const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
