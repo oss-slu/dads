@@ -19,7 +19,17 @@ export default function RationalPointsTable({ data }) {
     }
     return '[]';
   };
+    
 
+    function adjacencyListToMatrix(singleDegreeList) {
+	const numNodes = singleDegreeList.length;
+	const adjacencyMatrix = Array.from({ length: numNodes }, () => Array(numNodes).fill(0));
+	for (let node = 0; node < numNodes; node++) {
+	    const adjacentNode = singleDegreeList[node];
+	    adjacencyMatrix[node][adjacentNode] = 1;
+	}
+	return adjacencyMatrix;
+    }
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Rational Preperiodic Points</h3>
@@ -47,7 +57,7 @@ export default function RationalPointsTable({ data }) {
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
-            <TableCell align="right">{"link"}</TableCell>
+            <TableCell align="right">{adjacencyListToMatrix(data.edges}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

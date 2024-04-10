@@ -10,6 +10,10 @@ import Paper from '@mui/material/Paper';
 export default function ModelsTable({ data }) {
   // Extracting keys containing "_model" from the data object
   const modelKeys = Object.keys(data).filter(key => key.includes("_model"));
+    if( modelKeys.includes("display_model") {
+	let position = modelKeys.indexOf("display_model")
+
+    }
 
   return (
     <TableContainer className='table-component' component={Paper}>
@@ -33,7 +37,7 @@ export default function ModelsTable({ data }) {
                 <TableCell align="left">{modelData[0]}</TableCell>
                 <TableCell align="left">{modelData[1]}</TableCell>
                 <TableCell align="left">{modelData[2]}</TableCell>
-                <TableCell align="left">{modelData[3]}</TableCell>
+                <TableCell align="left">{modelData[5]}</TableCell>
               </TableRow>
             );
           })}

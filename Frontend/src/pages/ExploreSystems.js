@@ -245,7 +245,7 @@ function ExploreSystems() {
     const [fLink, setFLink] = useState('');
     
     const generateLink = (field_label) => {
-	let linkPrefix = "this is where the link goes";
+	let linkPrefix = "https://www.lmfdb.org/";
 	setFLink(linkPrefix.concat(field_label);
     };
   };
