@@ -234,21 +234,22 @@ function ExploreSystems() {
 
     const handlePagePerChange = (event) => {
     // Update the state with the selected value
-    if (event.target.value == 'All'){
-	setPagesPer(systems.length);
-	setPagesDisplay("All");
-    } else {
-	setPagesPer(event.target.value);
-	setPagesDisplay(event.target.value);
-    }
+	if (event.target.value == 'All'){
+	    setPagesPer(systems.length);
+	    setPagesDisplay("All");
+	} else {
+	    setPagesPer(event.target.value);
+	    setPagesDisplay(event.target.value);
+	}
+    };
     
     const [fLink, setFLink] = useState('');
     
     const generateLink = (field_label) => {
 	let linkPrefix = "https://www.lmfdb.org/";
-	setFLink(linkPrefix.concat(field_label);
+	setFLink(linkPrefix.concat(field_label));
     };
-  };
+
 
 
     return (

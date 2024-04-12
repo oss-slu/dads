@@ -9,8 +9,8 @@ import Paper from '@mui/material/Paper';
 
 export default function ModelsTable({ data }) {
   // Extracting keys containing "_model" from the data object
-  const modelKeys = Object.keys(data).filter(key => key.includes("_model"));
-    if( modelKeys.includes("display_model") {
+    const modelKeys = Object.keys(data).filter(key => key.includes("_model"));
+    if( modelKeys.includes("display_model")) {
 	let position = modelKeys.indexOf("display_model")
 
     }
