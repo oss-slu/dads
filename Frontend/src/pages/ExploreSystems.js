@@ -72,23 +72,25 @@ function ExploreSystems() {
             : [...filters[filterName], filterValue];
 
         setFilters({ ...filters, [filterName]: updatedFilters });
+
+        sessionStorage.setItem('currentPage', '1');
     };
 
     const handleRadioChange = (filterName, value) => {
         const updatedValue = value === '' ? [] : [String(value)];
         setFilters({ ...filters, [filterName]: updatedValue });
+        sessionStorage.setItem('currentPage', '1');
     };
 
     const handleTextChange = (filterName, value) => {
         setFilters({ ...filters, [filterName]: value });
+        sessionStorage.setItem('currentPage', '1');
     };
 
     const handlePagePerChange = (event) => {
         const value = event.target.value === 'All' ? systems?.length.toString() : event.target.value;
         setPagesPer(value);
         setPagesDisplay(event.target.value === 'All' ? 'All' : value);
-      
-        sessionStorage.setItem('resultsPerPage', value);
     };
 
     const handleMajorErrorClose = () => {
@@ -117,7 +119,14 @@ function ExploreSystems() {
     // API Call Functions
     const fetchFilteredSystems = async () => {
         try {
-            setCurrentPage(1);
+            const savedPage = sessionStorage.getItem('currentPage');
+            const savedFilters = sessionStorage.getItem('filters');
+            const parsedFilters = JSON.parse(savedFilters);
+
+            if(savedPage){
+                setCurrentPage(Number(savedPage));
+            }
+            
             const result = await get_filtered_systems(
                 {
                     degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)],
@@ -133,6 +142,7 @@ function ExploreSystems() {
                     indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
                 }
             )
+
             console.log(result.data['results'])
             console.log(result.data['statistics'])
             console.log(result.data)
