@@ -19,6 +19,7 @@ DADS is a web application designed for researchers to access information about a
 
 ### Contributing
 We welcome contributions from the community. Please refer to the Contributing Guide for more information.
+https://github.com/oss-slu/dads/blob/main/Contributing_Guide.txt
 
 ### Database Info
 Currently, the database connection settings are configured for local development using Beekeeper Studio with the following connection parameters:
