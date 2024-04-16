@@ -35,6 +35,17 @@ psycopg2.connect(
 
 ### Key Files
 
+#### Backend - 
+postgres_connector.py - Contains methods to select systems and build SQL query text
+server.py - Contains Flask server initialization and API routes4
+
+#### Frontend - 
+ExploreSystems.js - This page allows users to filter and search through the dynamical systems database using various properties.
+SystemDetails.js - Displays detailed information about a specific system when selected from the results in the Explore Systems page, uses component tables and data passed from postgres_connector
+AboutPage.js - Contains static information about the site
+newDataTable.js - Renders a dynamic table that displays systems based on the search and filter criteria, complete with pagination functionality.
+Topbar.js - Contains navigation logic for the site 
+
 ### License
 This project is licensed under the terms of the MIT license.
 
