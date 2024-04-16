@@ -2,7 +2,7 @@
 DADS is a web application designed for researchers to access information about a vast array of arithmetical dynamical systems that would otherwise take a long time to compute independently. This project was developed by the SLU Capstone Project team under Open Source with SLU in collaboration with Dr. Benjamin Hutz, a professor of mathematics and statistics at Saint Louis University.
 
 ### Features
-* Home Page: A brief description of the application and a link to the GitHub repository.
+* Home Page: A description of the application and a link to the GitHub repository.
 * Explore Systems Page: Allows users to filter and query through the database for various properties like automorphism group cardinality and degree. The results are displayed in a paginated data table with a statistics summary to the right which shows metrics about the returned systems, such as average height.
 * System Details Page: Each system in the paginated table has a label which can be selected to show a page with additional information about the system.
 
@@ -13,10 +13,9 @@ DADS is a web application designed for researchers to access information about a
 
 ### Getting Started
 * Clone the repository from GitHub.
-* Install the necessary dependencies for React and Python using PIP and npm install 
+* Install the necessary dependencies for React and Python using PIP and npm install.
 * Set up the PostgreSQL database.
-* Run the application.
-* For detailed instructions, please refer to the Installation Guide.
+* Run the application using "python server.py" and "npm start" commands in backend and frontend directories respectively. 
 
 ### Contributing
 We welcome contributions from the community. Please refer to the Contributing Guide for more information.
