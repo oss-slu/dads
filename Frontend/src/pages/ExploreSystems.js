@@ -5,10 +5,14 @@ import PaginatedDataTable from "../components/newDataTable";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { get_filtered_systems, get_selected_systems,get_families} from '../api/routes';
-import { get_filtered_systems, get_selected_systems,get_families} from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 import { useFilters } from '../context/FilterContext'; 
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 function ExploreSystems() {
 
@@ -31,9 +35,15 @@ function ExploreSystems() {
     const [currentPage, setCurrentPage] = useState(() => {
         return sessionStorage.getItem('currentPage') ? parseInt(sessionStorage.getItem('currentPage'), 10) : 1;
     });
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [families, setFamilies] = useState([]);
 
     // Context Hooks
     const {filters, setFilters} = useFilters();
+
+
+    const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+    const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
     // Effect Hooks
     useEffect(() => {
@@ -60,13 +70,21 @@ function ExploreSystems() {
         }
       
         fetchFilteredSystems();
+        fetchFamilies();
     }, []);
 
     useEffect(() => {
         fetchFilteredSystems();
+        fetchFamilies();
     }, [triggerFetch]); 
 
     // Handler Functions
+    const handleAutocompleteChange = (event, selectedValues) => {
+        setSelectedOptions(selectedValues);
+        const extractedValues = selectedValues.map(option => option[0]);
+        setFilters({ ...filters, "family": extractedValues });
+        console.log('Selected options:', extractedValues);
+    };
     const handleCheckboxChange = (filterName, filterValue) => {
         const updatedFilters = filters[filterName].includes(filterValue)
             ? filters[filterName].filter(value => value !== filterValue)
@@ -116,6 +134,15 @@ function ExploreSystems() {
     };
 
     // API Call Functions
+    const fetchFamilies = async () => {
+        try {
+            const result = await get_families()
+            setFamilies(result.data)
+        }
+        catch (error) {
+            console.log(error)
+        }
+     }
     const fetchFilteredSystems = async () => {
         try {
             setCurrentPage(1);
@@ -131,7 +158,8 @@ function ExploreSystems() {
 		            automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
                     base_field_degree: filters.base_field_degree,
-                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension
+                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension,
+                    family:filters.family
                 }
             )
             console.log(result.data['results'])
@@ -228,6 +256,7 @@ function ExploreSystems() {
         degree: [],
         is_polynomial: [],
         is_Lattes: [],
+        family:[],
         is_Chebyshev: [],
         is_Newton: [],
         is_pcf: [],
@@ -569,7 +598,42 @@ function ExploreSystems() {
                                     </ul>
                                 </li>
                             </ul>
-
+                            <ul id="myUL">
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Family
+                                    </span>
+                                    <ul className="nested">
+                                    <Autocomplete
+                                    multiple
+                                    id="checkboxes-tags-demo"
+                                    options={families}
+                                    disableCloseOnSelect
+                                    getOptionLabel={(option) => option[1]}
+                                    renderOption={(props, option, { selected }) => (
+                                        <li {...props}>
+                                        <Checkbox
+                                            icon={icon}
+                                            checkedIcon={checkedIcon}
+                                            style={{ marginRight: 8 }}
+                                            checked={selected}
+                                        />
+                                        {option[1]}
+                                        </li>
+                                    )}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Checkboxes" placeholder="Families" />
+                                    )}
+                                    onChange={handleAutocompleteChange}
+                                    value={selectedOptions} 
+                                    />
+                                    <br></br>
+                                    </ul>
+                                </li>
+                            </ul>
                             <ul id="myUL">
                                 <li  style={{ paddingBottom: '10px' }}>
                                     <button

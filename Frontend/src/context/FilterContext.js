@@ -10,6 +10,7 @@ export const FilterProvider = ({ children }) => {
         degree: [],
         is_polynomial: [],
         is_Lattes: [],
+        family:[],
         is_Chebyshev:  [],
         is_Newton:  [],
         is_pcf: [],
