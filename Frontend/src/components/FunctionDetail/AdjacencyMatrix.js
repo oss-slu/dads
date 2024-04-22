@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 
 
-function AdjacencyMatrix({ showModal, handleClose, modalTitle, edges, saveChangesText }) => {
+function AdjacencyMatrix({ modalTitle, edges }) {
 
     const generateAdjacencyMatrix = (adjacencyList) => {
 	const numVertices = Math.max(...adjacencyList) + 1; // Determine the number of vertices
@@ -20,6 +20,7 @@ function AdjacencyMatrix({ showModal, handleClose, modalTitle, edges, saveChange
     const [showModal, setShowModal] = useState(false);
     const handleClose = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
+    const matrix = generateAdjacencyMatrix(edges);
     
     
     return (
@@ -27,31 +28,11 @@ function AdjacencyMatrix({ showModal, handleClose, modalTitle, edges, saveChange
 	    {modalTitle}
 	</Button>
 
-	<Modal show={showModal} onHide={handleCloseModal}>
+	<Modal show={handleShow} onHide={handleCloseModal}>
 	    <Modal.Header closeButton>
 		<Modal.Title>{modalTitle}</Modal.Title>
 	    </Modal.Header>
 	    <Modal.Body>
-		<table className="table">
-		    <thead>
-			<tr>
-			    <th>Vertex</th>
-			    {edges.map((_, index) => (
-				<th key={index}>Node {index}</th>
-			    ))}
-			</tr>
-		    </thead>
-		    <tbody>
-			{edges.map((row, rowIndex) => (
-			    <tr key={rowIndex}>
-				<td>Node {rowIndex}</td>
-				{row.map((cell, cellIndex) => (
-				    <td key={cellIndex}>{cell}</td>
-				))}
-			    </tr>
-			))}
-		    </tbody>
-		</table>
 	    </Modal.Body>
 	    <Modal.Footer>
 		<Button variant="secondary" onClick={handleCloseModal}>
@@ -61,8 +42,7 @@ function AdjacencyMatrix({ showModal, handleClose, modalTitle, edges, saveChange
 		    {saveChangesText}
 		</Button>
 	    </Modal.Footer>
-      </Modal>
+	</Modal>
     );
 }
 
-export default AdjacencyMatrix;

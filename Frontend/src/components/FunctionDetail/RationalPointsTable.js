@@ -5,6 +5,8 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix'
+
 
 export default function RationalPointsTable({ data }) {
   
@@ -63,16 +65,10 @@ export default function RationalPointsTable({ data }) {
           <TableRow>
             <TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
             <TableCell align="right">{data.edges}
-		<Button variant="primary" onClick={handleShow}>
-		    Open Modal
-		</Button>
 	    </TableCell>
-	    <MyModal
-		showModal={showModal}
-		handleClose={handleClose}
+	    <AdjacencyMatrix
 		modalTitle="Adjacency Matrix"
 		edges = {data.edges}
-		saveChangesText="Save Changes"
 	    />
           </TableRow>
         </TableBody>
