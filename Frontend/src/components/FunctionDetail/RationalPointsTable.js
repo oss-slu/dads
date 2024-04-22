@@ -62,7 +62,18 @@ export default function RationalPointsTable({ data }) {
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
-            <TableCell align="right">{data.edges}</TableCell>
+            <TableCell align="right">{data.edges}
+		<Button variant="primary" onClick={handleShow}>
+		    Open Modal
+		</Button>
+	    </TableCell>
+	    <MyModal
+		showModal={showModal}
+		handleClose={handleClose}
+		modalTitle="Adjacency Matrix"
+		edges = {data.edges}
+		saveChangesText="Save Changes"
+	    />
           </TableRow>
         </TableBody>
       </Table>
