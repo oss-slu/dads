@@ -49,7 +49,8 @@ function Families() {
                                           x[2],
                                       ])
                             }
-                            itemsPerPage={pagesPer} // You can adjust the number of items per page as needed
+                            itemsPerPage={pagesPer}
+                            currentPage={1}
                         />
                         </Grid>
                         </div>
