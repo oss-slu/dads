@@ -19,21 +19,26 @@ export default function RationalPointsTable({ data }) {
     }
     return '[]';
   };
-    
+    const generateAdjacencyMatrix = (adjacencyList) => {
+	const numVertices = Math.max(...adjacencyList) + 1; // Determine the number of vertices
+	const adjacencyMatrix = Array.from({ length: numVertices }, () => Array(numVertices).fill(0));
 
-    function adjacencyListToMatrix(singleDegreeList) {
-	const numNodes = singleDegreeList.length;
-	const adjacencyMatrix = Array.from({ length: numNodes }, () => Array(numNodes).fill(0));
-	for (let node = 0; node < numNodes; node++) {
-	    const adjacentNode = singleDegreeList[node];
-	    adjacencyMatrix[node][adjacentNode] = 1;
+    // Populate the adjacency matrix based on the adjacency list
+	for (let i = 0; i < adjacencyList.length; i++) {
+	    const adjacentVertex = adjacencyList[i];
+	    adjacencyMatrix[i][adjacentVertex] = 1;
 	}
+
 	return adjacencyMatrix;
     }
+
+    //const list = formatData('edges');
+
+
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Rational Preperiodic Points</h3>
-      <Table aria-label="simple table">
+      <Table aria-label="simple table">:
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
@@ -57,7 +62,7 @@ export default function RationalPointsTable({ data }) {
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
-            <TableCell align="right">{adjacencyListToMatrix(data.edges)}</TableCell>
+            <TableCell align="right">{data.edges}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
