@@ -29,7 +29,6 @@ function SystemDetails() {
           return []
       } 
   };
-  console.log(data)
     return (
         <>
             <div>

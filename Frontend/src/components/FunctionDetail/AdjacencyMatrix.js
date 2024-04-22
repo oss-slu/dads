@@ -1,48 +1,78 @@
 import * as React from 'react';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { useState, useEffect } from 'react';
+
+export default function AdjacencyMatrix({ modalTitle, edges }) {
+
+    const generateAdjacencyMatrix = (adjacencyString) => {
+	const adjacencyList = adjacencyString.replace(/\[|\]/g, '').split(', ');
+
+	const adjacencyListInt = adjacencyList.map(Number);
+	console.log('adjacencyListInt:', adjacencyListInt);
 
 
-function AdjacencyMatrix({ modalTitle, edges }) {
+	const numVertices = adjacencyList.length;
+	console.log('numVertices:', numVertices);
 
-    const generateAdjacencyMatrix = (adjacencyList) => {
-	const numVertices = Math.max(...adjacencyList) + 1; // Determine the number of vertices
 	const adjacencyMatrix = Array.from({ length: numVertices }, () => Array(numVertices).fill(0));
+	console.log('adjacencyMatrix:', adjacencyMatrix);
 
-    // Populate the adjacency matrix based on the adjacency list
-	for (let i = 0; i < adjacencyList.length; i++) {
-	    const adjacentVertex = adjacencyList[i];
+	for (let i = 0; i < adjacencyListInt.length; i++) {
+	    const adjacentVertex = adjacencyListInt[i];
 	    adjacencyMatrix[i][adjacentVertex] = 1;
 	}
 
+	console.log('adjacencyMatrix after population:', adjacencyMatrix);
+
 	return adjacencyMatrix;
     }
+
+    const formatAdjacencyMatrix = (adjacencyMatrix) => {
+	let formattedString = '';
+	for (let i = 0; i < adjacencyMatrix.length; i++) {
+	    for (let j = 0; j < adjacencyMatrix[i].length; j++) {
+		formattedString += `${adjacencyMatrix[i][j]} `;
+	    }
+	    formattedString += '\n'; // Newline after each row
+	}
+	return formattedString;
+    }
+    
+    
 
     const [showModal, setShowModal] = useState(false);
     const handleClose = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
     const matrix = generateAdjacencyMatrix(edges);
+    const string = formatAdjacencyMatrix(matrix);
     
     
     return (
-	<Button variant="primary" onClick={handleShowModal}>
-	    {modalTitle}
-	</Button>
+	<>
+            <button className="btn btn-primary" onClick={handleShow}>
+                Show
+            </button>
 
-	<Modal show={handleShow} onHide={handleCloseModal}>
-	    <Modal.Header closeButton>
-		<Modal.Title>{modalTitle}</Modal.Title>
-	    </Modal.Header>
-	    <Modal.Body>
-	    </Modal.Body>
-	    <Modal.Footer>
-		<Button variant="secondary" onClick={handleCloseModal}>
-		    Close
-		</Button>
-		<Button variant="primary" onClick={handleCloseModal}>
-		    {saveChangesText}
-		</Button>
-	    </Modal.Footer>
-	</Modal>
+            {showModal && (
+                <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{modalTitle}</h5>
+                                <button type="button" className="close" onClick={handleClose} aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body" style={{ backgroundColor: 'lightblue' }}>
+                                {/* Modal Body Content with custom styles */}
+				<pre>{string}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
 

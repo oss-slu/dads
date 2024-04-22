@@ -21,58 +21,41 @@ export default function RationalPointsTable({ data }) {
     }
     return '[]';
   };
-    const generateAdjacencyMatrix = (adjacencyList) => {
-	const numVertices = Math.max(...adjacencyList) + 1; // Determine the number of vertices
-	const adjacencyMatrix = Array.from({ length: numVertices }, () => Array(numVertices).fill(0));
-
-    // Populate the adjacency matrix based on the adjacency list
-	for (let i = 0; i < adjacencyList.length; i++) {
-	    const adjacentVertex = adjacencyList[i];
-	    adjacencyMatrix[i][adjacentVertex] = 1;
-	}
-
-	return adjacencyMatrix;
-    }
-
-    //const list = formatData('edges');
 
 
   return (
-    <TableContainer className='table-component' component={Paper}>
-      <h3>Rational Preperiodic Points</h3>
-      <Table aria-label="simple table">:
-        <TableBody>
-          <TableRow>
-            <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
-            <TableCell align="right">{data.cardinality}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row"><b>Field Label</b></TableCell>
-            <TableCell align="right">{data.base_field_label}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row"><b>Preperiodic Components</b></TableCell>
-            <TableCell align="right">{formatData('preperiodic_components')}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row"><b>Rational Preperiodic Points</b></TableCell>
-            <TableCell align="right">{formatData('rational_periodic_points')}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
-            <TableCell align="right">{"link"}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
-            <TableCell align="right">{data.edges}
-	    </TableCell>
-	    <AdjacencyMatrix
-		modalTitle="Adjacency Matrix"
-		edges = {data.edges}
-	    />
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+      <>
+	<TableContainer className='table-component' component={Paper}>
+	  <h3>Rational Preperiodic Points</h3>
+	  <Table aria-label="simple table">
+	    <TableBody>
+	      <TableRow>
+		<TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
+		<TableCell align="right">{data.cardinality}</TableCell>
+	      </TableRow>
+	      <TableRow>
+		<TableCell component="th" scope="row"><b>Field Label</b></TableCell>
+		<TableCell align="right">{data.base_field_label}</TableCell>
+	      </TableRow>
+	      <TableRow>
+		<TableCell component="th" scope="row"><b>Preperiodic Components</b></TableCell>
+		<TableCell align="right">{formatData('preperiodic_components')}</TableCell>
+	      </TableRow>
+	      <TableRow>
+		<TableCell component="th" scope="row"><b>Rational Preperiodic Points</b></TableCell>
+		<TableCell align="right">{formatData('rational_periodic_points')}</TableCell>
+	      </TableRow>
+	      <TableRow>
+		<TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
+		<TableCell align="right">{"link"}</TableCell>
+	      </TableRow>
+	      <TableRow>
+		<TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
+		<AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")}/>
+	      </TableRow>
+	    </TableBody>
+	  </Table>
+	</TableContainer>
+      </>
   );
 }
