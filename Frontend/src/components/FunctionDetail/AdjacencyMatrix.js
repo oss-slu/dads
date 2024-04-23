@@ -49,24 +49,24 @@ export default function AdjacencyMatrix({ modalTitle, edges }) {
     
     
     return (
-	<>
-            <button className="btn btn-primary" onClick={handleShow}>
+       <>
+            <button className="custom-btn" onClick={handleShow}>
                 Show
             </button>
 
             {showModal && (
-                <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">{modalTitle}</h5>
-                                <button type="button" className="close" onClick={handleClose} aria-label="Close">
+                <div className="custom-modal" tabIndex="-1" role="dialog">
+                    <div className="custom-modal-dialog" role="document">
+                        <div className="custom-modal-content">
+                            <div className="custom-modal-header">
+                                <h5 className="custom-modal-title">{modalTitle}</h5>
+                                <button type="button" className="custom-close" onClick={handleClose} aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div className="modal-body" style={{ backgroundColor: 'lightblue' }}>
-                                {/* Modal Body Content with custom styles */}
-				<pre>{string}</pre>
+                            <div className="custom-modal-body">
+                                {/* Modal Body Content */}
+                                <pre>{string}</pre>
                             </div>
                         </div>
                     </div>
@@ -75,4 +75,3 @@ export default function AdjacencyMatrix({ modalTitle, edges }) {
         </>
     );
 }
-
