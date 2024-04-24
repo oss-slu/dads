@@ -22,7 +22,9 @@ function App() {
 
         <Routes>
           <Route index element={<AboutPage/>} />
-          <Route path="exploreSystems" element={<ExploreSystems />} />
+          <Route path="exploreSystems" element={
+                      <ExploreSystems />
+                      } />
           <Route path="system/:label" element={<SystemDetails/>}/>
         </Routes>
       </BrowserRouter>
