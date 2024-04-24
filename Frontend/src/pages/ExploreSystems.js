@@ -32,12 +32,6 @@ function ExploreSystems() {
     // Context Hooks
     const {filters, setFilters} = useFilters();
 
-    // Effect Hooks
-    /*
-    useEffect(() => {
-        sessionStorage.setItem('currentPage', currentPage.toString());
-    }, [currentPage]);*/
-
     useEffect(() => {
         const savedFilters = sessionStorage.getItem('filters');
         const savedPage = sessionStorage.getItem('currentPage');
@@ -49,7 +43,7 @@ function ExploreSystems() {
         }
       
         if (savedPage) {
-          setPage({currentPage: Number(savedPage)});
+          setPage(Number(savedPage));
         }
       
         if (savedResultsPerPage) {
@@ -71,18 +65,15 @@ function ExploreSystems() {
             : [...filters[filterName], filterValue];
 
         setFilters({ ...filters, [filterName]: updatedFilters });
-        setPage({currentPage: 1});
     };
 
     const handleRadioChange = (filterName, value) => {
         const updatedValue = value === '' ? [] : [String(value)];
         setFilters({ ...filters, [filterName]: updatedValue });
-        setPage({currentPage: 1});
     };
 
     const handleTextChange = (filterName, value) => {
         setFilters({ ...filters, [filterName]: value });
-        setPage({currentPage: 1});
     };
 
     const handlePagePerChange = (event) => {
@@ -103,6 +94,7 @@ function ExploreSystems() {
     };
 
     const sendFilters = () => {
+        setPage(1);
         setSystems(null);
         fetchFilteredSystems();
         setTriggerFetch(prev => !prev);
@@ -111,13 +103,12 @@ function ExploreSystems() {
     const clearFilters = () => {
         setFilters(defaultFilters);
         setTriggerFetch(prev => !prev);
-        setPage({currentPage: 1});
+        setPage(1);
     };
 
     // API Call Functions
     const fetchFilteredSystems = async () => {
         try {
-            setPage({currentPage: 1});
             const result = await get_filtered_systems(
                 {
                     degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)],
@@ -641,7 +632,7 @@ function ExploreSystems() {
                                       ])
                             }
                             itemsPerPage={pagesPer}
-                            currentPage={page.currentPage} 
+                            currentPage={page} 
                             setCurrentPage={setPage}
                         />
 
