@@ -8,6 +8,7 @@ import { get_filtered_systems, get_selected_systems} from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 import { useFilters } from '../context/FilterContext'; 
+import { usePage } from '../context/PageContext'; 
 
 function ExploreSystems() {
 
@@ -27,17 +28,9 @@ function ExploreSystems() {
         avgHeight:"",
         avgResultant:""
     });
-    const [currentPage, setCurrentPage] = useState(() => {
-        return sessionStorage.getItem('currentPage') ? parseInt(sessionStorage.getItem('currentPage'), 10) : 1;
-    });
-
+    const {page, setPage} = usePage();
     // Context Hooks
     const {filters, setFilters} = useFilters();
-
-    // Effect Hooks
-    useEffect(() => {
-        sessionStorage.setItem('currentPage', currentPage.toString());
-    }, [currentPage]);
 
     useEffect(() => {
         const savedFilters = sessionStorage.getItem('filters');
@@ -50,7 +43,7 @@ function ExploreSystems() {
         }
       
         if (savedPage) {
-          setCurrentPage(Number(savedPage));
+          setPage(Number(savedPage));
         }
       
         if (savedResultsPerPage) {
@@ -87,14 +80,12 @@ function ExploreSystems() {
         const value = event.target.value === 'All' ? systems?.length.toString() : event.target.value;
         setPagesPer(value);
         setPagesDisplay(event.target.value === 'All' ? 'All' : value);
-      
         sessionStorage.setItem('resultsPerPage', value);
     };
 
     const handleMajorErrorClose = () => {
         setOpenMajorErrorModal(false);
     };
-
     const handleGeneralErrorClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -103,6 +94,7 @@ function ExploreSystems() {
     };
 
     const sendFilters = () => {
+        setPage(1);
         setSystems(null);
         fetchFilteredSystems();
         setTriggerFetch(prev => !prev);
@@ -111,13 +103,12 @@ function ExploreSystems() {
     const clearFilters = () => {
         setFilters(defaultFilters);
         setTriggerFetch(prev => !prev);
-        setCurrentPage(1);
+        setPage(1);
     };
 
     // API Call Functions
     const fetchFilteredSystems = async () => {
         try {
-            setCurrentPage(1);
             const result = await get_filtered_systems(
                 {
                     degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)],
@@ -147,7 +138,6 @@ function ExploreSystems() {
             console.log(error)
         }
     };
-
     const fetchDataForCSV = async () => {
         let labels = []
         if (!systems){
@@ -185,7 +175,6 @@ function ExploreSystems() {
         el.parentElement.querySelector(".nested").classList.toggle("active");
         el.classList.toggle("caret-down");
     };
-
     const downloadCSV = async () => {
         try {
             let csvSystems = await fetchDataForCSV();
@@ -292,8 +281,6 @@ function ExploreSystems() {
             <div>
                 <div className="results-container" container>
                     <Grid className="sidebar" item xs={3}>
-
-
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p class = "sidebarHead">Filters</p>
                              <Divider />
@@ -667,8 +654,8 @@ function ExploreSystems() {
                                       ])
                             }
                             itemsPerPage={pagesPer}
-                            currentPage={currentPage} 
-                            setCurrentPage={setCurrentPage}
+                            currentPage={page} 
+                            setCurrentPage={setPage}
                         />
 
                         {connectionStatus === false ? (

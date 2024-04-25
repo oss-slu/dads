@@ -4,7 +4,7 @@ function AboutPage() {
   return (
     <div className="padded-page"> {/*Scaling issues due to other static components, WIP*/}
       <div className = "header"><h2>About Us</h2></div>
-      <div class="container">
+      <div className="container">
 
       <p className = "body">
       The goal of this project is to create a flexible, web-based, search-driven user
@@ -39,7 +39,7 @@ function AboutPage() {
         <li><strong>Research Institutions and Laboratories:</strong> Academic institutions, research laboratories, and organizations focused on mathematical research may maintain or use databases of arithmetical dynamical systems as part of their research resources.</li>
     </ul>
     <h1>Getting started with  DADS:</h1>
-    <p>Visit our <a className = "linkButton" href="https://github.com/oss-slu/dads" target="_blank">Github Page</a>.</p>
+    <p>Visit our <a className = "linkButton" href="https://github.com/oss-slu/dads">Github Page</a>.</p>
   </div>
   );
 }
