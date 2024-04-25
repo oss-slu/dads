@@ -264,6 +264,28 @@ function ExploreSystems() {
         padding: "6px 75px",
         borderRadius: "4px",
     };
+    
+    const [pagesPer, setPagesPer] = useState('20');
+
+    const [pagesDisplay, setPagesDisplay] = useState('20');
+
+    const handlePagePerChange = (event) => {
+    // Update the state with the selected value
+	if (event.target.value == 'All'){
+	    setPagesPer(systems.length);
+	    setPagesDisplay("All");
+	} else {
+	    setPagesPer(event.target.value);
+	    setPagesDisplay(event.target.value);
+	}
+    };
+    
+    const [fLink, setFLink] = useState('');
+    
+    const generateLink = (field_label) => {
+	let linkPrefix = "https://www.lmfdb.org/";
+	setFLink(linkPrefix.concat(field_label));
+    };
 
     return (
         <>
