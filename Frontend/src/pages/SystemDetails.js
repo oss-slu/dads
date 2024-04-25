@@ -8,6 +8,7 @@ import CriticalPointsTable from '../components/FunctionDetail/CriticalPointsTabl
 import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPointPortraitTable'
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
 import CitationsTable from '../components/FunctionDetail/CitationsTable'
+import { useFilters } from '../context/FilterContext';
 
 function SystemDetails() {
     const [data, setData] = useState({});
@@ -29,6 +30,9 @@ function SystemDetails() {
           return []
       } 
   };
+
+  const { filters } = useFilters(); 
+
     return (
         <>
             <div>
