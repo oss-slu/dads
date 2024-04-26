@@ -8,6 +8,8 @@ import { get_filtered_systems, get_selected_systems} from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 import { useFilters } from '../context/FilterContext'; 
+import ActiveFiltersBanner from '../components/ActiveFiltersBanner'; 
+
 
 function ExploreSystems() {
 
@@ -66,6 +68,16 @@ function ExploreSystems() {
     }, [triggerFetch]); 
 
     // Handler Functions
+    const handleRemoveFilter = (filterName) => {
+        const newFilters = { ...filters };
+        if (Array.isArray(newFilters[filterName])) {
+            newFilters[filterName] = [];
+        } else {
+            newFilters[filterName] = ''; 
+        }
+        setFilters(newFilters);
+    };
+    
     const handleCheckboxChange = (filterName, filterValue) => {
         const updatedFilters = filters[filterName].includes(filterValue)
             ? filters[filterName].filter(value => value !== filterValue)
@@ -611,6 +623,7 @@ function ExploreSystems() {
 			    <option value="All">All</option>
 			</select>
 			<p></p>
+            <ActiveFiltersBanner filters={filters} onRemoveFilter={handleRemoveFilter} />
                         <PaginatedDataTable
                             labels={[
                                 "Label",
