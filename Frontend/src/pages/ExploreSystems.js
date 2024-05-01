@@ -110,7 +110,6 @@ function ExploreSystems() {
         setSystems(null);
         fetchFilteredSystems();
         setTriggerFetch(prev => !prev);
-        setFiltersApplied(true);
     };
 
     const clearFilters = () => {
@@ -142,6 +141,7 @@ function ExploreSystems() {
             console.log(result.data['statistics'])
             console.log(result.data)
             setSystems(result.data['results']);
+            setFiltersApplied({...filters})
             setStat((previousState => {
                 return { ...previousState, numMaps:result.data['statistics'][0], avgAUT:Math.round(result.data['statistics'][1]*100)/100, numPCF:result.data['statistics'][2], avgHeight:Math.round(result.data['statistics'][3]*100)/100, avgResultant:Math.round(result.data['statistics'][4]*100)/100}
             }))
@@ -616,7 +616,7 @@ function ExploreSystems() {
 			    <option value="All">All</option>
 			</select>
 			<p></p>
-            {filtersApplied && <ActiveFiltersBanner filters={filters} />}
+            {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
 
                         <PaginatedDataTable
                             labels={[
