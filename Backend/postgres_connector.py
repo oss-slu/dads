@@ -63,7 +63,7 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
-    
+
     # gets a system identified by its label, input is string
     def get_system(self, ip):
         cur = None
@@ -295,7 +295,6 @@ class PostgresConnector:
                 conditions.append(fil + ' LIKE "%" + values + "%"')
             elif fil in ['family']:
                 print(values)
-                
                 query = f"""
                 family = ARRAY{psycopg2.extensions.AsIs(values)}
                 """
