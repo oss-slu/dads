@@ -7,8 +7,6 @@ import Grid from "@mui/material/Grid";
 import { useFilters } from '../context/FilterContext';
 import { useNavigate } from 'react-router-dom';
 
-
-
 function Families() {
     const navigate = useNavigate();
     const { filters, setFilters } = useFilters();
@@ -48,6 +46,7 @@ function Families() {
                                 "Family Id",
                                 "Family Name",
                                 "Degree",
+                                
                             ]}
                             data={
                                 families === null
@@ -56,8 +55,11 @@ function Families() {
                                           <button
                                               onClick={() => handleLinkClick(x[0])}
                                               style={{
+                                                  border:"None",
                                                   color: "red",
-                                                  textDecoration: "none",
+                                                  backgroundColor:"rgba(0, 0, 0, 0)",
+                                                  cursor:"pointer"
+                                
                                               }}
                                           >
                                               {x[0]}
