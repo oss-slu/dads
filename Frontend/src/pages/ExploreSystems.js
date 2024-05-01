@@ -22,7 +22,7 @@ function ExploreSystems() {
     const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
     const [generalError, setGeneralError] = useState('');
     const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
-    const [filtersApplied, setFiltersApplied] = useState(false);
+    const [filtersApplied, setFiltersApplied] = useState();
     const [stats, setStat] = useState({
         numMaps:"",
         avgAUT:"",
