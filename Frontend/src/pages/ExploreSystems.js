@@ -68,15 +68,6 @@ function ExploreSystems() {
     }, [triggerFetch]); 
 
     // Handler Functions
-    const handleRemoveFilter = (filterName) => {
-        const newFilters = { ...filters };
-        if (Array.isArray(newFilters[filterName])) {
-            newFilters[filterName] = [];
-        } else {
-            newFilters[filterName] = ''; 
-        }
-        setFilters(newFilters);
-    };
     
     const handleCheckboxChange = (filterName, filterValue) => {
         const updatedFilters = filters[filterName].includes(filterValue)
@@ -623,7 +614,7 @@ function ExploreSystems() {
 			    <option value="All">All</option>
 			</select>
 			<p></p>
-            <ActiveFiltersBanner filters={filters} onRemoveFilter={handleRemoveFilter} />
+            <ActiveFiltersBanner filters={filters} />
                         <PaginatedDataTable
                             labels={[
                                 "Label",
