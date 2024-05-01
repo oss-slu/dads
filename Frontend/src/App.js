@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar"
 import Toolbar from '@mui/material/Toolbar';
 import AboutPage from './pages/AboutPage';
+import Families from "./pages/Families";
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route index element={<AboutPage/>} />
           <Route path="exploreSystems" element={<ExploreSystems />} />
+          <Route path="families" element={<Families />} />
           <Route path="system/:label" element={<SystemDetails/>}/>
         </Routes>
       </BrowserRouter>

@@ -15,6 +15,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Drawer from '@mui/material/Drawer';
 
 import { Link } from "react-router-dom";
+import GrainIcon from '@mui/icons-material/Grain';
 
 const PageLink = ({ link, text, icon }) => {
     return (
@@ -45,7 +46,7 @@ export default function Topbar() {
 		    
 			<PageLink text="Home" link="/" icon={<HomeIcon />} />
 			<PageLink text="Dynamical Systems" link="/exploreSystems" icon={<FunctionsIcon />} />
-
+            <PageLink text="Families" link="/families" icon={<GrainIcon/>} />
 		    </Toolbar>
                 </AppBar>
         </Box>

@@ -57,6 +57,10 @@ def data5():
     data = connector.get_statistics(filters)
     return jsonify(data)
 
+@app.route('/get_all_families', methods=['POST', 'GET'])
+def data6():
+    data = connector.get_all_families()
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run()
