@@ -4,9 +4,14 @@ import {get_families } from '../api/routes';
 import PaginatedDataTable from "../components/newDataTable";
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
+import { useFilters } from '../context/FilterContext';
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Families() {
+    const navigate = useNavigate();
+    const { filters, setFilters } = useFilters();
     const [families, setFamilies] = useState(null);
     const [pagesPer, setPagesPer] = useState('20');
     const fetchFamilies = async () => {
@@ -22,6 +27,18 @@ function Families() {
     useEffect(() => {
         fetchFamilies()
     }, []); 
+    const updateAutocompleteSelections = (newSelections) => {
+        console.log('what is going on ',newSelections)
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          family: newSelections,
+        }));
+        console.log('what is going on ',filters.family)
+      };
+      const handleLinkClick = (selection) => {
+        updateAutocompleteSelections([selection]);
+        navigate('/exploreSystems');
+      };
     return (
         <>
         <div className="results-container" container>
@@ -36,15 +53,15 @@ function Families() {
                                 families === null
                                     ? []
                                     : families.map((x) => [
-                                          <Link
-                                              to={`/exploreSystems`}
+                                          <button
+                                              onClick={() => handleLinkClick(x[0])}
                                               style={{
                                                   color: "red",
                                                   textDecoration: "none",
                                               }}
                                           >
                                               {x[0]}
-                                          </Link>,
+                                          </button>,
                                           x[1],
                                           x[2],
                                       ])
