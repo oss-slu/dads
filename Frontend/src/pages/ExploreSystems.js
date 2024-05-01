@@ -22,6 +22,7 @@ function ExploreSystems() {
     const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
     const [generalError, setGeneralError] = useState('');
     const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
+    const [filtersApplied, setFiltersApplied] = useState(false);
     const [stats, setStat] = useState({
         numMaps:"",
         avgAUT:"",
@@ -109,6 +110,7 @@ function ExploreSystems() {
         setSystems(null);
         fetchFilteredSystems();
         setTriggerFetch(prev => !prev);
+        setFiltersApplied(true);
     };
 
     const clearFilters = () => {
@@ -614,7 +616,8 @@ function ExploreSystems() {
 			    <option value="All">All</option>
 			</select>
 			<p></p>
-            <ActiveFiltersBanner filters={filters} />
+            {filtersApplied && <ActiveFiltersBanner filters={filters} />}
+
                         <PaginatedDataTable
                             labels={[
                                 "Label",
