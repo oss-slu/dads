@@ -1,3 +1,7 @@
+/*
+This is the homepage of the application which displays some general background
+information to the user. 
+*/
 import React from 'react';
 
 function AboutPage() {
@@ -15,7 +19,7 @@ function AboutPage() {
       for further analysis. This type of searchable rich data set will save researchers
       countless hours of computation as well as provide a means to identify previously
       unknown patterns and connections</p>
-      <img src="./homeImage.png" alt="image" />
+      <img src="./homeImage.png" />
       </div>
       <h1>Who will Use DADs?</h1>
       <p>A database of arithmetical dynamical systems has numerous potential users including researchers, mathematicians, scientists, educators, and professionals. This database will be useful to anyone interested in studying how numbers change when a formula is applied to them. This could mean anything from modeling a chemical reaction, or modeling the effect of codebreaking formualae. Here are a few examples:</p>

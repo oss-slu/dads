@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 export default function PaginatedDataTable({ labels, data, itemsPerPage, currentPage, setCurrentPage }) {
 
