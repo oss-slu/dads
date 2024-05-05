@@ -19,10 +19,11 @@ jobs:
             echo "No package.json found in frontend folder. Exiting..."
             exit 1
           fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '15'
 
       - name: Install Dependencies
         working-directory: Frontend
