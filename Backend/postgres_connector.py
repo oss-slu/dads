@@ -21,7 +21,7 @@ class PostgresConnector:
 
         self.connection = psycopg2.connect(
                 host='localhost',
-                dbname='dad_cloud',
+                dbname='dad',
                 user='dad_user',
                 password='dad_pass',
                 port='5432')
