@@ -7,11 +7,31 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage, current
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentData = data.slice(indexOfFirstItem, indexOfLastItem)
 
-    const renderExponent = (exponent) => {
-        return exponent.replace(/\^(\d+)/g, (_, number) => {
-            return <sup>{number}</sup>;
-        });
+    const Superscript = ({ children }) => {
+      return (
+	<sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
+	  {children}
+	</sup>
+      );
     };
+    
+  
+    const renderExponent = (exponent) => {
+      const parts = exponent.split(/(\^[\d]+)/);
+      const formattedExpression = [];
+
+      for (let i = 0; i < parts.length; i++) {
+	if (parts[i].startsWith('^')) {
+	  const exponentValue = parts[i].slice(1);
+	  formattedExpression.push(<Superscript key={i}>{exponentValue}</Superscript>);
+	} else {
+	  formattedExpression.push(parts[i]);
+	}
+      }
+
+      return formattedExpression;
+    };
+    
 
   const handlePageChange = (pageNumber) => {
     if(pageNumber <= totalPages && pageNumber >= 1) {
