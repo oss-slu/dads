@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 export default function PaginatedDataTable({ labels, data, itemsPerPage, currentPage, setCurrentPage }) {
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(data.length / itemsPerPage);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentData = data.slice(indexOfFirstItem, indexOfLastItem)
+
+    const renderExponent = (exponent) => {
+        return exponent.replace(/\^(\d+)/g, (_, number) => {
+            return <sup>{number}</sup>;
+        });
+    };
 
   const handlePageChange = (pageNumber) => {
     if(pageNumber <= totalPages && pageNumber >= 1) {
@@ -28,7 +34,7 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage, current
             <tr key={key} className={key % 2 === 0 ? 'even-row' : 'odd-row'} style={{ textAlign: 'center' }}>
               {item.map((element, id) => (
                 <td key={id}>
-                  <span>{element}</span>
+                  <span>{id === 3 ? renderExponent(element) :element}</span>
                 </td>
               ))}
             </tr>
