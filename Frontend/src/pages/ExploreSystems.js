@@ -8,7 +8,9 @@ import { get_filtered_systems, get_selected_systems} from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 import { useFilters } from '../context/FilterContext'; 
+import ActiveFiltersBanner from '../components/ActiveFiltersBanner'; 
 import { usePage } from '../context/PageContext'; 
+
 
 function ExploreSystems() {
 
@@ -21,6 +23,7 @@ function ExploreSystems() {
     const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
     const [generalError, setGeneralError] = useState('');
     const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
+    const [filtersApplied, setFiltersApplied] = useState();
     const [stats, setStat] = useState({
         numMaps:"",
         avgAUT:"",
@@ -59,6 +62,7 @@ function ExploreSystems() {
     }, [triggerFetch]); 
 
     // Handler Functions
+    
     const handleCheckboxChange = (filterName, filterValue) => {
         const updatedFilters = filters[filterName].includes(filterValue)
             ? filters[filterName].filter(value => value !== filterValue)
@@ -128,6 +132,7 @@ function ExploreSystems() {
             console.log(result.data['statistics'])
             console.log(result.data)
             setSystems(result.data['results']);
+            setFiltersApplied({...filters})
             setStat((previousState => {
                 return { ...previousState, numMaps:result.data['statistics'][0], avgAUT:Math.round(result.data['statistics'][1]*100)/100, numPCF:result.data['statistics'][2], avgHeight:Math.round(result.data['statistics'][3]*100)/100, avgResultant:Math.round(result.data['statistics'][4]*100)/100}
             }))
@@ -605,6 +610,8 @@ function ExploreSystems() {
 			    <option value="All">All</option>
 			</select>
 			<p></p>
+            {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
+
                         <PaginatedDataTable
                             labels={[
                                 "Label",
