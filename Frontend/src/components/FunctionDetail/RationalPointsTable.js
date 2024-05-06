@@ -6,6 +6,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix'
+import Copy from '../FunctionDetail/Copy'
+
 
 
 export default function RationalPointsTable({ data }) {
@@ -47,11 +49,12 @@ export default function RationalPointsTable({ data }) {
 	      </TableRow>
 	      <TableRow>
 		<TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
-		<TableCell align="right">{"link"}</TableCell>
+		<Copy edges={formatData("edges")} type={2}/>
 	      </TableRow>
 	      <TableRow>
 		<TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
 		<AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")}/>
+		<Copy edges={formatData("edges")} type={1}/>
 	      </TableRow>
 	    </TableBody>
 	  </Table>
