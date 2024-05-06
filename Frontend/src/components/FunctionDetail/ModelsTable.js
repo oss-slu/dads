@@ -9,7 +9,66 @@ import Paper from '@mui/material/Paper';
 
 export default function ModelsTable({ data }) {
   // Extracting keys containing "_model" from the data object
-  const modelKeys = Object.keys(data).filter(key => key.includes("_model"));
+    const modelKeys = Object.keys(data).filter(key => key.includes("_model"));
+    if( modelKeys.includes("display_model")) {
+	let position = modelKeys.indexOf("display_model");
+	modelKeys.splice(position, 1);
+    }
+
+    function processInput(input) {
+    // Remove outer braces and split by '},{' to get individual polynomial coefficient sets
+    const polynomials = input.slice(2, -2).split('},{');
+    
+    const result = [];
+    
+    // Iterate over each polynomial
+    for (let poly of polynomials) {
+        // Split the polynomial coefficients by ','
+        const coeffs = poly.split(',');
+        
+        // Construct the polynomial expression
+        let polynomialExpression = '';
+        for (let i = 0; i < coeffs.length; i++) {
+            const coefficient = coeffs[i];
+            if (coefficient !== '0') {
+                // Construct monomial expression based on index
+                let monomial = '';
+                if (i === 0) {
+                    monomial = 'x^' + (coeffs.length - 1);
+                } else if (i === coeffs.length - 1) {
+                    monomial = 'y^' + (coeffs.length - 1);
+                } else if (i === 1 && (coeffs.length - 1) === 1) {
+                    monomial = 'xy';
+                } else if (i === 1) {
+                    monomial = 'x^' + (coeffs.length - 1 - i) + 'y';
+                } else if ((coeffs.length - 1 - i) === 1) {
+                    monomial = 'x' + 'y^' + i;
+                } else {
+                    monomial = 'x^' + (coeffs.length - 1 - i) + 'y^' + i;
+                }
+                
+                // Add coefficient with monomial
+                if (coefficient === '1') {
+                    polynomialExpression += monomial;
+                } else if (coefficient === '-1') {
+                    polynomialExpression += '-' + monomial;
+                } else {
+                    polynomialExpression += coefficient + monomial;
+                }
+                
+                // Add '+' if not the last term and coefficient is not zero
+                if (i !== coeffs.length - 1 && coeffs[i + 1] !== '0') {
+                    polynomialExpression += '+';
+                }
+            }
+        }
+        
+        // Push polynomial expression to result array
+        result.push(polynomialExpression);
+    }
+    
+    return result;
+}
 
   return (
     <TableContainer className='table-component' component={Paper}>
@@ -30,10 +89,10 @@ export default function ModelsTable({ data }) {
             return (
               <TableRow key={index}>
                 <TableCell align="left">{key.replace(/_/g, ' ').replace(/ model$/, '') + " model"}</TableCell>
-                <TableCell align="left">{modelData[0]}</TableCell>
+                <TableCell align="left">{processInput(modelData[0])}</TableCell>
                 <TableCell align="left">{modelData[1]}</TableCell>
                 <TableCell align="left">{modelData[2]}</TableCell>
-                <TableCell align="left">{modelData[3]}</TableCell>
+                <TableCell align="left">{modelData[5]}</TableCell>
               </TableRow>
             );
           })}

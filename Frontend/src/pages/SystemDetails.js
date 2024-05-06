@@ -33,7 +33,6 @@ function SystemDetails() {
 
   const { filters } = useFilters(); 
 
-  console.log(data)
     return (
         <>
             <div>

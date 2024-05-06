@@ -243,3 +243,94 @@ p.sidebarHead {
   background-color: transparent;
   cursor: pointer;
 }
+// bootstrap stuff 
+.custom-btn {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.custom-modal {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    overflow: hidden;
+    outline: 0;
+}
+
+.custom-modal-dialog {
+    max-width: 50%; 
+    max-height: 50%; 
+    overflow: auto;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    margin: 0.5rem;
+    pointer-events: none;
+}
+
+.custom-modal-content {
+    overflow: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
+    outline: 0;
+}
+
+.custom-modal-header {
+    overflow: auto;    
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+    background-color: #2E3B55;
+}
+
+.custom-modal-title {
+    overflow: auto;    
+    margin-bottom: 0;
+    line-height: 1.5;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.custom-close {
+    padding: 0.75rem;
+    width: 2rem;
+    height: 2rem;
+    margin: -0.5rem 0.75rem -0.5rem auto;
+    background-color: transparent;
+    color: white;
+    border: 0;
+    cursor: pointer;
+    font-size: 2rem;
+}
+
+.custom-modal-body {
+    overflow: auto;    
+    position: relative;
+    flex: 1 1 auto;
+    padding: 0.5rem;
+    font-size: 2rem;
+    background-color: #e0e0e0;
+
+}
+
