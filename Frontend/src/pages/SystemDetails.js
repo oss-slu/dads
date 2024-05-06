@@ -22,7 +22,7 @@ function SystemDetails() {
     const label = useParams().label;
     useEffect(() => {
       fetchDataForCSV();
-  }); 
+  },[]); 
 
   const fetchDataForCSV = async () => {
       try {
