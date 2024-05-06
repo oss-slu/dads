@@ -56,7 +56,7 @@ const Copy = ({ edges, type }) => {
 
   return (
     <div>
-      <button onClick={copyToClipboard}>Copy to Clipboard</button>
+      <button onClick={copyToClipboard}>Copy Sage Command</button>
       {copySuccess && <span style={{marginLeft: '10px', color: 'green'}}>Copied!</span>}
     </div>
   );
