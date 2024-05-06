@@ -1,3 +1,12 @@
+/*
+This is the main page of the web application. 
+It is responsible for allowing the user to select filters to search for system,
+displaying the selected systems, and providing statistics about the selected systems.
+This page saves the table pagination and filter state when navigating to the SystemDetails page,
+but resets them when the page is refreshed or the filters are changed. This is handled through the 
+pageContext and filterContext. 
+*/
+
 import * as React from "react";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";

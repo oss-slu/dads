@@ -1,3 +1,11 @@
+/*
+This page is responsible for providing additional details about a system.
+To access it through the UI, click the red ID of a System.
+It fetches the data from the backend and displays it in a table format.
+In ExploreSystems,the current pagination and filter state is saved when navigating to this page.
+Future work: adding a diagram of the System to the page
+*/
+
 import { get_system } from '../api/routes';
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
@@ -8,7 +16,6 @@ import CriticalPointsTable from '../components/FunctionDetail/CriticalPointsTabl
 import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPointPortraitTable'
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
 import CitationsTable from '../components/FunctionDetail/CitationsTable'
-import { useFilters } from '../context/FilterContext';
 
 function SystemDetails() {
     const [data, setData] = useState({});
@@ -30,8 +37,6 @@ function SystemDetails() {
           return []
       } 
   };
-
-  const { filters } = useFilters(); 
 
     return (
         <>

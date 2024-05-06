@@ -1,3 +1,7 @@
+/*
+This is the homepage of the application which displays some general background
+information to the user. 
+*/
 import React from 'react';
 
 function AboutPage() {
