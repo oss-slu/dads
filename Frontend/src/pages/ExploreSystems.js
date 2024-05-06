@@ -1,3 +1,12 @@
+/*
+This is the main page of the web application. 
+It is responsible for allowing the user to select filters to search for system,
+displaying the selected systems, and providing statistics about the selected systems.
+This page saves the table pagination and filter state when navigating to the SystemDetails page,
+but resets them when the page is refreshed or the filters are changed. This is handled through the 
+pageContext and filterContext. 
+*/
+
 import * as React from "react";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
@@ -13,7 +22,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useFilters } from '../context/FilterContext'; 
+import ActiveFiltersBanner from '../components/ActiveFiltersBanner'; 
 import { usePage } from '../context/PageContext'; 
+
 
 function ExploreSystems() {
 
@@ -27,6 +38,7 @@ function ExploreSystems() {
     const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
     const [generalError, setGeneralError] = useState('');
     const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
+    const [filtersApplied, setFiltersApplied] = useState();
     const [stats, setStat] = useState({
         numMaps: "",
         avgAUT: "",
@@ -167,6 +179,7 @@ function ExploreSystems() {
                 }
             )
             setSystems(result.data['results']);
+            setFiltersApplied({...filters})
             setStat((previousState => {
                 return { ...previousState, numMaps: result.data['statistics'][0], avgAUT: Math.round(result.data['statistics'][1] * 100) / 100, numPCF: result.data['statistics'][2], avgHeight: Math.round(result.data['statistics'][3] * 100) / 100, avgResultant: Math.round(result.data['statistics'][4] * 100) / 100 }
             }))
@@ -673,15 +686,17 @@ function ExploreSystems() {
                         <p style={{ textAlign: "center", marginTop: 0 }}>
                             Results
                         </p>
-                        <label for="pages">Results Per Page:</label>
-                        <select id="pages" name="pages" value={pagesDisplay} onChange={handlePagePerChange}>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="All">All</option>
-                        </select>
-                        <p></p>
+
+			<label for="pages">Results Per Page:</label>	
+			<select id="pages" name="pages"  value={pagesDisplay} onChange={handlePagePerChange}>
+			    <option value="10">10</option>
+			    <option value="20">20</option>
+			    <option value="50">50</option>
+			    <option value="100">100</option>
+			    <option value="All">All</option>
+			</select>
+			<p></p>
+            {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
                         <PaginatedDataTable
                             labels={[
                                 "Label",

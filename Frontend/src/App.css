@@ -213,11 +213,35 @@ p.sidebarHead {
 }
 
 .even-row {
-  background-color: #d0d6db; /* Set the background color for even rows */
+  background-color: #d0d6db; 
 }
 
 .odd-row {
-  background-color: #ffffff; /* Set the background color for odd rows */
+  background-color: #ffffff; 
+}
+
+.active-filters-container {
+  max-width: 700px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  background-color: #f2f2f2;
+}
+
+.filter-chip {
+  margin: 5px;
+  padding: 5px 10px;
+  background-color: #ddd; 
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.filter-chip button {
+  margin-left: 10px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
 // bootstrap stuff 
 .custom-btn {
@@ -309,4 +333,10 @@ p.sidebarHead {
     background-color: #e0e0e0;
 
 }
+
+.superscript {
+  font-size: smaller;
+  vertical-align: super;
+}
+
 
