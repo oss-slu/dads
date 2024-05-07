@@ -9,7 +9,6 @@ import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix'
 import Copy from '../FunctionDetail/Copy'
 
 
-
 export default function RationalPointsTable({ data }) {
 	console.log('rational pre data',data)
 	const formatData = (key) => {
@@ -23,7 +22,6 @@ export default function RationalPointsTable({ data }) {
 		}
 		return '[]';
 	};
-
 
 	return (
 		<>
@@ -49,17 +47,19 @@ export default function RationalPointsTable({ data }) {
 						</TableRow>
 						<TableRow>
 							<TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
-							<TableCell align="right"><Copy edges={formatData("edges")} type={2} /></TableCell>
+							<TableCell align="right">
+								<Copy edges={formatData("edges")} type={2} />
+							</TableCell>
+								
 						</TableRow>
 						<TableRow>
 							<TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
 							<TableCell align="right">
-								<AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} />
-								<br>
-								</br>
-								<br>
-								</br>
 								<Copy edges={formatData("edges")} type={1} />
+								<br>
+								</br>
+								<AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} />
+								
 							</TableCell>
 							
 						</TableRow>

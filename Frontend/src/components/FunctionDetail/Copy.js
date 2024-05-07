@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import {Button } from 'react-bootstrap';
+import SageMathCell from './SageMathCell';
+import Modal from 'react-bootstrap/Modal';
 
 const Copy = ({ edges, type }) => {
 
@@ -54,12 +56,40 @@ const Copy = ({ edges, type }) => {
       })
       .catch(err => console.error('Failed to copy:', err));
   };
+  
+  const [showGraphModal, setShowGraphModal] = useState(false);
+	const [edgesCommand, setEdgesCommand] = useState('');
+    const handleCloseGraph = () => setShowGraphModal(false);
+    const handleShowGraph = () => {
+        setShowGraphModal(true);
+        setEdgesCommand(stringToCopy);
+    };
 
   return (
+    <>
+    <Modal show={showGraphModal} onHide={handleCloseGraph} centered >
+                <Modal.Header closeButton>
+                    <Modal.Title>Directed Graph</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{maxHeight:'60vh',overflow:'scroll'}}>
+					<SageMathCell
+					command={edgesCommand}
+					></SageMathCell>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseGraph}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
     <div>
-      <Button variant='dark' onClick={copyToClipboard}>Copy Sage Command</Button>
+      <Button variant='dark' onClick={copyToClipboard}>Copy Sage Command</Button><span>  </span>
       {copySuccess && <span style={{marginLeft: '10px', color: 'green'}}>Copied!</span>}
+      {type==2&&<Button variant='dark' onClick={handleShowGraph}>
+									Show
+			</Button>}
     </div>
+    </>
   );
 };
 
