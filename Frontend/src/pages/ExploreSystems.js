@@ -19,6 +19,8 @@ import ReportMajorError from '../errorreport/ReportMajorError';
 import { useFilters } from '../context/FilterContext'; 
 import ActiveFiltersBanner from '../components/ActiveFiltersBanner'; 
 import { usePage } from '../context/PageContext'; 
+import Button from 'react-bootstrap/Button';
+
 
 
 function ExploreSystems() {
@@ -32,7 +34,7 @@ function ExploreSystems() {
     const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
     const [generalError, setGeneralError] = useState('');
     const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
-    const [filtersApplied, setFiltersApplied] = useState();
+    const [filtersApplied, setFiltersApplied] = useState([]);
     const [stats, setStat] = useState({
         numMaps:"",
         avgAUT:"",
@@ -246,33 +248,6 @@ function ExploreSystems() {
     const textBoxStyle = {
         width: "60px",
         marginRight: "12px",
-    };
-
-    const buttonStyle = {
-        border: "none",
-        backgroundColor: "#376dc4",
-        color: "white",
-        cursor: "pointer",
-        fontSize: "15px",
-        padding: "6px 76.5px",
-        borderRadius: "4px",
-    };
-
-    const redButtonStyle = {
-        border: "none",
-        backgroundColor: "#cc0000",
-        color: "white",
-        cursor: "pointer",
-        fontSize: "15px",
-        padding: "6px 75px",
-        borderRadius: "4px",
-    };
-    
-    const [fLink, setFLink] = useState('');
-    
-    const generateLink = (field_label) => {
-	let linkPrefix = "https://www.lmfdb.org/";
-	setFLink(linkPrefix.concat(field_label));
     };
 
     return (
@@ -579,17 +554,18 @@ function ExploreSystems() {
 
                             <ul id="myUL">
                                 <li  style={{ paddingBottom: '10px' }}>
-                                    <button
-                                        style={buttonStyle}
+                                    <Button
                                         onClick={sendFilters}
+                                        variant="primary"
+                                        style={{width:'100%'}}
                                     >
                                         Get Results 
-                                    </button>
+                                    </Button>
                                 </li>
                                 <li>
-                                    <button style={redButtonStyle} onClick={clearFilters}>
+                                    <Button onClick={clearFilters} variant="danger" style={{width:'100%'}}>
                                         Clear Filters
-                                    </button>
+                                    </Button>
                                 </li>
                             </ul>
                             <br />
@@ -615,7 +591,6 @@ function ExploreSystems() {
 			    <option value="100">100</option>
 			    <option value="All">All</option>
 			</select>
-			<p></p>
             {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
 
                         <PaginatedDataTable
@@ -646,9 +621,17 @@ function ExploreSystems() {
                                           </>,
                                           x[2],
                                           x[3],
-                                          <span style={{ color: "red" }}>
+                                          <Link
+                                              to={`https://www.lmfdb.org/NumberField/${x[4]}`}
+                                              style={{
+                                                  color: "red",
+                                                  textDecoration: "none",
+                                              }}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                          >
                                               {x[4]}
-                                          </span>,
+                                          </Link>,
                                       ])
                             }
                             itemsPerPage={pagesPer}
