@@ -607,9 +607,6 @@ function ExploreSystems() {
                         >
                             Download
                         </span>
-                        <p style={{ textAlign: "center", marginTop: 0 }}>
-                            Results
-                        </p>
 			<label for="pages">Results Per Page:</label>	
 			<select id="pages" name="pages"  value={pagesDisplay} onChange={handlePagePerChange}>
 			    <option value="10">10</option>

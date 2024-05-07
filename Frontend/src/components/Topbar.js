@@ -36,12 +36,14 @@ export default function Topbar() {
 		<AppBar style={{ background: '#2E3B55' }}
 		    position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
 		    <Toolbar>
-			<Typography style = {{textAlign: "center"}}variant="h7" noWrap component="div">
-			    Arithmetic Dynamical <br></br>Systems
+            <Link style={{textDecoration:'None'}} to={'/'}>
+			<Typography style = {{textAlign: "center",fontWeight:"bolder",fontFamily:"monospace", color:"white"}} variant="h5" noWrap component="div">
+			    DynaBase
 			</Typography>
+            </Link>
 		    
-			<PageLink text="Home" link="/" icon={<HomeIcon />} />
-			<PageLink text="Dynamical Systems" link="/exploreSystems" icon={<FunctionsIcon />} />
+			<PageLink text="Information" link="/" icon={<HomeIcon style={{color:'white'}} />} />
+			<PageLink text="Dynamical Systems" link="/exploreSystems" icon={<FunctionsIcon style={{color:'white'}}/>} />
 
 		    </Toolbar>
                 </AppBar>

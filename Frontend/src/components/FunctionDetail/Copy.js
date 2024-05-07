@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {Button } from 'react-bootstrap';
 
 const Copy = ({ edges, type }) => {
 
@@ -56,7 +57,7 @@ const Copy = ({ edges, type }) => {
 
   return (
     <div>
-      <button onClick={copyToClipboard}>Copy Sage Command</button>
+      <Button variant='dark' onClick={copyToClipboard}>Copy Sage Command</Button>
       {copySuccess && <span style={{marginLeft: '10px', color: 'green'}}>Copied!</span>}
     </div>
   );
