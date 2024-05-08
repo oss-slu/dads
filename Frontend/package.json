@@ -2,7 +2,7 @@
   "name": "math_app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/oss-slu/dads/Frontend",
+  "homepage": "https://github.com/oss-slu/dads/Frontend/",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
