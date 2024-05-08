@@ -2,6 +2,7 @@
   "name": "math_app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://github.com/oss-slu/dads/Frontend",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -27,7 +28,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ../Frontend/src/**/*.js",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +52,7 @@
   },
   "devDependencies": {
     "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-n": "^17.4.0"
+    "eslint-plugin-n": "^17.4.0",
+    "gh-pages": "^6.1.1"
   }
 }
