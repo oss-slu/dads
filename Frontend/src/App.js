@@ -2,9 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
 import ExploreSystems from './pages/ExploreSystems';
 import SystemDetails from './pages/SystemDetails'
-import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar"
-import Toolbar from '@mui/material/Toolbar';
 import AboutPage from './pages/AboutPage';
 
 function App() {

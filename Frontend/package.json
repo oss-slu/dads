@@ -25,13 +25,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ../Frontend/src/**/*.js",
-    "lint:fix": "eslint --fix .",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "lint:fix": "eslint --fix ."
   },
   "eslintConfig": {
     "extends": [
