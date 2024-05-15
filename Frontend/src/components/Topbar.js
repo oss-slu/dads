@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import HomeIcon from '@mui/icons-material/Home';
+import GrainIcon from '@mui/icons-material/Grain';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -41,9 +42,10 @@ export default function Topbar() {
 			    DynaBase
 			</Typography>
             </Link>
-		    
+
 			<PageLink text="Information" link="/" icon={<HomeIcon style={{color:'white'}} />} />
 			<PageLink text="Dynamical Systems" link="/exploreSystems" icon={<FunctionsIcon style={{color:'white'}}/>} />
+      <PageLink text="Families" link="/families" icon={<GrainIcon style={{color:'white'}}/>} />} />
 
 		    </Toolbar>
                 </AppBar>
