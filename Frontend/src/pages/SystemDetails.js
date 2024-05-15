@@ -11,7 +11,6 @@ import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import InfoTable from '../components/FunctionDetail/InfoTable'
 import RationalPointsTable from '../components/FunctionDetail/RationalPointsTable'
-import AutomorphismGroupTable from '../components/FunctionDetail/AutomorphismGroupTable'
 import CriticalPointsTable from '../components/FunctionDetail/CriticalPointsTable'
 import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPointPortraitTable'
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
@@ -49,7 +48,6 @@ function SystemDetails() {
             <div className="col">
               <RationalPointsTable data = {data}/>
               </div>
-              <div className="col"><AutomorphismGroupTable data = {data}/></div>
             </div>
             <div className="row">
               <div className="col">
