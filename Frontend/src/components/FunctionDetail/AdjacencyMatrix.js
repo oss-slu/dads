@@ -1,77 +1,60 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useState, useEffect } from 'react';
 
 export default function AdjacencyMatrix({ modalTitle, edges }) {
+    const [showModal, setShowModal] = useState(false);
+
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
 
     const generateAdjacencyMatrix = (adjacencyString) => {
-	const adjacencyList = adjacencyString.replace(/\[|\]/g, '').split(', ');
+        const adjacencyList = adjacencyString.replace(/\[|\]/g, '').split(', ');
+        const numVertices = adjacencyList.length;
+        const adjacencyMatrix = Array.from({ length: numVertices }, () => Array(numVertices).fill(0));
 
-	const adjacencyListInt = adjacencyList.map(Number);
-	console.log('adjacencyListInt:', adjacencyListInt);
+        for (let i = 0; i < adjacencyList.length; i++) {
+            const adjacentVertex = parseInt(adjacencyList[i], 10);
+            adjacencyMatrix[i][adjacentVertex] = 1;
+        }
 
-
-	const numVertices = adjacencyList.length;
-	console.log('numVertices:', numVertices);
-
-	const adjacencyMatrix = Array.from({ length: numVertices }, () => Array(numVertices).fill(0));
-	console.log('adjacencyMatrix:', adjacencyMatrix);
-
-	for (let i = 0; i < adjacencyListInt.length; i++) {
-	    const adjacentVertex = adjacencyListInt[i];
-	    adjacencyMatrix[i][adjacentVertex] = 1;
-	}
-
-	console.log('adjacencyMatrix after population:', adjacencyMatrix);
-
-	return adjacencyMatrix;
+        return adjacencyMatrix;
     }
 
     const formatAdjacencyMatrix = (adjacencyMatrix) => {
-	let formattedString = '';
-	for (let i = 0; i < adjacencyMatrix.length; i++) {
-	    for (let j = 0; j < adjacencyMatrix[i].length; j++) {
-		formattedString += `${adjacencyMatrix[i][j]} `;
-	    }
-	    formattedString += '\n'; // Newline after each row
-	}
-	return formattedString;
+        let formattedString = '';
+        for (let i = 0; i < adjacencyMatrix.length; i++) {
+            for (let j = 0; j < adjacencyMatrix[i].length; j++) {
+                formattedString += `${adjacencyMatrix[i][j]} `;
+            }
+            formattedString += '\n'; // Newline after each row
+        }
+        return formattedString;
     }
-    
-    
 
-    const [showModal, setShowModal] = useState(false);
-    const handleClose = () => setShowModal(false);
-    const handleShow = () => setShowModal(true);
     const matrix = generateAdjacencyMatrix(edges);
     const string = formatAdjacencyMatrix(matrix);
-    
-    
-    return (
-       <>
-            <button className="custom-btn" onClick={handleShow}>
-                Show
-            </button>
 
-            {showModal && (
-                <div className="custom-modal" tabIndex="-1" role="dialog">
-                    <div className="custom-modal-dialog" role="document">
-                        <div className="custom-modal-content">
-                            <div className="custom-modal-header">
-                                <h5 className="custom-modal-title">{modalTitle}</h5>
-                                <button type="button" className="custom-close" onClick={handleClose} aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="custom-modal-body">
-                                {/* Modal Body Content */}
-                                <pre>{string}</pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+    return (
+        <>
+            <Button variant='dark' onClick={handleShow}>
+                Show
+            </Button>
+
+            <Modal show={showModal} onHide={handleClose} centered >
+                <Modal.Header closeButton>
+                    <Modal.Title>{modalTitle}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{maxHeight:'60vh',overflow:'scroll'}}>
+                    <pre>{string}</pre>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+           
         </>
     );
 }

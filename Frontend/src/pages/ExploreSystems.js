@@ -24,6 +24,8 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useFilters } from '../context/FilterContext'; 
 import ActiveFiltersBanner from '../components/ActiveFiltersBanner'; 
 import { usePage } from '../context/PageContext'; 
+import Button from 'react-bootstrap/Button';
+
 
 
 function ExploreSystems() {
@@ -38,7 +40,7 @@ function ExploreSystems() {
     const [openMajorErrorModal, setOpenMajorErrorModal] = useState(false);
     const [generalError, setGeneralError] = useState('');
     const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
-    const [filtersApplied, setFiltersApplied] = useState();
+    const [filtersApplied, setFiltersApplied] = useState([]);
     const [stats, setStat] = useState({
         numMaps: "",
         avgAUT: "",
@@ -287,33 +289,6 @@ function ExploreSystems() {
         marginRight: "12px",
     };
 
-    const buttonStyle = {
-        border: "none",
-        backgroundColor: "#376dc4",
-        color: "white",
-        cursor: "pointer",
-        fontSize: "15px",
-        padding: "6px 76.5px",
-        borderRadius: "4px",
-    };
-
-    const redButtonStyle = {
-        border: "none",
-        backgroundColor: "#cc0000",
-        color: "white",
-        cursor: "pointer",
-        fontSize: "15px",
-        padding: "6px 75px",
-        borderRadius: "4px",
-    };
-    
-    const [fLink, setFLink] = useState('');
-    
-    const generateLink = (field_label) => {
-	let linkPrefix = "https://www.lmfdb.org/";
-	setFLink(linkPrefix.concat(field_label));
-    };
-
     return (
         <>
             <div>
@@ -403,25 +378,6 @@ function ExploreSystems() {
                                             onChange={(e) => handleTextChange("customDegree", e.target.value)}
                                         />
                                         <label>Custom</label>
-                                        <br />
-                                    </ul>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <span
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
-                                        Class
-                                    </span>
-                                    <ul className="nested">
-                                        <input type="checkbox" />
-                                        <label>Function</label>
-                                        <br />
-                                        <input type="checkbox" />
-                                        <label>Family</label>
                                         <br />
                                     </ul>
                                 </li>
@@ -595,26 +551,6 @@ function ExploreSystems() {
                                     </ul>
                                 </li>
                             </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <span
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
-                                        Indeterminacy Locus
-                                    </span>
-                                    <ul className="nested">
-                                        <input
-                                            type="number"
-                                            style={textBoxStyle}
-                                            value={filters.indeterminacy_locus_dimension || ''}
-                                            onChange={(e) => handleTextChange("indeterminacy_locus_dimension", e.target.value)}
-                                        />
-                                        <label>Dimension</label>
-                                    </ul>
-                                </li>
-                            </ul>
                             <ul id="myUL">
                                 <li>
                                     <span
@@ -625,8 +561,8 @@ function ExploreSystems() {
                                     </span>
                                     <ul className="nested">
                                     {optionsLoading ? (
-  <div>Loading...</div>
-) : (<Autocomplete
+                                        <div>Loading...</div>
+                                      ) : (<Autocomplete
                                             multiple
                                             id="checkboxes-tags-demo"
                                             options={families}
@@ -654,18 +590,19 @@ function ExploreSystems() {
                                 </li>
                             </ul>
                             <ul id="myUL">
-                                <li style={{ paddingBottom: '10px' }}>
-                                    <button
-                                        style={buttonStyle}
+                              <li  style={{ paddingBottom: '10px' }}>
+                                    <Button
                                         onClick={sendFilters}
+                                        variant="primary"
+                                        style={{width:'100%'}}
                                     >
-                                        Get Results
-                                    </button>
+                                        Get Results 
+                                    </Button>
                                 </li>
                                 <li>
-                                    <button style={redButtonStyle} onClick={clearFilters}>
+                                    <Button onClick={clearFilters} variant="danger" style={{width:'100%'}}>
                                         Clear Filters
-                                    </button>
+                                    </Button>
                                 </li>
                             </ul>
                             <br />
@@ -683,10 +620,6 @@ function ExploreSystems() {
                         >
                             Download
                         </span>
-                        <p style={{ textAlign: "center", marginTop: 0 }}>
-                            Results
-                        </p>
-
 			<label for="pages">Results Per Page:</label>	
 			<select id="pages" name="pages"  value={pagesDisplay} onChange={handlePagePerChange}>
 			    <option value="10">10</option>
@@ -695,7 +628,6 @@ function ExploreSystems() {
 			    <option value="100">100</option>
 			    <option value="All">All</option>
 			</select>
-			<p></p>
             {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
                         <PaginatedDataTable
                             labels={[
@@ -709,26 +641,34 @@ function ExploreSystems() {
                                 systems === null
                                     ? []
                                     : systems.map((x) => [
-                                        <Link
-                                            to={`/system/${x[5]}/`}
-                                            style={{
-                                                color: "red",
-                                                textDecoration: "none",
-                                            }}
-                                        >
-                                            {x[0]}
-                                        </Link>,
-                                        <>
-                                            P<sup>{x[1]}</sup>{" "}
-                                            {String.fromCharCode(8594)} P
-                                            <sup>{x[1]}</sup>
-                                        </>,
-                                        x[2],
-                                        x[3],
-                                        <span style={{ color: "red" }}>
-                                            {x[4]}
-                                        </span>,
-                                    ])
+                                          <Link
+                                              to={`/system/${x[5]}/`}
+                                              style={{
+                                                  color: "red",
+                                                  textDecoration: "none",
+                                              }}
+                                          >
+                                              {x[0]}
+                                          </Link>,
+                                          <>
+                                              P<sup>{x[1]}</sup>{" "}
+                                              {String.fromCharCode(8594)} P
+                                              <sup>{x[1]}</sup>
+                                          </>,
+                                          x[2],
+                                          x[3],
+                                          <Link
+                                              to={`https://www.lmfdb.org/NumberField/${x[4]}`}
+                                              style={{
+                                                  color: "red",
+                                                  textDecoration: "none",
+                                              }}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                          >
+                                              {x[4]}
+                                          </Link>,
+                                      ])
                             }
                             itemsPerPage={pagesPer}
                             currentPage={page} 

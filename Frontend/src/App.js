@@ -3,24 +3,17 @@ import './App.css'
 import ExploreSystems from './pages/ExploreSystems';
 import Families from "./pages/Families";
 import SystemDetails from './pages/SystemDetails'
-import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar"
-import Toolbar from '@mui/material/Toolbar';
 import AboutPage from './pages/AboutPage';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 
-  const showMenu = true;
-  const drawerWidth = showMenu ? 200 : 0;
 
   return (
     <>
       <BrowserRouter>
-
-        {showMenu && <>
 	    <Topbar />
-        </>}
-
         <Routes>
           <Route index element={<AboutPage/>} />
           <Route path="exploreSystems" element={<ExploreSystems />} />

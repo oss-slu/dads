@@ -8,7 +8,7 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage, current
 
     const Superscript = ({ children }) => {
       return (
-	<sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
+	<sup style={{ fontSize: '0.6em'}}>
 	  {children}
 	</sup>
       );
