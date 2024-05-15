@@ -389,25 +389,6 @@ function ExploreSystems() {
                                         className="caret"
                                         onClick={toggleTree}
                                     >
-                                        Class
-                                    </span>
-                                    <ul className="nested">
-                                        <input type="checkbox" />
-                                        <label>Function</label>
-                                        <br />
-                                        <input type="checkbox" />
-                                        <label>Family</label>
-                                        <br />
-                                    </ul>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <span
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
                                         Type
                                     </span>
                                     <ul className="nested">
@@ -567,26 +548,6 @@ function ExploreSystems() {
                                             />
                                             <label htmlFor="showAll">Show all</label>
                                         </li>
-                                    </ul>
-                                </li>
-                            </ul>
-
-                            <ul id="myUL">
-                                <li>
-                                    <span
-                                        className="caret"
-                                        onClick={toggleTree}
-                                    >
-                                        Indeterminacy Locus
-                                    </span>
-                                    <ul className="nested">
-                                        <input
-                                            type="number"
-                                            style={textBoxStyle}
-                                            value={filters.indeterminacy_locus_dimension || ''}
-                                            onChange={(e) => handleTextChange("indeterminacy_locus_dimension", e.target.value)}
-                                        />
-                                        <label>Dimension</label>
                                     </ul>
                                 </li>
                             </ul>
