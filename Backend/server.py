@@ -18,6 +18,10 @@ def data1():
     data = connector.get_all_systems()
     return jsonify(data)
 
+@app.route('/get_all_families', methods=['POST', 'GET'])
+def data6():
+    data = connector.get_all_families()
+    return jsonify(data)
 
 # expects json with attribute 'label' and value as the label of the system
 @app.route('/get_system', methods=['POST', 'GET'])
