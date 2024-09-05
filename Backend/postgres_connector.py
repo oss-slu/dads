@@ -4,6 +4,8 @@ manages  server data queries
 """
 import psycopg2
 import psycopg2.extras
+from config import load_config
+
 
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
@@ -18,13 +20,15 @@ class PostgresConnector:
         connection: A psycopg2 connection object to interact with the database.
     """
     def __init__(self):
+        
+        config = load_config()
+        try:
+            # connecting to the PostgreSQL server
+            self.connection = psycopg2.connect(**config)
+            print('Connected to the PostgreSQL server.')
 
-        self.connection = psycopg2.connect(
-                host='localhost',
-                dbname='dad',
-                user='dad_user',
-                password='dad_pass',
-                port='5432')
+        except (psycopg2.DatabaseError, Exception) as error:
+            print(error)
 
     def construct_label(self, data):
         return (
