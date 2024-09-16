@@ -24,7 +24,11 @@ class PostgresConnector:
         config = load_config()
         try:
             # connecting to the PostgreSQL server
-            self.connection = psycopg2.connect(**config)
+            self.connection = psycopg2.connect(host="ep-jolly-field-a5mt8r6k.us-east-2.aws.neon.tech",
+                       user="web-app",
+                       dbname="dad",
+                       password="FVhrzfL75eZl",
+                       port="5432")
             print('Connected to the PostgreSQL server.')
 
         except (psycopg2.DatabaseError, Exception) as error:
@@ -296,7 +300,7 @@ class PostgresConnector:
                     )
 
             elif fil in ['base_field_label']:
-                conditions.append(fil + ' LIKE "%" + values + "%"')
+                conditions.append(fil + " LIKE \'%" + values + "%\'")
             elif fil in ['family']:
                 print(values)
                 query = f"""
