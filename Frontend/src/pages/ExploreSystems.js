@@ -486,10 +486,38 @@ function ExploreSystems() {
                                     >
                                         Rational Preperiodic Points
                                     </span>
-                                    <ul className="nested"></ul>
+                                    <ul className="nested">
+                                        <li>
+                                            <input
+                                                type="number"
+                                                style={textBoxStyle}
+                                                value={filters.rationalPreperiodicCardinality || ''}
+                                                onChange={(e) => handleTextChange("rationalPreperiodicCardinality", e.target.value)}
+                                            />
+                                            <label>Cardinality</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="number"
+                                                style={textBoxStyle}
+                                                value={filters.rationalPreperiodicComponents || ''}
+                                                onChange={(e) => handleTextChange("rationalPreperiodicComponents", e.target.value)}
+                                            />
+                                            <label>Number of Connected Components</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="number"
+                                                style={textBoxStyle}
+                                                value={filters.rationalPreperiodicLongestTail || ''}
+                                                onChange={(e) => handleTextChange("rationalPreperiodicLongestTail", e.target.value)}
+                                            />
+                                            <label>Longest Tail</label>
+                                        </li>
+                                    </ul>
                                 </li>
                             </ul>
-
+ 
                             <ul id="myUL">
                                 <li>
                                     <span
