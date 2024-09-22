@@ -20,7 +20,6 @@ class PostgresConnector:
         connection: A psycopg2 connection object to interact with the database.
     """
     def __init__(self):
-        
         config = load_config()
         try:
             # connecting to the PostgreSQL server
