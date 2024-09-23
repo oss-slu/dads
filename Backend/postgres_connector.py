@@ -34,7 +34,6 @@ class PostgresConnector:
             '1.' +
             data['sigma_one'] +
             '.' + data['sigma_two'] +
-            '.' + data['sigma_three'] +
             '.' + str(data['ordinal'])
         )
 
@@ -107,7 +106,7 @@ class PostgresConnector:
         #    label, dimension, degree, polynomials, field_label
 
         columns = (
-            'function_id, sigma_one, sigma_two, sigma_three, ordinal,'
+            'function_id, sigma_one, sigma_two, ordinal,'
             ' degree, (original_model).coeffs, base_field_label'
         )
         dims = filters['N']
