@@ -1,3 +1,8 @@
+"""
+This module contains functionality to load the PostgreSQL
+configuration from a file.
+"""
+
 from configparser import ConfigParser
 
 def load_config(filename='database.ini', section='postgresql'):
@@ -17,9 +22,4 @@ def load_config(filename='database.ini', section='postgresql'):
 
 if __name__ == '__main__':
     config = load_config()
-
-
-
-
-
     print(config)
