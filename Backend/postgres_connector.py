@@ -294,7 +294,8 @@ class PostgresConnector:
                     )
 
             elif fil in ['base_field_label']:
-                conditions.append(fil + 'LIKE "%" + values + "%"')
+                conditions.append(fil + " LIKE \'%" + values + "%\'")
+
             elif fil in ['family']:
                 print(values)
                 query = f"""
