@@ -5,7 +5,7 @@ configuration from a file.
 
 from configparser import ConfigParser
 
-def load_config(filename='database.ini', section='postgresql'):
+def load_config(filename='database.ini', section='postgresql_local'):
     parser = ConfigParser()
     parser.read(filename)
 

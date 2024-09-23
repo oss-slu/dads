@@ -15,6 +15,7 @@ import CriticalPointsTable from '../components/FunctionDetail/CriticalPointsTabl
 import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPointPortraitTable'
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
 import CitationsTable from '../components/FunctionDetail/CitationsTable'
+import AutomorphismGroupTable from '../components/FunctionDetail/AutomorphismGroupTable'
 
 function SystemDetails() {
     const [data, setData] = useState({});
@@ -62,10 +63,13 @@ function SystemDetails() {
               <ModelsTable data = {data}/>
             </div>
             <div className="row">
-              <CitationsTable data = {data}/>
+              <AutomorphismGroupTable data={data} />
+            </div>
+            <div className="row">
+            <CitationsTable data = {data}/>
             </div>
         </div>
-            </div>
+      </div>
         </>
     )
 }
