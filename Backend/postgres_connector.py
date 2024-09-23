@@ -20,7 +20,6 @@ class PostgresConnector:
         connection: A psycopg2 connection object to interact with the database.
     """
     def __init__(self):
-        
         config = load_config()
         try:
             # connecting to the PostgreSQL server
@@ -296,7 +295,7 @@ class PostgresConnector:
                     )
 
             elif fil in ['base_field_label']:
-                conditions.append(fil + " LIKE \'%" + values + "%\'")
+                conditions.append(fil + "LIKE \'%" + values + "%\'")
             elif fil in ['family']:
                 print(values)
                 query = f"""
