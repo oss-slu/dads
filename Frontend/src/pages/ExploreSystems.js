@@ -282,7 +282,7 @@ function ExploreSystems() {
         automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
-        indeterminacy_locus_dimension: ""
+        indeterminacy_locus_dimension: "",
         preperiodic_cardinality: "",
         num_components: "",
         max_tail: ""
