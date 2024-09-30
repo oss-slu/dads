@@ -173,6 +173,8 @@ function ExploreSystems() {
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
                     is_pcf: filters.is_pcf,
+                    cp_cardinality: filters.cp_cardinality || "",
+                    periodic_largest_cycle: filters.largest_cycle || "",
                     automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
                     base_field_degree: filters.base_field_degree,
@@ -279,7 +281,9 @@ function ExploreSystems() {
         automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
-        indeterminacy_locus_dimension: ""
+        indeterminacy_locus_dimension: "",
+        cp_cardinality: "",
+        largest_cycle: ""
     };
 
     let connectionStatus = true;
@@ -465,12 +469,16 @@ function ExploreSystems() {
                                         <input
                                             type="text"
                                             style={textBoxStyle}
+                                            value={filters.cp_cardinality || ""}
+                                            onChange={(e) => handleTextChange('cp_cardinality', e.target.value)}
                                         />
                                         <label>Cardinality</label>
                                         <br />
                                         <input
                                             type="text"
                                             style={textBoxStyle}
+                                            value={filters.largest_cycle || ""}
+                                            onChange={(e) => handleTextChange('largest_cycle', e.target.value)}
                                         />
                                         <label>Largest Cycle</label>
                                         <br />

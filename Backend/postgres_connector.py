@@ -303,6 +303,9 @@ class PostgresConnector:
                 """
                 conditions.append(query)
 
+            elif fil =='cp_cardinality':
+                conditions.append(fil + ' = ' + str(values))
+
             else:
                 conditions.append(
                     fil +
