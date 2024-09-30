@@ -107,7 +107,8 @@ class PostgresConnector:
 
         columns = (
             'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal,'
-            ' degree, (original_model).coeffs, functions_dim_1_nf.base_field_label'
+            ' degree, (original_model).coeffs, ' 
+            'functions_dim_1_nf.base_field_label'
         )
         dims = filters['N']
         del filters['N']
@@ -306,10 +307,10 @@ class PostgresConnector:
                 family = ARRAY{psycopg2.extensions.AsIs(values)}
                 """
                 conditions.append(query)
-                
+
             elif fil in ['preperiodic_cardinality']:
                 conditions.append(f'cardinality = {values}')
-                
+
             elif fil in ['num_components'] or fil in ['max_tail']:
                 conditions.append(f'{fil} = {values}')
 
