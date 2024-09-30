@@ -178,7 +178,7 @@ function ExploreSystems() {
                     base_field_degree: filters.base_field_degree,
                     indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension,
                     family: filters.family,
-                    preperiodic_cardinaity: filters.rationalPreperiodicCardinality,
+                    preperiodic_cardinality: filters.rationalPreperiodicCardinality,
                     num_components: filters.rationalPreperiodicComponents,
                     max_tail: filters.rationalPreperiodicLongestTail
                 }
