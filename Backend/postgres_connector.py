@@ -106,8 +106,8 @@ class PostgresConnector:
         #    label, dimension, degree, polynomials, field_label
 
         columns = (
-            'function_id, sigma_one, sigma_two, ordinal,'
-            ' degree, (original_model).coeffs, base_field_label'
+            'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal,'
+            ' degree, (original_model).coeffs, functions_dim_1_nf.base_field_label'
         )
         dims = filters['N']
         del filters['N']
@@ -118,11 +118,15 @@ class PostgresConnector:
             stats= self.get_statistics(where_text)
             result = []
             if dims == [] or 1 in dims:
-                sql = (
-                    'SELECT ' +
-                    columns +
-                    ' FROM functions_dim_1_NF' +
-                    where_text
+                sql = (f"""
+                    SELECT {columns}
+                    FROM functions_dim_1_nf
+                    JOIN rational_preperiodic_dim_1_nf
+                    ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id
+                    JOIN graphs_dim_1_nf
+                    ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id
+                    {where_text}    
+                    """
                 )
                 with self.connection.cursor(
                     cursor_factory=psycopg2.extras.DictCursor
@@ -302,6 +306,12 @@ class PostgresConnector:
                 family = ARRAY{psycopg2.extensions.AsIs(values)}
                 """
                 conditions.append(query)
+                
+            elif fil in ['preperiodic_cardinality']:
+                conditions.append(f'cardinality = {values}')
+                
+            elif fil in ['num_components'] or fil in ['max_tail']:
+                conditions.append(f'{fil} = {values}')
 
             else:
                 conditions.append(
