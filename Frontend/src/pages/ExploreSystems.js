@@ -283,6 +283,9 @@ function ExploreSystems() {
         base_field_label: "",
         base_field_degree: "",
         indeterminacy_locus_dimension: ""
+        preperiodic_cardinality: "",
+        num_components: "",
+        max_tail: ""
     };
 
     let connectionStatus = true;
