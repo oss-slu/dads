@@ -19,6 +19,7 @@ function App() {
           <Route path="exploreSystems" element={<ExploreSystems />} />
           <Route path="families" element={<Families />} />
           <Route path="system/:label" element={<SystemDetails/>}/>
+          <Route path="/family/:id" element={<FamilyDetails />} />
         </Routes>
       </BrowserRouter>
 
