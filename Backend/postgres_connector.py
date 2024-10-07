@@ -20,14 +20,13 @@ class PostgresConnector:
         connection: A psycopg2 connection object to interact with the database.
     """
     def __init__(self):
-        config = load_config()
-        try:
-            # connecting to the PostgreSQL server
-            self.connection = psycopg2.connect(**config)
-            print('Connected to the PostgreSQL server.')
-
-        except (psycopg2.DatabaseError, Exception) as error:
-            print(error)
+        self.connection = psycopg2.connect(
+                        host='localhost',
+                        dbname='dad',
+                        user='dad_user',
+                        password='dad_pass',
+                        port='5432'
+                    )
 
     def construct_label(self, data):
         return (
@@ -51,6 +50,7 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
+
     def get_all_families(self):
         columns = '*'
         sql = 'SELECT ' + columns + ' FROM families_dim_1_NF'
@@ -64,6 +64,7 @@ class PostgresConnector:
         finally:
             if cur:
                 cur.close()
+        print(result)
         return result
 
     # gets a system identified by its label, input is string

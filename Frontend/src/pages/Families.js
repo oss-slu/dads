@@ -35,7 +35,7 @@ function Families() {
       };
       const handleLinkClick = (selection) => {
         updateAutocompleteSelections([selection]);
-        navigate('/exploreSystems');
+        navigate('/family-details');
       };
     return (
         <>
@@ -46,7 +46,6 @@ function Families() {
                                 "Family Id",
                                 "Family Name",
                                 "Degree",
-                                
                             ]}
                             data={
                                 families === null
