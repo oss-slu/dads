@@ -230,6 +230,10 @@ class PostgresConnector:
                 sql = (
                     'SELECT COUNT( (original_model).height )'
                     ' FROM functions_dim_1_NF'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id'
+                    ' JOIN graphs_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -238,6 +242,10 @@ class PostgresConnector:
                 sql = (
                     'SELECT AVG(automorphism_group_cardinality::int)'
                     ' FROM functions_dim_1_NF'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id'
+                    ' JOIN graphs_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -245,6 +253,10 @@ class PostgresConnector:
                 # number of PCF
                 sql = (
                     'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id'
+                    ' JOIN graphs_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -252,7 +264,11 @@ class PostgresConnector:
                 # Average Height
                 sql = (
                     'SELECT AVG( (original_model).height ) ' 
-                    'FROM functions_dim_1_NF' +
+                    'FROM functions_dim_1_NF' 
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id'
+                    ' JOIN graphs_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id' +
                     where_text
                 )
                 cur.execute(sql)
