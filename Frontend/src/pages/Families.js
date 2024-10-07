@@ -2,7 +2,6 @@ import * as React from "react";
 import { useState, useEffect } from 'react';
 import {get_families } from '../api/routes';
 import PaginatedDataTable from "../components/newDataTable";
-import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import { useFilters } from '../context/FilterContext';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +10,7 @@ function Families() {
     const navigate = useNavigate();
     const { filters, setFilters } = useFilters();
     const [families, setFamilies] = useState(null);
-    const [pagesPer, setPagesPer] = useState('20');
+    const [pagesPer] = useState('20');
     const fetchFamilies = async () => {
         try {
             const result = await get_families()
