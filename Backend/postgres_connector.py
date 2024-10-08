@@ -316,14 +316,14 @@ class PostgresConnector:
 
     def get_family(self, family_id):
         columns = '*'
-        sql = f"SELECT {columns} FROM families_dim_1_NF WHERE family_id = %s"
+        sql = f'SELECT {columns} FROM families_dim_1_NF WHERE family_id = %s'
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql, (family_id,))
                 result = cur.fetchone()
         except Exception as e:
             self.connection.rollback()
-            print(f"An error occurred: {e}")
+            print(f'An error occurred: {e}')
             result = None
         finally:
             if cur:
