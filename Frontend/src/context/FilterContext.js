@@ -21,7 +21,7 @@ export const FilterProvider = ({ children }) => {
         base_field_degree: "",
         indeterminacy_locus_dimension: "",
         cp_cardinality: "",
-        largest_cycle: ""
+        periodic_cycles: ""
     });
 
     return (
