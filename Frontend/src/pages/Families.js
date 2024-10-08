@@ -32,10 +32,12 @@ function Families() {
         }));
         console.log('what is going on ',filters.family)
       };
+
       const handleLinkClick = (selection) => {
         updateAutocompleteSelections([selection]);
-        navigate('/family-details');
-      };
+        navigate(`/family-details/${selection}`);
+    };
+
     return (
         <>
         <div className="results-container" container>

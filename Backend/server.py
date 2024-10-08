@@ -62,5 +62,11 @@ def data5():
     return jsonify(data)
 
 
+@app.route('/get_family', methods=['POST'])
+def get_family():
+    target = request.get_json()
+    data = connector.get_family(target['id'])
+    return jsonify(data)
+
 if __name__ == '__main__':
     app.run()
