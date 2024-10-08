@@ -315,7 +315,7 @@ class PostgresConnector:
             elif fil == 'periodic_cycles':
                 print(
                     f'Filter value for periodic_cycles: {int(values)}'
-                )  
+                )
                 conditions.append(
     f'(SELECT MAX(val) FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
     f'WHERE val IS NOT NULL) = '
