@@ -107,8 +107,8 @@ class PostgresConnector:
 
         columns = (
             'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal,'
-            ' degree, (original_model).coeffs, ' 
-            'functions_dim_1_nf.base_field_label'
+            ' degree, (original_model).coeffs,'
+            ' functions_dim_1_nf.base_field_label'
         )
         dims = filters['N']
         del filters['N']
@@ -251,7 +251,7 @@ class PostgresConnector:
                 pcf = cur.fetchall()
                 # Average Height
                 sql = (
-                    'SELECT AVG( (original_model).height ) ' 
+                    'SELECT AVG( (original_model).height ) '
                     'FROM functions_dim_1_NF' +
                     where_text
                 )
@@ -308,13 +308,19 @@ class PostgresConnector:
                 """
                 conditions.append(query)
 
-            elif fil =='cp_cardinality':
-                conditions.append(f"{fil} = {int(values)}")
+            elif fil == 'cp_cardinality':
+                conditions.append(f'{fil} = {int(values)}')
+
 
             elif fil == 'periodic_cycles':
-                print(f"Filter value for periodic_cycles: {int(values)}")  # Log the filter value
-                conditions.append(f"(SELECT MAX(val) FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val WHERE val IS NOT NULL) = {int(values)}")
-
+                print(
+                    f'Filter value for periodic_cycles: {int(values)}'
+                )  
+                conditions.append(
+    f'(SELECT MAX(val) FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
+    f'WHERE val IS NOT NULL) = '
+    f'{int(values)}'
+)
             else:
                 conditions.append(
                     fil +
