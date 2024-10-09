@@ -177,7 +177,10 @@ function ExploreSystems() {
                     base_field_label: filters.base_field_label,
                     base_field_degree: filters.base_field_degree,
                     indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension,
-                    family: filters.family
+                    family: filters.family,
+                    preperiodic_cardinality: filters.rationalPreperiodicCardinality,
+                    num_components: filters.rationalPreperiodicComponents,
+                    max_tail: filters.rationalPreperiodicLongestTail
                 }
             )
             setSystems(result.data['results']);
@@ -279,7 +282,10 @@ function ExploreSystems() {
         automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
-        indeterminacy_locus_dimension: ""
+        indeterminacy_locus_dimension: "",
+        preperiodic_cardinality: "",
+        num_components: "",
+        max_tail: ""
     };
 
     let connectionStatus = true;
