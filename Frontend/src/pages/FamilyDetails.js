@@ -43,6 +43,9 @@ function FamilyDetails() {
 
   return (
     <div className="family-details">
+      <br></br>
+      <br></br>
+      <br></br>
       <h1>Family Details: {family[1]}</h1>
       <div className="info-container">
         <div className="row">
