@@ -27,7 +27,7 @@ jobs:
 
       - name: Install Dependencies
         working-directory: Frontend
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Run ESLint
         working-directory: Frontend
