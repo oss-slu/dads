@@ -6,7 +6,6 @@ import psycopg2
 import psycopg2.extras
 from config import load_config
 
-
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
 # gets all systems from the database
@@ -51,6 +50,7 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
+
     def get_all_families(self):
         columns = '*'
         sql = 'SELECT ' + columns + ' FROM families_dim_1_NF'
@@ -107,8 +107,8 @@ class PostgresConnector:
 
         columns = (
             'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal,'
-            ' degree, (original_model).coeffs,'
-            ' functions_dim_1_nf.base_field_label'
+            ' degree, (original_model).coeffs, ' 
+            'functions_dim_1_nf.base_field_label'
         )
         dims = filters['N']
         del filters['N']
@@ -230,6 +230,12 @@ class PostgresConnector:
                 sql = (
                     'SELECT COUNT( (original_model).height )'
                     ' FROM functions_dim_1_NF'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id ='
+                    ' rational_preperiodic_dim_1_nf.function_id'
+                    ' JOIN graphs_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id ='
+                    ' rational_preperiodic_dim_1_nf.graph_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -238,6 +244,12 @@ class PostgresConnector:
                 sql = (
                     'SELECT AVG(automorphism_group_cardinality::int)'
                     ' FROM functions_dim_1_NF'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id ='
+                    ' rational_preperiodic_dim_1_nf.function_id'
+                    ' JOIN graphs_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id ='
+                    ' rational_preperiodic_dim_1_nf.graph_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -245,14 +257,26 @@ class PostgresConnector:
                 # number of PCF
                 sql = (
                     'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id ='
+                    ' rational_preperiodic_dim_1_nf.function_id'
+                    ' JOIN graphs_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id ='
+                    ' rational_preperiodic_dim_1_nf.graph_id'
                     + where_text
                 )
                 cur.execute(sql)
                 pcf = cur.fetchall()
                 # Average Height
                 sql = (
-                    'SELECT AVG( (original_model).height ) '
-                    'FROM functions_dim_1_NF' +
+                    'SELECT AVG( (original_model).height ) ' 
+                    'FROM functions_dim_1_NF' 
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id ='
+                    ' rational_preperiodic_dim_1_nf.function_id'
+                    ' JOIN graphs_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id ='
+                    ' rational_preperiodic_dim_1_nf.graph_id' +
                     where_text
                 )
                 cur.execute(sql)
@@ -308,19 +332,25 @@ class PostgresConnector:
                 """
                 conditions.append(query)
 
-            elif fil == 'cp_cardinality':
-                conditions.append(f'{fil} = {int(values)}')
+            elif fil in ['preperiodic_cardinality']:
+                conditions.append(f'cardinality = {values}')
 
+            elif fil in ['num_components'] or fil in ['max_tail']:
+                conditions.append(f'{fil} = {values}')
+
+            elif fil == 'cp_cardinality':
+                conditions.append(f'{fil}={int(values)}')
 
             elif fil == 'periodic_cycles':
                 print(
                     f'Filter value for periodic_cycles: {int(values)}'
                 )
                 conditions.append(
-    f'(SELECT MAX(val) FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
-    f'WHERE val IS NOT NULL) = '
-    f'{int(values)}'
-)
+                    f'(SELECT MAX(val) FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
+                    f'WHERE val IS NOT NULL)='
+                    f'{int(values)}'
+                )
+
             else:
                 conditions.append(
                     fil +
@@ -331,3 +361,19 @@ class PostgresConnector:
 
         filter_text += ' AND '.join(conditions)
         return filter_text
+
+    def get_family(self, family_id):
+        columns = '*'
+        sql = f'SELECT {columns} FROM families_dim_1_NF WHERE family_id = %s'
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute(sql, (family_id,))
+                result = cur.fetchone()
+        except Exception as e:
+            self.connection.rollback()
+            print(f'An error occurred: {e}')
+            result = None
+        finally:
+            if cur:
+                cur.close()
+        return result
