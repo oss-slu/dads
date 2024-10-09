@@ -28,7 +28,14 @@ export const get_statistics = (filters) => axios({
     url: "http://127.0.0.1:5000/get_statistics",
     data: filters
 })
+
 export const get_families= () => axios({
     method: "get",
     url: "http://127.0.0.1:5000/get_all_families",
+})
+
+export const get_family = (familyId) => axios({
+    method: "post",
+    url: "http://127.0.0.1:5000/get_family",
+    data: { id: familyId }
 })

@@ -6,7 +6,6 @@ import psycopg2
 import psycopg2.extras
 from config import load_config
 
-
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
 # gets all systems from the database
@@ -51,6 +50,7 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
+
     def get_all_families(self):
         columns = '*'
         sql = 'SELECT ' + columns + ' FROM families_dim_1_NF'
@@ -348,3 +348,19 @@ class PostgresConnector:
 
         filter_text += ' AND '.join(conditions)
         return filter_text
+
+    def get_family(self, family_id):
+        columns = '*'
+        sql = f'SELECT {columns} FROM families_dim_1_NF WHERE family_id = %s'
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute(sql, (family_id,))
+                result = cur.fetchone()
+        except Exception as e:
+            self.connection.rollback()
+            print(f'An error occurred: {e}')
+            result = None
+        finally:
+            if cur:
+                cur.close()
+        return result
