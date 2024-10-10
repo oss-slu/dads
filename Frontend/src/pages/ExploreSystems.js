@@ -173,6 +173,8 @@ function ExploreSystems() {
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
                     is_pcf: filters.is_pcf,
+                    cp_cardinality: filters.cp_cardinality,
+                    periodic_cycles: (filters.periodic_cycles),
                     automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
                     base_field_degree: filters.base_field_degree,
@@ -283,6 +285,8 @@ function ExploreSystems() {
         base_field_label: "",
         base_field_degree: "",
         indeterminacy_locus_dimension: "",
+        cp_cardinality: "",
+        periodic_cycles: "",
         preperiodic_cardinality: "",
         num_components: "",
         max_tail: ""
@@ -469,14 +473,18 @@ function ExploreSystems() {
                                     </span>
                                     <ul className="nested">
                                         <input
-                                            type="text"
+                                            type="number"
                                             style={textBoxStyle}
+                                            value={filters.cp_cardinality || ""}
+                                            onChange={(e) => handleTextChange('cp_cardinality', e.target.value)}
                                         />
                                         <label>Cardinality</label>
                                         <br />
                                         <input
-                                            type="text"
+                                            type="number"
                                             style={textBoxStyle}
+                                            value={filters.periodic_cycles || ""}
+                                            onChange={(e) => handleTextChange('periodic_cycles', e.target.value)}
                                         />
                                         <label>Largest Cycle</label>
                                         <br />

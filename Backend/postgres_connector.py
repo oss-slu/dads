@@ -107,7 +107,7 @@ class PostgresConnector:
 
         columns = (
             'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal,'
-            ' degree, (original_model).coeffs, ' 
+            ' degree, (original_model).coeffs, '
             'functions_dim_1_nf.base_field_label'
         )
         dims = filters['N']
@@ -269,8 +269,8 @@ class PostgresConnector:
                 pcf = cur.fetchall()
                 # Average Height
                 sql = (
-                    'SELECT AVG( (original_model).height ) ' 
-                    'FROM functions_dim_1_NF' 
+                    'SELECT AVG( (original_model).height ) '
+                    'FROM functions_dim_1_NF'
                     ' JOIN rational_preperiodic_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id ='
                     ' rational_preperiodic_dim_1_nf.function_id'
@@ -337,6 +337,19 @@ class PostgresConnector:
 
             elif fil in ['num_components'] or fil in ['max_tail']:
                 conditions.append(f'{fil} = {values}')
+
+            elif fil == 'cp_cardinality':
+                conditions.append(f'{fil}={int(values)}')
+
+            elif fil == 'periodic_cycles':
+                print(
+                    f'Filter value for periodic_cycles: {int(values)}'
+                )
+                conditions.append(
+f'(SELECT MAX(val) FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
+f'WHERE val IS NOT NULL)='
+f'{int(values)}'
+                )
 
             else:
                 conditions.append(

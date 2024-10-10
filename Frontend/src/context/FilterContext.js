@@ -19,7 +19,9 @@ export const FilterProvider = ({ children }) => {
         automorphism_group_cardinality: "",
         base_field_label: "",
         base_field_degree: "",
-        indeterminacy_locus_dimension: ""
+        indeterminacy_locus_dimension: "",
+        cp_cardinality: "",
+        periodic_cycles: ""
     });
 
     return (
