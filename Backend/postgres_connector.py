@@ -204,10 +204,10 @@ class PostgresConnector:
         sql = (
             'SELECT '
             + columns
-            + ' FROM functions_dim_1_NF WHERE' 
-            + ' base_field_degree || \'.\'' 
+            + ' FROM functions_dim_1_NF WHERE'
+            + ' base_field_degree || \'.\''
             + ' || sigma_one || \'.\''
-            + ' || sigma_two || \'.\'' 
+            + ' || sigma_two || \'.\''
             + ' || ordinal in '
             + labels
         )
