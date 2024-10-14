@@ -38,10 +38,6 @@ export default function CriticalPointPortraitTable({ data }) {
             <TableCell align="right">{formatData(data.critical_portrait_cardinality)}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row"><b>Cycle Sizes</b></TableCell>
-            <TableCell align="right">{"tmp"}</TableCell>
-          </TableRow>
-          <TableRow>
             <TableCell component="th" scope="row"><b>As Directed Graph (graph ID for now)</b></TableCell>
             <TableCell align="right">{formatData(data.critical_portrait_graph_id)}</TableCell>
           </TableRow>
