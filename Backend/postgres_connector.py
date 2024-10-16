@@ -193,6 +193,7 @@ class PostgresConnector:
             if cur:
                 cur.close()
 
+        print("results/stats", result, stats)
         return result,stats
 
     # gets a subset of the systems identified by the labels
@@ -281,7 +282,25 @@ class PostgresConnector:
                 )
                 cur.execute(sql)
                 height = cur.fetchall()
+                print("the height is: ", height)
                 resultant = 0
+
+                sql = (
+                    'SELECT '
+                    'AVG(positive_in_degree) AS avg_positive_in_degree, '
+                    'MAX(positive_in_degree) AS max_positive_in_degree '
+                    'FROM graphs_dim_1_nf '
+                    'JOIN rational_preperiodic_dim_1_nf '
+                    'ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id '
+                    'JOIN functions_dim_1_nf '
+                    'ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id'
+                    + where_text
+                )
+                cur.execute(sql)
+                positive_in_degree_stats = cur.fetchone()
+                average_pc_set = positive_in_degree_stats[0]
+                largeset_pc_set = positive_in_degree_stats[1]
+
         except Exception:
             self.connection.rollback()
             maps = 0
@@ -289,7 +308,9 @@ class PostgresConnector:
             pcf = 0
             height = 0
             resultant = 0
-        return [maps, aut, pcf, height, resultant]
+            average_pc_set = 0
+            largeset_pc_set = 0
+        return [maps, aut, pcf, height, resultant, average_pc_set, largeset_pc_set]
 
     def build_where_text(self, filters):
         # remove empty filters
