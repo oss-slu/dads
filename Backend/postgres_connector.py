@@ -193,7 +193,6 @@ class PostgresConnector:
             if cur:
                 cur.close()
 
-        print("results/stats", result, stats)
         return result,stats
 
     # gets a subset of the systems identified by the labels
@@ -282,7 +281,6 @@ class PostgresConnector:
                 )
                 cur.execute(sql)
                 height = cur.fetchall()
-                print("the height is: ", height)
                 resultant = 0
 
                 sql = (
