@@ -289,9 +289,11 @@ class PostgresConnector:
                     'MAX(positive_in_degree) AS max_positive_in_degree '
                     'FROM graphs_dim_1_nf '
                     'JOIN rational_preperiodic_dim_1_nf '
-                    'ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id '
+                    'ON graphs_dim_1_nf.graph_id = '
+                    'rational_preperiodic_dim_1_nf.graph_id '
                     'JOIN functions_dim_1_nf '
-                    'ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id'
+                    'ON functions_dim_1_nf.function_id = '
+                    'rational_preperiodic_dim_1_nf.function_id'
                     + where_text
                 )
                 cur.execute(sql)
