@@ -16,21 +16,13 @@ export default function InfoTable({ data }) {
             <TableCell><b>Label</b></TableCell>
             <TableCell align="right"><b>Domain</b></TableCell>
             <TableCell align="right"><b>Standard Model</b></TableCell>
-            <TableCell align="right"><b>Degree</b></TableCell>
-            <TableCell align="right"><b>Field of Definition</b></TableCell>
-            <TableCell align="right"><b>Min Field of Definition</b></TableCell>
-            <TableCell align="right"><b>Field of Modull</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row">{data.modelLabel}</TableCell>
             <TableCell align="right">{data.base_field_label}</TableCell>
-            <TableCell align="right">{"tmp"}</TableCell>
             <TableCell align="right">{data.degree}</TableCell>
-            <TableCell align="right">{"tmp"}</TableCell>
-            <TableCell align="right">{"tmp"}</TableCell>
-            <TableCell align="right">{"tmp"}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

@@ -13,20 +13,8 @@ export default function CriticalPointsTable({ data }) {
       <Table aria-label="simple table">
         <TableBody>
           <TableRow>
-            <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
-            <TableCell align="right">{"tmp"}</TableCell>
-          </TableRow>
-          <TableRow>
             <TableCell component="th" scope="row"><b>Postcritically Finite?</b></TableCell>
             <TableCell align="right">{String(data.is_pcf)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row"><b># Post Critical Set</b></TableCell>
-            <TableCell align="right">{"tmp"}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row"><b>Field of Definition</b></TableCell>
-            <TableCell align="right">{"tmp"}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
