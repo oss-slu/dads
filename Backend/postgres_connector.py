@@ -296,7 +296,7 @@ class PostgresConnector:
                 )
                 cur.execute(sql)
                 positive_in_degree_stats = cur.fetchone()
-                average_pc_set = positive_in_degree_stats[0]
+                avg_pc_set = positive_in_degree_stats[0]
                 largeset_pc_set = positive_in_degree_stats[1]
 
         except Exception:
@@ -306,9 +306,9 @@ class PostgresConnector:
             pcf = 0
             height = 0
             resultant = 0
-            average_pc_set = 0
+            avg_pc_set = 0
             largeset_pc_set = 0
-        return [maps, aut, pcf, height, resultant, average_pc_set, largeset_pc_set]
+        return [maps, aut, pcf, height, resultant, avg_pc_set, largeset_pc_set]
 
     def build_where_text(self, filters):
         # remove empty filters
