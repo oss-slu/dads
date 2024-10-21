@@ -209,7 +209,11 @@ class PostgresConnector:
         sql = (
             'SELECT '
             + columns
-            + ' FROM functions_dim_1_NF WHERE label in '
+            + ' FROM functions_dim_1_NF WHERE'
+            + ' base_field_degree || \'.\''
+            + ' || sigma_one || \'.\''
+            + ' || sigma_two || \'.\''
+            + ' || ordinal in '
             + labels
         )
         try:
