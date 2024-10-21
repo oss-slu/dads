@@ -775,7 +775,7 @@ function ExploreSystems() {
 
                             <div className="statcontainer">
                                 <ul id="myUL">
-                                    <li><span className="caret" onClick={toggleTree}>Average #Periodic: {stats.avgNumPeriodic}</span>
+                                    <li><span className="caret" onClick={toggleTree}>Avg #Periodic: {stats.avgNumPeriodic}</span>
                                         <ul className="nested">
                                             <label>Most Periodic: {stats.mostPeriodic}</label>
                                             <br />
@@ -788,7 +788,7 @@ function ExploreSystems() {
 
                             <div className='statcontainer'>
                                 <ul id="myUL">
-                                    <li><span className="caret" onClick={toggleTree}>Average #Preperiodic: {stats.avgNumPrePeriodic}</span>
+                                    <li><span className="caret" onClick={toggleTree}>Avg #Preperiodic: {stats.avgNumPrePeriodic}</span>
                                         <ul className="nested">
                                             <label>Most Preperiodic: {stats.mostPreperiodic} </label>
                                             <br />
