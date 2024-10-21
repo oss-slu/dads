@@ -301,6 +301,39 @@ class PostgresConnector:
                 avg_pc_set = positive_in_degree_stats[0]
                 largeset_pc_set = positive_in_degree_stats[1]
 
+                sql = (
+                    'SELECT periodic_cardinality'
+                    ' FROM graphs_dim_1_nf'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id'
+                    ' JOIN functions_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id'
+                    + where_text
+                )
+                cur.execute(sql)
+                periodic_cardinalities = [row[0] for row in cur.fetchall()]
+
+                avg_num_periodic = sum(periodic_cardinalities) / len(periodic_cardinalities)
+                most_periodic = max(set(periodic_cardinalities), key=periodic_cardinalities.count)
+                largest_cycle = max(periodic_cardinalities)
+
+                sql = (
+                    'SELECT preperiodic_components'
+                    ' FROM graphs_dim_1_nf'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id'
+                    ' JOIN functions_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id'
+                    + where_text
+                )
+                cur.execute(sql)
+                preperiodic_components = [row[0] for row in cur.fetchall()]
+
+                avg_num_preperiodic = sum(len(comp) for comp in preperiodic_components) / len(preperiodic_components)
+                component_sizes = [len(comp) for comp in preperiodic_components]
+                most_preperiodic = max(set(component_sizes), key=component_sizes.count)
+                largest_comp = max(component_sizes)
+
         except Exception:
             self.connection.rollback()
             maps = 0
@@ -310,7 +343,16 @@ class PostgresConnector:
             resultant = 0
             avg_pc_set = 0
             largeset_pc_set = 0
-        return [maps, aut, pcf, height, resultant, avg_pc_set, largeset_pc_set]
+            avg_num_periodic = 0
+            most_periodic = 0
+            largest_cycle = 0
+            most_preperiodic = 0
+            largest_comp = 0
+        return [maps, aut, pcf, height, resultant, 
+                avg_pc_set, largeset_pc_set, 
+                avg_num_periodic, most_periodic, 
+                largest_cycle, avg_num_preperiodic,
+                most_preperiodic, largest_comp]
 
     def build_where_text(self, filters):
         # remove empty filters

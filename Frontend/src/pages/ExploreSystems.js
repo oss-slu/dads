@@ -195,7 +195,13 @@ function ExploreSystems() {
                         avgHeight: Math.round(result.data['statistics'][3] * 100) / 100, 
                         avgResultant: Math.round(result.data['statistics'][4] * 100) / 100, 
                         avgPCSet: Math.round(result.data['statistics'][5] * 100) / 100, 
-                        largestPCSet: result.data['statistics'][6] 
+                        largestPCSet: result.data['statistics'][6],
+                        avgNumPeriodic: Math.round(result.data['statistics'][7] * 100) / 100,
+                        mostPeriodic: result.data['statistics'][8],
+                        largestPeriodicCycle: result.data['statistics'][9],
+                        avgNumPrePeriodic: Math.round(result.data['statistics'][10] * 100) / 100,
+                        mostPreperiodic: result.data['statistics'][11],
+                        largestComp: result.data['statistics'][12]
                     }
             }))
         } catch (error) {
@@ -769,11 +775,11 @@ function ExploreSystems() {
 
                             <div className="statcontainer">
                                 <ul id="myUL">
-                                    <li><span className="caret" onClick={toggleTree}>Average #Periodic</span>
+                                    <li><span className="caret" onClick={toggleTree}>Average #Periodic: {stats.avgNumPeriodic}</span>
                                         <ul className="nested">
-                                            <label>Most Periodic</label>
+                                            <label>Most Periodic: {stats.mostPeriodic}</label>
                                             <br />
-                                            <label>Largest Cycle</label>
+                                            <label>Largest Cycle: {stats.largestPeriodicCycle}</label>
                                             <br />
                                         </ul>
                                     </li>
@@ -782,11 +788,11 @@ function ExploreSystems() {
 
                             <div className='statcontainer'>
                                 <ul id="myUL">
-                                    <li><span className="caret" onClick={toggleTree}>Average #Preperiodic</span>
+                                    <li><span className="caret" onClick={toggleTree}>Average #Preperiodic: {stats.avgNumPrePeriodic}</span>
                                         <ul className="nested">
-                                            <label>Most Preperiodic </label>
+                                            <label>Most Preperiodic: {stats.mostPreperiodic} </label>
                                             <br />
-                                            <label>Largest Comp.</label>
+                                            <label>Largest Comp.: {stats.largestComp}</label>
                                             <br />
                                         </ul>
                                     </li>
