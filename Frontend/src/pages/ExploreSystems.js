@@ -242,15 +242,10 @@ function ExploreSystems() {
             }
             else {
                 // For handing non-empty data
-                let csvData = 'degree,N,keywords,base_field_type,base_field_label,base_field_latex,base_field_degree,sigma_inv_1,sigma_inv_2,sigma_inv_3,label,citations,family,models_original_polys_vars,models_original_polys_val,models_original_polys_latex,models_original_resultant,models_original_name,models_original_bad_primes,models_original_height,models_original_base_field_label,models_original_base_field_latex,models_original_num_parameters,models_original_conjugation_from_original_latex,models_original_conjugation_from_original_val,models_original_conjugation_from_original_base_field_label,models_original_conjugation_from_original_num_parameters,display_model,is_morphism,indeterminacy_locus_dimension,is_polynomial,models.monic_centered_polys_vars,models.monic_centered_polys_val,models.monic_centered_polys_latex,models.monic_centered_resultant,models.monic_centered_name,models.monic_centered_num_parameters,models.monic_centered_bad_primes,models.monic_centered_height,models.monic_centered_conjugation_from_original_latex,models.monic_centered_conjugation_from_original_val,models.monic_centered_conjugation_from_original_base_field_label,models.monic_centered_conjugation_from_original_base_field_emb,models.monic_centered_base_field_label,models.monic_centered_base_field_emb,models.monic_centered_base_field_latex,models.Chebyshev_polys_vars,models.Chebyshev_polys_val,models.Chebyshev_polys_latex,models.Chebyshev_name,models.Chebyshev_height,models.Chebyshev_resultant,models.Chebyshev_conjugation_from_original_latex,models.Chebyshev_conjugation_from_original_val,models.Chebyshev_conjugation_from_original_base_field_label,models.Chebyshev_conjugation_from_original_base_field_emb,models.Chebyshev_conjugation_from_original_num_parameters,models.Chebyshev_base_field_label,models.Chebyshev_base_field_emb,models.Chebyshev_base_field_latex,models.Chebyshev_num_parameters,is_Chebyshev,is_Newton,is_Lattes,is_pcf,automorphism_group_cardinality,automorphism_group_matrices\n'
+                let csvData = 'function_id,degree,base_field_label,base_field_degree,sigma_one,sigma_two,ordinal,citations,family,original_model,monic_centered,chebyshev_model,reduced_model,newton_model,display_model,is_polynomial,is_chebyshev,is_newton,is_lattes,is_pcf,cp_cardinality,cp_field_of_defn,automorphism_group_cardinality,rational_twists,critical_portrait_graph_id\n'
                 for (let i = 0; i < csvSystems.length; i++) {
                     for (let j = 0; j < csvSystems[i].length; j++) {
-                        if (isNaN(csvSystems[i][j])) {
-                            csvData += "\"" + csvSystems[i][j] + "\"" + ","
-                        }
-                        else {
-                            csvData += csvSystems[i][j] + ","
-                        }
+                        csvData += "\"" + String(csvSystems[i][j]).replace(/"/g, '') + "\"" + ","
                     }
                     csvData += '\n'
                 }
