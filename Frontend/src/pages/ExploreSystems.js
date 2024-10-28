@@ -173,7 +173,7 @@ function ExploreSystems() {
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
                     is_pcf: filters.is_pcf,
-                    cp_cardinality: filters.cp_cardinality,
+                    periodic_cardinality: filters.periodic_cardinality,
                     periodic_cycles: (filters.periodic_cycles),
                     automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
@@ -182,27 +182,15 @@ function ExploreSystems() {
                     family: filters.family,
                     preperiodic_cardinality: filters.rationalPreperiodicCardinality,
                     num_components: filters.rationalPreperiodicComponents,
-                    max_tail: filters.rationalPreperiodicLongestTail
+                    max_tail: filters.rationalPreperiodicLongestTail,
+                    cp_cardinality: filters.cp_cardinality,
+                    positive_in_degree: filters.positive_in_degree
                 }
             )
             setSystems(result.data['results']);
             setFiltersApplied({...filters})
             setStat((previousState => {
-                return { ...previousState, 
-                        numMaps: result.data['statistics'][0], 
-                        avgAUT: Math.round(result.data['statistics'][1] * 100) / 100, 
-                        numPCF: result.data['statistics'][2], 
-                        avgHeight: Math.round(result.data['statistics'][3] * 100) / 100, 
-                        avgResultant: Math.round(result.data['statistics'][4] * 100) / 100, 
-                        avgPCSet: Math.round(result.data['statistics'][5] * 100) / 100, 
-                        largestPCSet: result.data['statistics'][6],
-                        avgNumPeriodic: Math.round(result.data['statistics'][7] * 100) / 100,
-                        mostPeriodic: result.data['statistics'][8],
-                        largestPeriodicCycle: result.data['statistics'][9],
-                        avgNumPrePeriodic: Math.round(result.data['statistics'][10] * 100) / 100,
-                        mostPreperiodic: result.data['statistics'][11],
-                        largestComp: result.data['statistics'][12]
-                    }
+                return { ...previousState, numMaps: result.data['statistics'][0], avgAUT: Math.round(result.data['statistics'][1] * 100) / 100, numPCF: result.data['statistics'][2], avgHeight: Math.round(result.data['statistics'][3] * 100) / 100, avgResultant: Math.round(result.data['statistics'][4] * 100) / 100 }
             }))
         } catch (error) {
             setSystems(null);
@@ -294,11 +282,13 @@ function ExploreSystems() {
         base_field_label: "",
         base_field_degree: "",
         indeterminacy_locus_dimension: "",
-        cp_cardinality: "",
+        periodic_cardinality: "",
         periodic_cycles: "",
         preperiodic_cardinality: "",
         num_components: "",
-        max_tail: ""
+        max_tail: "",
+        cp_cardinality: "",
+        positive_in_degree: ""
     };
 
     let connectionStatus = true;
@@ -484,8 +474,8 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            value={filters.cp_cardinality || ""}
-                                            onChange={(e) => handleTextChange('cp_cardinality', e.target.value)}
+                                            value={filters.periodic_cardinality || ""}
+                                            onChange={(e) => handleTextChange('periodic_cardinality', e.target.value)}
                                         />
                                         <label>Cardinality</label>
                                         <br />
@@ -564,7 +554,7 @@ function ExploreSystems() {
 
                             <ul id="myUL">
                                 <li>
-                                    <span className="caret" onClick={toggleTree}>Postcritically Finite</span>
+                                    <span className="caret" onClick={toggleTree}>Critical Points</span>
                                     <ul className="nested">
                                         <li>
                                             <input
@@ -598,6 +588,24 @@ function ExploreSystems() {
                                                 onChange={() => handleRadioChange('is_pcf', '')}
                                             />
                                             <label htmlFor="showAll">Show all</label>
+                                        </li>
+                                        <li>
+                                        <input
+                                            type="number"
+                                            style={textBoxStyle}
+                                            value={filters.positive_in_degree || ''}
+                                            onChange={(e) => handleTextChange("positive_in_degree", e.target.value)}
+                                        />
+                                        <label>Post Critical Cardinality</label>
+                                        </li>
+                                        <li>
+                                        <input
+                                            type="number"
+                                            style={textBoxStyle}
+                                            value={filters.cp_cardinality || ''}
+                                            onChange={(e) => handleTextChange("cp_cardinality", e.target.value)}
+                                        />
+                                        <label>Num. Critical Points</label>
                                         </li>
                                     </ul>
                                 </li>
@@ -755,12 +763,11 @@ function ExploreSystems() {
                                 <ul id="myUL">
                                     <li>
                                         <label className="caret" onClick={toggleTree}>Number PCF</label>
+
                                         <ul className="nested">
-                                            <label>Avg Size of PC Set: </label>
-                                            {stats.avgPCSet}
+                                            <label>Average Size of PC Set</label>
                                             <br />
-                                            <label>Largest PC Set: </label>
-                                            {stats.largestPCSet}
+                                            <label>Largest PC Set</label>
                                             <br />
                                         </ul>
                                     </li>
@@ -770,11 +777,11 @@ function ExploreSystems() {
 
                             <div className="statcontainer">
                                 <ul id="myUL">
-                                    <li><span className="caret" onClick={toggleTree}>Avg #Periodic: {stats.avgNumPeriodic}</span>
+                                    <li><span className="caret" onClick={toggleTree}>Average #Periodic</span>
                                         <ul className="nested">
-                                            <label>Most Periodic: {stats.mostPeriodic}</label>
+                                            <label>Most Periodic</label>
                                             <br />
-                                            <label>Largest Cycle: {stats.largestPeriodicCycle}</label>
+                                            <label>Largest Cycle</label>
                                             <br />
                                         </ul>
                                     </li>
@@ -783,11 +790,11 @@ function ExploreSystems() {
 
                             <div className='statcontainer'>
                                 <ul id="myUL">
-                                    <li><span className="caret" onClick={toggleTree}>Avg #Preperiodic: {stats.avgNumPrePeriodic}</span>
+                                    <li><span className="caret" onClick={toggleTree}>Average #Preperiodic</span>
                                         <ul className="nested">
-                                            <label>Most Preperiodic: {stats.mostPreperiodic} </label>
+                                            <label>Most Preperiodic </label>
                                             <br />
-                                            <label>Largest Comp.: {stats.largestComp}</label>
+                                            <label>Largest Comp.</label>
                                             <br />
                                         </ul>
                                     </li>

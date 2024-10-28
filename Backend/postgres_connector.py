@@ -285,70 +285,20 @@ class PostgresConnector:
                 )
                 cur.execute(sql)
                 height = cur.fetchall()
-                resultant = 0
-
+                # Average Resultant
                 sql = (
-                    'SELECT '
-                    'AVG(positive_in_degree) AS avg_positive_in_degree, '
-                    'MAX(positive_in_degree) AS max_positive_in_degree '
-                    'FROM graphs_dim_1_nf '
-                    'JOIN rational_preperiodic_dim_1_nf '
-                    'ON graphs_dim_1_nf.graph_id = '
-                    'rational_preperiodic_dim_1_nf.graph_id '
-                    'JOIN functions_dim_1_nf '
-                    'ON functions_dim_1_nf.function_id = '
-                    'rational_preperiodic_dim_1_nf.function_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                positive_in_degree_stats = cur.fetchone()
-                avg_pc_set = positive_in_degree_stats[0]
-                largeset_pc_set = positive_in_degree_stats[1]
-
-                sql = (
-                    'SELECT periodic_cardinality'
-                    ' FROM graphs_dim_1_nf'
+                    'SELECT AVG( (original_model).height ) '
+                    'FROM functions_dim_1_NF'
                     ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id = '
-                    'rational_preperiodic_dim_1_nf.graph_id'
-                    ' JOIN functions_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id = '
-                    'rational_preperiodic_dim_1_nf.function_id'
-                    + where_text
+                    ' ON functions_dim_1_nf.function_id ='
+                    ' rational_preperiodic_dim_1_nf.function_id'
+                    ' JOIN graphs_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id ='
+                    ' rational_preperiodic_dim_1_nf.graph_id' +
+                    where_text
                 )
                 cur.execute(sql)
-                periodic_cardinalities = [row[0] for row in cur.fetchall()]
-                avg_num_periodic = sum(periodic_cardinalities) / len(
-                    periodic_cardinalities)
-                most_periodic = max(
-                    set(periodic_cardinalities),
-                    key=periodic_cardinalities.count
-                )
-                largest_cycle = max(periodic_cardinalities)
-                sql = (
-                    'SELECT preperiodic_components'
-                    ' FROM graphs_dim_1_nf'
-                    ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id = '
-                    'rational_preperiodic_dim_1_nf.graph_id'
-                    ' JOIN functions_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id = '
-                    'rational_preperiodic_dim_1_nf.function_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                preperiodic_components = [row[0] for row in cur.fetchall()]
-                avg_num_preperiodic = sum(
-                    len(comp) for comp in preperiodic_components
-                ) / len(preperiodic_components)
-                component_sizes = [len(comp) for comp in preperiodic_components]
-                most_preperiodic = max(
-                    set(component_sizes),
-                    key=component_sizes.count
-                )
-                largest_comp = max(component_sizes)
-
-
+                resultant = cur.fetchall()
         except Exception:
             self.connection.rollback()
             maps = 0
@@ -356,14 +306,7 @@ class PostgresConnector:
             pcf = 0
             height = 0
             resultant = 0
-            avg_pc_set = 0
-            avg_num_periodic = most_periodic = largest_cycle = 0
-            avg_num_preperiodic = most_preperiodic = largest_comp = 0
-        return [maps, aut, pcf, height, resultant,
-                avg_pc_set, largeset_pc_set,
-                avg_num_periodic, most_periodic,
-                largest_cycle, avg_num_preperiodic,
-                most_preperiodic, largest_comp]
+        return [maps, aut, pcf, height, resultant]
 
     def build_where_text(self, filters):
         # remove empty filters
@@ -412,7 +355,7 @@ class PostgresConnector:
             elif fil in ['num_components'] or fil in ['max_tail']:
                 conditions.append(f'{fil} = {values}')
 
-            elif fil == 'cp_cardinality':
+            elif fil in ['periodic_cardinality']:
                 conditions.append(f'{fil}={int(values)}')
 
             elif fil == 'periodic_cycles':
@@ -420,10 +363,15 @@ class PostgresConnector:
                     f'Filter value for periodic_cycles: {int(values)}'
                 )
                 conditions.append(
-f'(SELECT MAX(val) FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
-f'WHERE val IS NOT NULL)='
-f'{int(values)}'
+                    f'(SELECT MAX(val) FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
+                    + f'WHERE val IS NOT NULL)='
+                    + f'{int(values)}'
                 )
+            elif fil in ['cp_cardinality']:
+                conditions.append(f'{fil}={int(values)}')
+
+            elif fil in ['positive_in_degree']:
+                conditions.append(f'{fil}={int(values)}')
 
             else:
                 conditions.append(
