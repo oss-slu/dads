@@ -190,21 +190,21 @@ function ExploreSystems() {
             setSystems(result.data['results']);
             setFiltersApplied({...filters})
             setStat((previousState => {
-            return { ...previousState, 
-                    numMaps: result.data['statistics'][0], 
-                    avgAUT: Math.round(result.data['statistics'][1] * 100) / 100, 
-                    numPCF: result.data['statistics'][2], 
-                    avgHeight: Math.round(result.data['statistics'][3] * 100) / 100, 
-                    avgResultant: Math.round(result.data['statistics'][4] * 100) / 100, 
-                    avgPCSet: Math.round(result.data['statistics'][5] * 100) / 100, 
-                    largestPCSet: result.data['statistics'][6],
-                    avgNumPeriodic: Math.round(result.data['statistics'][7] * 100) / 100,
-                    mostPeriodic: result.data['statistics'][8],
-                    largestPeriodicCycle: result.data['statistics'][9],
-                    avgNumPrePeriodic: Math.round(result.data['statistics'][10] * 100) / 100,
-                    mostPreperiodic: result.data['statistics'][11],
-                    largestComp: result.data['statistics'][12]
-                }
+                return { ...previousState, 
+                        numMaps: result.data['statistics'][0], 
+                        avgAUT: Math.round(result.data['statistics'][1] * 100) / 100, 
+                        numPCF: result.data['statistics'][2], 
+                        avgHeight: Math.round(result.data['statistics'][3] * 100) / 100, 
+                        avgResultant: Math.round(result.data['statistics'][4] * 100) / 100, 
+                        avgPCSet: Math.round(result.data['statistics'][5] * 100) / 100, 
+                        largestPCSet: result.data['statistics'][6],
+                        avgNumPeriodic: Math.round(result.data['statistics'][7] * 100) / 100,
+                        mostPeriodic: result.data['statistics'][8],
+                        largestPeriodicCycle: result.data['statistics'][9],
+                        avgNumPrePeriodic: Math.round(result.data['statistics'][10] * 100) / 100,
+                        mostPreperiodic: result.data['statistics'][11],
+                        largestComp: result.data['statistics'][12]
+                    }
             }))
         } catch (error) {
             setSystems(null);
@@ -779,10 +779,10 @@ function ExploreSystems() {
                                         <label className="caret" onClick={toggleTree}>Number PCF</label>
 
                                         <ul className="nested">
-                                            <label>Avg Size of PC Set:</label>
+                                            <label>Avg Size of PC Set: </label>
                                             {stats.avgPCSet}
                                             <br />
-                                            <label>Largest PC Set:</label>
+                                            <label>Largest PC Set: </label>
                                             {stats.largestPCSet}
                                             <br />
                                         </ul>
