@@ -412,7 +412,7 @@ class PostgresConnector:
             elif fil in ['num_components'] or fil in ['max_tail']:
                 conditions.append(f'{fil} = {values}')
 
-            elif fil == 'cp_cardinality':
+            elif fil in ['periodic_cardinality']:
                 conditions.append(f'{fil}={int(values)}')
 
             elif fil == 'periodic_cycles':
@@ -420,10 +420,16 @@ class PostgresConnector:
                     f'Filter value for periodic_cycles: {int(values)}'
                 )
                 conditions.append(
-f'(SELECT MAX(val) FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
-f'WHERE val IS NOT NULL)='
-f'{int(values)}'
+                    '(SELECT MAX(val) '
+                    'FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
+                    'WHERE val IS NOT NULL)='
+                    f'{int(values)}'
                 )
+            elif fil in ['cp_cardinality']:
+                conditions.append(f'{fil}={int(values)}')
+
+            elif fil in ['positive_in_degree']:
+                conditions.append(f'{fil}={int(values)}')
 
             else:
                 conditions.append(

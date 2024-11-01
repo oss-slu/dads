@@ -173,7 +173,7 @@ function ExploreSystems() {
                     is_Chebyshev: filters.is_Chebyshev,
                     is_Newton: filters.is_Newton,
                     is_pcf: filters.is_pcf,
-                    cp_cardinality: filters.cp_cardinality,
+                    periodic_cardinality: filters.periodic_cardinality,
                     periodic_cycles: (filters.periodic_cycles),
                     automorphism_group_cardinality: filters.automorphism_group_cardinality,
                     base_field_label: filters.base_field_label,
@@ -182,7 +182,9 @@ function ExploreSystems() {
                     family: filters.family,
                     preperiodic_cardinality: filters.rationalPreperiodicCardinality,
                     num_components: filters.rationalPreperiodicComponents,
-                    max_tail: filters.rationalPreperiodicLongestTail
+                    max_tail: filters.rationalPreperiodicLongestTail,
+                    cp_cardinality: filters.cp_cardinality,
+                    positive_in_degree: filters.positive_in_degree
                 }
             )
             setSystems(result.data['results']);
@@ -294,11 +296,13 @@ function ExploreSystems() {
         base_field_label: "",
         base_field_degree: "",
         indeterminacy_locus_dimension: "",
-        cp_cardinality: "",
+        periodic_cardinality: "",
         periodic_cycles: "",
         preperiodic_cardinality: "",
         num_components: "",
-        max_tail: ""
+        max_tail: "",
+        cp_cardinality: "",
+        positive_in_degree: ""
     };
 
     let connectionStatus = true;
@@ -484,8 +488,8 @@ function ExploreSystems() {
                                         <input
                                             type="number"
                                             style={textBoxStyle}
-                                            value={filters.cp_cardinality || ""}
-                                            onChange={(e) => handleTextChange('cp_cardinality', e.target.value)}
+                                            value={filters.periodic_cardinality || ""}
+                                            onChange={(e) => handleTextChange('periodic_cardinality', e.target.value)}
                                         />
                                         <label>Cardinality</label>
                                         <br />
@@ -564,7 +568,7 @@ function ExploreSystems() {
 
                             <ul id="myUL">
                                 <li>
-                                    <span className="caret" onClick={toggleTree}>Postcritically Finite</span>
+                                    <span className="caret" onClick={toggleTree}>Critical Points</span>
                                     <ul className="nested">
                                         <li>
                                             <input
@@ -598,6 +602,24 @@ function ExploreSystems() {
                                                 onChange={() => handleRadioChange('is_pcf', '')}
                                             />
                                             <label htmlFor="showAll">Show all</label>
+                                        </li>
+                                        <li>
+                                        <input
+                                            type="number"
+                                            style={textBoxStyle}
+                                            value={filters.positive_in_degree || ''}
+                                            onChange={(e) => handleTextChange("positive_in_degree", e.target.value)}
+                                        />
+                                        <label>Post Critical Cardinality</label>
+                                        </li>
+                                        <li>
+                                        <input
+                                            type="number"
+                                            style={textBoxStyle}
+                                            value={filters.cp_cardinality || ''}
+                                            onChange={(e) => handleTextChange("cp_cardinality", e.target.value)}
+                                        />
+                                        <label>Num. Critical Points</label>
                                         </li>
                                     </ul>
                                 </li>
@@ -755,6 +777,7 @@ function ExploreSystems() {
                                 <ul id="myUL">
                                     <li>
                                         <label className="caret" onClick={toggleTree}>Number PCF</label>
+
                                         <ul className="nested">
                                             <label>Avg Size of PC Set: </label>
                                             {stats.avgPCSet}
