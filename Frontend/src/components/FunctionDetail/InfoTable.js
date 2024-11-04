@@ -24,9 +24,9 @@ export default function InfoTable({ data }) {
           <TableRow>
             <TableCell component="th" scope="row">{data.modelLabel}</TableCell>
             <TableCell align="right">{data.base_field_label}</TableCell>
-            <TableCell align="right">{data.original_model}</TableCell>
+            <TableCell align="right">{data.display_model}</TableCell>
             <TableCell align="right">{data.degree}</TableCell>
-            <TableCell align="right">{data.cp_field_of_defn}</TableCell>
+            <TableCell align="right">{data.base_field_label}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
