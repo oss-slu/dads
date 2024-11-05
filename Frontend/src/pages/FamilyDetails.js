@@ -4,9 +4,91 @@ import { get_family } from '../api/routes';
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
 
 function FamilyDetailsTable({ family }) {
+  const Superscript = ({ children }) => {
+    return (
+      <sup style={{ fontSize: '0.6em'}}>
+        {children}
+      </sup>
+    );
+  };
+
+  const renderExponent = (expression) => {
+    const parts = expression.split(/(\^[\d]+)/);
+    const formattedExpression = [];
+    for (let i = 0; i < parts.length; i++) {
+      if (parts[i].startsWith('^')) {
+        const exponentValue = parts[i].slice(1);
+        formattedExpression.push(<Superscript key={i}>{exponentValue}</Superscript>);
+      } else {
+        formattedExpression.push(parts[i]);
+      }
+    }
+    return formattedExpression;
+  };
+
   const formatModelCoeffs = (coeffs) => {
     if (!Array.isArray(coeffs)) return 'N/A';
-    return coeffs.map(row => `[${row.join(', ')}]`).join(', ');
+    
+    const formatSinglePolynomial = (poly) => {
+      if (!Array.isArray(poly)) return '';
+      
+      let terms = [];
+      
+      // Process each coefficient
+      poly.forEach((coeff, index) => {
+        // More robust zero checking
+        if (coeff === "0" || coeff === 0 || coeff === "0.0" || coeff === 0.0) {
+          console.log(`Skipping zero coefficient: ${coeff} (type: ${typeof coeff})`);
+          return;
+        }
+        
+        let term = '';
+        
+        // Handle coefficient part
+        if (typeof coeff === 'string') {
+          // For parametric coefficients like 't'
+          term = coeff;
+        } else if (coeff === 1) {
+          // Only show coefficient 1 if it's the constant term (index 0)
+          term = index === 0 ? '1' : '';
+        } else if (coeff === -1) {
+          term = '-';
+        } else {
+          term = coeff.toString();
+        }
+        
+        // Add variable and power if needed
+        if (index > 0) {
+          if (term === '') {
+            term = 'x';
+          } else if (term === '-') {
+            term = '-x';
+          } else {
+            term += 'x';
+          }
+          
+          if (index > 1) {
+            term += `^${index}`;
+          }
+        }
+        
+        terms.push(term);
+      });
+      
+      // If no terms (all zeros), return 0
+      if (terms.length === 0) return '0';
+      
+      // Join terms with proper plus signs
+      return terms.reduce((acc, term, idx) => {
+        if (idx === 0) return term;
+        return term.startsWith('-') ? `${acc}${term}` : `${acc}+${term}`;
+      }, '');
+    };
+    
+    // Format both polynomials and combine with : between them
+    const firstPoly = formatSinglePolynomial(coeffs[0]);
+    const secondPoly = formatSinglePolynomial(coeffs[1]);
+    return <>[{renderExponent(firstPoly)} : {renderExponent(secondPoly)}]</>;
   };
 
   const formatCitations = (citations) => {
