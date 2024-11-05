@@ -180,7 +180,6 @@ function FamilyDetails() {
         setFamily(result.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching family details:', error);
         setError('Failed to fetch family details. Please try again later.');
         setLoading(false);
       }
