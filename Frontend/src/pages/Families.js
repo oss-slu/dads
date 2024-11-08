@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from 'react';
 import {get_families } from '../api/routes';
-import PaginatedDataTable from "../components/newDataTable";
+import PaginatedDataTable from "../components/PaginatedDataTable";
 import Grid from "@mui/material/Grid";
 import { useFilters } from '../context/FilterContext';
 import { useNavigate } from 'react-router-dom';

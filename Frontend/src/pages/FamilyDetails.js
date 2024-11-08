@@ -4,91 +4,51 @@ import { get_family } from '../api/routes';
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
 
 function FamilyDetailsTable({ family }) {
-  const Superscript = ({ children }) => {
-    return (
-      <sup style={{ fontSize: '0.6em'}}>
-        {children}
-      </sup>
-    );
-  };
-
-  const renderExponent = (expression) => {
-    const parts = expression.split(/(\^[\d]+)/);
-    const formattedExpression = [];
-    for (let i = 0; i < parts.length; i++) {
-      if (parts[i].startsWith('^')) {
-        const exponentValue = parts[i].slice(1);
-        formattedExpression.push(<Superscript key={i}>{exponentValue}</Superscript>);
-      } else {
-        formattedExpression.push(parts[i]);
-      }
-    }
-    return formattedExpression;
-  };
-
   const formatModelCoeffs = (coeffs) => {
-    if (!Array.isArray(coeffs)) return 'N/A';
-    
-    const formatSinglePolynomial = (poly) => {
-      if (!Array.isArray(poly)) return '';
-      
-      let terms = [];
-      
-      // Process each coefficient
-      poly.forEach((coeff, index) => {
-        // More robust zero checking
-        if (coeff === "0" || coeff === 0 || coeff === "0.0" || coeff === 0.0) {
-          console.log(`Skipping zero coefficient: ${coeff} (type: ${typeof coeff})`);
-          return;
-        }
-        
-        let term = '';
-        
-        // Handle coefficient part
-        if (typeof coeff === 'string') {
-          // For parametric coefficients like 't'
-          term = coeff;
-        } else if (coeff === 1) {
-          // Only show coefficient 1 if it's the constant term (index 0)
-          term = index === 0 ? '1' : '';
-        } else if (coeff === -1) {
-          term = '-';
-        } else {
-          term = coeff.toString();
-        }
-        
-        // Add variable and power if needed
-        if (index > 0) {
-          if (term === '') {
-            term = 'x';
-          } else if (term === '-') {
-            term = '-x';
-          } else {
-            term += 'x';
-          }
-          
-          if (index > 1) {
-            term += `^${index}`;
-          }
-        }
-        
-        terms.push(term);
-      });
-      
-      // If no terms (all zeros), return 0
-      if (terms.length === 0) return '0';
-      
-      // Join terms with proper plus signs
-      return terms.reduce((acc, term, idx) => {
-        if (idx === 0) return term;
-        return term.startsWith('-') ? `${acc}${term}` : `${acc}+${term}`;
-      }, '');
-    };
-    
-    // Format both polynomials and combine with : between them
-    const firstPoly = formatSinglePolynomial(coeffs[0]);
-    const secondPoly = formatSinglePolynomial(coeffs[1]);
-    return <>[{renderExponent(firstPoly)} : {renderExponent(secondPoly)}]</>;
+    const superscripts = {
+      "0": "\u2070",
+      "1": "\u00B9",
+      "2": "\u00B2",
+      "3": "\u00B3",
+      "4": "\u2074",
+      "5": "\u2075",
+      "6": "\u2076",
+      "7": "\u2077",
+      "8": "\u2078",
+      "9": "\u2079"
+  };
+  
+  // Helper function to convert a number to superscript
+  const toSuperscript = (num) => {
+      return String(num).split("").map(digit => superscripts[digit]).join("");
+  };
+  
+  return coeffs
+      .map(poly => {
+          let degree = poly.length - 1;
+          return poly
+              .map((coeff, index) => {
+                  const power = degree - index;
+                  
+                  // Skip terms with coefficient "0"
+                  if (coeff === "0") return "";
+                  
+                  // Determine term format
+                  if (power === 0) {
+                      // Constant term
+                      return `${coeff}`;
+                  } else if (power === 1) {
+                      // Linear term
+                      return coeff === "1" ? "x" : `${coeff}x`;
+                  } else {
+                      // Higher degree term
+                      return coeff === "1" ? `x${toSuperscript(power)}` : `${coeff}x${toSuperscript(power)}`;
+                  }
+              })
+              .filter(term => term !== "")  // Remove any empty terms
+              .join(" + ");  // Join terms with " + "
+      })
+      .join(", ");  // Join each polynomial string with a comma
   };
 
   const formatCitations = (citations) => {
@@ -180,6 +140,7 @@ function FamilyDetails() {
         setFamily(result.data);
         setLoading(false);
       } catch (error) {
+        console.error('Error fetching family details:', error);
         setError('Failed to fetch family details. Please try again later.');
         setLoading(false);
       }
