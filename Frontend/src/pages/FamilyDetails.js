@@ -16,39 +16,57 @@ function FamilyDetailsTable({ family }) {
       "7": "\u2077",
       "8": "\u2078",
       "9": "\u2079"
-  };
+    };
   
-  // Helper function to convert a number to superscript
-  const toSuperscript = (num) => {
+    // Helper function to convert a number to superscript
+    const toSuperscript = (num) => {
       return String(num).split("").map(digit => superscripts[digit]).join("");
-  };
+    };
   
-  return coeffs
-      .map(poly => {
-          let degree = poly.length - 1;
-          return poly
-              .map((coeff, index) => {
-                  const power = degree - index;
-                  
-                  // Skip terms with coefficient "0"
-                  if (coeff === "0") return "";
-                  
-                  // Determine term format
-                  if (power === 0) {
-                      // Constant term
-                      return `${coeff}`;
-                  } else if (power === 1) {
-                      // Linear term
-                      return coeff === "1" ? "x" : `${coeff}x`;
-                  } else {
-                      // Higher degree term
-                      return coeff === "1" ? `x${toSuperscript(power)}` : `${coeff}x${toSuperscript(power)}`;
-                  }
-              })
-              .filter(term => term !== "")  // Remove any empty terms
-              .join(" + ");  // Join terms with " + "
-      })
-      .join(", ");  // Join each polynomial string with a comma
+    // For your example input [[1,0,t], [0,0,1]], we want to form [x² + ty², y²]
+    let result = coeffs.map((poly, polyIndex) => {
+      let terms = [];
+      let degree = poly.length - 1;
+  
+      for (let i = 0; i < poly.length; i++) {
+        const coeff = poly[i];
+        const xPower = degree - i;
+        const yPower = i;  // y power increases as x power decreases
+  
+        // Skip terms with coefficient "0"
+        if (coeff === "0") continue;
+  
+        let term = "";
+        
+        // Handle coefficient
+        if (coeff !== "1" || (xPower === 0 && yPower === 0)) {
+          term += coeff;
+        }
+  
+        // Add x term if needed
+        if (xPower > 0) {
+          term += "x";
+          if (xPower > 1) {
+            term += toSuperscript(xPower);
+          }
+        }
+  
+        // Add y term if needed
+        if (yPower > 0) {
+          term += "y";
+          if (yPower > 1) {
+            term += toSuperscript(yPower);
+          }
+        }
+  
+        terms.push(term);
+      }
+  
+      return terms.join(" + ") || "0";
+    });
+  
+    // Wrap the result in square brackets
+    return `[${result.join(", ")}]`;
   };
 
   const formatCitations = (citations) => {
