@@ -5,8 +5,68 @@ import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@m
 
 function FamilyDetailsTable({ family }) {
   const formatModelCoeffs = (coeffs) => {
-    if (!Array.isArray(coeffs)) return 'N/A';
-    return coeffs.map(row => `[${row.join(', ')}]`).join(', ');
+    const superscripts = {
+      "0": "\u2070",
+      "1": "\u00B9",
+      "2": "\u00B2",
+      "3": "\u00B3",
+      "4": "\u2074",
+      "5": "\u2075",
+      "6": "\u2076",
+      "7": "\u2077",
+      "8": "\u2078",
+      "9": "\u2079"
+    };
+  
+    // Helper function to convert a number to superscript
+    const toSuperscript = (num) => {
+      return String(num).split("").map(digit => superscripts[digit]).join("");
+    };
+  
+    // For your example input [[1,0,t], [0,0,1]], we want to form [x² + ty², y²]
+    let result = coeffs.map((poly, polyIndex) => {
+      let terms = [];
+      let degree = poly.length - 1;
+  
+      for (let i = 0; i < poly.length; i++) {
+        const coeff = poly[i];
+        const xPower = degree - i;
+        const yPower = i;  // y power increases as x power decreases
+  
+        // Skip terms with coefficient "0"
+        if (coeff === "0") continue;
+  
+        let term = "";
+        
+        // Handle coefficient
+        if (coeff !== "1" || (xPower === 0 && yPower === 0)) {
+          term += coeff;
+        }
+  
+        // Add x term if needed
+        if (xPower > 0) {
+          term += "x";
+          if (xPower > 1) {
+            term += toSuperscript(xPower);
+          }
+        }
+  
+        // Add y term if needed
+        if (yPower > 0) {
+          term += "y";
+          if (yPower > 1) {
+            term += toSuperscript(yPower);
+          }
+        }
+  
+        terms.push(term);
+      }
+  
+      return terms.join(" + ") || "0";
+    });
+  
+    // Wrap the result in square brackets
+    return `[${result.join(", ")}]`;
   };
 
   const formatCitations = (citations) => {

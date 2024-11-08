@@ -10,7 +10,7 @@ pageContext and filterContext.
 import * as React from "react";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
-import PaginatedDataTable from "../components/newDataTable";
+import PaginatedDataTable from "../components/PaginatedDataTable";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { get_filtered_systems, get_selected_systems, get_families } from '../api/routes';
