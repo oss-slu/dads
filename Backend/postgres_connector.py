@@ -320,10 +320,7 @@ class PostgresConnector:
                 periodic_cardinalities = [row[0] for row in cur.fetchall()]
                 avg_num_periodic = sum(periodic_cardinalities) / len(
                     periodic_cardinalities)
-                most_periodic = max(
-                    set(periodic_cardinalities),
-                    key=periodic_cardinalities.count
-                )
+                most_periodic = max(periodic_cardinalities)
                 sql = (
                     'SELECT periodic_cycles'
                     ' FROM graphs_dim_1_nf'
@@ -337,16 +334,12 @@ class PostgresConnector:
                 )
                 cur.execute(sql)
                 periodic_cycles = [row[0] for row in cur.fetchall()]
-                periodic_clean = [cycle for cycle in periodic_cycles if cycle]
-                if (len(periodic_clean) > 0):
-                    longest_cycles = [max(comp) for comp in periodic_clean]
-                    largest_cycle = max(
-                        set(longest_cycles),
-                        key=longest_cycles.count
-                    )
+                longest_cycles = [max(cycle) for cycle in periodic_cycles if cycle]
+                if len(longest_cycles) > 0:
+                    largest_cycle = max(longest_cycles)
                 else:
                     largest_cycle = 0
-                    
+
                 print (largest_cycle)
                 sql = (
                     'SELECT preperiodic_components'
@@ -361,15 +354,16 @@ class PostgresConnector:
                 )
                 cur.execute(sql)
                 preperiodic_components = [row[0] for row in cur.fetchall()]
+                preperiodic_cardinalities = [sum(comp) for comp in preperiodic_components]
                 avg_num_preperiodic = sum(
-                    len(comp) for comp in preperiodic_components
-                ) / len(preperiodic_components)
-                component_sizes = [len(comp) for comp in preperiodic_components]
-                most_preperiodic = max(
-                    set(component_sizes),
-                    key=component_sizes.count
-                )
-                largest_comp = max(component_sizes)
+                    preperiodic_cardinalities
+                    ) / len(preperiodic_components)
+                most_preperiodic = max(preperiodic_cardinalities)
+                component_sizes = [max(comp) for comp in preperiodic_components if comp]
+                if len(component_sizes) > 0:
+                    largest_comp = max(component_sizes)
+                else:
+                    largest_comp = 0
 
 
         except Exception:
