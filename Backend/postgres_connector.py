@@ -337,11 +337,16 @@ class PostgresConnector:
                 )
                 cur.execute(sql)
                 periodic_cycles = [row[0] for row in cur.fetchall()]
-                longest_cycles =  [max(comp) for comp in periodic_cycles]
-                largest_cycle = max(
-                    set(longest_cycles),
-                    key=longest_cycles.count
-                )
+                periodic_clean = [cycle for cycle in periodic_cycles if cycle]
+                if (len(periodic_clean) > 0):
+                    longest_cycles = [max(comp) for comp in periodic_clean]
+                    largest_cycle = max(
+                        set(longest_cycles),
+                        key=longest_cycles.count
+                    )
+                else:
+                    largest_cycle = 0
+                    
                 print (largest_cycle)
                 sql = (
                     'SELECT preperiodic_components'
