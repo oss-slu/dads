@@ -324,7 +324,25 @@ class PostgresConnector:
                     set(periodic_cardinalities),
                     key=periodic_cardinalities.count
                 )
-                largest_cycle = max(periodic_cardinalities)
+                sql = (
+                    'SELECT periodic_cycles'
+                    ' FROM graphs_dim_1_nf'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = '
+                    'rational_preperiodic_dim_1_nf.graph_id'
+                    ' JOIN functions_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = '
+                    'rational_preperiodic_dim_1_nf.function_id'
+                    + where_text
+                )
+                cur.execute(sql)
+                periodic_cycles = [row[0] for row in cur.fetchall()]
+                longest_cycles =  [max(comp) for comp in periodic_cycles]
+                largest_cycle = max(
+                    set(longest_cycles),
+                    key=longest_cycles.count
+                )
+                print (largest_cycle)
                 sql = (
                     'SELECT preperiodic_components'
                     ' FROM graphs_dim_1_nf'
