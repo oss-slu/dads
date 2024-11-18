@@ -59,40 +59,30 @@ export default function FunctionAttributes({ data }) {
   const isNewtonFunction = data.is_newton ? "True" : "False";
   const newtonPolynomial = data.is_newton && data.newton_model
     ? renderExponent(processInput(data.newton_model))
-    : null;
+    : "N/A";
 
   return (
     <TableContainer component={Paper} className="table-component">
       <h3>Function Attributes</h3>
       <Table aria-label="function attributes table">
         <TableBody>
-          {/* Single row for "Is Newton Function" with associated polynomial if true */}
+          {/* Row for field labels */}
           <TableRow>
             <TableCell><b>Is Newton Function</b></TableCell>
-            <TableCell align="right">{isNewtonFunction}</TableCell>
-            <TableCell align="right">{newtonPolynomial}</TableCell>
-          </TableRow>
-          <TableRow>
             <TableCell><b>Is Polynomial</b></TableCell>
-            <TableCell align="right">{String(data.is_poly)}</TableCell>
-          </TableRow>
-          <TableRow>
             <TableCell><b>Is Postcritically Finite (PCF)</b></TableCell>
-            <TableCell align="right">{String(data.is_pcf)}</TableCell>
-          </TableRow>
-          <TableRow>
             <TableCell><b>Is Lattès Function</b></TableCell>
-            <TableCell align="right">{String(data.is_lattes)}</TableCell>
-          </TableRow>
-          {data.is_lattes && data.elliptic_curve_label && (
-            <TableRow>
-              <TableCell><b>Elliptic Curve Label</b></TableCell>
-              <TableCell align="right">{data.elliptic_curve_label}</TableCell>
-            </TableRow>
-          )}
-          <TableRow>
             <TableCell><b>Is Chebyshev</b></TableCell>
-            <TableCell align="right">{String(data.is_chebyshev)}</TableCell>
+            {data.is_newton && <TableCell><b>Associated Polynomial</b></TableCell>}
+          </TableRow>
+          {/* Row for values */}
+          <TableRow>
+            <TableCell>{isNewtonFunction}</TableCell>
+            <TableCell>{String(data.is_polynomial)}</TableCell>
+            <TableCell>{String(data.is_pcf)}</TableCell>
+            <TableCell>{String(data.is_lattes)}</TableCell>
+            <TableCell>{String(data.is_chebyshev)}</TableCell>
+            {data.is_newton && <TableCell>{newtonPolynomial}</TableCell>}
           </TableRow>
         </TableBody>
       </Table>

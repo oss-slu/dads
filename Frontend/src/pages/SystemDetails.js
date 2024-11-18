@@ -47,6 +47,9 @@ function SystemDetails() {
               <InfoTable data = {data}/>
             </div>
             <div className="row">
+              <FunctionAttributes data={data} />
+            </div>
+            <div className="row">
             <div className="col">
               <RationalPointsTable data = {data}/>
               </div>
@@ -65,9 +68,6 @@ function SystemDetails() {
             </div>
             <div className="row">
               <AutomorphismGroupTable data={data} />
-            </div>
-            <div className="row">
-              <FunctionAttributes data={data} />
             </div>
             <div className="row">
               <CitationsTable data = {data}/>
