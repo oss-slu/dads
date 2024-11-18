@@ -16,6 +16,7 @@ import CriticalPointPortraitTable from '../components/FunctionDetail/CriticalPoi
 import ModelsTable from '../components/FunctionDetail/ModelsTable'
 import CitationsTable from '../components/FunctionDetail/CitationsTable'
 import AutomorphismGroupTable from '../components/FunctionDetail/AutomorphismGroupTable'
+import FunctionAttributes from '../components/FunctionDetail/FunctionAttributes';
 
 function SystemDetails() {
     const [data, setData] = useState({});
@@ -46,6 +47,9 @@ function SystemDetails() {
               <InfoTable data = {data}/>
             </div>
             <div className="row">
+              <FunctionAttributes data={data} />
+            </div>
+            <div className="row">
             <div className="col">
               <RationalPointsTable data = {data}/>
               </div>
@@ -66,7 +70,7 @@ function SystemDetails() {
               <AutomorphismGroupTable data={data} />
             </div>
             <div className="row">
-            <CitationsTable data = {data}/>
+              <CitationsTable data = {data}/>
             </div>
         </div>
       </div>
