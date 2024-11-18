@@ -354,7 +354,19 @@ class PostgresConnector:
                 )
                 cur.execute(sql)
                 preperiodic_components = [row[0] for row in cur.fetchall()]
-                cardinalities = [sum(comp) for comp in preperiodic_components]
+                sql = (
+                    'SELECT graphs_dim_1_nf.cardinality'
+                    ' FROM graphs_dim_1_nf'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = '
+                    'rational_preperiodic_dim_1_nf.graph_id'
+                    ' JOIN functions_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = '
+                    'rational_preperiodic_dim_1_nf.function_id'
+                    + where_text
+                )
+                cur.execute(sql)
+                cardinalities = [row[0] for row  in cur.fetchall()]
                 avg_num_preperiodic = sum(
                     cardinalities
                     ) / len(preperiodic_components)
