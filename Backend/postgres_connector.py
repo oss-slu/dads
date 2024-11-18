@@ -320,11 +320,27 @@ class PostgresConnector:
                 periodic_cardinalities = [row[0] for row in cur.fetchall()]
                 avg_num_periodic = sum(periodic_cardinalities) / len(
                     periodic_cardinalities)
-                most_periodic = max(
-                    set(periodic_cardinalities),
-                    key=periodic_cardinalities.count
+                most_periodic = max(periodic_cardinalities)
+                sql = (
+                    'SELECT periodic_cycles'
+                    ' FROM graphs_dim_1_nf'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = '
+                    'rational_preperiodic_dim_1_nf.graph_id'
+                    ' JOIN functions_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = '
+                    'rational_preperiodic_dim_1_nf.function_id'
+                    + where_text
                 )
-                largest_cycle = max(periodic_cardinalities)
+                cur.execute(sql)
+                periodic_cycles = [row[0] for row in cur.fetchall()]
+                longest_cycles = [max(val) for val in periodic_cycles if val]
+                if len(longest_cycles) > 0:
+                    largest_cycle = max(longest_cycles)
+                else:
+                    largest_cycle = 0
+
+                print (largest_cycle)
                 sql = (
                     'SELECT preperiodic_components'
                     ' FROM graphs_dim_1_nf'
@@ -338,15 +354,30 @@ class PostgresConnector:
                 )
                 cur.execute(sql)
                 preperiodic_components = [row[0] for row in cur.fetchall()]
-                avg_num_preperiodic = sum(
-                    len(comp) for comp in preperiodic_components
-                ) / len(preperiodic_components)
-                component_sizes = [len(comp) for comp in preperiodic_components]
-                most_preperiodic = max(
-                    set(component_sizes),
-                    key=component_sizes.count
+                sql = (
+                    'SELECT graphs_dim_1_nf.cardinality'
+                    ' FROM graphs_dim_1_nf'
+                    ' JOIN rational_preperiodic_dim_1_nf'
+                    ' ON graphs_dim_1_nf.graph_id = '
+                    'rational_preperiodic_dim_1_nf.graph_id'
+                    ' JOIN functions_dim_1_nf'
+                    ' ON functions_dim_1_nf.function_id = '
+                    'rational_preperiodic_dim_1_nf.function_id'
+                    + where_text
                 )
-                largest_comp = max(component_sizes)
+                cur.execute(sql)
+                cardinalities = [row[0] for row  in cur.fetchall()]
+                avg_num_preperiodic = sum(
+                    cardinalities
+                    ) / len(preperiodic_components)
+                most_preperiodic = max(cardinalities)
+                component_sizes = [
+                    max(comp) for comp in preperiodic_components if comp
+                ]
+                if len(component_sizes) > 0:
+                    largest_comp = max(component_sizes)
+                else:
+                    largest_comp = 0
 
 
         except Exception:
