@@ -429,7 +429,8 @@ class PostgresConnector:
                     )
 
             elif fil in ['base_field_label']:
-                conditions.append(f'functions_dim_1_nf.{fil} LIKE \'%{values}%\'')
+                conditions.append(
+                    f'functions_dim_1_nf.{fil} LIKE \'%{values}%\'')
 
             elif fil in ['family']:
                 print(values)
