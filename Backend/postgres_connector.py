@@ -293,12 +293,9 @@ class PostgresConnector:
                     'AVG(positive_in_degree) AS avg_positive_in_degree, '
                     'MAX(positive_in_degree) AS max_positive_in_degree '
                     'FROM graphs_dim_1_nf '
-                    'JOIN rational_preperiodic_dim_1_nf '
-                    'ON graphs_dim_1_nf.graph_id = '
-                    'rational_preperiodic_dim_1_nf.graph_id '
                     'JOIN functions_dim_1_nf '
-                    'ON functions_dim_1_nf.function_id = '
-                    'rational_preperiodic_dim_1_nf.function_id'
+                    'ON graphs_dim_1_nf.graph_id = '
+                    'CAST(functions_dim_1_nf.critical_portrait_graph_id AS integer)'
                     + where_text
                 )
                 cur.execute(sql)
