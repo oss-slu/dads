@@ -124,6 +124,7 @@ class PostgresConnector:
                     FROM functions_dim_1_nf
                     JOIN rational_preperiodic_dim_1_nf
                     ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id
+                    AND functions_dim_1_nf.base_field_label = rational_preperiodic_dim_1_nf.base_field_label
                     JOIN graphs_dim_1_nf
                     ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id
                     {where_text}    
@@ -428,7 +429,7 @@ class PostgresConnector:
                     )
 
             elif fil in ['base_field_label']:
-                conditions.append(fil + " LIKE \'%" + values + "%\'")
+                conditions.append(f'functions_dim_1_nf.{fil} LIKE \'%{values}%\'')
 
             elif fil in ['family']:
                 print(values)
