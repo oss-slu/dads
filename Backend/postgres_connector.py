@@ -295,7 +295,8 @@ class PostgresConnector:
                     'FROM graphs_dim_1_nf '
                     'JOIN functions_dim_1_nf '
                     'ON graphs_dim_1_nf.graph_id = '
-                    'CAST(functions_dim_1_nf.critical_portrait_graph_id AS integer)'
+                    'CAST(functions_dim_1_nf.critical_portrait_graph_id ' 
+                    'AS integer)'
                     + where_text
                 )
                 cur.execute(sql)
