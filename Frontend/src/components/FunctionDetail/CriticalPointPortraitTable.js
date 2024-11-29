@@ -53,6 +53,10 @@ export default function CriticalPointPortraitTable({ data }) {
             <TableCell component="th" scope="row"><b>Structure</b></TableCell>
             <TableCell align="right">{formatData(data.critical_portrait_structure)}</TableCell>
           </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Positive in Degree</b></TableCell>
+            <TableCell align="right">{formatData(data.positive_in_degree)}</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

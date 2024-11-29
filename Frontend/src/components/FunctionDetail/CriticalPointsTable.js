@@ -16,6 +16,14 @@ export default function CriticalPointsTable({ data }) {
             <TableCell component="th" scope="row"><b>Postcritically Finite?</b></TableCell>
             <TableCell align="right">{String(data.is_pcf)}</TableCell>
           </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Critical Points Cardinality</b></TableCell>
+            <TableCell align="right">{data.cp_cardinality || "N/A"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>Field of Definition</b></TableCell>
+            <TableCell align="right">{data.cp_field_of_defn || "N/A"}</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
