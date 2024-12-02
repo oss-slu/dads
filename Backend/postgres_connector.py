@@ -124,6 +124,7 @@ class PostgresConnector:
                     FROM functions_dim_1_nf
                     JOIN rational_preperiodic_dim_1_nf
                     ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id
+                    AND functions_dim_1_nf.base_field_label = rational_preperiodic_dim_1_nf.base_field_label
                     JOIN graphs_dim_1_nf
                     ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id
                     {where_text}    
@@ -237,6 +238,8 @@ class PostgresConnector:
                     ' JOIN rational_preperiodic_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id ='
                     ' rational_preperiodic_dim_1_nf.function_id'
+                    ' AND functions_dim_1_nf.base_field_label ='
+                    ' rational_preperiodic_dim_1_nf.base_field_label'
                     ' JOIN graphs_dim_1_nf'
                     ' ON graphs_dim_1_nf.graph_id ='
                     ' rational_preperiodic_dim_1_nf.graph_id'
@@ -251,6 +254,8 @@ class PostgresConnector:
                     ' JOIN rational_preperiodic_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id ='
                     ' rational_preperiodic_dim_1_nf.function_id'
+                    ' AND functions_dim_1_nf.base_field_label ='
+                    ' rational_preperiodic_dim_1_nf.base_field_label'
                     ' JOIN graphs_dim_1_nf'
                     ' ON graphs_dim_1_nf.graph_id ='
                     ' rational_preperiodic_dim_1_nf.graph_id'
@@ -264,6 +269,8 @@ class PostgresConnector:
                     ' JOIN rational_preperiodic_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id ='
                     ' rational_preperiodic_dim_1_nf.function_id'
+                    ' AND functions_dim_1_nf.base_field_label ='
+                    ' rational_preperiodic_dim_1_nf.base_field_label'
                     ' JOIN graphs_dim_1_nf'
                     ' ON graphs_dim_1_nf.graph_id ='
                     ' rational_preperiodic_dim_1_nf.graph_id'
@@ -273,11 +280,13 @@ class PostgresConnector:
                 pcf = cur.fetchall()
                 # Average Height
                 sql = (
-                    'SELECT AVG( (original_model).height ) '
-                    'FROM functions_dim_1_NF'
+                    ' SELECT AVG( (original_model).height )'
+                    ' FROM functions_dim_1_NF'
                     ' JOIN rational_preperiodic_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id ='
                     ' rational_preperiodic_dim_1_nf.function_id'
+                    ' AND functions_dim_1_nf.base_field_label ='
+                    ' rational_preperiodic_dim_1_nf.base_field_label'
                     ' JOIN graphs_dim_1_nf'
                     ' ON graphs_dim_1_nf.graph_id ='
                     ' rational_preperiodic_dim_1_nf.graph_id' +
@@ -292,12 +301,10 @@ class PostgresConnector:
                     'AVG(positive_in_degree) AS avg_positive_in_degree, '
                     'MAX(positive_in_degree) AS max_positive_in_degree '
                     'FROM graphs_dim_1_nf '
-                    'JOIN rational_preperiodic_dim_1_nf '
-                    'ON graphs_dim_1_nf.graph_id = '
-                    'rational_preperiodic_dim_1_nf.graph_id '
                     'JOIN functions_dim_1_nf '
-                    'ON functions_dim_1_nf.function_id = '
-                    'rational_preperiodic_dim_1_nf.function_id'
+                    'ON graphs_dim_1_nf.graph_id = '
+                    'CAST(functions_dim_1_nf.critical_portrait_graph_id ' 
+                    'AS integer)'
                     + where_text
                 )
                 cur.execute(sql)
@@ -309,8 +316,8 @@ class PostgresConnector:
                     'SELECT periodic_cardinality'
                     ' FROM graphs_dim_1_nf'
                     ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id = '
-                    'rational_preperiodic_dim_1_nf.graph_id'
+                    ' ON graphs_dim_1_nf.graph_id ='
+                    ' rational_preperiodic_dim_1_nf.graph_id'
                     ' JOIN functions_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id = '
                     'rational_preperiodic_dim_1_nf.function_id'
@@ -326,7 +333,7 @@ class PostgresConnector:
                     ' FROM graphs_dim_1_nf'
                     ' JOIN rational_preperiodic_dim_1_nf'
                     ' ON graphs_dim_1_nf.graph_id = '
-                    'rational_preperiodic_dim_1_nf.graph_id'
+                    ' rational_preperiodic_dim_1_nf.graph_id'
                     ' JOIN functions_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id = '
                     'rational_preperiodic_dim_1_nf.function_id'
@@ -358,8 +365,8 @@ class PostgresConnector:
                     'SELECT graphs_dim_1_nf.cardinality'
                     ' FROM graphs_dim_1_nf'
                     ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id = '
-                    'rational_preperiodic_dim_1_nf.graph_id'
+                    ' ON graphs_dim_1_nf.graph_id ='
+                    ' rational_preperiodic_dim_1_nf.graph_id'
                     ' JOIN functions_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id = '
                     'rational_preperiodic_dim_1_nf.function_id'
@@ -428,7 +435,8 @@ class PostgresConnector:
                     )
 
             elif fil in ['base_field_label']:
-                conditions.append(fil + " LIKE \'%" + values + "%\'")
+                conditions.append(
+                    f'functions_dim_1_nf.{fil} LIKE \'%{values}%\'')
 
             elif fil in ['family']:
                 print(values)
