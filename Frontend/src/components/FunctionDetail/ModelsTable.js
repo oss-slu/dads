@@ -8,131 +8,105 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default function ModelsTable({ data }) {
-  // Extracting keys containing "_model" from the data object
-    const modelKeys = Object.keys(data).filter(key => key.includes("_model"));
-    if( modelKeys.includes("display_model")) {
-	let position = modelKeys.indexOf("display_model");
-	modelKeys.splice(position, 1);
-    }
+  // Filter relevant model keys, excluding 'display_model'
+const modelKeys = Object.keys(data).filter(
+    key => key.includes('_model') && key !== 'display_model'
+  );
 
-   const Superscript = ({ children }) => {
+  const Superscript = ({ children }) => (
+    <sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>{children}</sup>
+  );
+
+  const renderExponent = (expressionArray) => {
+    return expressionArray.map((expression, index) => {
+      const parts = expression.split(/(\^[\d]+)/);
       return (
-	<sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
-	  {children}
-	</sup>
+        <React.Fragment key={index}>
+          {parts.map((part, i) =>
+            part.startsWith('^') ? (
+              <Superscript key={i}>{part.slice(1)}</Superscript>
+            ) : (
+              part
+            )
+          )}
+          {index !== expressionArray.length - 1 && <span> : </span>}
+        </React.Fragment>
       );
-    };
+    });
+  };
 
-    const renderExponent = (expressionArray) => {
-      const formattedExpressions = [];
+  function processInput(input) {
+    const polynomials = input.slice(2, -2).split('},{');
+    return polynomials.map(poly => {
+      const coeffs = poly.split(',');
+      // Format polynomial expression: remove trailing '+' and wrap in parentheses
+const formattedPoly = coeffs
+        .map((coefficient, i) => {
+          if (coefficient === '0') return '';
+          const exponentX = coeffs.length - 1 - i;
+          const exponentY = i;
+          let monomial = '';
+          if (exponentX > 0) monomial += `x^${exponentX}`;
+          if (exponentY > 0) monomial += `y^${exponentY}`;
+          return coefficient === '1' ? monomial : `${coefficient}${monomial}`;
+        })
+        .filter(Boolean)
+        .join('+')
+        .replace(/\+$/, ''); // Remove trailing + symbol // Remove trailing + symbol
+      // Ensure polynomial expressions are enclosed in parentheses
+return formattedPoly ? `(${formattedPoly})` : ''; // Add surrounding parentheses
+    });
+  }
 
-      expressionArray.forEach((expression, index) => {
-	const parts = expression.split(/(\^[\d]+)/);
-	const formattedExpression = [];
-
-	for (let i = 0; i < parts.length; i++) {
-	  if (parts[i].startsWith('^')) {
-	    const exponentValue = parts[i].slice(1);
-	    formattedExpression.push(<Superscript key={i}>{exponentValue}</Superscript>);
-	  } else {
-	    formattedExpression.push(parts[i]);
-	  }
-	}
-
-	formattedExpressions.push(
-	  <React.Fragment key={index}>
-	    {formattedExpression}
-	    {index !== expressionArray.length - 1 && <span> : </span>}
-	  </React.Fragment>
-	);
-      });
-
-      return formattedExpressions;
-    }; 
-    
-
-    function processInput(input) {
-	// Remove outer braces and split by '},{' to get individual polynomial coefficient sets
-	const polynomials = input.slice(2, -2).split('},{');
-	
-	const result = [];
-	
-	// Iterate over each polynomial
-	for (let poly of polynomials) {
-	    // Split the polynomial coefficients by ','
-	    const coeffs = poly.split(',');
-	    
-	    // Construct the polynomial expression
-	    let polynomialExpression = '';
-	    for (let i = 0; i < coeffs.length; i++) {
-		const coefficient = coeffs[i];
-		if (coefficient !== '0') {
-		    // Construct monomial expression based on index
-		    let monomial = '';
-		    if (i === 0) {
-			monomial = 'x^' + (coeffs.length - 1);
-		    } else if (i === coeffs.length - 1) {
-			monomial = 'y^' + (coeffs.length - 1);
-		    } else if (i === 1 && (coeffs.length - 1) === 1) {
-			monomial = 'xy';
-		    } else if (i === 1) {
-			monomial = 'x^' + (coeffs.length - 1 - i) + 'y';
-		    } else if ((coeffs.length - 1 - i) === 1) {
-			monomial = 'x' + 'y^' + i;
-		    } else {
-			monomial = 'x^' + (coeffs.length - 1 - i) + 'y^' + i;
-		    }
-		    
-		    // Add coefficient with monomial
-		    if (coefficient === '1') {
-			polynomialExpression += monomial;
-		    } else if (coefficient === '-1') {
-			polynomialExpression += '-' + monomial;
-		    } else {
-			polynomialExpression += coefficient + monomial;
-		    }
-		    
-		    // Add '+' if not the last term and coefficient is not zero
-		    // && coeffs[i + 1] !== '0'
-		    if (i !== coeffs.length - 1 ) {
-			polynomialExpression += '+';
-		    }
-		}
-	    }
-	    
-	    // Push polynomial expression to result array
-	    result.push(polynomialExpression);
-	}
-	
-	return result;
+  const splitOutermostCommas = (str) => {
+    const parts = [];
+    let temp = '';
+    let openBrackets = 0;
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] === '{') openBrackets++;
+      else if (str[i] === '}') openBrackets--;
+      if (str[i] === ',' && openBrackets === 0) {
+        parts.push(temp.trim().replace(/["()]/g, ''));
+        temp = '';
+      } else {
+        temp += str[i];
+      }
     }
+    parts.push(temp.trim().replace(/["()]/g, ''));
+    return parts;
+  };
+
+  // Filter out models that have no data to display
+const relevantModels = modelKeys.filter(key => {
+    const modelData = data[key] ? splitOutermostCommas(data[key]) : [];
+    return modelData.some(value => value && value.trim() !== '');
+  });
 
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Models:</h3>
-      <Table aria-label="simple table">
+      <Table aria-label='models table'>
         <TableHead>
           <TableRow>
-            <TableCell align="left"><b>Name</b></TableCell>
-            <TableCell align="left"><b>Polynomials</b></TableCell>
-            <TableCell align="left"><b>Resultant</b></TableCell>
-            <TableCell align="left"><b>Primes of Bad Reduction</b></TableCell>
-            <TableCell align="left"><b>Conjugation from Standard</b></TableCell>
+            <TableCell><b>Name</b></TableCell>
+            <TableCell><b>Polynomials</b></TableCell>
+            <TableCell><b>Resultant</b></TableCell>
+            <TableCell><b>Primes of Bad Reduction</b></TableCell>
+            <TableCell><b>Conjugation from Standard</b></TableCell>
+            <TableCell><b>Field of Definition</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {modelKeys.map((key, index) => {
-            const modelData = data[key] ? splitOutermostCommas(data[key]) : ['', '', '', '', '']; // Split data[key] or set default values if null
-	    console.log("THIS SHIT RIGHT HERE: ");
-	    console.log(modelData[0]);
-	    console.log(processInput(modelData[0]));
+          {relevantModels.map((key, index) => {
+            const modelData = data[key] ? splitOutermostCommas(data[key]) : ['', '', '', '', ''];
             return (
               <TableRow key={index}>
-                <TableCell align="left">{key.replace(/_/g, ' ').replace(/ model$/, '') + " model"}</TableCell>
-                <TableCell align="left">{renderExponent(processInput(modelData[0]))}</TableCell>
-                <TableCell align="left">{modelData[1]}</TableCell>
-                <TableCell align="left">{modelData[2]}</TableCell>
-                <TableCell align="left">{modelData[5]}</TableCell>
+                <TableCell>{key.replace(/_/g, ' ').replace(/ model$/, '') + ' model'}</TableCell>
+                <TableCell>{renderExponent(processInput(modelData[0]))}</TableCell>
+                <TableCell>{modelData[1]}</TableCell>
+                <TableCell>{modelData[2]}</TableCell>
+                <TableCell>{modelData[5]}</TableCell>
+                <TableCell>{data.cp_field_of_defn || 'N/A'}</TableCell>
               </TableRow>
             );
           })}
@@ -141,22 +115,3 @@ export default function ModelsTable({ data }) {
     </TableContainer>
   );
 }
-
-// Function to split the string at the outermost commas
-const splitOutermostCommas = (str) => {
-  const parts = [];
-  let temp = '';
-  let openBrackets = 0;
-  for (let i = 0; i < str.length; i++) {
-    if (str[i] === '{') openBrackets++;
-    else if (str[i] === '}') openBrackets--;
-    if (str[i] === ',' && openBrackets === 0) {
-      parts.push(temp.trim().replace(/["()]/g, '')); // Remove parentheses, curly braces, and double quotes
-      temp = '';
-    } else {
-      temp += str[i];
-    }
-  }
-  parts.push(temp.trim().replace(/["()]/g, '')); // Push the last part and remove characters
-  return parts;
-};
