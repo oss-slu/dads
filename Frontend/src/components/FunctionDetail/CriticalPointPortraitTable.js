@@ -7,7 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default function CriticalPointPortraitTable({ data }) {
-  
+  console.log(JSON.stringify(data));
   const formatData = (key) => {
     const value = data[key];
   
@@ -25,9 +25,8 @@ export default function CriticalPointPortraitTable({ data }) {
       }
       return '[]'; // Return '[]' for empty arrays
     }
-      return 'N/A';
   };
-
+  if (data.is_pcf == true) {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Critical Point Portrait</h3>
@@ -35,30 +34,31 @@ export default function CriticalPointPortraitTable({ data }) {
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
-            <TableCell align="right">{formatData(data.critical_portrait_cardinality)}</TableCell>
+            <TableCell align="right">{data.cardinality || "N/A"}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row"><b>As Directed Graph (graph ID for now)</b></TableCell>
-            <TableCell align="right">{formatData(data.critical_portrait_graph_id)}</TableCell>
+            <TableCell component="th" scope="row"><b>Size of Post Critical Set</b></TableCell>
+            <TableCell align="right">{data.positive_in_degree || "N/A"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
+            <TableCell align="right">{"test"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Adjacency Matrix</b></TableCell>
-            <TableCell align="right">{"link"}</TableCell>
+            <TableCell align="right">{"test"}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row"><b>Components</b></TableCell>
-            <TableCell align="right">{formatData(data.critical_portrait_components)}</TableCell>
+            <TableCell component="th" scope="row"><b>Cycle Lengths</b></TableCell>
+            <TableCell align="right">{data.periodic_cycles || "N/A"}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row"><b>Structure</b></TableCell>
-            <TableCell align="right">{formatData(data.critical_portrait_structure)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row"><b>Positive in Degree</b></TableCell>
-            <TableCell align="right">{formatData(data.positive_in_degree)}</TableCell>
+            <TableCell component="th" scope="row"><b>Component Sizes</b></TableCell>
+            <TableCell align="right">{data.preperiodic_components || "N/A"}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
   );
+}
 }
