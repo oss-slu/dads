@@ -318,7 +318,7 @@ function ExploreSystems() {
                 <div className="results-container" container>
                     <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-                            <p class="sidebarHead">Filters</p>
+                            <p className="sidebarHead">Filters</p>
                             <Divider />
 
                             <ul id="myUL">
@@ -693,7 +693,7 @@ function ExploreSystems() {
                         >
                             Download
                         </span>
-			<label for="pages">Results Per Page:</label>	
+			<label htmlFor="pages">Results Per Page:</label>	
 			<select id="pages" name="pages"  value={pagesDisplay} onChange={handlePagePerChange}>
 			    <option value="10">10</option>
 			    <option value="20">20</option>
@@ -731,7 +731,7 @@ function ExploreSystems() {
                                           x[2],
                                           x[3],
                                           <Link
-                                              to={`https://www.lmfdb.org/NumberField/${x[4]}`}
+                                              to ={`https://www.lmfdb.org/NumberFields/${x[4]}`} 
                                               style={{
                                                   color: "red",
                                                   textDecoration: "none",
@@ -740,7 +740,7 @@ function ExploreSystems() {
                                               rel="noopener noreferrer"
                                           >
                                               {x[4]}
-                                          </Link>,
+                                          </Link>
                                       ])
                             }
                             itemsPerPage={pagesPer}
@@ -764,7 +764,7 @@ function ExploreSystems() {
 
                     <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-                            <p class="sidebarHead" >RESULT STATISTICS </p>
+                            <p className="sidebarHead" >RESULT STATISTICS </p>
                             <Divider />
 
                             <br />

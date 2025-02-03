@@ -90,7 +90,7 @@ class PostgresConnector:
                     result = {'modelLabel': model_label, **temp}
                 else:
                     result = {}
-
+            print("Fetched system data:", result)  # Debugging print
         except Exception:
             self.connection.rollback()
             result = {}

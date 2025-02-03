@@ -15,99 +15,98 @@ export default function ModelsTable({ data }) {
 	modelKeys.splice(position, 1);
     }
 
-   const Superscript = ({ children }) => {
-      return (
-	<sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
-	  {children}
-	</sup>
-      );
-    };
-
-    const renderExponent = (expressionArray) => {
-      const formattedExpressions = [];
-
-      expressionArray.forEach((expression, index) => {
-	const parts = expression.split(/(\^[\d]+)/);
-	const formattedExpression = [];
-
-	for (let i = 0; i < parts.length; i++) {
-	  if (parts[i].startsWith('^')) {
-	    const exponentValue = parts[i].slice(1);
-	    formattedExpression.push(<Superscript key={i}>{exponentValue}</Superscript>);
-	  } else {
-	    formattedExpression.push(parts[i]);
-	  }
-	}
-
-	formattedExpressions.push(
-	  <React.Fragment key={index}>
-	    {formattedExpression}
-	    {index !== expressionArray.length - 1 && <span> : </span>}
-	  </React.Fragment>
-	);
-      });
-
-      return formattedExpressions;
-    }; 
-    
-
-    function processInput(input) {
-	// Remove outer braces and split by '},{' to get individual polynomial coefficient sets
-	const polynomials = input.slice(2, -2).split('},{');
-	
-	const result = [];
-	
-	// Iterate over each polynomial
-	for (let poly of polynomials) {
-	    // Split the polynomial coefficients by ','
-	    const coeffs = poly.split(',');
-	    
-	    // Construct the polynomial expression
-	    let polynomialExpression = '';
-	    for (let i = 0; i < coeffs.length; i++) {
-		const coefficient = coeffs[i];
-		if (coefficient !== '0') {
-		    // Construct monomial expression based on index
-		    let monomial = '';
-		    if (i === 0) {
-			monomial = 'x^' + (coeffs.length - 1);
-		    } else if (i === coeffs.length - 1) {
-			monomial = 'y^' + (coeffs.length - 1);
-		    } else if (i === 1 && (coeffs.length - 1) === 1) {
-			monomial = 'xy';
-		    } else if (i === 1) {
-			monomial = 'x^' + (coeffs.length - 1 - i) + 'y';
-		    } else if ((coeffs.length - 1 - i) === 1) {
-			monomial = 'x' + 'y^' + i;
-		    } else {
-			monomial = 'x^' + (coeffs.length - 1 - i) + 'y^' + i;
-		    }
-		    
-		    // Add coefficient with monomial
-		    if (coefficient === '1') {
-			polynomialExpression += monomial;
-		    } else if (coefficient === '-1') {
-			polynomialExpression += '-' + monomial;
-		    } else {
-			polynomialExpression += coefficient + monomial;
-		    }
-		    
-		    // Add '+' if not the last term and coefficient is not zero
-		    // && coeffs[i + 1] !== '0'
-		    if (i !== coeffs.length - 1 ) {
-			polynomialExpression += '+';
-		    }
+	const Superscript = ({ children }) => {
+		return (
+		<sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
+		{children}
+		</sup>
+		);
+		};
+		
+		const renderExponent = (expressionArray) => {
+		const formattedExpressions = [];
+		
+		expressionArray.forEach((expression, index) => {
+		const parts = expression.split(/(\^[\d]+)/);
+		const formattedExpression = [];
+		
+		for (let i = 0; i < parts.length; i++) {
+		if (parts[i].startsWith('^')) {
+			const exponentValue = parts[i].slice(1);
+			formattedExpression.push(<Superscript key={i}>{exponentValue}</Superscript>);
+		} else {
+			formattedExpression.push(parts[i]);
 		}
-	    }
-	    
-	    // Push polynomial expression to result array
-	    result.push(polynomialExpression);
-	}
-	
-	return result;
-    }
-
-  return (
+		}
+		
+		formattedExpressions.push(
+		<React.Fragment key={index}>
+			{formattedExpression}
+			{index !== expressionArray.length - 1 && <span> : </span>}
+		</React.Fragment>
+		);
+		});
+		
+		return formattedExpressions;
+		}; 
+		
+		
+		function processInput(input) {
+		// Remove outer braces and split by '},{' to get individual polynomial coefficient sets
+		const polynomials = input.slice(2, -2).split('},{');
+		
+		const result = [];
+		
+		// Iterate over each polynomial
+		for (let poly of polynomials) {
+			// Split the polynomial coefficients by ','
+			const coeffs = poly.split(',');
+			
+			// Construct the polynomial expression
+			let polynomialExpression = '';
+			for (let i = 0; i < coeffs.length; i++) {
+			const coefficient = coeffs[i];
+			if (coefficient !== '0') {
+				// Construct monomial expression based on index
+				let monomial = '';
+				if (i === 0) {
+				monomial = 'x^' + (coeffs.length - 1);
+				} else if (i === coeffs.length - 1) {
+				monomial = 'y^' + (coeffs.length - 1);
+				} else if (i === 1 && (coeffs.length - 1) === 1) {
+				monomial = 'xy';
+				} else if (i === 1) {
+				monomial = 'x^' + (coeffs.length - 1 - i) + 'y';
+				} else if ((coeffs.length - 1 - i) === 1) {
+				monomial = 'x' + 'y^' + i;
+				} else {
+				monomial = 'x^' + (coeffs.length - 1 - i) + 'y^' + i;
+				}
+				
+				// Add coefficient with monomial
+				if (coefficient === '1') {
+				polynomialExpression += monomial;
+				} else if (coefficient === '-1') {
+				polynomialExpression += '-' + monomial;
+				} else {
+				polynomialExpression += coefficient + monomial;
+				}
+				
+				// Add '+' if not the last term and coefficient is not zero
+				// && coeffs[i + 1] !== '0'
+				if (i !== coeffs.length - 1 ) {
+				polynomialExpression += '+';
+				}
+			}
+			}
+			
+			// Push polynomial expression to result array
+			result.push(polynomialExpression);
+		}
+		
+		return result;
+		}
+	return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Models:</h3>
       <Table aria-label="simple table">
@@ -160,3 +159,4 @@ const splitOutermostCommas = (str) => {
   parts.push(temp.trim().replace(/["()]/g, '')); // Push the last part and remove characters
   return parts;
 };
+

@@ -14,7 +14,11 @@ export default function AutomorphismGroupTable({ data }) {
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
-            <TableCell align="right">{data.automorphism_group_cardinality}</TableCell>
+            <TableCell align="right">
+              {data.automorphism_group_cardinality !== undefined 
+              ? data.automorphism_group_cardinality 
+              : "N/A"}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell component="th" scope="row"><b>Structure</b></TableCell>
