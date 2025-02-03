@@ -731,7 +731,7 @@ function ExploreSystems() {
                                           x[2],
                                           x[3],
                                           <Link
-                                              to ={`https://www.lmfdb.org/NumberFields/${x[4]}`} 
+                                              to={`https://www.lmfdb.org/NumberField/${x[4]}`}
                                               style={{
                                                   color: "red",
                                                   textDecoration: "none",
@@ -740,7 +740,7 @@ function ExploreSystems() {
                                               rel="noopener noreferrer"
                                           >
                                               {x[4]}
-                                          </Link>
+                                          </Link>,
                                       ])
                             }
                             itemsPerPage={pagesPer}
