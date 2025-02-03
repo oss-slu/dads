@@ -90,7 +90,6 @@ class PostgresConnector:
                     result = {'modelLabel': model_label, **temp}
                 else:
                     result = {}
-            
         except Exception:
             self.connection.rollback()
             result = {}
@@ -127,7 +126,7 @@ class PostgresConnector:
                     AND functions_dim_1_nf.base_field_label = rational_preperiodic_dim_1_nf.base_field_label
                     JOIN graphs_dim_1_nf
                     ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id
-                    {where_text}    
+                    {where_text}
                     """
                 )
                 with self.connection.cursor(
