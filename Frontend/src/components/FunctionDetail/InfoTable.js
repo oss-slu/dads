@@ -89,16 +89,11 @@ export default function InfoTable({ data }) {
           <TableRow>
             <TableCell component="th" scope="row">{data.modelLabel}</TableCell>
             <TableCell align="right">{data.base_field_label}</TableCell>
-            <TableCell align="right">
-              {data.is_polynomial && data.models?.[data.display_model]?.polys_val
-                ? renderExponent(processInput(data.models[data.display_model].polys_val[0]))
-                : data.reduced_model || "N/A"}   
-       
-            </TableCell>
+            <TableCell align="right">{data.display_model}</TableCell>
             <TableCell align="right">{data.degree}</TableCell>
             <TableCell align="right">
             <a
-                href={`https://www.lmfdb.org/NumberFields/${data.base_field_label}`}
+                href={`https://www.lmfdb.org/NumberField/${data.base_field_label}`}
                 style={{ color: "red", textDecoration: "none" }}
                 target="_blank"
                 rel="noopener noreferrer"
