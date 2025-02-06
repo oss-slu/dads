@@ -25,10 +25,12 @@ export default function CriticalPointPortraitTable({ data }) {
         }
       }
       return '[]'; // Return '[]' for empty arrays
+    } else {
+      return value;
     }
   };
   
-  if (data.is_pcf == true) {
+  if (data.is_pcf) {
     return (
       <TableContainer className='table-component' component={Paper}>
         <h3>Critical Point Portrait</h3>
@@ -36,11 +38,11 @@ export default function CriticalPointPortraitTable({ data }) {
           <TableBody>
             <TableRow>
               <TableCell component="th" scope="row"><b>Cardinality</b></TableCell>
-              <TableCell align="right">{data.cardinality || "N/A"}</TableCell>
+              <TableCell align="right">{formatData("cardinality")}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell component="th" scope="row"><b>Size of Post Critical Set</b></TableCell>
-              <TableCell align="right">{data.positive_in_degree || "N/A"}</TableCell>
+              <TableCell align="right">{formatData("positive_in_degree")}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell component="th" scope="row"><b>As Directed Graph</b></TableCell>
@@ -59,11 +61,11 @@ export default function CriticalPointPortraitTable({ data }) {
             </TableRow>
             <TableRow>
               <TableCell component="th" scope="row"><b>Cycle Lengths</b></TableCell>
-              <TableCell align="right">{data.periodic_cycles || "N/A"}</TableCell>
+              <TableCell align="right">{formatData("periodic_cycles")}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell component="th" scope="row"><b>Component Sizes</b></TableCell>
-              <TableCell align="right">{data.preperiodic_components || "N/A"}</TableCell>
+              <TableCell align="right">{formatData("preperiodic_components")}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
