@@ -7,51 +7,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-export default function ModelsTable({ data }) {
-  // Extracting keys containing "_model" from the data object
-    const modelKeys = Object.keys(data).filter(key => key.includes("_model"));
-    if( modelKeys.includes("display_model")) {
-	let position = modelKeys.indexOf("display_model");
-	modelKeys.splice(position, 1);
-    }
-
-   const Superscript = ({ children }) => {
-      return (
-	<sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
-	  {children}
-	</sup>
-      );
-    };
-
-    const renderExponent = (expressionArray) => {
-      const formattedExpressions = [];
-
-      expressionArray.forEach((expression, index) => {
-	const parts = expression.split(/(\^[\d]+)/);
-	const formattedExpression = [];
-
-	for (let i = 0; i < parts.length; i++) {
-	  if (parts[i].startsWith('^')) {
-	    const exponentValue = parts[i].slice(1);
-	    formattedExpression.push(<Superscript key={i}>{exponentValue}</Superscript>);
-	  } else {
-	    formattedExpression.push(parts[i]);
-	  }
-	}
-
-	formattedExpressions.push(
-	  <React.Fragment key={index}>
-	    {formattedExpression}
-	    {index !== expressionArray.length - 1 && <span> : </span>}
-	  </React.Fragment>
-	);
-      });
-
-      return formattedExpressions;
-    }; 
-    
-
-    function processInput(input) {
+// move processInput and renderExponent to use them in InfoTable.js
+export function processInput(input) {
 	// Remove outer braces and split by '},{' to get individual polynomial coefficient sets
 	const polynomials = input.slice(2, -2).split('},{');
 	
@@ -106,7 +63,48 @@ export default function ModelsTable({ data }) {
 	
 	return result;
     }
+export const renderExponent = (expressionArray) => {
+	const formattedExpressions = [];
+	const Superscript = ({ children }) => {
+		return (
+	  <sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
+		{children}
+	  </sup>
+		);
+	  };
+	expressionArray.forEach((expression, index) => {
+	const parts = expression.split(/(\^[\d]+)/);
+	const formattedExpression = [];
 
+	for (let i = 0; i < parts.length; i++) {
+	if (parts[i].startsWith('^')) {
+		const exponentValue = parts[i].slice(1);
+		formattedExpression.push(<Superscript key={i}>{exponentValue}</Superscript>);
+	} else {
+		formattedExpression.push(parts[i]);
+	}
+	}
+
+	formattedExpressions.push(
+	<React.Fragment key={index}>
+		{formattedExpression}
+		{index !== expressionArray.length - 1 && <span> : </span>}
+	</React.Fragment>
+	);
+	});
+
+	return formattedExpressions;
+	}; 
+
+
+export default function ModelsTable({ data }) {
+  // Extracting keys containing "_model" from the data object
+    const modelKeys = Object.keys(data).filter(key => key.includes("_model"));
+    if( modelKeys.includes("display_model")) {
+	let position = modelKeys.indexOf("display_model");
+	modelKeys.splice(position, 1);
+    }
+    
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Models:</h3>
@@ -143,7 +141,7 @@ export default function ModelsTable({ data }) {
 }
 
 // Function to split the string at the outermost commas
-const splitOutermostCommas = (str) => {
+export const splitOutermostCommas = (str) => {
   const parts = [];
   let temp = '';
   let openBrackets = 0;
@@ -160,3 +158,4 @@ const splitOutermostCommas = (str) => {
   parts.push(temp.trim().replace(/["()]/g, '')); // Push the last part and remove characters
   return parts;
 };
+
