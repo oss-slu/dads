@@ -93,7 +93,7 @@ export const renderExponent = (expressionArray) => {
 	);
 	});
 
-	return formattedExpressions;
+	return(<><span>[ </span>{formattedExpressions}<span> ]</span></>);
 	}; 
 
 
