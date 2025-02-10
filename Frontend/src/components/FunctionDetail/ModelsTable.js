@@ -37,10 +37,9 @@ const modelKeys = Object.keys(data).filter(
 
   function processInput(input) {
     const polynomials = input.slice(2, -2).split('},{');
-    return polynomials.map(poly => {
+    const formattedPolynomials = polynomials.map(poly => {
       const coeffs = poly.split(',');
-      // Format polynomial expression: remove trailing '+' and wrap in parentheses
-const formattedPoly = coeffs
+      const formattedPoly = coeffs
         .map((coefficient, i) => {
           if (coefficient === '0') return '';
           const exponentX = coeffs.length - 1 - i;
@@ -51,11 +50,15 @@ const formattedPoly = coeffs
           return coefficient === '1' ? monomial : `${coefficient}${monomial}`;
         })
         .filter(Boolean)
-        .join('+')
-        .replace(/\+$/, ''); // Remove trailing + symbol // Remove trailing + symbol
-      // Ensure polynomial expressions are enclosed in parentheses
-return formattedPoly ? `(${formattedPoly})` : ''; // Add surrounding parentheses
+        .join(' + ')
+        .replace(/\+ -/g, '- ') // Ensures correct spacing for negatives
+        .replace(/\+$/, ''); // Remove trailing + symbol
+  
+      return formattedPoly;
     });
+  
+    // Return as an array containing one string (wrapped in brackets)
+    return [`[${formattedPolynomials.join(' : ')}]`];
   }
 
   const splitOutermostCommas = (str) => {
