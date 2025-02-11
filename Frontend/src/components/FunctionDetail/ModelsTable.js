@@ -7,17 +7,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-export default function ModelsTable({ data }) {
-  // Filter relevant model keys, excluding 'display_model'
-const modelKeys = Object.keys(data).filter(
-    key => key.includes('_model') && key !== 'display_model'
-  );
-
-  const Superscript = ({ children }) => (
-    <sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>{children}</sup>
-  );
-
-  const renderExponent = (expressionArray) => {
+export const renderExponent = (expressionArray) => {
+	const Superscript = ({ children }) => (
+		<sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>{children}</sup>
+	  );
     return expressionArray.map((expression, index) => {
       const parts = expression.split(/(\^[\d]+)/);
       return (
@@ -34,56 +27,59 @@ const modelKeys = Object.keys(data).filter(
       );
     });
   };
+export function processInput(input) {
+	const polynomials = input.slice(2, -2).split('},{');
+	const formattedPolynomials = polynomials.map(poly => {
+	const coeffs = poly.split(',');
+	const formattedPoly = coeffs
+		.map((coefficient, i) => {
+		if (coefficient === '0') return '';
+		const exponentX = coeffs.length - 1 - i;
+		const exponentY = i;
+		let monomial = '';
+		if (exponentX > 0) monomial += `x^${exponentX}`;
+		if (exponentY > 0) monomial += `y^${exponentY}`;
+		return coefficient === '1' ? monomial : `${coefficient}${monomial}`;
+		})
+		.filter(Boolean)
+		.join(' + ')
+		.replace(/\+ -/g, '- ') // Ensures correct spacing for negatives
+		.replace(/\+$/, ''); // Remove trailing + symbol
 
-  function processInput(input) {
-    const polynomials = input.slice(2, -2).split('},{');
-    const formattedPolynomials = polynomials.map(poly => {
-      const coeffs = poly.split(',');
-      const formattedPoly = coeffs
-        .map((coefficient, i) => {
-          if (coefficient === '0') return '';
-          const exponentX = coeffs.length - 1 - i;
-          const exponentY = i;
-          let monomial = '';
-          if (exponentX > 0) monomial += `x^${exponentX}`;
-          if (exponentY > 0) monomial += `y^${exponentY}`;
-          return coefficient === '1' ? monomial : `${coefficient}${monomial}`;
-        })
-        .filter(Boolean)
-        .join(' + ')
-        .replace(/\+ -/g, '- ') // Ensures correct spacing for negatives
-        .replace(/\+$/, ''); // Remove trailing + symbol
-  
-      return formattedPoly;
-    });
+	return formattedPoly;
+	});
   
     // Return as an array containing one string (wrapped in brackets)
     return [`[${formattedPolynomials.join(' : ')}]`];
   }
 
-  const splitOutermostCommas = (str) => {
-    const parts = [];
-    let temp = '';
-    let openBrackets = 0;
-    for (let i = 0; i < str.length; i++) {
-      if (str[i] === '{') openBrackets++;
-      else if (str[i] === '}') openBrackets--;
-      if (str[i] === ',' && openBrackets === 0) {
-        parts.push(temp.trim().replace(/["()]/g, ''));
-        temp = '';
-      } else {
-        temp += str[i];
-      }
-    }
-    parts.push(temp.trim().replace(/["()]/g, ''));
-    return parts;
-  };
-
-  // Filter out models that have no data to display
-const relevantModels = modelKeys.filter(key => {
-    const modelData = data[key] ? splitOutermostCommas(data[key]) : [];
-    return modelData.some(value => value && value.trim() !== '');
-  });
+export const splitOutermostCommas = (str) => {
+	const parts = [];
+	let temp = '';
+	let openBrackets = 0;
+	for (let i = 0; i < str.length; i++) {
+	if (str[i] === '{') openBrackets++;
+	else if (str[i] === '}') openBrackets--;
+	if (str[i] === ',' && openBrackets === 0) {
+		parts.push(temp.trim().replace(/["()]/g, ''));
+		temp = '';
+	} else {
+		temp += str[i];
+	}
+	}
+	parts.push(temp.trim().replace(/["()]/g, ''));
+	return parts;
+};
+  
+export default function ModelsTable({ data }) {
+	const modelKeys = Object.keys(data).filter(
+		key => key.includes('_model') && key !== 'display_model'
+		);
+	// Filter out models that have no data to display
+	const relevantModels = modelKeys.filter(key => {
+	const modelData = data[key] ? splitOutermostCommas(data[key]) : [];
+	return modelData.some(value => value && value.trim() !== '');
+	});
 
   return (
     <TableContainer className='table-component' component={Paper}>
