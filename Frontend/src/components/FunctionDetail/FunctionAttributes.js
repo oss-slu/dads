@@ -5,6 +5,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import HelpBox from '../FunctionDetail/HelpBox'
 
 export default function FunctionAttributes({ data }) {
   const Superscript = ({ children }) => (
@@ -64,15 +65,16 @@ export default function FunctionAttributes({ data }) {
   return (
     <TableContainer component={Paper} className="table-component">
       <h3>Function Attributes</h3>
+      <h6>The attributes of the function.</h6>
       <Table aria-label="function attributes table">
         <TableBody>
           {/* Row for field labels */}
           <TableRow>
-            <TableCell><b>Is Newton Function</b></TableCell>
-            <TableCell><b>Is Polynomial</b></TableCell>
-            <TableCell><b>Is Postcritically Finite (PCF)</b></TableCell>
-            <TableCell><b>Is Lattès Function</b></TableCell>
-            <TableCell><b>Is Chebyshev</b></TableCell>
+            <TableCell><b>Is Newton Function</b><HelpBox description="Did Newton eat the apple?" title="Is Newton Function" /></TableCell>
+            <TableCell><b>Is Polynomial</b><HelpBox description="Is it a polynomial?" title="Is Polynomial" /></TableCell>
+            <TableCell><b>Is Postcritically Finite (PCF)</b><HelpBox description="Is Postcritically Finite (PCF)" title="Is Postcritically Finite (PCF)" /></TableCell>
+            <TableCell><b>Is Lattès Function</b><HelpBox description="I am lactose intolerant." title="Is Lattès Function" /></TableCell>
+            <TableCell><b>Is Chebyshev</b><HelpBox description="I have no idea what this means." title="Is Chebyshev" /></TableCell>
             {data.is_newton && <TableCell><b>Associated Polynomial</b></TableCell>}
           </TableRow>
           {/* Row for values */}

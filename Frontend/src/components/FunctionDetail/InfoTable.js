@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 import { processInput, renderExponent, splitOutermostCommas } from './ModelsTable';
+import HelpBox from '../FunctionDetail/HelpBox'
 
 
 export default function InfoTable({ data }) {
@@ -53,15 +54,16 @@ export default function InfoTable({ data }) {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Function Details</h3>
+      <h6>The details of the function.</h6>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell><b>Label</b></TableCell>
-            <TableCell align="right"><b>Domain</b></TableCell>
-            <TableCell align="right"><b>Standard Model</b></TableCell>
-            <TableCell align="right"><b>Degree</b></TableCell>
-            <TableCell align="right"><b>Field of Definition</b></TableCell>
-            <TableCell align="right"><b>Family</b></TableCell>
+            <TableCell><b>Label</b><HelpBox description="Label" title="Label" /></TableCell>
+            <TableCell align="right"><b>Domain</b><HelpBox description="Domain" title="Domain" /></TableCell>
+            <TableCell align="right"><b>Standard Model</b><HelpBox description="Standard Model" title="Standard Model" /></TableCell>
+            <TableCell align="right"><b>Degree</b><HelpBox description="Degree" title="Degree" /></TableCell>
+            <TableCell align="right"><b>Field of Definition</b><HelpBox description="Field of Definition" title="Field of Definition" /></TableCell>
+            <TableCell align="right"><b>Family</b><HelpBox description="Family" title="Family" /></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

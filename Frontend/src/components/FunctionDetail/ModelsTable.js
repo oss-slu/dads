@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import HelpBox from '../FunctionDetail/HelpBox'
 
 export const renderExponent = (expressionArray) => {
 	const Superscript = ({ children }) => (
@@ -84,15 +85,16 @@ export default function ModelsTable({ data }) {
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Models:</h3>
+      <h6>The different models of the function.</h6>
       <Table aria-label='models table'>
         <TableHead>
           <TableRow>
-            <TableCell><b>Name</b></TableCell>
-            <TableCell><b>Polynomials</b></TableCell>
-            <TableCell><b>Resultant</b></TableCell>
-            <TableCell><b>Primes of Bad Reduction</b></TableCell>
-            <TableCell><b>Conjugation from Standard</b></TableCell>
-            <TableCell><b>Field of Definition</b></TableCell>
+            <TableCell><b>Name</b><HelpBox description="Family" title="Name" /></TableCell>
+            <TableCell><b>Polynomials</b><HelpBox description="Family" title="Polynomials" /></TableCell>
+            <TableCell><b>Resultant</b><HelpBox description="Family" title="Resultant" /></TableCell>
+            <TableCell><b>Primes of Bad Reduction</b><HelpBox description="Family" title="Primes of Bad Reduction" /></TableCell>
+            <TableCell><b>Conjugation from Standard</b><HelpBox description="Family" title="Cojugation from Standard" /></TableCell>
+            <TableCell><b>Field of Definition</b><HelpBox description="Family" title="Field of Definition" /></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
