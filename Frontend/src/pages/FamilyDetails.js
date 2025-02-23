@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { get_family } from '../api/routes';
-import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 function FamilyDetailsTable({ family }) {
   const formatModelCoeffs = (coeffs) => {
-    const superscripts = {
-      "0": "\u2070",
+    const superscripts = {"0": "\u2070",
       "1": "\u00B9",
       "2": "\u00B2",
       "3": "\u00B3",
@@ -15,8 +14,8 @@ function FamilyDetailsTable({ family }) {
       "6": "\u2076",
       "7": "\u2077",
       "8": "\u2078",
-      "9": "\u2079"
-    };
+      "9": "\u2079"};
+
     const toSuperscript = (num) => String(num).split("").map(digit => superscripts[digit]).join("");
     let result = coeffs.map((poly, polyIndex) => {
       let terms = [];
@@ -37,35 +36,53 @@ function FamilyDetailsTable({ family }) {
     return `[${result.join(", ")}]`;
   };
 
-  const formatCitations = (citations) => Array.isArray(citations) ? citations.join(', ') : 'N/A';
+  const formatCitations = (citations) => Array.isArray(citations) ? citations.join(', ') : 'None';
 
   return (
     <>
       <TableContainer className='table-component' component={Paper}>
         <h3>General Information</h3>
         <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><b>Name</b></TableCell>
+              <TableCell><b>Degree</b></TableCell>
+              <TableCell><b>Model Coeffs</b></TableCell>
+              <TableCell><b>Base Field Label</b></TableCell>
+              <TableCell><b>Sigma One</b></TableCell>
+              <TableCell><b>Sigma Two</b></TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
-            {[['Name', family[1]], ['Degree', family[2]], ['Model Coeffs', formatModelCoeffs(family[4])],
-              ['Base Field Label', family[6]], ['Sigma One', family[8]], ['Sigma Two', family[9]]].map(([label, value]) => (
-              <TableRow key={label}>
-                <TableCell><b>{label}</b></TableCell>
-                <TableCell align="right">{value}</TableCell>
-              </TableRow>
-            ))}
+            <TableRow>
+              <TableCell>{family[1]}</TableCell>
+              <TableCell>{family[2]}</TableCell>
+              <TableCell>{formatModelCoeffs(family[4])}</TableCell>
+              <TableCell>{family[6]}</TableCell>
+              <TableCell>{family[8]}</TableCell>
+              <TableCell>{family[9]}</TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
       <TableContainer className='table-component' component={Paper}>
-        <h3>Properties</h3>
+        <h3>Mathematical Properties</h3>
         <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><b>Model Resultant</b></TableCell>
+              <TableCell><b>Is Polynomial</b></TableCell>
+              <TableCell><b>Num Critical Points</b></TableCell>
+              <TableCell><b>Automorphism Group Cardinality</b></TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
-            {[['Model Resultant', family[5]], ['Is Polynomial', family[12] ? 'Yes' : 'No'], 
-              ['Num Critical Points', family[13]], ['Automorphism Group Cardinality', family[14]]].map(([label, value]) => (
-              <TableRow key={label}>
-                <TableCell><b>{label}</b></TableCell>
-                <TableCell align="right">{value}</TableCell>
-              </TableRow>
-            ))}
+            <TableRow>
+              <TableCell>{family[5]}</TableCell>
+              <TableCell>{family[12] ? 'Yes' : 'No'}</TableCell>
+              <TableCell>{family[13]}</TableCell>
+              <TableCell>{family[14]}</TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
