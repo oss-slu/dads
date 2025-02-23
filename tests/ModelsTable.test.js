@@ -1,13 +1,21 @@
 import React from 'react';
 import { renderExponent, processInput, splitOutermostCommas } from '../Frontend/src/components/FunctionDetail/ModelsTable';
 import ModelsTable from '../Frontend/src/components/FunctionDetail/ModelsTable';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
+// import { ThemeProvider, createTheme } from '@mui/material/styles';
+// import { CssBaseline, StyledEngineProvider } from '@mui/material';
+
+// const theme = createTheme();
 
 describe('renderExponent function', () => {
   test('renders exponent correctly', () => {
-    const result = renderExponent(['x^2', 'y^3']);
-    expect(result.length).toBe(2);
+    const { container } = render(<>{renderExponent(['x^2', 'y^3'])}</>);
+    const textContent = container.textContent;  
+    expect(textContent).toContain('x');
+    expect(textContent).toContain('2');
+    expect(textContent).toContain('y');
+    expect(textContent).toContain('3');
   });
 });
 
@@ -23,6 +31,13 @@ describe('processInput function', () => {
     const result = processInput(input);
     expect(result).toEqual(["[x^2 : y^2]"]);
   });
+
+  test('handles empty input', () => {
+    const input = "{{},{}}";
+    const result = processInput(input);
+    expect(result).toEqual(["[ : ]"]);
+  });
+  
 });
 
 describe('splitOutermostCommas function', () => {
@@ -49,4 +64,28 @@ describe('ModelsTable function', () => {
 
         expect(() => ModelsTable({ data: input })).not.toThrow();
     });
-});
+  });
+
+// describe("ModelsTable snapshot test", () => {
+//   test("renders correctly", () => {
+//     const input = {
+//       original_model: "{x^2, y^2}",
+//       reduced_model: "{x^2, y^2}",
+//       cp_field_of_defn: "1.1.1.1",
+//       resultant: "1",
+//       primes_of_bad_reduction: "{}",
+//       conjugation_from_standard: ""
+//     };
+//     const tree = renderer
+//     .create(
+//       <StyledEngineProvider injectFirst>
+//         <ThemeProvider theme={theme}>
+//           <CssBaseline />
+//           <ModelsTable data={input} />
+//         </ThemeProvider>
+//       </StyledEngineProvider>
+//     ).toJSON();
+
+//   expect(tree).toMatchSnapshot(); 
+//   });
+// });
