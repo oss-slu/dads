@@ -74,12 +74,12 @@ export const splitOutermostCommas = (str) => {
   
 export default function ModelsTable({ data }) {
 	const modelKeys = Object.keys(data).filter(
-		key => key.includes('_model') && key !== 'display_model'
+		key => (key.includes('_model') && key !== 'display_model') || key === 'monic_centered'
 		);
 	// Filter out models that have no data to display
 	const relevantModels = modelKeys.filter(key => {
 	const modelData = data[key] ? splitOutermostCommas(data[key]) : [];
-	return modelData.some(value => value && value.trim() !== '');
+	return modelData.some(value => (value && value.trim() !== ''));
 	});
 
   return (
