@@ -539,3 +539,4 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
+    
