@@ -184,7 +184,10 @@ function ExploreSystems() {
                     num_components: filters.rationalPreperiodicComponents,
                     max_tail: filters.rationalPreperiodicLongestTail,
                     cp_cardinality: filters.cp_cardinality,
-                    positive_in_degree: filters.positive_in_degree
+                    positive_in_degree: filters.positive_in_degree,
+                    sigma_one: filters.sigma_one,
+                    sigma_two: filters.sigma_two,
+                    label: filters.label
                 }
             )
             setSystems(result.data['results']);
@@ -302,7 +305,10 @@ function ExploreSystems() {
         num_components: "",
         max_tail: "",
         cp_cardinality: "",
-        positive_in_degree: ""
+        positive_in_degree: "",
+        sigma_one: "",
+        sigma_two: "",
+        label: ""
     };
 
     let connectionStatus = true;
@@ -544,7 +550,7 @@ function ExploreSystems() {
                                     </ul>
                                 </li>
                             </ul>
- 
+
                             <ul id="myUL">
                                 <li>
                                     <span
@@ -658,10 +664,51 @@ function ExploreSystems() {
                                             value={filters.family.map((id) => families.find((option) => option.id === id))}
                                             onChange={handleAutocompleteChange}
                                         />)}
-                                        <br></br>
                                     </ul>
                                 </li>
                             </ul>
+
+                            <ul id="myUL">
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Other Map Properties
+                                    </span>
+                                    <ul className="nested">
+                                        <li>
+                                            <input
+                                                type="text"
+                                                style={textBoxStyle}
+                                                value={filters.sigma_one || ''}
+                                                onChange={(e) => handleTextChange("sigma_one", e.target.value)}
+                                            />
+                                            <label>Sigma 1</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="text"
+                                                style={textBoxStyle}
+                                                value={filters.sigma_two || ''}
+                                                onChange={(e) => handleTextChange("sigma_two", e.target.value)}
+                                            />
+                                            <label>Sigma 2</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="text"
+                                                style={textBoxStyle}
+                                                value={filters.label || ''}
+                                                onChange={(e) => handleTextChange("label", e.target.value)}
+                                            />
+                                            <label>Label</label>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <br></br>
                             <ul id="myUL">
                               <li  style={{ paddingBottom: '10px' }}>
                                     <Button
