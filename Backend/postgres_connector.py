@@ -436,7 +436,8 @@ class PostgresConnector:
         # remove empty filters
         # remove ILD because not currently in use
 
-        # Basically the search filters from the search UI are converted into SQL "where text"
+        # Basically the search filters from the search UI are
+        # converted into SQL "where text"
         for fil in filters.copy():
             if (
                 not filters[fil]
@@ -500,10 +501,12 @@ class PostgresConnector:
 
             elif fil in ['positive_in_degree']:
                 conditions.append(f'{fil}={int(values)}')
-            
-            # The "label" field is in another table ... had to make sure the citations table was included first
+
+            # The "label" field is in another table ... 
+            # had to make sure the citations table was included first
             # See SQL select code in get_selected_systems function
-            # The search works regardless of capital letters (ILIKE) or leading/trailing whitespaces (TRIM)
+            # The search works regardless of capital letters (ILIKE) 
+            # or leading/trailing whitespaces (TRIM)
             elif fil in ['label']:
                 conditions.append(f"""citationsTable.label ILIKE '%' || TRIM('{values}') || '%' """)
             
