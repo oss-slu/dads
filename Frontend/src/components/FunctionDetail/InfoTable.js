@@ -50,18 +50,29 @@ export default function InfoTable({ data }) {
 
 
   let polynomialExpression;
+
+  // For Newton polynomial
   if (data.is_newton) {
-    polynomialExpression = data.newton_polynomial_coeffs.join(' + '); 
-    //in the dataset there's no is_newton is true and no value of newton_polynomial_coeffs
-    //so I don't know the format of it, will adjust if we have updated data
-  } else if (polynomial) {
-    const modelData = splitOutermostCommas(polynomial);
-    polynomialExpression = renderExponent(modelData[0]);
+    const newtonPolynomial = data.newton_polynomial_coeffs;
+    if (newtonPolynomial && newtonPolynomial.some(coeff => coeff !== null)) {
+      //for non-null, it's just my assumption about formatting
+      polynomialExpression = newtonPolynomial.map((coeff, index) => {
+        const exponentX = newtonPolynomial.length - 1 - index; 
+        const exponentY = index; 
+        let term = '';
+        if (coeff !== null && coeff !== 0) {
+          if (exponentX > 0) term += `x^${exponentX}`;
+          if (exponentY > 0) term += `y^${exponentY}`;
+          return coeff === 1 ? term : `${coeff}*${term}`;
+        }
+      }).filter(Boolean).join(' + ');
+    } 
   }
-  // if (polynomial) {
-  //   const modelData= splitOutermostCommas(polynomial);
-  //   polynomialExpression= renderExponent(processInput(modelData[0]));
-  // }
+  
+  if (polynomial) {
+    const modelData= splitOutermostCommas(polynomial);
+    polynomialExpression= renderExponent(processInput(modelData[0]));
+  }
   console.log("Standard Model Name:", standard_model);
   console.log("Model Key Used:", modelKey);
   console.log("Polynomial Data Found:", polynomial);
