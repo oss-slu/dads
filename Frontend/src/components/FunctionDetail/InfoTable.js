@@ -41,11 +41,27 @@ export default function InfoTable({ data }) {
     polynomial= data[`${standard_model}_model`];
   }
 
+  const labelDisplay = data.is_lattes ? (
+    <a href={`https://www.lmfdb.org/EllipticCurve/${data.sigma_one}`} target="_blank" rel="noopener noreferrer">
+      {data.sigma_one}
+    </a>
+  ) : data.modelLabel;
+
+
+
   let polynomialExpression;
-  if (polynomial) {
-    const modelData= splitOutermostCommas(polynomial);
-    polynomialExpression= renderExponent(processInput(modelData[0]));
+  if (data.is_newton) {
+    polynomialExpression = data.newton_polynomial_coeffs.join(' + '); 
+    //in the dataset there's no is_newton is true and no value of newton_polynomial_coeffs
+    //so I don't know the format of it, will adjust if we have updated data
+  } else if (polynomial) {
+    const modelData = splitOutermostCommas(polynomial);
+    polynomialExpression = renderExponent(modelData[0]);
   }
+  // if (polynomial) {
+  //   const modelData= splitOutermostCommas(polynomial);
+  //   polynomialExpression= renderExponent(processInput(modelData[0]));
+  // }
   console.log("Standard Model Name:", standard_model);
   console.log("Model Key Used:", modelKey);
   console.log("Polynomial Data Found:", polynomial);
@@ -68,7 +84,7 @@ export default function InfoTable({ data }) {
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell component="th" scope="row">{data.modelLabel}</TableCell>
+            <TableCell component="th" scope="row">{labelDisplay}</TableCell> 
             <TableCell align="right">{data.base_field_label}</TableCell>
             <TableCell align="right">{polynomialExpression}</TableCell>
             <TableCell align="right">{data.degree}</TableCell>
