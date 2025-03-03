@@ -93,7 +93,6 @@ export default function ModelsTable({ data }) {
             <TableCell><b>Polynomials</b><HelpBox description="Family" title="Polynomials" /></TableCell>
             <TableCell><b>Resultant</b><HelpBox description="Family" title="Resultant" /></TableCell>
             <TableCell><b>Primes of Bad Reduction</b><HelpBox description="Family" title="Primes of Bad Reduction" /></TableCell>
-            <TableCell><b>Conjugation from Standard</b><HelpBox description="Family" title="Cojugation from Standard" /></TableCell>
             <TableCell><b>Field of Definition</b><HelpBox description="Family" title="Field of Definition" /></TableCell>
           </TableRow>
         </TableHead>
@@ -106,7 +105,6 @@ export default function ModelsTable({ data }) {
                 <TableCell>{renderExponent(processInput(modelData[0]))}</TableCell>
                 <TableCell>{modelData[1]}</TableCell>
                 <TableCell>{modelData[2]}</TableCell>
-                <TableCell>{modelData[5]}</TableCell>
                 <TableCell>{data.cp_field_of_defn || 'N/A'}</TableCell>
               </TableRow>
             );

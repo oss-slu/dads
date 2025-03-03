@@ -50,6 +50,12 @@ export default function InfoTable({ data }) {
   console.log("Model Key Used:", modelKey);
   console.log("Polynomial Data Found:", polynomial);
 
+  // Map family_id values to there corresponding family names
+  const familyMapping = {
+    1: "poly_deg_2",
+    2: "poly_deg_3"
+  };
+
 
   return (
     <TableContainer className='table-component' component={Paper}>
@@ -93,7 +99,8 @@ export default function InfoTable({ data }) {
                     cursor: "pointer"
                   }}
                 >
-                  {data.family}
+                  {/* Displays the mapped family name*/}
+                  {familyMapping[data.family] || data.family}
                 </button>
               )}
             </TableCell>
