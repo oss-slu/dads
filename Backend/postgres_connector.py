@@ -30,11 +30,11 @@ class PostgresConnector:
             print('Connected to the PostgreSQL server.')
         except (psycopg2.DatabaseError, Exception) as error:
             print(error)
-    
+
     def is_connection_active(self):
         try:
             with self.connection.cursor() as cur:
-                cur.execute("SELECT 1")
+                cur.execute('SELECT 1')
             return True
         except psycopg2.OperationalError:
             return False
@@ -94,7 +94,7 @@ class PostgresConnector:
         # Reconnect if connection to database closed
         if not self.is_connection_active():
             self.connect()
-            
+
         try:
             sql = """
                 SELECT *
