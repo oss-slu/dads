@@ -20,6 +20,9 @@ class PostgresConnector:
     """
 
     def __init__(self):
+        self.connect()
+
+    def connect(self):
         config = load_config()
         try:
             # connecting to the PostgreSQL server
@@ -27,6 +30,14 @@ class PostgresConnector:
             print('Connected to the PostgreSQL server.')
         except (psycopg2.DatabaseError, Exception) as error:
             print(error)
+    
+    def is_connection_active(self):
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute("SELECT 1")
+            return True
+        except psycopg2.OperationalError:
+            return False
 
     def construct_label(self, data):
         return (
@@ -39,6 +50,11 @@ class PostgresConnector:
     def get_all_systems(self):
         columns = '*'
         sql = 'SELECT ' + columns + ' FROM functions_dim_1_NF'
+
+        # Reconnect if connection to database closed
+        if not self.is_connection_active():
+            self.connect()
+
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
@@ -54,6 +70,11 @@ class PostgresConnector:
     def get_all_families(self):
         columns = '*'
         sql = 'SELECT ' + columns + ' FROM families_dim_1_NF'
+
+        # Reconnect if connection to database closed
+        if not self.is_connection_active():
+            self.connect()
+
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
@@ -69,6 +90,11 @@ class PostgresConnector:
     # gets a system identified by its label, input is string
     def get_system(self, ip):
         cur = None
+
+        # Reconnect if connection to database closed
+        if not self.is_connection_active():
+            self.connect()
+            
         try:
             sql = """
                 SELECT *
@@ -107,6 +133,10 @@ class PostgresConnector:
     def get_filtered_systems(self, filters):
         # return a list of strings of the form:
         #    label, dimension, degree, polynomials, field_label
+
+        # Reconnect if connection to database closed
+        if not self.is_connection_active():
+            self.connect()
 
         # Which column data to grab from the database:
         columns = (
@@ -240,6 +270,11 @@ class PostgresConnector:
             + ' || ordinal in '
             + labels
         )
+
+        # Reconnect if connection to database closed
+        if not self.is_connection_active():
+            self.connect()
+
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
@@ -253,6 +288,11 @@ class PostgresConnector:
         # whereText = self.buildWhereText(filters)
         # number of maps
         cur = None
+
+        # Reconnect if connection to database closed
+        if not self.is_connection_active():
+            self.connect()
+
         try:
             with self.connection.cursor() as cur:
                 sql = (
@@ -587,6 +627,11 @@ class PostgresConnector:
     def get_family(self, family_id):
         columns = '*'
         sql = f'SELECT {columns} FROM families_dim_1_NF WHERE family_id = %s'
+
+        # Reconnect if connection to database closed
+        if not self.is_connection_active():
+            self.connect()
+
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql, (family_id,))
