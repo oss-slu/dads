@@ -27,7 +27,7 @@ class PostgresConnector:
             print('Connected to the PostgreSQL server.')
         except (psycopg2.DatabaseError, Exception) as error:
             print(error)
-            
+
     def construct_label(self, data):
         return (
             '1.' +
