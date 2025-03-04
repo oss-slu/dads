@@ -24,7 +24,8 @@ export const FilterProvider = ({ children }) => {
         periodic_cycles: "",
         sigma_one: "",
         sigma_two: "",
-        label: ""
+        model_label: "",
+        journal_label: ""
     });
 
     return (

@@ -187,7 +187,8 @@ function ExploreSystems() {
                     positive_in_degree: filters.positive_in_degree,
                     sigma_one: filters.sigma_one,
                     sigma_two: filters.sigma_two,
-                    label: filters.label
+                    model_label: filters.model_label,
+                    journal_label: filters.journal_label
                 }
             )
             setSystems(result.data['results']);
@@ -308,7 +309,8 @@ function ExploreSystems() {
         positive_in_degree: "",
         sigma_one: "",
         sigma_two: "",
-        label: ""
+        model_label: "",
+        journal_label: ""
     };
 
     let connectionStatus = true;
@@ -476,7 +478,7 @@ function ExploreSystems() {
                                             value={filters.base_field_label || ''}
                                             onChange={(e) => handleTextChange("base_field_label", e.target.value)}
                                         />
-                                        <label>Label</label>
+                                        <label>Base Field Label</label>
                                         <br />
                                     </ul>
                                 </li>
@@ -699,10 +701,19 @@ function ExploreSystems() {
                                             <input
                                                 type="text"
                                                 style={textBoxStyle}
-                                                value={filters.label || ''}
-                                                onChange={(e) => handleTextChange("label", e.target.value)}
+                                                value={filters.model_label || ''}
+                                                onChange={(e) => handleTextChange("model_label", e.target.value)}
                                             />
-                                            <label>Label</label>
+                                            <label>Model Label</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="text"
+                                                style={textBoxStyle}
+                                                value={filters.journal_label || ''}
+                                                onChange={(e) => handleTextChange("journal_label", e.target.value)}
+                                            />
+                                            <label>Journal Label</label>
                                         </li>
                                     </ul>
                                 </li>
@@ -751,11 +762,11 @@ function ExploreSystems() {
             {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
                         <PaginatedDataTable
                             labels={[
-                                "Label",
+                                "Model Label",
                                 "Domain",
                                 "Degree",
                                 "Polynomials",
-                                "Field",
+                                "Base Field Label",
                             ]}
                             data={
                                 systems === null

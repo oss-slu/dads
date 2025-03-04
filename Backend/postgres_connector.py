@@ -27,7 +27,7 @@ class PostgresConnector:
             print('Connected to the PostgreSQL server.')
         except (psycopg2.DatabaseError, Exception) as error:
             print(error)
-
+            
     def construct_label(self, data):
         return (
             '1.' +
@@ -74,9 +74,13 @@ class PostgresConnector:
                 SELECT *
                 FROM functions_dim_1_nf
                 JOIN rational_preperiodic_dim_1_nf 
-                ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id
-                JOIN graphs_dim_1_nf ON rational_preperiodic_dim_1_nf.graph_id = graphs_dim_1_nf.graph_id
-                LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true
+                ON functions_dim_1_nf.function_id =
+                rational_preperiodic_dim_1_nf.function_id
+                JOIN graphs_dim_1_nf ON
+                rational_preperiodic_dim_1_nf.graph_id =
+                graphs_dim_1_nf.graph_id
+                LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations,
+                ARRAY[NULL]::INTEGER[])) AS citation_id ON true
                 LEFT JOIN citations ON citations.id = citation_id
                 WHERE functions_dim_1_nf.function_id = %s
                 """
@@ -125,17 +129,25 @@ class PostgresConnector:
             result = []
             if dims == [] or 1 in dims:
                 # Basically we are pulling the data from the database
-                # First, we join many different tables (with each row corresponding to the same ID)
+                # First, we join many different tables
+                # (with each row corresponding to the same ID)
                 # We also add "where text" for filtering
                 sql = (f"""
                     SELECT {columns}
                     FROM functions_dim_1_nf
                     JOIN rational_preperiodic_dim_1_nf
-                    ON functions_dim_1_nf.function_id = rational_preperiodic_dim_1_nf.function_id
-                    AND functions_dim_1_nf.base_field_label = rational_preperiodic_dim_1_nf.base_field_label
-                    JOIN graphs_dim_1_nf ON graphs_dim_1_nf.graph_id = rational_preperiodic_dim_1_nf.graph_id
-                    LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true
-                    LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id
+                    ON functions_dim_1_nf.function_id = 
+                    rational_preperiodic_dim_1_nf.function_id
+                    AND functions_dim_1_nf.base_field_label = 
+                    rational_preperiodic_dim_1_nf.base_field_label
+                    JOIN graphs_dim_1_nf ON graphs_dim_1_nf.graph_id = 
+                    rational_preperiodic_dim_1_nf.graph_id
+                    LEFT JOIN LATERAL UNNEST(
+                    COALESCE(functions_dim_1_nf.citations,
+                    ARRAY[NULL]::INTEGER[]))
+                    AS citation_id ON true
+                    LEFT JOIN citations AS citationsTable
+                    ON citationsTable.id = citation_id
                     {where_text}
                     """
                 )
@@ -254,8 +266,11 @@ class PostgresConnector:
                     ' JOIN graphs_dim_1_nf'
                     ' ON graphs_dim_1_nf.graph_id ='
                     ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id'
+                    ' LEFT JOIN LATERAL UNNEST('
+                    ' COALESCE(functions_dim_1_nf.citations, '
+                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+                    ' LEFT JOIN citations AS citationsTable ON '
+                    ' citationsTable.id = citation_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -272,8 +287,11 @@ class PostgresConnector:
                     ' JOIN graphs_dim_1_nf'
                     ' ON graphs_dim_1_nf.graph_id ='
                     ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id'
+                    ' LEFT JOIN LATERAL UNNEST('
+                    ' COALESCE(functions_dim_1_nf.citations, '
+                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+                    ' LEFT JOIN citations AS citationsTable ON '
+                    ' citationsTable.id = citation_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -289,8 +307,11 @@ class PostgresConnector:
                     ' JOIN graphs_dim_1_nf'
                     ' ON graphs_dim_1_nf.graph_id ='
                     ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id'
+                    ' LEFT JOIN LATERAL UNNEST('
+                    ' COALESCE(functions_dim_1_nf.citations, '
+                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+                    ' LEFT JOIN citations AS citationsTable ON '
+                    ' citationsTable.id = citation_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -307,8 +328,11 @@ class PostgresConnector:
                     ' JOIN graphs_dim_1_nf'
                     ' ON graphs_dim_1_nf.graph_id ='
                     ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id'
+                    ' LEFT JOIN LATERAL UNNEST('
+                    ' COALESCE(functions_dim_1_nf.citations, '
+                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+                    ' LEFT JOIN citations AS citationsTable ON '
+                    ' citationsTable.id = citation_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -324,8 +348,11 @@ class PostgresConnector:
                     'ON graphs_dim_1_nf.graph_id = '
                     'CAST(functions_dim_1_nf.critical_portrait_graph_id ' 
                     'AS integer)'
-                    ' LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id'
+                    ' LEFT JOIN LATERAL UNNEST('
+                    ' COALESCE(functions_dim_1_nf.citations, '
+                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+                    ' LEFT JOIN citations AS citationsTable ON '
+                    ' citationsTable.id = citation_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -342,8 +369,11 @@ class PostgresConnector:
                     ' JOIN functions_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id = '
                     'rational_preperiodic_dim_1_nf.function_id'
-                    ' LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id'
+                    ' LEFT JOIN LATERAL UNNEST('
+                    ' COALESCE(functions_dim_1_nf.citations, '
+                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+                    ' LEFT JOIN citations AS citationsTable ON '
+                    ' citationsTable.id = citation_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -360,8 +390,11 @@ class PostgresConnector:
                     ' JOIN functions_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id = '
                     'rational_preperiodic_dim_1_nf.function_id'
-                    ' LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id'
+                    ' LEFT JOIN LATERAL UNNEST('
+                    ' COALESCE(functions_dim_1_nf.citations, '
+                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+                    ' LEFT JOIN citations AS citationsTable ON '
+                    ' citationsTable.id = citation_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -382,8 +415,11 @@ class PostgresConnector:
                     ' JOIN functions_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id = '
                     'rational_preperiodic_dim_1_nf.function_id'
-                    ' LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id'
+                    ' LEFT JOIN LATERAL UNNEST('
+                    ' COALESCE(functions_dim_1_nf.citations, '
+                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+                    ' LEFT JOIN citations AS citationsTable ON '
+                    ' citationsTable.id = citation_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -397,8 +433,11 @@ class PostgresConnector:
                     ' JOIN functions_dim_1_nf'
                     ' ON functions_dim_1_nf.function_id = '
                     'rational_preperiodic_dim_1_nf.function_id'
-                    ' LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON citationsTable.id = citation_id'
+                    ' LEFT JOIN LATERAL UNNEST('
+                    ' COALESCE(functions_dim_1_nf.citations, '
+                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+                    ' LEFT JOIN citations AS citationsTable ON '
+                    ' citationsTable.id = citation_id'
                     + where_text
                 )
                 cur.execute(sql)
@@ -466,9 +505,12 @@ class PostgresConnector:
                     'CAST(' + fil + ' AS integer) IN (' + values + ')'
                     )
 
+            # Since there are multiple base_field_label fields, we have to
+            # specify the specific table
             elif fil in ['base_field_label']:
                 conditions.append(
-                    f'functions_dim_1_nf.{fil} LIKE \'%{values}%\'')
+                    f"""functions_dim_1_nf.base_field_label ILIKE '%'
+                    || TRIM('{values}') || '%' """)
 
             elif fil in ['family']:
                 print(values)
@@ -502,19 +544,34 @@ class PostgresConnector:
             elif fil in ['positive_in_degree']:
                 conditions.append(f'{fil}={int(values)}')
 
-            # The "label" field is in another table ... 
+            # The "label" field is in another table ...
             # had to make sure the citations table was included first
             # See SQL select code in get_selected_systems function
-            # The search works regardless of capital letters (ILIKE) 
+            # The search works regardless of capital letters (ILIKE)
             # or leading/trailing whitespaces (TRIM)
-            elif fil in ['label']:
-                conditions.append(f"""citationsTable.label ILIKE '%' || TRIM('{values}') || '%' """)
-            
+            elif fil in ['journal_label']:
+                conditions.append(f"""citationsTable.label ILIKE '%'
+                                  || TRIM('{values}') || '%' """)
+
+            # Apparently the model label is dynamically created
+            # (not a database field), so we have to search manually as well too
+            elif fil in ['model_label']:
+                conditions.append(f"""CONCAT(
+                                '1.', 
+                                TRIM(sigma_one), 
+                                '.', 
+                                TRIM(sigma_two), 
+                                '.', 
+                                TRIM(CAST(ordinal AS TEXT))) ILIKE '%'
+                                || TRIM('{values}') || '%' """)
+
             elif fil in ['sigma_one']:
-                conditions.append(f"""sigma_one ILIKE '%' || TRIM('{values}') || '%' """)
-            
+                conditions.append(f"""sigma_one ILIKE '%'
+                                  || TRIM('{values}') || '%' """)
+
             elif fil in ['sigma_two']:
-                conditions.append(f"""sigma_two ILIKE '%' || TRIM('{values}') || '%' """)
+                conditions.append(f"""sigma_two ILIKE '%'
+                                  || TRIM('{values}') || '%' """)
 
             else:
                 conditions.append(
@@ -542,4 +599,3 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
-    
