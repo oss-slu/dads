@@ -478,7 +478,7 @@ function ExploreSystems() {
                                             value={filters.base_field_label || ''}
                                             onChange={(e) => handleTextChange("base_field_label", e.target.value)}
                                         />
-                                        <label>Base Field Label</label>
+                                        <label>Field</label>
                                         <br />
                                     </ul>
                                 </li>
@@ -704,7 +704,7 @@ function ExploreSystems() {
                                                 value={filters.model_label || ''}
                                                 onChange={(e) => handleTextChange("model_label", e.target.value)}
                                             />
-                                            <label>Model Label</label>
+                                            <label>Label</label>
                                         </li>
                                         <li>
                                             <input
@@ -762,11 +762,11 @@ function ExploreSystems() {
             {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
                         <PaginatedDataTable
                             labels={[
-                                "Model Label",
+                                "Label",
                                 "Domain",
                                 "Degree",
                                 "Polynomials",
-                                "Base Field Label",
+                                "Field",
                             ]}
                             data={
                                 systems === null
