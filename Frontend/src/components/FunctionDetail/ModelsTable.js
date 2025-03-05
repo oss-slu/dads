@@ -123,9 +123,6 @@ export default function ModelsTable({ data }) {
         <TableBody>
           {modelKeys.map((key, index) => {
             const modelData = data[key] ? splitOutermostCommas(data[key]) : ['', '', '', '', '']; // Split data[key] or set default values if null
-	    console.log("THIS SHIT RIGHT HERE: ");
-	    console.log(modelData[0]);
-	    console.log(processInput(modelData[0]));
             return (
               <TableRow key={index}>
                 <TableCell align="left">{key.replace(/_/g, ' ').replace(/ model$/, '') + " model"}</TableCell>

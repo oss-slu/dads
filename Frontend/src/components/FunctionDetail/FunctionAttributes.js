@@ -61,6 +61,8 @@ export default function FunctionAttributes({ data }) {
     ? renderExponent(processInput(data.newton_model))
     : "N/A";
 
+  console.log(data);
+
   return (
     <TableContainer component={Paper} className="table-component">
       <h3>Function Attributes</h3>
@@ -74,6 +76,7 @@ export default function FunctionAttributes({ data }) {
             <TableCell><b>Is Lattès Function</b></TableCell>
             <TableCell><b>Is Chebyshev</b></TableCell>
             {data.is_newton && <TableCell><b>Associated Polynomial</b></TableCell>}
+            <TableCell><b>Rational Twists</b></TableCell>
           </TableRow>
           {/* Row for values */}
           <TableRow>
@@ -83,6 +86,18 @@ export default function FunctionAttributes({ data }) {
             <TableCell>{String(data.is_lattes)}</TableCell>
             <TableCell>{String(data.is_chebyshev)}</TableCell>
             {data.is_newton && <TableCell>{newtonPolynomial}</TableCell>}
+            <TableCell>
+              {data.rational_twists && data.rational_twists.length > 0 ? (
+                data.rational_twists.map((id, index) => (
+                  <React.Fragment key={id}>
+                    <a href={`http://localhost:3000/system/${id}/`} target="_blank" rel="noopener noreferrer">
+                      {id}
+                    </a>
+                    {index < data.rational_twists.length - 1 && ", "}
+                  </React.Fragment>
+                ))
+              ) : "None"}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

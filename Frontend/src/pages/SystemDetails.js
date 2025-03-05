@@ -17,7 +17,6 @@ import ModelsTable from '../components/FunctionDetail/ModelsTable';
 import CitationsTable from '../components/FunctionDetail/CitationsTable';
 import AutomorphismGroupTable from '../components/FunctionDetail/AutomorphismGroupTable';
 import FunctionAttributes from '../components/FunctionDetail/FunctionAttributes';
-import RationalTwistsTable from '../components/FunctionDetail/RationalTwistsTable';
 
 function SystemDetails() {
     const [data, setData] = useState({});
@@ -48,11 +47,6 @@ function SystemDetails() {
                 <div className="row">
                     <div className="col">
                         <RationalPointsTable data={data} />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <RationalTwistsTable />
                     </div>
                 </div>
                 <div className="row">

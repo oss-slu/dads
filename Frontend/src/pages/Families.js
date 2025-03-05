@@ -25,12 +25,10 @@ function Families() {
         fetchFamilies()
     }, []); 
     const updateAutocompleteSelections = (newSelections) => {
-        console.log('what is going on ',newSelections)
         setFilters((prevFilters) => ({
           ...prevFilters,
           family: newSelections,
         }));
-        console.log('what is going on ',filters.family)
       };
 
       const handleLinkClick = (selection) => {
