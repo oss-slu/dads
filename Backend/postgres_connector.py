@@ -29,7 +29,7 @@ class PostgresConnector:
             print(error)
 
     def get_rational_periodic_data(self, function_id):
-        sql = """SELECT * FROM rational_preperiodic_dim_1_nf 
+        sql = """SELECT * FROM rational_preperiodic_dim_1_nf
                 WHERE function_id = %s"""
         try:
             with self.connection.cursor() as cur:
@@ -45,14 +45,14 @@ class PostgresConnector:
         return result
 
     def get_label(self, function_id):
-        sql = """SELECT sigma_one, sigma_two, ordinal 
+        sql = """SELECT sigma_one, sigma_two, ordinal
                FROM functions_dim_1_nf WHERE function_id = %s"""
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql, (function_id,))
                 row = cur.fetchone()
                 if row:
-                    return f"1.{row[0]}.{row[1]}.{row[2]}"
+                    return ("1.%s.%s.%s", row[0], row[1], row[2])
                 else:
                     return None
         except Exception:
