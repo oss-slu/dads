@@ -28,6 +28,38 @@ class PostgresConnector:
         except (psycopg2.DatabaseError, Exception) as error:
             print(error)
 
+    def get_rational_periodic_data(self, function_id):
+        sql = f"SELECT * FROM rational_preperiodic_dim_1_nf WHERE function_id = {function_id}"
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute(sql)
+                result = cur.fetchall()
+        except Exception:
+            self.connection.rollback()
+            result = None
+        finally:
+            if cur:
+                cur.close()
+        print(result)
+        return result
+
+    def get_label(self, function_id):
+        sql = "SELECT sigma_one, sigma_two, ordinal FROM functions_dim_1_nf WHERE function_id = %s"
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute(sql, (function_id,))
+                row = cur.fetchone()
+                if row:
+                    return f"1.{row[0]}.{row[1]}.{row[2]}"
+                else:
+                    return None
+        except Exception:
+            self.connection.rollback()
+            return None
+        finally:
+            if cur:
+                cur.close()
+
     def construct_label(self, data):
         return (
             '1.' +
