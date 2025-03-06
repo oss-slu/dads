@@ -41,7 +41,6 @@ class PostgresConnector:
         finally:
             if cur:
                 cur.close()
-        print(result)
         return result
 
     def get_label(self, function_id):
