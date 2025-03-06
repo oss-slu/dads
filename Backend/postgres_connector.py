@@ -29,10 +29,11 @@ class PostgresConnector:
             print(error)
 
     def get_rational_periodic_data(self, function_id):
-        sql = f"SELECT * FROM rational_preperiodic_dim_1_nf WHERE function_id = {function_id}"
+        sql = """SELECT * FROM rational_preperiodic_dim_1_nf 
+                WHERE function_id = %s"""
         try:
             with self.connection.cursor() as cur:
-                cur.execute(sql)
+                cur.execute(sql, (function_id,))
                 result = cur.fetchall()
         except Exception:
             self.connection.rollback()
@@ -44,7 +45,8 @@ class PostgresConnector:
         return result
 
     def get_label(self, function_id):
-        sql = "SELECT sigma_one, sigma_two, ordinal FROM functions_dim_1_nf WHERE function_id = %s"
+        sql = """SELECT sigma_one, sigma_two, ordinal 
+               FROM functions_dim_1_nf WHERE function_id = %s"""
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql, (function_id,))
