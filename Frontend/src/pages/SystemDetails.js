@@ -17,6 +17,8 @@ import ModelsTable from '../components/FunctionDetail/ModelsTable';
 import CitationsTable from '../components/FunctionDetail/CitationsTable';
 import AutomorphismGroupTable from '../components/FunctionDetail/AutomorphismGroupTable';
 import FunctionAttributes from '../components/FunctionDetail/FunctionAttributes';
+import RationalTwistsTable from '../components/FunctionDetail/RationalTwistsTable'; // Import the new component
+
 
 function SystemDetails() {
     const [data, setData] = useState({});
@@ -40,6 +42,9 @@ function SystemDetails() {
             <div className="info-container">
                 <div className="row">
                     <InfoTable data={data} />
+                </div>
+                <div className="row">
+                    <RationalTwistsTable data={data} />
                 </div>
                 <div className="row">
                     <FunctionAttributes data={data} />
