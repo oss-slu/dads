@@ -7,6 +7,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default function RationalTwistsTable({ data }) {
+  console.log(data);
+
   return (
     <TableContainer component={Paper} className="table-component">
       <h3>Rational Twists</h3>
@@ -14,21 +16,23 @@ export default function RationalTwistsTable({ data }) {
         <TableBody>
           {/* Header Row */}
           <TableRow>
+            <TableCell><b>Function ID</b></TableCell>
             <TableCell><b>Rational Twists</b></TableCell>
           </TableRow>
           {/* Data Row */}
           <TableRow>
+            <TableCell>{data.function_id}</TableCell>
             <TableCell>
-                {data.rational_twists && data.rational_twists.length > 0 ? (
-                    data.rational_twists.map((id, index) => (
-                    <React.Fragment key={id}>
-                        <a href={`http://localhost:3000/system/${id}/`} target="_blank" rel="noopener noreferrer">
-                        {id}
-                        </a>
-                        {index < data.rational_twists.length - 1 && ", "}
-                    </React.Fragment>
-                    ))
-                ) : "None"}
+              {data.rational_twists && data.rational_twists.length > 0 ? (
+                data.rational_twists.map((id, index) => (
+                  <React.Fragment key={id}>
+                    <a href={`http://localhost:3000/system/${id}/`} target="_blank" rel="noopener noreferrer">
+                      {id}
+                    </a>
+                    {index < data.rational_twists.length - 1 && ", "}
+                  </React.Fragment>
+                ))
+              ) : "None"}
             </TableCell>
           </TableRow>
         </TableBody>
