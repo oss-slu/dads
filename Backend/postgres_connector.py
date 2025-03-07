@@ -51,7 +51,7 @@ class PostgresConnector:
                 cur.execute(sql, (function_id,))
                 row = cur.fetchone()
                 if row:
-                    return ('1.%s.%s.%s', row[0], row[1], row[2])
+                    return ('1.{}.{}.{}'.format(row[0], row[1], row[2]))
                 else:
                     return None
         except Exception:
