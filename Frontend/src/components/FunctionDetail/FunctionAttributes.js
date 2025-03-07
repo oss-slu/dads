@@ -76,6 +76,7 @@ export default function FunctionAttributes({ data }) {
             <TableCell><b>Is Lattès Function</b><HelpBox description="I am lactose intolerant." title="Is Lattès Function" /></TableCell>
             <TableCell><b>Is Chebyshev</b><HelpBox description="I have no idea what this means." title="Is Chebyshev" /></TableCell>
             {data.is_newton && <TableCell><b>Associated Polynomial</b></TableCell>}
+            <TableCell><b>Automorphism Cardinality</b><HelpBox description="Shows how many elements are in the set." title="Automorphism Cardinality" /></TableCell>
           </TableRow>
           {/* Row for values */}
           <TableRow>
@@ -85,6 +86,7 @@ export default function FunctionAttributes({ data }) {
             <TableCell>{String(data.is_lattes)}</TableCell>
             <TableCell>{String(data.is_chebyshev)}</TableCell>
             {data.is_newton && <TableCell>{newtonPolynomial}</TableCell>}
+            <TableCell>{data.automorphism_group_cardinality !== undefined ? data.automorphism_group_cardinality: "N/A"}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
