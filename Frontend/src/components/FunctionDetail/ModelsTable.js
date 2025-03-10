@@ -93,7 +93,6 @@ export default function ModelsTable({ data }) {
             <TableCell><b>Polynomials</b><HelpBox description="The defining polynomials of the representative model" title="Polynomials" /></TableCell>
             <TableCell><b>Resultant</b><HelpBox description="The resultant of the defining polynomials of the representative model" title="Resultant" /></TableCell>
             <TableCell><b>Primes of Bad Reduction</b><HelpBox description="The primes when the representative model has bad reduction, i.e., the primes dividing the resultant" title="Primes of Bad Reduction" /></TableCell>
-            <TableCell><b>Conjugation from Standard</b></TableCell>
             <TableCell><b>Field of Definition</b><HelpBox description="The smallest field containing all coefficients of this representative model" title="Field of Definition" /></TableCell>
           </TableRow>
         </TableHead>
@@ -106,7 +105,6 @@ export default function ModelsTable({ data }) {
                 <TableCell>{renderExponent(processInput(modelData[0]))}</TableCell>
                 <TableCell>{modelData[1]}</TableCell>
                 <TableCell>{modelData[2]}</TableCell>
-                <TableCell>{modelData[5]}</TableCell>
                 <TableCell>{data.cp_field_of_defn || 'N/A'}</TableCell>
               </TableRow>
             );

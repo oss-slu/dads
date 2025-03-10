@@ -50,6 +50,12 @@ export default function InfoTable({ data }) {
   console.log("Model Key Used:", modelKey);
   console.log("Polynomial Data Found:", polynomial);
 
+  // Map family_id values to there corresponding family names
+  const familyMapping = {
+    1: "poly_deg_2",
+    2: "poly_deg_3"
+  };
+
 
   return (
     <TableContainer className='table-component' component={Paper}>
@@ -75,7 +81,10 @@ export default function InfoTable({ data }) {
             <TableCell align="right">
             <a
                 href={`https://www.lmfdb.org/NumberField/${data.base_field_label}`}
-                style={{ color: "blue", textDecoration: "underline" }}
+                style={{
+                  color: "blue",
+                  textDecoration: "underline"
+                }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -88,12 +97,14 @@ export default function InfoTable({ data }) {
                   onClick={() => handleLinkClick(data.family)}
                   style={{
                     border: "None",
-                    color: "red",
+                    color: "blue",
+                    textDecoration: "underline",
                     backgroundColor: "rgba(0, 0, 0, 0)",
                     cursor: "pointer"
                   }}
                 >
-                  {data.family}
+                  {/* Displays the mapped family name*/}
+                  {familyMapping[data.family] || data.family}
                 </button>
               )}
             </TableCell>
