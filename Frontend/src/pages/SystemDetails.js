@@ -37,6 +37,9 @@ function SystemDetails() {
                 <FunctionAttributes data={data} />
             </div>
             <div className="row">
+                    <RationalTwistsTable data={data} />
+            </div>
+            <div className="row">
                 <div className="col">
                     <RationalPointsTable data={data} />
                 </div>
