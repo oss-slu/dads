@@ -38,39 +38,34 @@ function SystemDetails() {
     };
 
     return (
-        <div>
-            <div className="info-container">
-                <div className="row">
-                    <InfoTable data={data} />
-                </div>
-                <div className="row">
-                    <FunctionAttributes data={data} />
-                </div>
-                <div className="row">
-                    <RationalTwistsTable data={data} />
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <RationalPointsTable data={data} />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <CriticalPointsTable data={data} />
-                    </div>
-                    <div className="col">
-                        <CriticalPointPortraitTable data={data} />
-                    </div>
-                </div>
-                <div className="row">
-                    <ModelsTable data={data} />
-                </div>
-                <div className="row">
-                    <AutomorphismGroupTable data={data} />
-                </div>
-                <div className="row">
-                    <CitationsTable data={data} />
-                </div>
+        <>
+            <div>
+                <div className="info-container">
+            <div className="row">
+              <InfoTable data = {data}/>
+            </div>
+            <div className="row">
+              <FunctionAttributes data={data} />
+            </div>
+            <div className="row">
+            <div className="col">
+              <RationalPointsTable data = {data}/>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+              <CriticalPointsTable data = {data}/>
+              </div>
+              
+              <div className="col">
+              <CriticalPointPortraitTable data = {data}/>
+              </div>
+            </div>
+            <div className="row">
+              <ModelsTable data = {data}/>
+            </div>
+            <div className="row">
+              <CitationsTable data = {data}/>
             </div>
         </div>
     );

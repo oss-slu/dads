@@ -179,7 +179,11 @@ function ExploreSystems() {
                     num_components: filters.rationalPreperiodicComponents,
                     max_tail: filters.rationalPreperiodicLongestTail,
                     cp_cardinality: filters.cp_cardinality,
-                    positive_in_degree: filters.positive_in_degree
+                    positive_in_degree: filters.positive_in_degree,
+                    sigma_one: filters.sigma_one,
+                    sigma_two: filters.sigma_two,
+                    model_label: filters.model_label,
+                    journal_label: filters.journal_label
                 }
             )
             setSystems(result.data['results']);
@@ -297,7 +301,11 @@ function ExploreSystems() {
         num_components: "",
         max_tail: "",
         cp_cardinality: "",
-        positive_in_degree: ""
+        positive_in_degree: "",
+        sigma_one: "",
+        sigma_two: "",
+        model_label: "",
+        journal_label: ""
     };
 
     let connectionStatus = true;
@@ -313,7 +321,7 @@ function ExploreSystems() {
                 <div className="results-container" container>
                     <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-                            <p class="sidebarHead">Filters</p>
+                            <p className="sidebarHead">Filters</p>
                             <Divider />
 
                             <ul id="myUL">
@@ -465,7 +473,7 @@ function ExploreSystems() {
                                             value={filters.base_field_label || ''}
                                             onChange={(e) => handleTextChange("base_field_label", e.target.value)}
                                         />
-                                        <label>Label</label>
+                                        <label>Field</label>
                                         <br />
                                     </ul>
                                 </li>
@@ -539,7 +547,7 @@ function ExploreSystems() {
                                     </ul>
                                 </li>
                             </ul>
- 
+
                             <ul id="myUL">
                                 <li>
                                     <span
@@ -653,10 +661,60 @@ function ExploreSystems() {
                                             value={filters.family.map((id) => families.find((option) => option.id === id))}
                                             onChange={handleAutocompleteChange}
                                         />)}
-                                        <br></br>
                                     </ul>
                                 </li>
                             </ul>
+
+                            <ul id="myUL">
+                                <li>
+                                    <span
+                                        className="caret"
+                                        onClick={toggleTree}
+                                    >
+                                        Other Map Properties
+                                    </span>
+                                    <ul className="nested">
+                                        <li>
+                                            <input
+                                                type="text"
+                                                style={textBoxStyle}
+                                                value={filters.sigma_one || ''}
+                                                onChange={(e) => handleTextChange("sigma_one", e.target.value)}
+                                            />
+                                            <label>Sigma 1</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="text"
+                                                style={textBoxStyle}
+                                                value={filters.sigma_two || ''}
+                                                onChange={(e) => handleTextChange("sigma_two", e.target.value)}
+                                            />
+                                            <label>Sigma 2</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="text"
+                                                style={textBoxStyle}
+                                                value={filters.model_label || ''}
+                                                onChange={(e) => handleTextChange("model_label", e.target.value)}
+                                            />
+                                            <label>Label</label>
+                                        </li>
+                                        <li>
+                                            <input
+                                                type="text"
+                                                style={textBoxStyle}
+                                                value={filters.journal_label || ''}
+                                                onChange={(e) => handleTextChange("journal_label", e.target.value)}
+                                            />
+                                            <label>Journal Label</label>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <br></br>
                             <ul id="myUL">
                               <li  style={{ paddingBottom: '10px' }}>
                                     <Button
@@ -688,7 +746,7 @@ function ExploreSystems() {
                         >
                             Download
                         </span>
-			<label for="pages">Results Per Page:</label>	
+			<label htmlFor="pages">Results Per Page:</label>	
 			<select id="pages" name="pages"  value={pagesDisplay} onChange={handlePagePerChange}>
 			    <option value="10">10</option>
 			    <option value="20">20</option>
@@ -759,7 +817,7 @@ function ExploreSystems() {
 
                     <Grid className="sidebar" item xs={3}>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-                            <p class="sidebarHead" >RESULT STATISTICS </p>
+                            <p className="sidebarHead" >RESULT STATISTICS </p>
                             <Divider />
 
                             <br />
