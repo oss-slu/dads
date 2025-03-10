@@ -67,9 +67,6 @@ function SystemDetails() {
               <ModelsTable data = {data}/>
             </div>
             <div className="row">
-              <AutomorphismGroupTable data={data} />
-            </div>
-            <div className="row">
               <CitationsTable data = {data}/>
             </div>
         </div>

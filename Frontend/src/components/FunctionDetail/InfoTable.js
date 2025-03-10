@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 import { processInput, renderExponent, splitOutermostCommas } from './ModelsTable';
+import HelpBox from '../FunctionDetail/HelpBox'
 
 
 export default function InfoTable({ data }) {
@@ -49,19 +50,26 @@ export default function InfoTable({ data }) {
   console.log("Model Key Used:", modelKey);
   console.log("Polynomial Data Found:", polynomial);
 
+  // Map family_id values to there corresponding family names
+  const familyMapping = {
+    1: "poly_deg_2",
+    2: "poly_deg_3"
+  };
+
 
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Function Details</h3>
+      <h6>Basic data identifying this conjugacy class of dynamical systems.</h6>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell><b>Label</b></TableCell>
-            <TableCell align="right"><b>Domain</b></TableCell>
-            <TableCell align="right"><b>Standard Model</b></TableCell>
-            <TableCell align="right"><b>Degree</b></TableCell>
-            <TableCell align="right"><b>Field of Definition</b></TableCell>
-            <TableCell align="right"><b>Family</b></TableCell>
+            <TableCell><b>Label</b><HelpBox description="A unique identifier of the form N.S1.S2.M where N is the dimension of the domain, S1 is a hash of the sigma invariants of the fixed points, S2 is a hash of the sigma invariants of the points of period 2, and M is an ordinal to ensure uniqueness. For Lattes maps, the label is N.(LMFDB label).degree.M" title="Label" /></TableCell>
+            <TableCell align="right"><b>Domain</b><HelpBox description="The ambient domain of the map; a project space" title="Domain" /></TableCell>
+            <TableCell align="right"><b>Standard Model</b><HelpBox description="The typical representative polynomials of this conjugacy class." title="Standard Model" /></TableCell>
+            <TableCell align="right"><b>Degree</b><HelpBox description="Degree of the homogeneous polynomials of a representative of this map." title="Degree" /></TableCell>
+            <TableCell align="right"><b>Field of Definition</b><HelpBox description="The smallest field containing all coefficients of the standard representative polynomials." title="Field of Definition" /></TableCell>
+            <TableCell align="right"><b>Family</b><HelpBox description="Identifier for families of maps this conjugacy class belongs to (e.g. degree 2 polynomials)." title="Family" /></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -73,7 +81,10 @@ export default function InfoTable({ data }) {
             <TableCell align="right">
             <a
                 href={`https://www.lmfdb.org/NumberField/${data.base_field_label}`}
-                style={{ color: "blue", textDecoration: "underline" }}
+                style={{
+                  color: "blue",
+                  textDecoration: "underline"
+                }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -86,12 +97,14 @@ export default function InfoTable({ data }) {
                   onClick={() => handleLinkClick(data.family)}
                   style={{
                     border: "None",
-                    color: "red",
+                    color: "blue",
+                    textDecoration: "underline",
                     backgroundColor: "rgba(0, 0, 0, 0)",
                     cursor: "pointer"
                   }}
                 >
-                  {data.family}
+                  {/* Displays the mapped family name*/}
+                  {familyMapping[data.family] || data.family}
                 </button>
               )}
             </TableCell>
