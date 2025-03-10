@@ -44,10 +44,10 @@ function SystemDetails() {
                     <InfoTable data={data} />
                 </div>
                 <div className="row">
-                    <RationalTwistsTable data={data} />
+                    <FunctionAttributes data={data} />
                 </div>
                 <div className="row">
-                    <FunctionAttributes data={data} />
+                    <RationalTwistsTable data={data} />
                 </div>
                 <div className="row">
                     <div className="col">
