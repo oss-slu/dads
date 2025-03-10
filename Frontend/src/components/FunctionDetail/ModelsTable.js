@@ -27,6 +27,7 @@ export const renderExponent = (expressionArray) => {
       );
     });
   };
+
 export function processInput(input) {
 	const polynomials = input.slice(2, -2).split('},{');
 	const formattedPolynomials = polynomials.map(poly => {
@@ -72,6 +73,42 @@ export const splitOutermostCommas = (str) => {
 };
   
 export default function ModelsTable({ data }) {
+
+    // Predefined Chebyshev polynomials for small degrees
+    const chebyshevPolynomials = {
+      0: "T₀(x) = 1",
+      1: "T₁(x) = x",
+      2: "T₂(x) = 2x² - 1",
+      3: "T₃(x) = 4x³ - 3x",
+      4: "T₄(x) = 8x⁴ - 8x² + 1",
+      5: "T₅(x) = 16x⁵ - 20x³ + 5x",
+      6: "T₆(x) = 32x⁶ - 48x⁴ + 18x² - 1",
+      7: "T₇(x) = 64x⁷ - 112x⁵ + 56x³ - 7x",
+      8: "T₈(x) = 128x⁸ - 256x⁶ + 160x⁴ - 32x² + 1",
+      9: "T₉(x) = 256x⁹ - 576x⁷ + 432x⁵ - 120x³ + 9x"
+    };
+
+    const computeChebyshev = (n) => {
+      if (n in chebyshevPolynomials) return chebyshevPolynomials[n];
+  
+      let T_prev = "x"; // T₁(x)
+      let T_curr = "2x² - 1"; // T₂(x)
+  
+      for (let i = 2; i < n; i++) {
+        let T_next = `2x(${T_curr}) - (${T_prev})`;
+        T_prev = T_curr;
+        T_curr = T_next;
+      }
+  
+      return `T_${n}(x) = ${T_curr}`;
+    };
+  
+    // Determine Chebyshev model
+    let chebyshevModel = "Not Chebyshev";
+    if (data.is_chebyshev) {
+      chebyshevModel = data.degree < 10 ? chebyshevPolynomials[data.degree] : computeChebyshev(data.degree);
+    }
+
 	const modelKeys = Object.keys(data).filter(
 		key => key.includes('_model') && key !== 'display_model'
 		);
@@ -93,6 +130,7 @@ export default function ModelsTable({ data }) {
             <TableCell><b>Primes of Bad Reduction</b></TableCell>
             <TableCell><b>Conjugation from Standard</b></TableCell>
             <TableCell><b>Field of Definition</b></TableCell>
+            <TableCell><b>Chebyshev Model</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -106,6 +144,7 @@ export default function ModelsTable({ data }) {
                 <TableCell>{modelData[2]}</TableCell>
                 <TableCell>{modelData[5]}</TableCell>
                 <TableCell>{data.cp_field_of_defn || 'N/A'}</TableCell>
+                <TableCell>{chebyshevModel}</TableCell>
               </TableRow>
             );
           })}

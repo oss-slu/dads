@@ -106,8 +106,6 @@ export default function FunctionAttributes({ data }) {
             <TableCell><b>Is Polynomial</b></TableCell>
             <TableCell><b>Is Postcritically Finite (PCF)</b></TableCell>
             <TableCell><b>Is Lattès Function</b></TableCell>
-            <TableCell><b>Is Chebyshev</b></TableCell>
-            <TableCell><b>Chebyshev Model</b></TableCell>
             {data.is_newton && <TableCell><b>Associated Polynomial</b></TableCell>}
           </TableRow>
           {/* Row for values */}
@@ -116,8 +114,6 @@ export default function FunctionAttributes({ data }) {
             <TableCell>{String(data.is_polynomial)}</TableCell>
             <TableCell>{String(data.is_pcf)}</TableCell>
             <TableCell>{String(data.is_lattes)}</TableCell>
-            <TableCell>{String(data.is_chebyshev)}</TableCell>
-            <TableCell>{chebyshevModel}</TableCell>
             {data.is_newton && <TableCell>{newtonPolynomial}</TableCell>}
           </TableRow>
         </TableBody>
