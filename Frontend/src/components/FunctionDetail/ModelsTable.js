@@ -106,10 +106,7 @@ export default function ModelsTable({ data }) {
     };
     
     // Usage within the table or elsewhere
-    let chebyshevModel = "Not Chebyshev";
-    if (data.is_chebyshev) {
-      chebyshevModel = getChebyshevPolynomial(data.degree);
-    }
+    let chebyshevModel = getChebyshevPolynomial(data.degree);
 
 	const modelKeys = Object.keys(data).filter(
 		key => (key.includes('_model') && key !== 'display_model') || key === 'monic_centered'
