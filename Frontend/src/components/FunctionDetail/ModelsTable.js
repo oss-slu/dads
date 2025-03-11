@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import HelpBox from '../FunctionDetail/HelpBox'
 
 export const renderExponent = (expressionArray) => {
 	const Superscript = ({ children }) => (
@@ -73,26 +74,26 @@ export const splitOutermostCommas = (str) => {
   
 export default function ModelsTable({ data }) {
 	const modelKeys = Object.keys(data).filter(
-		key => key.includes('_model') && key !== 'display_model'
+		key => (key.includes('_model') && key !== 'display_model') || key === 'monic_centered'
 		);
 	// Filter out models that have no data to display
 	const relevantModels = modelKeys.filter(key => {
 	const modelData = data[key] ? splitOutermostCommas(data[key]) : [];
-	return modelData.some(value => value && value.trim() !== '');
+	return modelData.some(value => (value && value.trim() !== ''));
 	});
 
   return (
     <TableContainer className='table-component' component={Paper}>
       <h3>Models:</h3>
+      <h6>Several different representatives of this conjugacy class. May include: monic centered, reduced, and the original model found in the literature.</h6>
       <Table aria-label='models table'>
         <TableHead>
           <TableRow>
-            <TableCell><b>Name</b></TableCell>
-            <TableCell><b>Polynomials</b></TableCell>
-            <TableCell><b>Resultant</b></TableCell>
-            <TableCell><b>Primes of Bad Reduction</b></TableCell>
-            <TableCell><b>Conjugation from Standard</b></TableCell>
-            <TableCell><b>Field of Definition</b></TableCell>
+            <TableCell><b>Name</b><HelpBox description="Name of the representative model" title="Name" /></TableCell>
+            <TableCell><b>Polynomials</b><HelpBox description="The defining polynomials of the representative model" title="Polynomials" /></TableCell>
+            <TableCell><b>Resultant</b><HelpBox description="The resultant of the defining polynomials of the representative model" title="Resultant" /></TableCell>
+            <TableCell><b>Primes of Bad Reduction</b><HelpBox description="The primes when the representative model has bad reduction, i.e., the primes dividing the resultant" title="Primes of Bad Reduction" /></TableCell>
+            <TableCell><b>Field of Definition</b><HelpBox description="The smallest field containing all coefficients of this representative model" title="Field of Definition" /></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -104,7 +105,6 @@ export default function ModelsTable({ data }) {
                 <TableCell>{renderExponent(processInput(modelData[0]))}</TableCell>
                 <TableCell>{modelData[1]}</TableCell>
                 <TableCell>{modelData[2]}</TableCell>
-                <TableCell>{modelData[5]}</TableCell>
                 <TableCell>{data.cp_field_of_defn || 'N/A'}</TableCell>
               </TableRow>
             );
