@@ -9,21 +9,16 @@ const Copy = ({ edges, type }) => {
 	const adjacencyList = adjacencyString.replace(/\[|\]/g, '').split(', ');
 
 	const adjacencyListInt = adjacencyList.map(Number);
-	console.log('adjacencyListInt:', adjacencyListInt);
 
 
 	const numVertices = adjacencyList.length;
-	console.log('numVertices:', numVertices);
 
 	const adjacencyMatrix = Array.from({ length: numVertices }, () => Array(numVertices).fill(0));
-	console.log('adjacencyMatrix:', adjacencyMatrix);
 
 	for (let i = 0; i < adjacencyListInt.length; i++) {
 	    const adjacentVertex = adjacencyListInt[i];
 	    adjacencyMatrix[i][adjacentVertex] = 1;
 	}
-
-	console.log('adjacencyMatrix after population:', adjacencyMatrix);
 
 	return adjacencyMatrix;
     }

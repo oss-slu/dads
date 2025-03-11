@@ -10,7 +10,6 @@ import Copy from '../FunctionDetail/Copy'
 import HelpBox from '../FunctionDetail/HelpBox'
 
 export default function RationalPointsTable({ data }) {
-	console.log('rational pre data',data)
 	const formatData = (key) => {
 		const items = data[key];
 		if (items && items.length > 0) {

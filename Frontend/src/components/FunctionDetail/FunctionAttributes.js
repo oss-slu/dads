@@ -96,6 +96,8 @@ export default function FunctionAttributes({ data }) {
     ? renderExponent(processInput(data.newton_model))
     : "N/A";
 
+  console.log(data);
+
   return (
     <TableContainer component={Paper} className="table-component">
       <h3>Function Attributes</h3>

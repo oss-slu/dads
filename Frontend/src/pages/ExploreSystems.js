@@ -50,11 +50,9 @@ function ExploreSystems() {
     });
 
     const [families, setFamilies] = useState([]);
-    console.log('families first',families)
     const {page, setPage} = usePage();
     // Context Hooks
     const { filters, setFilters } = useFilters();
-    console.log('filters first',filters)
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -151,10 +149,7 @@ function ExploreSystems() {
                 id: family[0], // Use the first element as id
                 name: family[1], // Use the second element as label
             }));
-            console.log('family Options before', families)
             setFamilies(autocompleteOptions)
-            console.log('auto', autocompleteOptions)
-            console.log('family Options', families)
             setOptionsLoading(false)
         }
         catch (error) {
