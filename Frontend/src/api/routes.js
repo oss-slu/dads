@@ -39,3 +39,15 @@ export const get_family = (familyId) => axios({
     url: "http://127.0.0.1:5000/get_family",
     data: { id: familyId }
 })
+
+export const get_rational_periodic_data = (functionId) => axios({
+    method: "post",
+    url: "http://127.0.0.1:5000/get_rational_periodic_data",
+    data: { function_id: functionId }
+});
+
+export const get_label = (functionId) => axios({
+    method: "post",
+    url: "http://127.0.0.1:5000/get_label",
+    data: { function_id: functionId }
+});
