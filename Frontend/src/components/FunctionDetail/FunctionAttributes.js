@@ -62,7 +62,12 @@ export default function FunctionAttributes({ data }) {
     ? renderExponent(processInput(data.newton_model))
     : "N/A";
 
-  console.log(data);
+  //For Lattes maps, the label is N.(LMFDB label).degree.M
+  const lattesLink = data.is_lattes ? (
+    <a href={`https://www.lmfdb.org/EllipticCurve/Q/${data.sigma_one.replace(/[()]/g, '').replace(/\./, '/').replace(/([a-z])(\d+)/, "$1/$2")}`} target="_blank" rel="noopener noreferrer">
+      {data.sigma_one}
+    </a>
+  ) : null;
 
   return (
     <TableContainer component={Paper} className="table-component">
@@ -85,7 +90,8 @@ export default function FunctionAttributes({ data }) {
             <TableCell>{isNewtonFunction}</TableCell>
             <TableCell>{String(data.is_polynomial)}</TableCell>
             <TableCell>{String(data.is_pcf)}</TableCell>
-            <TableCell>{String(data.is_lattes)}</TableCell>
+            {/* <TableCell>{String(data.is_lattes)}</TableCell> */}
+            <TableCell>{String(data.is_lattes)} {lattesLink}</TableCell>
             <TableCell>{String(data.is_chebyshev)}</TableCell>
             {data.is_newton && <TableCell>{newtonPolynomial}</TableCell>}
             <TableCell>{data.automorphism_group_cardinality !== undefined ? data.automorphism_group_cardinality: "N/A"}</TableCell>
