@@ -40,8 +40,35 @@ export default function InfoTable({ data }) {
     // I do this just in case in the future we have more models
     polynomial= data[`${standard_model}_model`];
   }
+// //For Lattes maps, the label is N.(LMFDB label).degree.M
+//   const labelDisplay = data.is_lattes ? (
+//     <a href={`https://www.lmfdb.org/EllipticCurve/Q/${data.sigma_one.replace(/[()]/g, '').replace('.', '/')}`} target="_blank" rel="noopener noreferrer">
+//       {data.sigma_one}
+//     </a>
+//   ) : data.modelLabel; -> move to FunctionAttributes.js
+
+
 
   let polynomialExpression;
+
+  // For Newton polynomial
+  if (data.is_newton) {
+    const newtonPolynomial = data.newton_polynomial_coeffs;
+    if (newtonPolynomial && newtonPolynomial.some(coeff => coeff !== null)) {
+      //for non-null, it's just my assumption about formatting
+      polynomialExpression = newtonPolynomial.map((coeff, index) => {
+        const exponentX = newtonPolynomial.length - 1 - index; 
+        const exponentY = index; 
+        let term = '';
+        if (coeff !== null && coeff !== 0) {
+          if (exponentX > 0) term += `x^${exponentX}`;
+          if (exponentY > 0) term += `y^${exponentY}`;
+          return coeff === 1 ? term : `${coeff}*${term}`;
+        }
+      }).filter(Boolean).join(' + ');
+    } 
+  }
+  
   if (polynomial) {
     const modelData= splitOutermostCommas(polynomial);
     polynomialExpression= renderExponent(processInput(modelData[0]));
@@ -74,7 +101,7 @@ export default function InfoTable({ data }) {
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell component="th" scope="row">{data.modelLabel}</TableCell>
+            <TableCell component="th" scope="row">{data.modelLabel}</TableCell> 
             <TableCell align="right">{data.base_field_label}</TableCell>
             <TableCell align="right">{polynomialExpression}</TableCell>
             <TableCell align="right">{data.degree}</TableCell>

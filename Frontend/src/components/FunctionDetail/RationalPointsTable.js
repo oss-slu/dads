@@ -1,71 +1,103 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+import { get_rational_periodic_data, get_label } from '../../api/routes';
 import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix'
 import Copy from '../FunctionDetail/Copy'
-import HelpBox from '../FunctionDetail/HelpBox'
+
+const ScrollableTableContainer = styled(TableContainer)({
+  maxHeight: '400px',
+  overflowY: 'auto'
+});
 
 export default function RationalPointsTable({ data }) {
-	const formatData = (key) => {
-		const items = data[key];
-		if (items && items.length > 0) {
-			if (Array.isArray(items[0])) {
-				return `[${items[0].join(', ')}]`;
-			} else {
-				return `[${items.join(', ')}]`;
-			}
-		}
-		return '[]';
-	};
+  const [rationalData, setRationalData] = useState([]);
+  const [label, setLabel] = useState('');
 
-	return (
-		<>
-			<TableContainer className='table-component' component={Paper}>
-				<h3>Rational Preperiodic Points</h3>
-				<h6>Information on the rational preperiodic points over different fields.</h6>
-				<Table aria-label="simple table">
-					<TableBody>
-						<TableRow>
-							<TableCell component="th" scope="row"><b>Cardinality</b><HelpBox description="The number of rational preperiodic points." title="Cardinality" /></TableCell>
-							<TableCell align="right">{data.cardinality}</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell component="th" scope="row"><b>Field Label</b><HelpBox description="The field of definition of the points considered." title="Field Label" /></TableCell>
-							<TableCell align="right">{data.base_field_label}</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell component="th" scope="row"><b>Preperiodic Components</b><HelpBox description="The number of preperiodic components in the graph whose vertices are the preperiodic points and whose edges connect x to f(x)." title="Preperiodic Components" /></TableCell>
-							<TableCell align="right">{formatData('preperiodic_components')}</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell component="th" scope="row"><b>Rational Preperiodic Points</b><HelpBox description="A single preperiodic point in each of the preperiodic components." title="Rational Preperiodic Points" /></TableCell>
-							<TableCell align="right">{formatData('rational_periodic_points')}</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell component="th" scope="row"><b>As Directed Graph</b><HelpBox description="The DiGraph object of rational preperiodic points as created by SageMath." title="As Directed Graph" /></TableCell>
-							<TableCell align="right">
-								<Copy edges={formatData("edges")} type={2} />
-							</TableCell>
-								
-						</TableRow>
-						<TableRow>
-							<TableCell component="th" scope="row"><b>Adjacency Matrix</b><HelpBox description="An adjacency matric representing the preperiodic point DiGraph." title="Adjancency Matrix" /></TableCell>
-							<TableCell align="right">
-								<Copy edges={formatData("edges")} type={1} />
-								<br>
-								</br>
-								<AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} />
-								
-							</TableCell>
-							
-						</TableRow>
-					</TableBody>
-				</Table>
-			</TableContainer>
-		</>
-	);
+  const functionId = data?.function_id;
+
+  const formatData = (key) => {
+    const items = data[key];
+    if (items && items.length > 0) {
+      if (Array.isArray(items[0])) {
+        return `[${items[0].join(', ')}]`;
+      } else {
+        return `[${items.join(', ')}]`;
+      }
+    }
+    return '[]';
+  };
+
+  useEffect(() => {
+    if (functionId) {
+      get_rational_periodic_data(functionId)
+        .then(response => {
+          console.log("Rational Periodic Data Response:", response.data);
+          setRationalData(response.data);
+        })
+        .catch(error => {
+          console.error("Error fetching rational periodic data:", error);
+        });
+
+      get_label(functionId)
+        .then(response => {
+          setLabel(response.data.label);
+        })
+        .catch(error => {
+          console.error("Error fetching label:", error);
+        });
+    }
+  }, [functionId]);
+
+  if (!rationalData.length) return <p>Loading rational periodic data...</p>;
+
+  return (
+    <>
+      <h3>Rational Points Table</h3>
+      <ScrollableTableContainer component={Paper}>
+        <Table size="small" stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell><b>Field Label</b></TableCell>
+              <TableCell><b>Cardinality</b></TableCell>
+              <TableCell><b>As Directed Graph</b></TableCell>
+              <TableCell><b>Adjacency Matrix</b></TableCell>
+              <TableCell><b>Cycle Lengths</b></TableCell>
+              <TableCell><b>Component Sizes</b></TableCell>
+              <TableCell><b>Rational Preperiodic Points</b></TableCell>
+              <TableCell><b>Longest Tail</b></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rationalData.map((item, index) => (
+              <TableRow key={index}>
+                <TableCell>{item[2]}</TableCell> {/* Field Label */}
+                <TableCell>{data.cardinality}</TableCell> {/* Cardinality */}
+                <TableCell><Copy edges={formatData("edges")} type={2} /></TableCell> {/* As Directed Graph */}
+                <TableCell>
+                  <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} />
+                  <Copy edges={formatData("edges")} type={1} />
+                </TableCell> {/* Adjacency Matrix */}
+                <TableCell>{formatData("periodic_cycles")}</TableCell> {/* Cycle Lengths */}
+                <TableCell>{formatData("preperiodic_components")}</TableCell> {/* Component Sizes */}
+                <TableCell>
+                  {item[3].map((point, idx) => (
+                    <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>
+                  ))}
+                </TableCell>
+                <TableCell>{item[4]}</TableCell> {/* Longest Tail */}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </ScrollableTableContainer>
+    </>
+  );
 }
