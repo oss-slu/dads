@@ -25,6 +25,9 @@ import { useFilters } from '../context/FilterContext';
 import ActiveFiltersBanner from '../components/ActiveFiltersBanner'; 
 import { usePage } from '../context/PageContext'; 
 import Button from 'react-bootstrap/Button';
+import Tooltip from '@mui/material/Tooltip';
+import {tooltips} from './Definitions'
+import HelpBox from '../components/FunctionDetail/HelpBox';
 
 
 
@@ -754,11 +757,11 @@ function ExploreSystems() {
             {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
                         <PaginatedDataTable
                             labels={[
-                                "Label",
-                                "Domain",
-                                "Degree",
-                                "Polynomials",
-                                "Field",
+                                <Tooltip title={tooltips.label} arrow><span><b>Label</b></span></Tooltip>,
+                                <Tooltip title={tooltips.domain} arrow><span><b>Domain</b></span></Tooltip>,
+                                <Tooltip title={tooltips.degree} arrow><span><b>Degree</b></span></Tooltip>,
+                                <Tooltip title={tooltips.polynomials} arrow><span><b>Polynomials</b></span></Tooltip>,
+                                <Tooltip title={tooltips.field} arrow><span><b>Field</b></span></Tooltip>
                             ]}
                             data={
                                 systems === null
