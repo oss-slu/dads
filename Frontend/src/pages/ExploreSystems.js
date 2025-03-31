@@ -27,6 +27,7 @@ import { usePage } from '../context/PageContext';
 import Button from 'react-bootstrap/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { tooltips } from './Definitions';
+import HelpBox from '../components/FunctionDetail/HelpBox';
 
 
 
@@ -759,11 +760,11 @@ function ExploreSystems() {
             {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
                         <PaginatedDataTable
                             labels={[
-                                "Label",
-                                "Domain",
-                                <Tooltip title={tooltips.degree} arrow><span>Degree</span></Tooltip>,
-                                "Polynomials",
-                                "Field",
+                                <span><b>Label</b><HelpBox title="Label" description="A unique identifier of the form N.S1.S2.M where N is the dimension of the domain, S1 is a hash of the sigma invariants of the fixed points, S2 is a hash of the sigma invariants of the points of period 2, and M is an ordinal to ensure uniqueness." /></span>,
+                                <span><b>Domain</b><HelpBox title="Domain" description="The ambient domain of the map; a projective space" /></span>,
+                                <span><b>Degree</b><HelpBox title="Degree" description="Degree of the homogeneous polynomials of a representative of this map." /></span>,
+                                <span><b>Polynomials</b><HelpBox title="Polynomials" description="Representative polynomials in the selected standard model." /></span>,
+                                <span><b>Field</b><HelpBox title="Field of Definition" description="The smallest field containing all coefficients of the standard representative polynomials." /></span>,
                             ]}
                             data={
                                 systems === null
