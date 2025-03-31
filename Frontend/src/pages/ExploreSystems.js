@@ -25,8 +25,6 @@ import { useFilters } from '../context/FilterContext';
 import ActiveFiltersBanner from '../components/ActiveFiltersBanner'; 
 import { usePage } from '../context/PageContext'; 
 import Button from 'react-bootstrap/Button';
-import Tooltip from '@mui/material/Tooltip';
-import { tooltips } from './Definitions';
 import HelpBox from '../components/FunctionDetail/HelpBox';
 
 
