@@ -696,8 +696,8 @@ function ExploreSystems() {
                                             />
                                         </li>
                                         <li>
-                                        {/* <label>Label </label> */}
-                                        <label style={{ display: "block", marginBottom: "5px" }}>Label</label>
+                                        <label>Label </label>
+                                        {/* <label style={{ display: "block", marginBottom: "5px" }}>Label</label> */}
                                             <input
                                                 type="text"
                                                 // style={textBoxStyle}
