@@ -696,12 +696,12 @@ function ExploreSystems() {
                                             />
                                         </li>
                                         <li>
-                                        <label>Label </label>
+                                        <label>Label</label>
                                         {/* <label style={{ display: "block", marginBottom: "5px" }}>Label</label> */}
                                             <input
                                                 type="text"
                                                 // style={textBoxStyle}
-                                                style={{ width: "150px", marginRight: "12px" }}
+                                                style={{ width: "150px", marginLeft: "22px",marginRight: "12px" }}
                                                 value={filters.model_label || ''}
                                                 onChange={(e) => handleTextChange("model_label", e.target.value)}
                                             />
