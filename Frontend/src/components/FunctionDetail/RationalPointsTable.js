@@ -9,6 +9,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { get_rational_periodic_data, get_label } from '../../api/routes';
+import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix'
+import Copy from '../FunctionDetail/Copy'
 
 const ScrollableTableContainer = styled(TableContainer)({
   maxHeight: '400px',
@@ -20,6 +22,18 @@ export default function RationalPointsTable({ data }) {
   const [label, setLabel] = useState('');
 
   const functionId = data?.function_id;
+
+  const formatData = (key) => {
+    const items = data[key];
+    if (items && items.length > 0) {
+      if (Array.isArray(items[0])) {
+        return `[${items[0].join(', ')}]`;
+      } else {
+        return `[${items.join(', ')}]`;
+      }
+    }
+    return '[]';
+  };
 
   useEffect(() => {
     if (functionId) {
@@ -65,11 +79,14 @@ export default function RationalPointsTable({ data }) {
             {rationalData.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item[2]}</TableCell> {/* Field Label */}
-                <TableCell>{item[1]}</TableCell> {/* Cardinality */}
-                <TableCell>{item[6]}</TableCell> {/* As Directed Graph */}
-                <TableCell>{item[7]}</TableCell> {/* Adjacency Matrix */}
-                <TableCell>{item[8]}</TableCell> {/* Cycle Lengths */}
-                <TableCell>{item[9]}</TableCell> {/* Component Sizes */}
+                <TableCell>{data.cardinality}</TableCell> {/* Cardinality */}
+                <TableCell><Copy edges={formatData("edges")} type={2} /></TableCell> {/* As Directed Graph */}
+                <TableCell>
+                  <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} />
+                  <Copy edges={formatData("edges")} type={1} />
+                </TableCell> {/* Adjacency Matrix */}
+                <TableCell>{formatData("periodic_cycles")}</TableCell> {/* Cycle Lengths */}
+                <TableCell>{formatData("preperiodic_components")}</TableCell> {/* Component Sizes */}
                 <TableCell>
                   {item[3].map((point, idx) => (
                     <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>
