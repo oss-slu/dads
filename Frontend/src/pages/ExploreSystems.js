@@ -675,41 +675,38 @@ function ExploreSystems() {
                                     </span>
                                     <ul className="nested">
                                         <li>
+                                        <label>Sigma 1</label>
                                             <input
                                                 type="text"
-                                                style={textBoxStyle}
+                                                // style={textBoxStyle} if we want to apply the same style for all text boxes, we can adjust textBoxStyle
+                                                style={{ width: "150px", marginRight: "12px" }}
                                                 value={filters.sigma_one || ''}
                                                 onChange={(e) => handleTextChange("sigma_one", e.target.value)}
                                             />
-                                            <label>Sigma 1</label>
+                                            
                                         </li>
                                         <li>
+                                        <label>Sigma 2</label>
                                             <input
                                                 type="text"
-                                                style={textBoxStyle}
+                                                // style={textBoxStyle}
+                                                style={{ width: "150px", marginRight: "12px" }}
                                                 value={filters.sigma_two || ''}
                                                 onChange={(e) => handleTextChange("sigma_two", e.target.value)}
                                             />
-                                            <label>Sigma 2</label>
                                         </li>
                                         <li>
+                                        <label>Label</label>
+                                        {/* <label style={{ display: "block", marginBottom: "5px" }}>Label</label> */}
                                             <input
                                                 type="text"
-                                                style={textBoxStyle}
+                                                // style={textBoxStyle}
+                                                style={{ width: "150px", marginLeft: "22px",marginRight: "12px" }}
                                                 value={filters.model_label || ''}
                                                 onChange={(e) => handleTextChange("model_label", e.target.value)}
                                             />
-                                            <label>Label</label>
                                         </li>
-                                        <li>
-                                            <input
-                                                type="text"
-                                                style={textBoxStyle}
-                                                value={filters.journal_label || ''}
-                                                onChange={(e) => handleTextChange("journal_label", e.target.value)}
-                                            />
-                                            <label>Journal Label</label>
-                                        </li>
+                                         <li></li>   
                                     </ul>
                                 </li>
                             </ul>
