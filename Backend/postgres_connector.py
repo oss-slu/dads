@@ -54,6 +54,33 @@ class PostgresConnector:
                 cur.close()
         return result
 
+    def get_graph_metadata(self, graph_id):
+        sql = """
+            SELECT cardinality, periodic_cycles, preperiodic_components, max_tail
+            FROM graphs_dim_1_nf
+            WHERE graph_id = %s
+        """
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute(sql, (graph_id,))
+                result = cur.fetchone()
+        except Exception:
+            self.connection.rollback()
+            result = None
+        finally:
+            if cur:
+                cur.close()
+
+        if result:
+            return {
+                'cardinality': result[0],
+                'periodic_cycles': result[1],
+                'preperiodic_components': result[2],
+                'max_tail': result[3],
+            }
+        else:
+            return {}
+
     def get_label(self, function_id):
         sql = """SELECT sigma_one, sigma_two, ordinal
                FROM functions_dim_1_nf WHERE function_id = %s"""
