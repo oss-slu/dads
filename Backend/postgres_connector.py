@@ -53,7 +53,7 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
-    
+
     def get_graph_metadata(self, graph_id):
         sql = """
             SELECT cardinality, periodic_cycles, preperiodic_components, max_tail
