@@ -8,9 +8,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { get_rational_periodic_data, get_label } from '../../api/routes';
-import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix'
-import Copy from '../FunctionDetail/Copy'
+import { get_rational_periodic_data, get_label, get_graph_metadata } from '../../api/routes';
+import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix';
+import Copy from '../FunctionDetail/Copy';
 
 const ScrollableTableContainer = styled(TableContainer)({
   maxHeight: '400px',
@@ -20,6 +20,7 @@ const ScrollableTableContainer = styled(TableContainer)({
 export default function RationalPointsTable({ data }) {
   const [rationalData, setRationalData] = useState([]);
   const [label, setLabel] = useState('');
+  const [graphMetaMap, setGraphMetaMap] = useState({});
 
   const functionId = data?.function_id;
 
@@ -38,9 +39,25 @@ export default function RationalPointsTable({ data }) {
   useEffect(() => {
     if (functionId) {
       get_rational_periodic_data(functionId)
-        .then(response => {
-          console.log("Rational Periodic Data Response:", response.data);
-          setRationalData(response.data);
+        .then(async response => {
+          const rawData = response.data;
+          console.log("Rational Periodic Data:", rawData);
+          setRationalData(rawData);
+
+          const metaMap = {};
+          for (const item of rawData) {
+            const graphId = item[4];
+            console.log("Graph ID extracted:", graphId);
+            try {
+              const metaResponse = await get_graph_metadata(graphId);
+              console.log(`Metadata for graph_id ${graphId}:`, metaResponse.data, Object.keys(metaResponse.data));
+              metaMap[graphId] = metaResponse.data;
+            } catch (error) {
+              console.error(`Error fetching metadata for graph_id ${graphId}:`, error);
+            }
+          }
+          console.log("Final graphMetaMap:", metaMap);
+          setGraphMetaMap(metaMap);
         })
         .catch(error => {
           console.error("Error fetching rational periodic data:", error);
@@ -76,25 +93,32 @@ export default function RationalPointsTable({ data }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rationalData.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{item[2]}</TableCell> {/* Field Label */}
-                <TableCell>{data.cardinality}</TableCell> {/* Cardinality */}
-                <TableCell><Copy edges={formatData("edges")} type={2} /></TableCell> {/* As Directed Graph */}
-                <TableCell>
-                  <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} />
-                  <Copy edges={formatData("edges")} type={1} />
-                </TableCell> {/* Adjacency Matrix */}
-                <TableCell>{formatData("periodic_cycles")}</TableCell> {/* Cycle Lengths */}
-                <TableCell>{formatData("preperiodic_components")}</TableCell> {/* Component Sizes */}
-                <TableCell>
-                  {item[3].map((point, idx) => (
-                    <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>
-                  ))}
-                </TableCell>
-                <TableCell>{item[4]}</TableCell> {/* Longest Tail */}
-              </TableRow>
-            ))}
+            {rationalData.map((item, index) => {
+              const graphId = item[4];
+              const meta = graphMetaMap[graphId] || {};
+
+              console.log(`Rendering row ${index} for graphId ${graphId}`, meta);
+
+              return (
+                <TableRow key={index}>
+                  <TableCell>{item[2]}</TableCell>
+                  <TableCell>{meta.cardinality !== undefined && meta.cardinality !== null ? meta.cardinality : 'N/A'}</TableCell>
+                  <TableCell><Copy edges={formatData("edges")} type={2} /></TableCell>
+                  <TableCell>
+                    <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} />
+                    <Copy edges={formatData("edges")} type={1} />
+                  </TableCell>
+                  <TableCell>{Array.isArray(meta.periodic_cycles) && meta.periodic_cycles.length > 0 ? `[${meta.periodic_cycles.join(', ')}]` : 'N/A'}</TableCell>
+                  <TableCell>{Array.isArray(meta.preperiodic_components) && meta.preperiodic_components.length > 0 ? `[${meta.preperiodic_components.join(', ')}]` : 'N/A'}</TableCell>
+                  <TableCell>
+                    {item[3].map((point, idx) => (
+                      <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>
+                    ))}
+                  </TableCell>
+                  <TableCell>{meta.max_tail !== undefined && meta.max_tail !== null ? meta.max_tail : 'N/A'}</TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </ScrollableTableContainer>
