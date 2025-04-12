@@ -78,7 +78,17 @@ export default function RationalPointsTable({ data }) {
           <TableBody>
             {rationalData.map((item, index) => (
               <TableRow key={index}>
-                <TableCell>{item[2]}</TableCell> {/* Field Label */}
+                <TableCell>
+                <a
+                  href={`https://www.lmfdb.org/NumberField/${item[2]}`}
+                  style={{
+                    color: "blue",
+                    textDecoration: "underline"
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer">
+                    {item[2]}
+                </a></TableCell> {/* Field Label */}
                 <TableCell>{data.cardinality}</TableCell> {/* Cardinality */}
                 <TableCell><Copy edges={formatData("edges")} type={2} /></TableCell> {/* As Directed Graph */}
                 <TableCell>
