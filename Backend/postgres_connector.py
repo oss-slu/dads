@@ -72,6 +72,30 @@ class PostgresConnector:
             if cur:
                 cur.close()
 
+    def get_graph_data(self, graph_id):
+        # Get all graph data associated with that graph ID
+        sql = """SELECT * FROM graphs_dim_1_nf
+                WHERE graphs_dim_1_nf.graph_id = %s"""
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute(sql, (graph_id,))
+                row = cur.fetchone()
+
+                if row is None:
+                    return None
+
+                # Get column names and then put the data together as column name: value
+                column_names = [desc[0] for desc in cur.description]
+                result = dict(zip(column_names, row))
+
+        except Exception:
+            self.connection.rollback()
+            result = None
+        finally:
+            if cur:
+                cur.close()
+        return result
+
     def construct_label(self, data):
         return (
             '1.' +
