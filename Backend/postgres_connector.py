@@ -84,7 +84,7 @@ class PostgresConnector:
                 if row is None:
                     return None
 
-                # Get column names and then put the data together as column name: value
+                # Put the data together as column name: value
                 column_names = [desc[0] for desc in cur.description]
                 result = dict(zip(column_names, row))
 
