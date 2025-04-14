@@ -11,6 +11,7 @@ import { styled } from '@mui/material/styles';
 import { get_rational_periodic_data, get_label, get_graph_metadata } from '../../api/routes';
 import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix';
 import Copy from '../FunctionDetail/Copy';
+import HelpBox from '../FunctionDetail/HelpBox';
 
 const ScrollableTableContainer = styled(TableContainer)({
   maxHeight: '400px',
@@ -41,22 +42,18 @@ export default function RationalPointsTable({ data }) {
       get_rational_periodic_data(functionId)
         .then(async response => {
           const rawData = response.data;
-          console.log("Rational Periodic Data:", rawData);
           setRationalData(rawData);
 
           const metaMap = {};
           for (const item of rawData) {
             const graphId = item[4];
-            console.log("Graph ID extracted:", graphId);
             try {
               const metaResponse = await get_graph_metadata(graphId);
-              console.log(`Metadata for graph_id ${graphId}:`, metaResponse.data, Object.keys(metaResponse.data));
               metaMap[graphId] = metaResponse.data;
             } catch (error) {
               console.error(`Error fetching metadata for graph_id ${graphId}:`, error);
             }
           }
-          console.log("Final graphMetaMap:", metaMap);
           setGraphMetaMap(metaMap);
         })
         .catch(error => {
@@ -82,22 +79,44 @@ export default function RationalPointsTable({ data }) {
         <Table size="small" stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell><b>Field Label</b></TableCell>
-              <TableCell><b>Cardinality</b></TableCell>
-              <TableCell><b>As Directed Graph</b></TableCell>
-              <TableCell><b>Adjacency Matrix</b></TableCell>
-              <TableCell><b>Cycle Lengths</b></TableCell>
-              <TableCell><b>Component Sizes</b></TableCell>
-              <TableCell><b>Rational Preperiodic Points</b></TableCell>
-              <TableCell><b>Longest Tail</b></TableCell>
+              <TableCell>
+                <b>Field Label</b>
+                <HelpBox title="Field Label" description="An identifier representing the field extension the map is defined over, typically in a dot-separated form." />
+              </TableCell>
+              <TableCell>
+                <b>Cardinality</b>
+                <HelpBox title="Cardinality" description="The number of elements in the field over which the function is defined." />
+              </TableCell>
+              <TableCell>
+                <b>As Directed Graph</b>
+                <HelpBox title="As Directed Graph" description="Visual representation of the function as a directed graph showing how elements map under iteration." />
+              </TableCell>
+              <TableCell>
+                <b>Adjacency Matrix</b>
+                <HelpBox title="Adjacency Matrix" description="The matrix representation of the directed graph where each entry indicates an edge between nodes." />
+              </TableCell>
+              <TableCell>
+                <b>Cycle Lengths</b>
+                <HelpBox title="Cycle Lengths" description="Lengths of distinct cycles formed by rational periodic points under iteration." />
+              </TableCell>
+              <TableCell>
+                <b>Component Sizes</b>
+                <HelpBox title="Component Sizes" description="Sizes of connected components in the directed graph formed by the function." />
+              </TableCell>
+              <TableCell>
+                <b>Rational Preperiodic Points</b>
+                <HelpBox title="Rational Preperiodic Points" description="Points defined over the rational field that eventually become periodic under iteration, along with their preperiod lengths." />
+              </TableCell>
+              <TableCell>
+                <b>Longest Tail</b>
+                <HelpBox title="Longest Tail" description="The maximum preperiod length (number of steps before becoming periodic) among all preperiodic points." />
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rationalData.map((item, index) => {
               const graphId = item[4];
               const meta = graphMetaMap[graphId] || {};
-
-              console.log(`Rendering row ${index} for graphId ${graphId}`, meta);
 
               return (
                 <TableRow key={index}>
@@ -106,14 +125,14 @@ export default function RationalPointsTable({ data }) {
                   <TableCell><Copy edges={formatData("edges")} type={2} /></TableCell>
                   <TableCell>
                     <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} />
-                    <Copy edges={formatData("edges")} type={1} />
                   </TableCell>
                   <TableCell>{Array.isArray(meta.periodic_cycles) && meta.periodic_cycles.length > 0 ? `[${meta.periodic_cycles.join(', ')}]` : 'N/A'}</TableCell>
                   <TableCell>{Array.isArray(meta.preperiodic_components) && meta.preperiodic_components.length > 0 ? `[${meta.preperiodic_components.join(', ')}]` : 'N/A'}</TableCell>
                   <TableCell>
-                    {item[3].map((point, idx) => (
-                      <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>
-                    ))}
+                    {Array.isArray(item[3]) && item[3].length > 0 ? (item[3].map((point, idx) => (
+                        <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>
+                      ))
+                    ) : ('N/A')}
                   </TableCell>
                   <TableCell>{meta.max_tail !== undefined && meta.max_tail !== null ? meta.max_tail : 'N/A'}</TableCell>
                 </TableRow>
