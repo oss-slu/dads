@@ -21,7 +21,7 @@ export default function RationalTwistsTable({ data }) {
           </TableRow>
           {/* Data Row */}
           <TableRow>
-            <TableCell>{data.modelLabel}</TableCell>
+            <TableCell>{data.function_id}</TableCell>
             <TableCell>
               {data.rational_twists && data.rational_twists.length > 0 ? (
                 data.rational_twists.map((id, index) => (
