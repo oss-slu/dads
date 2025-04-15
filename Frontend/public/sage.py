@@ -1,3 +1,4 @@
+# pylint: skip-file
 from six.moves.urllib.request import urlopen
 import json
 def get_sage_field_NF(label): # get field from db, return as sage object
