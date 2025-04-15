@@ -13,7 +13,7 @@ import Divider from "@mui/material/Divider";
 import PaginatedDataTable from "../components/PaginatedDataTable";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { get_filtered_systems, get_selected_systems, get_families } from '../api/routes';
+import { get_filtered_systems, get_selected_systems, get_systems, get_families } from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
 import Checkbox from '@mui/material/Checkbox';
@@ -25,8 +25,8 @@ import { useFilters } from '../context/FilterContext';
 import ActiveFiltersBanner from '../components/ActiveFiltersBanner'; 
 import { usePage } from '../context/PageContext'; 
 import Button from 'react-bootstrap/Button';
-import Tooltip from '@mui/material/Tooltip';
-import {tooltips} from './Definitions'
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import HelpBox from '../components/FunctionDetail/HelpBox';
 
 
@@ -56,6 +56,16 @@ function ExploreSystems() {
     const {page, setPage} = usePage();
     // Context Hooks
     const { filters, setFilters } = useFilters();
+
+    // Menu setup
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -215,26 +225,6 @@ function ExploreSystems() {
             console.log(error)
         }
     };
-    const fetchDataForCSV = async () => {
-        let labels = []
-        if (!systems) {
-            return []
-        }
-        else if (systems) {
-            for (let i = 0; i < systems.length; i++) {
-                labels.push(systems[i][0])
-            }
-        }
-        try {
-            const result = await get_selected_systems({
-                labels: labels,
-            });
-            return result.data;
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
-    };
 
     // Utility Functions
     const reportMajorError = (message) => {
@@ -252,27 +242,50 @@ function ExploreSystems() {
         el.parentElement.querySelector(".nested").classList.toggle("active");
         el.classList.toggle("caret-down");
     };
-    const downloadCSV = async () => {
+
+    const createCSV = (csvSystems, fileName) => {
         try {
-            let csvSystems = await fetchDataForCSV();
             if (csvSystems.length == 0) {
                 reportGeneralError('There is nothing to download.');
             }
             else {
                 // For handing non-empty data
-                let csvData = 'function_id,degree,base_field_label,base_field_degree,sigma_one,sigma_two,ordinal,citations,family,original_model,monic_centered,chebyshev_model,reduced_model,newton_model,display_model,is_polynomial,is_chebyshev,is_newton,is_lattes,is_pcf,cp_cardinality,cp_field_of_defn,automorphism_group_cardinality,rational_twists,critical_portrait_graph_id\n'
+                let csvData = 'label,newton_polynomial_coeffs,base_field_label,automorphism_group_cardinality,base_field_degree,citations,cp_cardinality,cp_field_of_defn,critical_portrait_graph_id,degree,display_model,family,function_id,is_chebyshev,is_lattes,is_newton,is_pcf,is_polynomial,monic_centered,ordinal,original_model,rational_twists,reduced_model,sigma_one,sigma_two\n'
                 for (let i = 0; i < csvSystems.length; i++) {
-                    for (let j = 0; j < csvSystems[i].length; j++) {
-                        csvData += "\"" + String(csvSystems[i][j]).replace(/"/g, '') + "\"" + ","
-                    }
-                    csvData += '\n'
+                    // Going one data entry (one row) at a time
+                    csvData += "\"" + String("1." + csvSystems[i].sigma_one + "." + csvSystems[i].sigma_two + "." + csvSystems[i].ordinal).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].newton_polynomial_coeffs).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].base_field_label).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].automorphism_group_cardinality).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].base_field_degree).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].citations).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].cp_cardinality).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].cp_field_of_defn).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].critical_portrait_graph_id).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].degree).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].display_model).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].family).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].function_id).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].is_chebyshev).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].is_lattes).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].is_newton).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].is_pcf).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].is_polynomial).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].monic_centered).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].ordinal).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].original_model).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].rational_twists).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].reduced_model).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].sigma_one).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + String(csvSystems[i].sigma_two).replace(/"/g, '') + "\"" + ","
+                    csvData += "\n";
                 }
 
                 const blob = new Blob([csvData], { type: 'text/csv' });
                 const url = window.URL.createObjectURL(blob)
                 const a = document.createElement('a')
                 a.setAttribute('href', url)
-                a.setAttribute('download', 'results.csv');
+                a.setAttribute('download', fileName + '.csv');
                 a.click()
             }
 
@@ -281,6 +294,53 @@ function ExploreSystems() {
             console.error(error);
         }
     }
+
+    const downloadSageCode = () => {
+        const link = document.createElement('a');
+        link.href = '/sage.py'; // Path to your file in public/
+        link.download = 'sage.py'; // Desired filename
+        link.click();
+    };
+
+    const downloadSearchResults = async () => {
+        let labels = []
+        if (!systems) {
+            return []
+        }
+        else if (systems) {
+            for (let i = 0; i < systems.length; i++) {
+                labels.push(systems[i][0])
+            }
+        }
+        try {
+            const result = await get_selected_systems({
+                labels: labels,
+            });
+            createCSV(result.data, "searchResults");
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    };
+
+    const downloadAllData = async () => {
+        let labels = []
+        if (!systems) {
+            return []
+        }
+        else if (systems) {
+            for (let i = 0; i < systems.length; i++) {
+                labels.push(systems[i][0])
+            }
+        }
+        try {
+            const result = await get_systems();
+            createCSV(result.data, "allData");
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    };
 
     // True Constants
     const defaultFilters = {
@@ -739,13 +799,30 @@ function ExploreSystems() {
                         <span
                             style={{
                                 float: "right",
-                                color: "red",
-                                cursor: "pointer",
+                                color: 'blue',
+                                textDecoration: 'underline',
+                                cursor: 'pointer'
                             }}
-                            onClick={() => downloadCSV()}
-                        >
-                            Download
-                        </span>
+
+                            aria-controls={open ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleClick}>
+                        Download
+                    </span>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                            <MenuItem onClick={() => {downloadAllData(); handleClose();}}>Download All Data</MenuItem>
+                            <MenuItem onClick={() => {downloadSearchResults(); handleClose();}}>Download Search Results</MenuItem>
+                            <MenuItem onClick={() => {downloadSageCode(); handleClose();}}>Download Sage Code</MenuItem>
+                    </Menu>
 			<label htmlFor="pages">Results Per Page:</label>	
 			<select id="pages" name="pages"  value={pagesDisplay} onChange={handlePagePerChange}>
 			    <option value="10">10</option>
@@ -757,11 +834,11 @@ function ExploreSystems() {
             {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
                         <PaginatedDataTable
                             labels={[
-                                <Tooltip title={tooltips.label} arrow><span><b>Label</b></span></Tooltip>,
-                                <Tooltip title={tooltips.domain} arrow><span><b>Domain</b></span></Tooltip>,
-                                <Tooltip title={tooltips.degree} arrow><span><b>Degree</b></span></Tooltip>,
-                                <Tooltip title={tooltips.polynomials} arrow><span><b>Polynomials</b></span></Tooltip>,
-                                <Tooltip title={tooltips.field} arrow><span><b>Field</b></span></Tooltip>
+                                <>Label<HelpBox description="A unique identifier of the form N.S1.S2.M where N is the dimension of the domain, S1 is a hash of the sigma invariants of the fixed points, S2 is a hash of the sigma invariants of the points of period 2, and M is an ordinal to ensure uniqueness." title="Label" /></>,
+                                <>Domain<HelpBox description="The ambient domain of the map; a projective space" title="Domain" /></>,
+                                <>Degree<HelpBox description="Degree of the homogeneous polynomials of a representative of this map." title="Degree" /></>,
+                                <>Polynomial<HelpBox description="Representative polynomials in the selected standard model." title="Polynomials" /></>,
+                                <>Field<HelpBox description="The smallest field containing all coefficients of the standard representative polynomials." title="Field" /></>
                             ]}
                             data={
                                 systems === null
