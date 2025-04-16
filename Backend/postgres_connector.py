@@ -36,7 +36,7 @@ class PostgresConnector:
             with self.connection.cursor() as cur:
                 cur.execute('SELECT 1')
             return True
-        except psycopg2.OperationalError:
+        except Exception:
             return False
 
     def get_rational_periodic_data(self, function_id):
@@ -118,7 +118,10 @@ class PostgresConnector:
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
-                result = cur.fetchall()
+                # Get all rows, return with column names as well
+                rows = cur.fetchall()
+                column_names = [desc[0] for desc in cur.description]
+                result = [dict(zip(column_names, row)) for row in rows]
         except Exception:
             self.connection.rollback()
             result = None
@@ -338,7 +341,10 @@ class PostgresConnector:
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
-                result = cur.fetchall()
+                # Get all rows, return with column names as well
+                rows = cur.fetchall()
+                column_names = [desc[0] for desc in cur.description]
+                result = [dict(zip(column_names, row)) for row in rows]
         except Exception:
             self.connection.rollback()
             result = None
