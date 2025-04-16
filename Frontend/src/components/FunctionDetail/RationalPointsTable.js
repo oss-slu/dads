@@ -136,33 +136,29 @@ export default function RationalPointsTable({ data }) {
               const meta = graphMetaMap[graphId] || {};
 
               return (
-<TableRow key={index}>
-  <TableCell sx={{ width: '100px', maxWidth: '100px' }}>{item[2]}</TableCell>
-  <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.cardinality !== undefined && meta.cardinality !== null ? meta.cardinality : 'N/A'}</TableCell>
-  <TableCell sx={{ width: '180px', maxWidth: '180px' }}>
-    <Box display="flex" flexDirection="column" alignItems="flex-start" gap={0.5}>
-      <Copy edges={formatData("edges")} type={2} size="small" sx={{ whiteSpace: 'nowrap' }} />
-    </Box>
-  </TableCell>
-  <TableCell sx={{ width: '220px', maxWidth: '220px' }}>
-    <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5}>
-      <Copy edges={formatData("edges")} type={1} size="small" sx={{ whiteSpace: 'nowrap' }} />
-      <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} size="small" sx={{ whiteSpace: 'nowrap' }} />
-    </Box>
-  </TableCell>
-  <TableCell sx={{ width: '100px', maxWidth: '100px' }}>{Array.isArray(meta.periodic_cycles) && meta.periodic_cycles.length > 0 ? `[${meta.periodic_cycles.join(', ')}]` : 'N/A'}</TableCell>
-  <TableCell sx={{ width: '120px', maxWidth: '120px' }}>{Array.isArray(meta.preperiodic_components) && meta.preperiodic_components.length > 0 ? `[${meta.preperiodic_components.join(', ')}]` : 'N/A'}</TableCell>
-  <TableCell sx={{ width: '100px', maxWidth: '100px' }}>
-    {Array.isArray(item[3]) && item[3].length > 0 ? (
-      item[3].map((point, idx) => <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>)
-    ) : ('N/A')}
-  </TableCell>
-  <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.max_tail !== undefined && meta.max_tail !== null ? meta.max_tail : 'N/A'}</TableCell>
-</TableRow>
-
-
-
-
+            <TableRow key={index}>
+              <TableCell sx={{ width: '100px', maxWidth: '100px' }}>{item[2]}</TableCell>
+              <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.cardinality !== undefined && meta.cardinality !== null ? meta.cardinality : 'N/A'}</TableCell>
+              <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
+                <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
+                  <Copy edges={formatData("edges")} type={2} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                </Box>
+              </TableCell>
+              <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
+                <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
+                  <Copy edges={formatData("edges")} type={1} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                  <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                </Box>
+              </TableCell>
+              <TableCell sx={{ width: '100px', maxWidth: '100px' }}>{Array.isArray(meta.periodic_cycles) && meta.periodic_cycles.length > 0 ? `[${meta.periodic_cycles.join(', ')}]` : 'N/A'}</TableCell>
+              <TableCell sx={{ width: '120px', maxWidth: '120px' }}>{Array.isArray(meta.preperiodic_components) && meta.preperiodic_components.length > 0 ? `[${meta.preperiodic_components.join(', ')}]` : 'N/A'}</TableCell>
+              <TableCell sx={{ width: '100px', maxWidth: '100px' }}>
+                {Array.isArray(item[3]) && item[3].length > 0 ? (
+                  item[3].map((point, idx) => <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>)
+                ) : ('N/A')}
+              </TableCell>
+              <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.max_tail !== undefined && meta.max_tail !== null ? meta.max_tail : 'N/A'}</TableCell>
+            </TableRow>
               );
             })}
           </TableBody>
