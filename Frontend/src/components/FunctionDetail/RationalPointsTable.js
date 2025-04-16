@@ -8,9 +8,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { get_rational_periodic_data, get_label } from '../../api/routes';
-import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix'
-import Copy from '../FunctionDetail/Copy'
+import { Box } from '@mui/material';
+import { get_rational_periodic_data, get_label, get_graph_metadata } from '../../api/routes';
+import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix';
+import Copy from '../FunctionDetail/Copy';
+import HelpBox from '../FunctionDetail/HelpBox';
 
 const ScrollableTableContainer = styled(TableContainer)({
   maxHeight: '400px',
@@ -20,6 +22,7 @@ const ScrollableTableContainer = styled(TableContainer)({
 export default function RationalPointsTable({ data }) {
   const [rationalData, setRationalData] = useState([]);
   const [label, setLabel] = useState('');
+  const [graphMetaMap, setGraphMetaMap] = useState({});
 
   const functionId = data?.function_id;
 
@@ -38,9 +41,21 @@ export default function RationalPointsTable({ data }) {
   useEffect(() => {
     if (functionId) {
       get_rational_periodic_data(functionId)
-        .then(response => {
-          console.log("Rational Periodic Data Response:", response.data);
-          setRationalData(response.data);
+        .then(async response => {
+          const rawData = response.data;
+          setRationalData(rawData);
+
+          const metaMap = {};
+          for (const item of rawData) {
+            const graphId = item[4];
+            try {
+              const metaResponse = await get_graph_metadata(graphId);
+              metaMap[graphId] = metaResponse.data;
+            } catch (error) {
+              console.error(`Error fetching metadata for graph_id ${graphId}:`, error);
+            }
+          }
+          setGraphMetaMap(metaMap);
         })
         .catch(error => {
           console.error("Error fetching rational periodic data:", error);
@@ -65,39 +80,99 @@ export default function RationalPointsTable({ data }) {
         <Table size="small" stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell><b>Field Label</b></TableCell>
-              <TableCell><b>Cardinality</b></TableCell>
-              <TableCell><b>As Directed Graph</b></TableCell>
-              <TableCell><b>Adjacency Matrix</b></TableCell>
-              <TableCell><b>Cycle Lengths</b></TableCell>
-              <TableCell><b>Component Sizes</b></TableCell>
-              <TableCell><b>Rational Preperiodic Points</b></TableCell>
-              <TableCell><b>Longest Tail</b></TableCell>
+              <TableCell>
+                <Box display="inline-flex" alignItems="center" gap={0.5}>
+                  <b>Field Label</b>
+                  <HelpBox title="Field Label" description="An identifier representing the field extension the map is defined over, typically in a dot-separated form." />
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box display="inline-flex" alignItems="center" gap={0.5}>
+                  <b>Cardinality</b>
+                  <HelpBox title="Cardinality" description="The number of elements in the field over which the function is defined." />
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box display="inline-flex" alignItems="center" gap={0.5}>
+                  <b>As Directed Graph</b>
+                  <HelpBox title="As Directed Graph" description="Visual representation of the function as a directed graph showing how elements map under iteration." />
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box display="inline-flex" alignItems="center" gap={0.5}>
+                  <b>Adjacency Matrix</b>
+                  <HelpBox title="Adjacency Matrix" description="The matrix representation of the directed graph where each entry indicates an edge between nodes." />
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box display="inline-flex" alignItems="center" gap={0.5}>
+                  <b>Cycle Lengths</b>
+                  <HelpBox title="Cycle Lengths" description="Lengths of distinct cycles formed by rational periodic points under iteration." />
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box display="inline-flex" alignItems="center" gap={0.5}>
+                  <b>Component Sizes</b>
+                  <HelpBox title="Component Sizes" description="Sizes of connected components in the directed graph formed by the function." />
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box display="inline-flex" alignItems="center" gap={0.5}>
+                  <b>Rational Preperiodic Points</b>
+                  <HelpBox title="Rational Preperiodic Points" description="Points defined over the rational field that eventually become periodic under iteration, along with their preperiod lengths." />
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box display="inline-flex" alignItems="center" gap={0.5}>
+                  <b>Longest Tail</b>
+                  <HelpBox title="Longest Tail" description="The maximum preperiod length (number of steps before becoming periodic) among all preperiodic points." />
+                </Box>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rationalData.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{item[2]}</TableCell> {/* Field Label */}
-                <TableCell>{data.cardinality}</TableCell> {/* Cardinality */}
-                <TableCell><Copy edges={formatData("edges")} type={2} /></TableCell> {/* As Directed Graph */}
-                <TableCell>
-                  <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} />
-                  <Copy edges={formatData("edges")} type={1} />
-                </TableCell> {/* Adjacency Matrix */}
-                <TableCell>{formatData("periodic_cycles")}</TableCell> {/* Cycle Lengths */}
-                <TableCell>{formatData("preperiodic_components")}</TableCell> {/* Component Sizes */}
-                <TableCell>
-                  {item[3].map((point, idx) => (
-                    <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>
-                  ))}
-                </TableCell>
-                <TableCell>{item[4]}</TableCell> {/* Longest Tail */}
-              </TableRow>
-            ))}
+            {rationalData.map((item, index) => {
+              const graphId = item[4];
+              const meta = graphMetaMap[graphId] || {};
+
+              return (
+            <TableRow key={index}>
+              <TableCell sx={{ width: '100px', maxWidth: '100px' }}>{item[2]}</TableCell>
+              <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.cardinality !== undefined && meta.cardinality !== null ? meta.cardinality : 'N/A'}</TableCell>
+              <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
+                <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
+                  <Copy edges={formatData("edges")} type={2} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                </Box>
+              </TableCell>
+              <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
+                <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
+                  <Copy edges={formatData("edges")} type={1} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                  <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                </Box>
+              </TableCell>
+              <TableCell sx={{ width: '100px', maxWidth: '100px' }}>{Array.isArray(meta.periodic_cycles) && meta.periodic_cycles.length > 0 ? `[${meta.periodic_cycles.join(', ')}]` : 'N/A'}</TableCell>
+              <TableCell sx={{ width: '120px', maxWidth: '120px' }}>{Array.isArray(meta.preperiodic_components) && meta.preperiodic_components.length > 0 ? `[${meta.preperiodic_components.join(', ')}]` : 'N/A'}</TableCell>
+              <TableCell sx={{ width: '100px', maxWidth: '100px' }}>
+                {Array.isArray(item[3]) && item[3].length > 0 ? (
+                  item[3].map((point, idx) => <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>)
+                ) : ('N/A')}
+              </TableCell>
+              <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.max_tail !== undefined && meta.max_tail !== null ? meta.max_tail : 'N/A'}</TableCell>
+            </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </ScrollableTableContainer>
     </>
   );
 }
+
+
+
+
+
+
+
+
+

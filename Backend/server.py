@@ -75,5 +75,17 @@ def data8():
     label = connector.get_label(function_id)
     return jsonify({'label': label})
 
+@app.route('/get_graph_metadata', methods=['POST'])
+def get_graph_metadata():
+    graph_id = request.get_json().get('graph_id')
+    if graph_id is None:
+        return jsonify({'error': 'graph_id is required'}), 400
+
+    try:
+        metadata = connector.get_graph_metadata(graph_id)
+        return jsonify(metadata)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run()
