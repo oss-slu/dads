@@ -36,7 +36,7 @@ class PostgresConnector:
             with self.connection.cursor() as cur:
                 cur.execute('SELECT 1')
             return True
-        except psycopg2.OperationalError:
+        except Exception:
             return False
 
     def get_rational_periodic_data(self, function_id):
@@ -53,6 +53,33 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
+
+    def get_graph_metadata(self, graph_id):
+        sql = """
+            SELECT cardinality, periodic_cycles, preperiodic_components, max_tail
+            FROM graphs_dim_1_nf
+            WHERE graph_id = %s
+        """
+        try:
+            with self.connection.cursor() as cur:
+                cur.execute(sql, (graph_id,))
+                result = cur.fetchone()
+        except Exception:
+            self.connection.rollback()
+            result = None
+        finally:
+            if cur:
+                cur.close()
+
+        if result:
+            return {
+                'cardinality': result[0],
+                'periodic_cycles': result[1],
+                'preperiodic_components': result[2],
+                'max_tail': result[3],
+            }
+        else:
+            return {}
 
     def get_label(self, function_id):
         sql = """SELECT sigma_one, sigma_two, ordinal
@@ -115,7 +142,10 @@ class PostgresConnector:
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
-                result = cur.fetchall()
+                # Get all rows, return with column names as well
+                rows = cur.fetchall()
+                column_names = [desc[0] for desc in cur.description]
+                result = [dict(zip(column_names, row)) for row in rows]
         except Exception:
             self.connection.rollback()
             result = None
@@ -335,7 +365,10 @@ class PostgresConnector:
         try:
             with self.connection.cursor() as cur:
                 cur.execute(sql)
-                result = cur.fetchall()
+                # Get all rows, return with column names as well
+                rows = cur.fetchall()
+                column_names = [desc[0] for desc in cur.description]
+                result = [dict(zip(column_names, row)) for row in rows]
         except Exception:
             self.connection.rollback()
             result = None
