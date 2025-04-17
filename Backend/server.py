@@ -80,7 +80,7 @@ def data9():
     graph_id = request.get_json()['graph_id']
     data = connector.get_graph_data(graph_id)
     return jsonify(data)
-  
+
 @app.route('/get_graph_metadata', methods=['POST'])
 def get_graph_metadata():
     graph_id = request.get_json().get('graph_id')

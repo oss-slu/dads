@@ -47,7 +47,7 @@ export default function RationalTwistsTable({ data }) {
               {data.rational_twists && data.rational_twists.length > 0 ? (
                 data.rational_twists.map((id, index) => (
                   <React.Fragment key={id}>
-                    <a href={`http://localhost:3000/system/${id}/`} target="_blank" rel="noopener noreferrer">
+                    <a href={`${window.location.href.split('/')[0]}/system/${id}/`} target="_blank" rel="noopener noreferrer">
                       {<ModelLabel id={id} />}
                     </a>
                     <br></br>
