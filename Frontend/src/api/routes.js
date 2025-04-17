@@ -52,6 +52,12 @@ export const get_label = (functionId) => axios({
     data: { function_id: functionId }
 });
 
+export const get_graph_data = (graphId) => axios({
+    method: "post",
+    url: "http://127.0.0.1:5000/get_graph_data",
+    data: { graph_id: graphId }
+});
+
 export const get_graph_metadata = (graphId) => axios({
     method: "post",
     url: "http://127.0.0.1:5000/get_graph_metadata",

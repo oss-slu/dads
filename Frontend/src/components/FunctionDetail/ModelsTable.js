@@ -39,8 +39,18 @@ export function processInput(input) {
 		const exponentX = coeffs.length - 1 - i;
 		const exponentY = i;
 		let monomial = '';
-		if (exponentX > 0) monomial += `x^${exponentX}`;
-		if (exponentY > 0) monomial += `y^${exponentY}`;
+		if (exponentX > 0) {
+      monomial += `x`;
+      if (exponentX > 1) {
+        monomial += `^${exponentX}`;
+      }
+    }
+		if (exponentY > 0) {
+      monomial += `y`;
+      if (exponentX > 1) {
+        monomial += `^${exponentY}`;
+      }
+    }
 		return coefficient === '1' ? monomial : `${coefficient}${monomial}`;
 		})
 		.filter(Boolean)
@@ -141,9 +151,21 @@ export default function ModelsTable({ data }) {
                 <TableCell>{renderExponent(processInput(modelData[0]))}</TableCell>
                 <TableCell>{modelData[1]}</TableCell>
                 <TableCell>{modelData[2]}</TableCell>
-                <TableCell>{data.cp_field_of_defn || 'N/A'}</TableCell>
+                <TableCell>{data.cp_field_of_defn ? (
+                <a
+                  href={`https://www.lmfdb.org/NumberField/${data.cp_field_of_defn}`}
+                  style={{
+                    color: "blue",
+                    textDecoration: "underline"
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer">
+                    {data.cp_field_of_defn}
+                </a>): ('N/A')}
+                </TableCell>
                 <TableCell>{chebyshevModel}</TableCell>
               </TableRow>
+
             );
           })}
         </TableBody>
