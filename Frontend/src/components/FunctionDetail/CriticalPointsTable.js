@@ -33,7 +33,17 @@ export default function CriticalPointsTable({ data }) {
               <b>Field of Definition</b>
               <HelpBox description="The smallest field containing all of the critical points." title="Field of Definition" />
             </TableCell>
-            <TableCell align="right">{data.cp_field_of_defn || "N/A"}</TableCell>
+            <TableCell align="right">{data.cp_field_of_defn ? (
+                <a
+                  href={`https://www.lmfdb.org/NumberField/${data.cp_field_of_defn}`}
+                  style={{
+                    color: "blue",
+                    textDecoration: "underline"
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer">
+                    {data.cp_field_of_defn}
+                </a>): ('N/A')}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

@@ -137,7 +137,16 @@ export default function RationalPointsTable({ data }) {
 
               return (
             <TableRow key={index}>
-              <TableCell sx={{ width: '100px', maxWidth: '100px' }}>{item[2]}</TableCell>
+              <TableCell sx={{ width: '100px', maxWidth: '100px' }}><a
+                  href={`https://www.lmfdb.org/NumberField/${item[2]}`}
+                  style={{
+                    color: "blue",
+                    textDecoration: "underline"
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer">
+                    {item[2]}
+                </a></TableCell>
               <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.cardinality !== undefined && meta.cardinality !== null ? meta.cardinality : 'N/A'}</TableCell>
               <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
                 <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
@@ -167,12 +176,3 @@ export default function RationalPointsTable({ data }) {
     </>
   );
 }
-
-
-
-
-
-
-
-
-

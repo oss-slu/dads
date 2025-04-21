@@ -8,10 +8,29 @@ import Paper from '@mui/material/Paper';
 import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix'
 import Copy from '../FunctionDetail/Copy'
 import HelpBox from '../FunctionDetail/HelpBox'
+import { get_graph_data, get_label } from '../../api/routes';
+import { useEffect, useState } from 'react';
 
 export default function CriticalPointPortraitTable({ data }) {
+  const [graphData, setGraphData] = useState([]);
+  const graphId = data?.graph_id;
+  
+  // Get graph data from backend (additional call)
+  useEffect(() => {
+    if (graphId) {
+      get_graph_data(graphId)
+        .then(response => {
+          console.log("Graph Data:", response.data);
+          setGraphData(response.data);
+        })
+        .catch(error => {
+          console.error("Error fetching graph data:", error);
+        });
+    }
+  }, [graphId]);
+
   const formatData = (key) => {
-    const value = data[key];
+    const value = graphData[key];
   
     if (value === null || value === undefined) {
       return 'N/A';
