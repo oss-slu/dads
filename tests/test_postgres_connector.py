@@ -1,3 +1,4 @@
+"""Unit tests for postgres_connector module."""
 from postgres_connector import PostgresConnector
 from unittest.mock import MagicMock, patch
 
@@ -10,7 +11,7 @@ COMMON_MOCK_CONFIG = {
 
 @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_get_all_systems(mock_connect, mock_config):
+def test_get_all_systems(mock_connect, _mock_config):
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_conn.cursor.return_value.__enter__.return_value = mock_cur
@@ -27,7 +28,7 @@ def test_get_all_systems(mock_connect, mock_config):
 
 @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect", side_effect=Exception("fail"))
-def test_get_all_systems_connection_failure(mock_connect, mock_config):
+def test_get_all_systems_connection_failure(mock_connect, _mock_config):
     connector = PostgresConnector()
     connector.connection = MagicMock()
     result = connector.get_all_systems()
@@ -35,12 +36,12 @@ def test_get_all_systems_connection_failure(mock_connect, mock_config):
 
 @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_get_system(mock_connect, mock_config):
+def test_get_system(mock_connect, _mock_config):
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_conn.cursor.return_value.__enter__.return_value = mock_cur
     mock_cur.fetchone.return_value = {
-        'sigma_one': 'a', 'sigma_two': 'b', 'ordinal': 1, 'function_id': 123
+        "sigma_one": "a", "sigma_two": "b", "ordinal": 1, "function_id": 123
     }
 
     connector = PostgresConnector()
@@ -50,7 +51,7 @@ def test_get_system(mock_connect, mock_config):
 
 @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_get_system_no_result(mock_connect, mock_config):
+def test_get_system_no_result(mock_connect, _mock_config):
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_cur.fetchone.return_value = None
@@ -63,11 +64,13 @@ def test_get_system_no_result(mock_connect, mock_config):
 
 @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_get_selected_systems(mock_connect, mock_config):
+def test_get_selected_systems(mock_connect, _mock_config):
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_conn.cursor.return_value.__enter__.return_value = mock_cur
-    mock_cur.fetchall.return_value = [("SelectedSystem1",), ("SelectedSystem2",)]
+    mock_cur.fetchall.return_value = [
+        ("SelectedSystem1",), 
+        ("SelectedSystem2",)]
     mock_cur.description = [("name",)]
 
     connector = PostgresConnector()
@@ -79,7 +82,7 @@ def test_get_selected_systems(mock_connect, mock_config):
 
 @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_get_label_not_found(mock_connect, mock_config):
+def test_get_label_not_found(mock_connect, _mock_config):
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_cur.fetchone.return_value = None
@@ -114,7 +117,7 @@ def test_get_label_not_found(mock_connect, mock_config):
 
 @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_get_statistics_empty_lists(mock_connect, mock_config):
+def test_get_statistics_empty_lists(mock_connect, _mock_config):
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_conn.cursor.return_value.__enter__.return_value = mock_cur
@@ -125,16 +128,14 @@ def test_get_statistics_empty_lists(mock_connect, mock_config):
     connector = PostgresConnector()
     connector.connection = mock_conn
     result = connector.get_statistics("")
-
     assert result[0] == 0  
     assert result[1] == 0  
     assert result[2] == 0  
     assert result[3] == 0  
 
-
 @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_build_where_text(mock_connect, mock_config):
+def test_build_where_text(mock_connect, _mock_config):
     connector = PostgresConnector()
     connector.connection = mock_connect.return_value
 
@@ -165,7 +166,7 @@ def test_build_where_text(mock_connect, mock_config):
 
 @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_build_where_text_empty(mock_connect, mock_config):
+def test_build_where_text_empty(mock_connect, _mock_config):
     connector = PostgresConnector()
     connector.connection = mock_connect.return_value
     assert connector.build_where_text({}) == ""
