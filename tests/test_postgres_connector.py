@@ -83,7 +83,10 @@ def test_get_selected_systems(
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_conn.cursor.return_value.__enter__.return_value = mock_cur
-    mock_cur.fetchall.return_value = [("SelectedSystem1",), ("SelectedSystem2",)]
+    mock_cur.fetchall.return_value = [
+    ("SelectedSystem1",),
+    ("SelectedSystem2",),
+    ]
     mock_cur.description = [("name",)]
 
     connector = PostgresConnector()
