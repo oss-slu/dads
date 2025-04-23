@@ -593,6 +593,7 @@ class PostgresConnector:
             height = 0
             resultant = 0
             avg_pc_set = 0
+            largeset_pc_set = 0
             avg_num_periodic = most_periodic = largest_cycle = 0
             avg_num_preperiodic = most_preperiodic = largest_comp = 0
         return [maps, aut, pcf, height, resultant,
