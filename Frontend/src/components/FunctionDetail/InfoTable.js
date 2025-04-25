@@ -124,7 +124,7 @@ export default function InfoTable({ data }) {
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row">{data.modelLabel}</TableCell> 
-            <TableCell align="right">P<sup>{<Domain id={data.function_id} />}</sup></TableCell>
+            <TableCell align="right">P<sup>{<Domain id={data.function_id} />}</sup>{" "}{String.fromCharCode(8594)}{" "}P<sup>{<Domain id={data.function_id} />}</sup></TableCell>
             <TableCell align="right">{polynomialExpression}</TableCell>
             <TableCell align="right">{data.degree}</TableCell>
             <TableCell align="right">
