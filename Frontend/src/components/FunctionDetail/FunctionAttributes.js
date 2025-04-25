@@ -46,6 +46,7 @@ export default function FunctionAttributes({ data }) {
     if (data.is_chebyshev) {
       chebyshevModel = data.degree < 10 ? chebyshevPolynomials[data.degree] : computeChebyshev(data.degree);
     }
+
   const processInput = (input) => {
     const polynomialPart = input.match(/{{.*?}}/);
     if (!polynomialPart) return [];
@@ -92,10 +93,35 @@ export default function FunctionAttributes({ data }) {
   };
 
   const isNewtonFunction = data.is_newton ? "True" : "False";
-  const newtonPolynomial = data.is_newton && data.newton_model
-    ? renderExponent(processInput(data.newton_model))
-    : "N/A";
+  var newtonPolynomial = "N/A";
+  
+  // Construct the Newton Polynomial if it exists
+  if (data.is_newton && data.newton_polynomial_coeffs) {
+    newtonPolynomial = "";
+    var coefficients = data.newton_polynomial_coeffs;
+    for (let i = 0; i < coefficients.length; i++) {
+      if (coefficients[i] != 0) {
+        // Add coefficient if needed
+        if (i > 0 && coefficients[i] != 1) {
+          newtonPolynomial += coefficients[i];
+        }
 
+        // Add x variable if needed
+        if (i > 0) {
+          newtonPolynomial += "z";
+          // Add exponents if needed
+          if (i > 1) {
+            newtonPolynomial += "^" + i;
+          }
+        }
+        // Add plus sign if needed
+        if (i !== coefficients.length - 1) {
+          newtonPolynomial += " + ";
+        }
+      }
+    }
+    newtonPolynomial = renderExponent([newtonPolynomial]);
+  }
   //For Lattes maps, the label is N.(LMFDB label).degree.M
   const lattesLink = data.is_lattes ? (
     <a href={`https://www.lmfdb.org/EllipticCurve/Q/${data.sigma_one.replace(/[()]/g, '').replace(/\./, '/').replace(/([a-z])(\d+)/, "$1/$2")}`} target="_blank" rel="noopener noreferrer">
@@ -115,6 +141,7 @@ export default function FunctionAttributes({ data }) {
             <TableCell><b>Is Polynomial</b><HelpBox description="True if this conjugacy class represents a polynomial map; i.e., if it has a totally ramified fixed point." title="Is Polynomial" /></TableCell>
             <TableCell><b>Is Postcritically Finite (PCF)</b><HelpBox description="True if every critical point is preperiodic." title="Is Postcritically Finite (PCF)" /></TableCell>
             <TableCell><b>Is Lattès Function</b><HelpBox description="True if this conjugacy class represents a Lattes function. Note that the label for Lattes maps contains the LMFDB label of the elliptic curve rather than the sigma invariants." title="Is Lattès Function" /></TableCell>
+            <TableCell><b>Is Chebyshev</b></TableCell>
             {data.is_newton && <TableCell><b>Associated Polynomial</b></TableCell>}
             <TableCell><b>Automorphism Cardinality</b><HelpBox description="Shows how many elements are in the set." title="Automorphism Cardinality" /></TableCell>
           </TableRow>

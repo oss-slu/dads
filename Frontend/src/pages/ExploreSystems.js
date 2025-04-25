@@ -323,25 +323,6 @@ function ExploreSystems() {
         }
     };
 
-    const downloadAllData = async () => {
-        let labels = []
-        if (!systems) {
-            return []
-        }
-        else if (systems) {
-            for (let i = 0; i < systems.length; i++) {
-                labels.push(systems[i][0])
-            }
-        }
-        try {
-            const result = await get_systems();
-            createCSV(result.data, "allData");
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
-    };
-
     // True Constants
     const defaultFilters = {
         dimension: [],
@@ -819,7 +800,6 @@ function ExploreSystems() {
                         'aria-labelledby': 'basic-button',
                         }}
                     >
-                            <MenuItem onClick={() => {downloadAllData(); handleClose();}}>Download All Data</MenuItem>
                             <MenuItem onClick={() => {downloadSearchResults(); handleClose();}}>Download Search Results</MenuItem>
                             <MenuItem onClick={() => {downloadSageCode(); handleClose();}}>Download Sage Code</MenuItem>
                     </Menu>

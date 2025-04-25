@@ -184,7 +184,10 @@ class PostgresConnector:
 
         try:
             sql = """
-                SELECT *
+                SELECT
+                functions_dim_1_nf.base_field_label
+                AS functions_base_field_label,
+                *
                 FROM functions_dim_1_nf
                 JOIN rational_preperiodic_dim_1_nf 
                 ON functions_dim_1_nf.function_id =
@@ -703,6 +706,9 @@ class PostgresConnector:
             elif fil in ['sigma_two']:
                 conditions.append(f"""sigma_two ILIKE '%'
                                   || TRIM('{values}') || '%' """)
+                
+            elif fil in ['function_id']:
+                conditions.append(f"""functions_dim_1_nf.function_id = {int(values)}""")
 
             else:
                 conditions.append(
