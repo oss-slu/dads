@@ -706,9 +706,10 @@ class PostgresConnector:
             elif fil in ['sigma_two']:
                 conditions.append(f"""sigma_two ILIKE '%'
                                   || TRIM('{values}') || '%' """)
-                
+            
             elif fil in ['function_id']:
-                conditions.append(f"""functions_dim_1_nf.function_id = {int(values)}""")
+                conditions.append(f"""functions_dim_1_nf.function_id 
+                                  = {int(values)}""")
 
             else:
                 conditions.append(

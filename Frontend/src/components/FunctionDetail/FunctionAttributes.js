@@ -102,7 +102,7 @@ export default function FunctionAttributes({ data }) {
     for (let i = 0; i < coefficients.length; i++) {
       if (coefficients[i] != 0) {
         // Add coefficient if needed
-        if (i > 0 && coefficients[i] != 1) {
+        if (i == 0 || coefficients[i] != 1) {
           newtonPolynomial += coefficients[i];
         }
 
