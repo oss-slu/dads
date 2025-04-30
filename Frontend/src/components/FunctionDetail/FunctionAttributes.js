@@ -100,13 +100,24 @@ export default function FunctionAttributes({ data }) {
     newtonPolynomial = "";
     var coefficients = data.newton_polynomial_coeffs;
     for (let i = 0; i < coefficients.length; i++) {
-      if (coefficients[i] != 0) {
-        // Add coefficient if needed
-        if (i == 0 || coefficients[i] != 1) {
-          newtonPolynomial += coefficients[i];
+      if (Number(coefficients[i]) !== 0) {
+        // Add plus or negative sign if needed
+        if (newtonPolynomial !== "" && coefficients[i] > 0) {
+          newtonPolynomial += "+ ";
+        } else if (newtonPolynomial !== "" && coefficients[i] < 0) {
+          newtonPolynomial += "- ";
         }
 
-        // Add x variable if needed
+        // Add coefficient if needed
+        if (i === 0) {
+          newtonPolynomial += coefficients[i];
+        } else if (coefficients[i] > 1) {
+          newtonPolynomial += coefficients[i];
+        } else if (coefficients[i] < -1) {
+          newtonPolynomial += -(coefficients[i]);
+        }
+
+        // Add z variable if needed
         if (i > 0) {
           newtonPolynomial += "z";
           // Add exponents if needed
@@ -114,14 +125,16 @@ export default function FunctionAttributes({ data }) {
             newtonPolynomial += "^" + i;
           }
         }
-        // Add plus sign if needed
+
+        // Add space if needed
         if (i !== coefficients.length - 1) {
-          newtonPolynomial += " + ";
+          newtonPolynomial += " ";
         }
       }
     }
-    newtonPolynomial = renderExponent([newtonPolynomial]);
+    newtonPolynomial = renderExponent(["[" + newtonPolynomial + "]"]);
   }
+
   //For Lattes maps, the label is N.(LMFDB label).degree.M
   const lattesLink = data.is_lattes ? (
     <a href={`https://www.lmfdb.org/EllipticCurve/Q/${data.sigma_one.replace(/[()]/g, '').replace(/\./, '/').replace(/([a-z])(\d+)/, "$1/$2")}`} target="_blank" rel="noopener noreferrer">
