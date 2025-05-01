@@ -9,7 +9,9 @@ from postgres_connector import PostgresConnector
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000', 'http://127.0.0.1:3000', '*'])
 
-connector = PostgresConnector()
+#connector = PostgresConnector()
+print("Server file runs properly and refactor code loads fine.")
+
 
 @app.route('/get_family', methods=['POST'])
 def get_family():

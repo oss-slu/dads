@@ -2,6 +2,8 @@
 Module Docstring
 manages  server data queries
 """
+from filter_manager import build_where_text
+
 import psycopg2
 import psycopg2.extras
 from config import load_config
@@ -181,7 +183,7 @@ class PostgresConnector:
         del filters['N']
 
         # The "where text" is the filters for the database
-        where_text = self.build_where_text(filters)
+        where_text = build_where_text(filters)
         print(where_text)
 
         cur = None
@@ -543,7 +545,7 @@ class PostgresConnector:
                 avg_num_periodic, most_periodic,
                 largest_cycle, avg_num_preperiodic,
                 most_preperiodic, largest_comp]
-
+'''    
     def build_where_text(self, filters):
         # remove empty filters
         # remove ILD because not currently in use
@@ -656,8 +658,8 @@ class PostgresConnector:
 
         filter_text += ' AND '.join(conditions)
         return filter_text
-
-    def get_family(self, family_id):
+'''
+def get_family(self, family_id):
         columns = '*'
         sql = f'SELECT {columns} FROM families_dim_1_NF WHERE family_id = %s'
 
