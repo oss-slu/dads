@@ -250,7 +250,7 @@ function ExploreSystems() {
             }
             else {
                 // For handing non-empty data
-                let csvData = 'label,newton_polynomial_coeffs,base_field_label,automorphism_group_cardinality,base_field_degree,citations,cp_cardinality,cp_field_of_defn,critical_portrait_graph_id,degree,display_model,family,function_id,is_chebyshev,is_lattes,is_newton,is_pcf,is_polynomial,monic_centered 1,monic_centered 2,monic_centered 3,monic_centered 4,monic_centered 5,ordinal,original_model 1,original_model 2,original_model 3,original_model 4,original_model 5,rational_twists,reduced_model 1,reduced_model 2,reduced_model 3,reduced_model 4,reduced_model 5,sigma_one,sigma_two\n'
+                let csvData = 'model_label,newton_polynomial_coeffs,base_field_label,automorphism_group_cardinality,base_field_degree,citations,cp_cardinality,cp_field_of_defn,critical_portrait_graph_id,degree,display_model,family,function_id,is_chebyshev,is_lattes,is_newton,is_pcf,is_polynomial,monic_centered.coeffs,monic_centered.resultant,monic_centered.bad_primes,monic_centered.height,monic_centered.base_field_label,ordinal,original_model.coeffs,original_model.resultant,original_model.bad_primes,original_model.height,original_model.base_field_label,rational_twists,reduced_model.coeffs,reduced_model.resultant,reduced_model.bad_primes,reduced_model.height,reduced_model.base_field_label,sigma_one,sigma_two\n'
                 for (let i = 0; i < csvSystems.length; i++) {
                     // Going one data entry (one row) at a time
                     csvData += "\"" + String("1." + csvSystems[i].sigma_one + "." + csvSystems[i].sigma_two + "." + csvSystems[i].ordinal).replace(/"/g, '') + "\"" + ","
