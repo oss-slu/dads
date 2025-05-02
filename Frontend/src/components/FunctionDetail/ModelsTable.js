@@ -29,42 +29,6 @@ export const renderExponent = (expressionArray) => {
     });
   };
 
-export function processInput(input) {
-	const polynomials = input.slice(2, -2).split('},{');
-	const formattedPolynomials = polynomials.map(poly => {
-	const coeffs = poly.split(',');
-	const formattedPoly = coeffs
-		.map((coefficient, i) => {
-		if (coefficient === '0') return '';
-		const exponentX = coeffs.length - 1 - i;
-		const exponentY = i;
-		let monomial = '';
-		if (exponentX > 0) {
-      monomial += `x`;
-      if (exponentX > 1) {
-        monomial += `^${exponentX}`;
-      }
-    }
-		if (exponentY > 0) {
-      monomial += `y`;
-      if (exponentX > 1) {
-        monomial += `^${exponentY}`;
-      }
-    }
-		return coefficient === '1' ? monomial : `${coefficient}${monomial}`;
-		})
-		.filter(Boolean)
-		.join(' + ')
-		.replace(/\+ -/g, '- ') // Ensures correct spacing for negatives
-		.replace(/\+$/, ''); // Remove trailing + symbol
-
-	return formattedPoly;
-	});
-  
-    // Return as an array containing one string (wrapped in brackets)
-    return [`[${formattedPolynomials.join(' : ')}]`];
-  }
-
   export function buildModelString(originalModelString, degree) {
     var monomialList = [];
 
