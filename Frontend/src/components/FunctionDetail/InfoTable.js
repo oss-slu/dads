@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
-import { processInput, renderExponent, splitOutermostCommas } from './ModelsTable';
+import { renderExponent, splitOutermostCommas, buildModelString } from './ModelsTable';
 import HelpBox from '../FunctionDetail/HelpBox'
 import { useEffect, useState } from 'react';
 import { get_filtered_systems } from '../../api/routes';
@@ -93,7 +93,7 @@ export default function InfoTable({ data }) {
 
   if (polynomial) {
     const modelData= splitOutermostCommas(polynomial);
-    polynomialExpression= renderExponent(processInput(modelData[0]));
+    polynomialExpression= renderExponent([buildModelString(modelData[0], data.degree)]);
   }
   console.log("Standard Model Name:", standard_model);
   console.log("Model Key Used:", modelKey);
