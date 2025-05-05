@@ -4,7 +4,6 @@ exports[`ModelsTable component matches snapshot 1`] = `
 <DocumentFragment>
   <div
     class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiTableContainer-root table-component css-11xur9t-MuiPaper-root-MuiTableContainer-root"
-    data-testid="models-table"
   >
     <h3>
       Models:
@@ -15,6 +14,7 @@ exports[`ModelsTable component matches snapshot 1`] = `
     <table
       aria-label="models table"
       class="MuiTable-root css-rqglhn-MuiTable-root"
+      data-testid="models-table"
     >
       <thead
         class="MuiTableHead-root css-15wwp11-MuiTableHead-root"

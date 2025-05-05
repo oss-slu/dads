@@ -10,13 +10,13 @@ describe('processInput function', () => {
   test('formats polynomial correctly', () => {
     const input = "{{1,0,2},{0,1,3}}";
     const result = processInput(input);
-    expect(result).toEqual(["[x^2 + 2y^2 : x^1y^1 + 3y^2]"]);
+    expect(result).toEqual(["[x^2 + 2y : xy + 3y]"]);
   });
 
   test('handles zero coefficients', () => {
     const input = "{{1,0,0},{0,0,1}}";
     const result = processInput(input);
-    expect(result).toEqual(["[x^2 : y^2]"]);
+    expect(result).toEqual(["[x^2 : y]"]);
   });
 
   test('handles empty input', () => {

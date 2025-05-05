@@ -134,7 +134,7 @@ export default function ModelsTable({ data }) {
     <TableContainer className='table-component' component={Paper}>
       <h3>Models:</h3>
       <h6>Several different representatives of this conjugacy class. May include: monic centered, reduced, and the original model found in the literature.</h6>
-      <Table aria-label='models table'>
+      <Table aria-label='models table' data-testid="models-table">
         <TableHead>
           <TableRow>
             <TableCell><b>Name</b><HelpBox description="Name of the representative model" title="Name" /></TableCell>

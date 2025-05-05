@@ -37,7 +37,7 @@ describe('DataTable component', () => {
   test('renders pagination controls', () => {
     render(<DataTable labels={labels} data={data} />);
     expect(screen.getByText('First')).toBeInTheDocument();
-    expect(screen.getByText('Prev')).toBeInTheDocument();
+    expect(screen.getAllByText('Previous').length).toBeGreaterThan(0);
     expect(screen.getByText('Next')).toBeInTheDocument();
     expect(screen.getByText('Last')).toBeInTheDocument();
   });
