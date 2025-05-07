@@ -125,17 +125,17 @@ export default function ModelsTable({ data }) {
     // Predefined Chebyshev polynomials for small degrees
     const getChebyshevPolynomial = (n) => {
       const predefinedPolynomials = [
-        "[1, 1]",
-        "[x, y]",
-        "[2x^2 - y^2, y^2]",
-        "[4x^3 - 3xy^2, y^3]",
-        "[8x^4 - 8x^2y^2 + y^4, y^4]",
-        "[16x^5 - 20x^3y^2 + 5xy^4, y^5]",
-        "[32x^6 - 48x^4y^2 + 18x^2y^4 - y^6, y^6]",
-        "[64x^7 - 112x^5y^2 + 56x^3y^4 - 7xy^6, y^7]",
-        "[128x^8 - 256x^6y^2 + 160x^4y^4 - 32x^2y^6 + y^8, y^8]",
-        "[256x^9 - 576x^7y^2 + 432x^5y^4 - 120x^3y^6 + 9xy^8, y^9]",
-        "[512x^10 - 1280x^8y^2 + 1120x^6y^4 - 400x^4y^6 + 50x^2y^8 - y^10, y^10]"
+        "[1 : 1]",
+        "[x : y]",
+        "[2x^2 - y^2 : y^2]",
+        "[4x^3 - 3xy^2 : y^3]",
+        "[8x^4 - 8x^2y^2 + y^4 : y^4]",
+        "[16x^5 - 20x^3y^2 + 5xy^4 : y^5]",
+        "[32x^6 - 48x^4y^2 + 18x^2y^4 - y^6 : y^6]",
+        "[64x^7 - 112x^5y^2 + 56x^3y^4 - 7xy^6 : y^7]",
+        "[128x^8 - 256x^6y^2 + 160x^4y^4 - 32x^2y^6 + y^8 : y^8]",
+        "[256x^9 - 576x^7y^2 + 432x^5y^4 - 120x^3y^6 + 9xy^8 : y^9]",
+        "[512x^10 - 1280x^8y^2 + 1120x^6y^4 - 400x^4y^6 + 50x^2y^8 - y^10 : y^10]"
       ];
     
       if (n <= predefinedPolynomials.length) {
