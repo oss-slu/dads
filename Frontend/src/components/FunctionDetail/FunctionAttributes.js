@@ -12,41 +12,6 @@ export default function FunctionAttributes({ data }) {
     <sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>{children}</sup>
   );
 
-    // Predefined Chebyshev polynomials for small degrees
-    const chebyshevPolynomials = {
-      0: "T₀(x) = 1",
-      1: "T₁(x) = x",
-      2: "T₂(x) = 2x² - 1",
-      3: "T₃(x) = 4x³ - 3x",
-      4: "T₄(x) = 8x⁴ - 8x² + 1",
-      5: "T₅(x) = 16x⁵ - 20x³ + 5x",
-      6: "T₆(x) = 32x⁶ - 48x⁴ + 18x² - 1",
-      7: "T₇(x) = 64x⁷ - 112x⁵ + 56x³ - 7x",
-      8: "T₈(x) = 128x⁸ - 256x⁶ + 160x⁴ - 32x² + 1",
-      9: "T₉(x) = 256x⁹ - 576x⁷ + 432x⁵ - 120x³ + 9x"
-    };
-
-    const computeChebyshev = (n) => {
-      if (n in chebyshevPolynomials) return chebyshevPolynomials[n];
-  
-      let T_prev = "x"; // T₁(x)
-      let T_curr = "2x² - 1"; // T₂(x)
-  
-      for (let i = 2; i < n; i++) {
-        let T_next = `2x(${T_curr}) - (${T_prev})`;
-        T_prev = T_curr;
-        T_curr = T_next;
-      }
-  
-      return `T_${n}(x) = ${T_curr}`;
-    };
-  
-    // Determine Chebyshev model
-    let chebyshevModel = "Not Chebyshev";
-    if (data.is_chebyshev) {
-      chebyshevModel = data.degree < 10 ? chebyshevPolynomials[data.degree] : computeChebyshev(data.degree);
-    }
-
   const processInput = (input) => {
     const polynomialPart = input.match(/{{.*?}}/);
     if (!polynomialPart) return [];
@@ -92,6 +57,39 @@ export default function FunctionAttributes({ data }) {
     ));
   };
 
+        // Predefined Chebyshev polynomials for small degrees
+      const getChebyshevPolynomial = (n) => {
+        const predefinedPolynomials = [
+          "[1 : 1]",
+          "[x : y]",
+          "[2x^2 - y^2 : y^2]",
+          "[4x^3 - 3xy^2 : y^3]",
+          "[8x^4 - 8x^2y^2 + y^4 : y^4]",
+          "[16x^5 - 20x^3y^2 + 5xy^4 : y^5]",
+          "[32x^6 - 48x^4y^2 + 18x^2y^4 - y^6 : y^6]",
+          "[64x^7 - 112x^5y^2 + 56x^3y^4 - 7xy^6 : y^7]",
+          "[128x^8 - 256x^6y^2 + 160x^4y^4 - 32x^2y^6 + y^8 : y^8]",
+          "[256x^9 - 576x^7y^2 + 432x^5y^4 - 120x^3y^6 + 9xy^8 : y^9]",
+          "[512x^10 - 1280x^8y^2 + 1120x^6y^4 - 400x^4y^6 + 50x^2y^8 - y^10 : y^10]"
+        ];
+      
+        if (n <= predefinedPolynomials.length) {
+          return renderExponent([predefinedPolynomials[n]]);
+        }
+      
+        // Dynamically compute for higher degrees if not predefined
+        let T_prev = "x"; // T₁(x)
+        let T_curr = "2*x^2 - 1"; // T₂(x)
+      
+        for (let i = 2; i < n; i++) {
+          let T_next = `2*x*(${T_curr}) - (${T_prev})`;
+          T_prev = T_curr;
+          T_curr = T_next;
+        }
+      
+        return renderExponent([`T_${n}(x) = ${T_curr}`]);
+    };
+
   const isNewtonFunction = data.is_newton ? "True" : "False";
   var newtonPolynomial = "N/A";
   
@@ -135,6 +133,8 @@ export default function FunctionAttributes({ data }) {
     newtonPolynomial = renderExponent(["[" + newtonPolynomial + "]"]);
   }
 
+    let chebyshevModel = getChebyshevPolynomial(data.degree);
+
   //For Lattes maps, the label is N.(LMFDB label).degree.M
   const lattesLink = data.is_lattes ? (
     <a href={`https://www.lmfdb.org/EllipticCurve/Q/${data.sigma_one.replace(/[()]/g, '').replace(/\./, '/').replace(/([a-z])(\d+)/, "$1/$2")}`} target="_blank" rel="noopener noreferrer">
@@ -151,22 +151,24 @@ export default function FunctionAttributes({ data }) {
           {/* Row for field labels */}
           <TableRow>
             <TableCell><b>Is Newton Function</b><HelpBox description="True if this conjugacy class represents a function from Newton’s method: f(z) = z- F(z)/F'(z)" title="Is Newton Function" /></TableCell>
+            {data.is_newton && <TableCell><b>Newton Polynomial</b></TableCell>}
             <TableCell><b>Is Polynomial</b><HelpBox description="True if this conjugacy class represents a polynomial map; i.e., if it has a totally ramified fixed point." title="Is Polynomial" /></TableCell>
             <TableCell><b>Is Postcritically Finite (PCF)</b><HelpBox description="True if every critical point is preperiodic." title="Is Postcritically Finite (PCF)" /></TableCell>
             <TableCell><b>Is Lattès Function</b><HelpBox description="True if this conjugacy class represents a Lattes function. Note that the label for Lattes maps contains the LMFDB label of the elliptic curve rather than the sigma invariants." title="Is Lattès Function" /></TableCell>
             <TableCell><b>Is Chebyshev</b></TableCell>
-            {data.is_newton && <TableCell><b>Associated Polynomial</b></TableCell>}
+            {data.is_chebyshev && <TableCell><b>Chebyshev Model</b></TableCell>}
             <TableCell><b>Automorphism Cardinality</b><HelpBox description="Shows how many elements are in the set." title="Automorphism Cardinality" /></TableCell>
           </TableRow>
           {/* Row for values */}
           <TableRow>
             <TableCell>{isNewtonFunction}</TableCell>
+            {data.is_newton && <TableCell>{newtonPolynomial}</TableCell>}
             <TableCell>{String(data.is_polynomial)}</TableCell>
             <TableCell>{String(data.is_pcf)}</TableCell>
             {/* <TableCell>{String(data.is_lattes)}</TableCell> */}
             <TableCell>{String(data.is_lattes)} {lattesLink}</TableCell>
             <TableCell>{String(data.is_chebyshev)}</TableCell>
-            {data.is_newton && <TableCell>{newtonPolynomial}</TableCell>}
+            {data.is_chebyshev && <TableCell>{chebyshevModel}</TableCell>}
             <TableCell>{data.automorphism_group_cardinality !== undefined ? data.automorphism_group_cardinality: "N/A"}</TableCell>
           </TableRow>
         </TableBody>
