@@ -36,7 +36,16 @@ function FamilyDetailsTable({ family }) {
     return `[${result.join(", ")}]`;
   };
 
-  const formatCitations = (citations) => Array.isArray(citations) ? citations.join(', ') : 'None';
+  const formatCitations = (citations) => {
+    // Separate array, return single string, or show None
+    if (Array.isArray(citations)) {
+      return citations.join(', ');
+    } else if (typeof citations === 'string') {
+      return citations;
+    } else {
+      return 'None';
+    }
+  };
 
   return (
     <>
@@ -91,7 +100,7 @@ function FamilyDetailsTable({ family }) {
         <Table>
           <TableBody>
             <TableRow>
-              <TableCell>{formatCitations(family[11])}</TableCell>
+              <TableCell>{formatCitations(family[15])}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
