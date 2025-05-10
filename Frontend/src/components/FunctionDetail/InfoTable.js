@@ -7,9 +7,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
-import { processInput, renderExponent, splitOutermostCommas } from './ModelsTable';
+import { renderExponent, splitOutermostCommas, buildModelString } from './ModelsTable';
 import HelpBox from '../FunctionDetail/HelpBox'
-
+import { useEffect, useState } from 'react';
+import { get_filtered_systems } from '../../api/routes';
 
 export default function InfoTable({ data }) {
   const navigate = useNavigate();
@@ -69,9 +70,30 @@ export default function InfoTable({ data }) {
     } 
   }
   
+  // Get information for domain
+  const Domain = ({ id }) => {
+    const [domainText, setDomainText] = useState(null);
+  
+    // Once the backend data gets received,
+    // then update the domain text
+    useEffect(() => {
+      get_filtered_systems({N: [], function_id: id})
+      .then(response => {
+        // Get the system, then the second value (which is the domain)
+        setDomainText(response.data.results[0][1]);
+      })
+      .catch(error => {
+        console.error("Error fetching domain: ", error);
+      });
+    }, [id]);
+  
+    // While the domain is being retrieved, show loading text in meantime
+    return <>{domainText || "Loading..."}</>;
+};
+
   if (polynomial) {
     const modelData= splitOutermostCommas(polynomial);
-    polynomialExpression= renderExponent(processInput(modelData[0]));
+    polynomialExpression= renderExponent([buildModelString(modelData[0], data.degree)]);
   }
   console.log("Standard Model Name:", standard_model);
   console.log("Model Key Used:", modelKey);
@@ -102,12 +124,12 @@ export default function InfoTable({ data }) {
         <TableBody>
           <TableRow>
             <TableCell component="th" scope="row">{data.modelLabel}</TableCell> 
-            <TableCell align="right">{data.base_field_label}</TableCell>
+            <TableCell align="right">P<sup>{<Domain id={data.function_id} />}</sup>{" "}{String.fromCharCode(8594)}{" "}P<sup>{<Domain id={data.function_id} />}</sup></TableCell>
             <TableCell align="right">{polynomialExpression}</TableCell>
             <TableCell align="right">{data.degree}</TableCell>
             <TableCell align="right">
             <a
-                href={`https://www.lmfdb.org/NumberField/${data.base_field_label}`}
+                href={`https://www.lmfdb.org/NumberField/${data.functions_base_field_label}`}
                 style={{
                   color: "blue",
                   textDecoration: "underline"
@@ -115,11 +137,11 @@ export default function InfoTable({ data }) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {data.base_field_label}
+                {data.functions_base_field_label}
               </a>
             </TableCell>
             <TableCell align="right">
-              {data.family && (
+              {(data.family && data.family.length > 0) ? (
                 <button
                   onClick={() => handleLinkClick(data.family)}
                   style={{
@@ -133,7 +155,7 @@ export default function InfoTable({ data }) {
                   {/* Displays the mapped family name*/}
                   {familyMapping[data.family] || data.family}
                 </button>
-              )}
+              ) : "N/A"}
             </TableCell>
           </TableRow>
         </TableBody>

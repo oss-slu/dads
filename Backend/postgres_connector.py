@@ -184,7 +184,10 @@ class PostgresConnector:
 
         try:
             sql = """
-                SELECT *
+                SELECT
+                functions_dim_1_nf.base_field_label
+                AS functions_base_field_label,
+                *
                 FROM functions_dim_1_nf
                 JOIN rational_preperiodic_dim_1_nf 
                 ON functions_dim_1_nf.function_id =
@@ -593,6 +596,7 @@ class PostgresConnector:
             height = 0
             resultant = 0
             avg_pc_set = 0
+            largeset_pc_set = 0
             avg_num_periodic = most_periodic = largest_cycle = 0
             avg_num_preperiodic = most_preperiodic = largest_comp = 0
         return [maps, aut, pcf, height, resultant,
@@ -703,6 +707,10 @@ class PostgresConnector:
                 conditions.append(f"""sigma_two ILIKE '%'
                                   || TRIM('{values}') || '%' """)
 
+            elif fil in ['function_id']:
+                conditions.append(f"""functions_dim_1_nf.function_id
+                                  = {int(values)}""")
+
             else:
                 conditions.append(
                     fil +
@@ -715,8 +723,17 @@ class PostgresConnector:
         return filter_text
 
     def get_family(self, family_id):
-        columns = '*'
-        sql = f'SELECT {columns} FROM families_dim_1_NF WHERE family_id = %s'
+        # We grab all family data
+        # and the associated citation as well
+        sql = '''
+            SELECT familiesTable.*,
+            citationsTable.citation
+            FROM families_dim_1_NF familiesTable
+            LEFT JOIN citations citationsTable
+            ON citationsTable.id
+            = ANY(familiesTable.citations)
+            WHERE familiesTable.family_id = %s
+        '''
 
         # Reconnect if connection to database closed
         if not self.is_connection_active():

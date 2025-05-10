@@ -163,7 +163,7 @@ export default function RationalPointsTable({ data }) {
               <TableCell sx={{ width: '120px', maxWidth: '120px' }}>{Array.isArray(meta.preperiodic_components) && meta.preperiodic_components.length > 0 ? `[${meta.preperiodic_components.join(', ')}]` : 'N/A'}</TableCell>
               <TableCell sx={{ width: '100px', maxWidth: '100px' }}>
                 {Array.isArray(item[3]) && item[3].length > 0 ? (
-                  item[3].map((point, idx) => <div key={idx}>{`(${point[0]}, ${point[1]})`}</div>)
+                  item[3].map((point, idx) => <div key={idx}>{`(${point[0]} : ${point[1]})`}</div>)
                 ) : ('N/A')}
               </TableCell>
               <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.max_tail !== undefined && meta.max_tail !== null ? meta.max_tail : 'N/A'}</TableCell>

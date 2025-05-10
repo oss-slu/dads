@@ -37,12 +37,10 @@ export default function RationalTwistsTable({ data }) {
         <TableBody>
           {/* Header Row */}
           <TableRow>
-            <TableCell><b>Label</b></TableCell>
-            <TableCell><b>Rational Twists</b></TableCell>
+            <TableCell><b>Rational Twists Labels</b></TableCell>
           </TableRow>
           {/* Data Row */}
           <TableRow>
-            <TableCell>{data.modelLabel}</TableCell>
             <TableCell>
               {data.rational_twists && data.rational_twists.length > 0 ? (
                 data.rational_twists.map((id, index) => (

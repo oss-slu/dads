@@ -250,7 +250,7 @@ function ExploreSystems() {
             }
             else {
                 // For handing non-empty data
-                let csvData = 'label,newton_polynomial_coeffs,base_field_label,automorphism_group_cardinality,base_field_degree,citations,cp_cardinality,cp_field_of_defn,critical_portrait_graph_id,degree,display_model,family,function_id,is_chebyshev,is_lattes,is_newton,is_pcf,is_polynomial,monic_centered,ordinal,original_model,rational_twists,reduced_model,sigma_one,sigma_two\n'
+                let csvData = 'model_label,newton_polynomial_coeffs,base_field_label,automorphism_group_cardinality,base_field_degree,citations,cp_cardinality,cp_field_of_defn,critical_portrait_graph_id,degree,display_model,family,function_id,is_chebyshev,is_lattes,is_newton,is_pcf,is_polynomial,monic_centered.coeffs,monic_centered.resultant,monic_centered.bad_primes,monic_centered.height,monic_centered.base_field_label,ordinal,original_model.coeffs,original_model.resultant,original_model.bad_primes,original_model.height,original_model.base_field_label,rational_twists,reduced_model.coeffs,reduced_model.resultant,reduced_model.bad_primes,reduced_model.height,reduced_model.base_field_label,sigma_one,sigma_two\n'
                 for (let i = 0; i < csvSystems.length; i++) {
                     // Going one data entry (one row) at a time
                     csvData += "\"" + String("1." + csvSystems[i].sigma_one + "." + csvSystems[i].sigma_two + "." + csvSystems[i].ordinal).replace(/"/g, '') + "\"" + ","
@@ -271,11 +271,23 @@ function ExploreSystems() {
                     csvData += "\"" + String(csvSystems[i].is_newton).replace(/"/g, '') + "\"" + ","
                     csvData += "\"" + String(csvSystems[i].is_pcf).replace(/"/g, '') + "\"" + ","
                     csvData += "\"" + String(csvSystems[i].is_polynomial).replace(/"/g, '') + "\"" + ","
-                    csvData += "\"" + String(csvSystems[i].monic_centered).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].monic_centered, 0).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].monic_centered, 1).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].monic_centered, 2).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].monic_centered, 3).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].monic_centered, 4).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
                     csvData += "\"" + String(csvSystems[i].ordinal).replace(/"/g, '') + "\"" + ","
-                    csvData += "\"" + String(csvSystems[i].original_model).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].original_model, 0).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].original_model, 1).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].original_model, 2).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].original_model, 3).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].original_model, 4).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
                     csvData += "\"" + String(csvSystems[i].rational_twists).replace(/"/g, '') + "\"" + ","
-                    csvData += "\"" + String(csvSystems[i].reduced_model).replace(/"/g, '') + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].reduced_model, 0).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].reduced_model, 1).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].reduced_model, 2).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].reduced_model, 3).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
+                    csvData += "\"" + getEntryFromModelString(csvSystems[i].reduced_model, 4).replace(/"/g, '').replace(/{/g, "[").replace(/}/g, "]") + "\"" + ","
                     csvData += "\"" + String(csvSystems[i].sigma_one).replace(/"/g, '') + "\"" + ","
                     csvData += "\"" + String(csvSystems[i].sigma_two).replace(/"/g, '') + "\"" + ","
                     csvData += "\n";
@@ -323,24 +335,23 @@ function ExploreSystems() {
         }
     };
 
-    const downloadAllData = async () => {
-        let labels = []
-        if (!systems) {
-            return []
+    function getEntryFromModelString(modelString, index) {
+        if (!modelString) {
+            return "N/A";
         }
-        else if (systems) {
-            for (let i = 0; i < systems.length; i++) {
-                labels.push(systems[i][0])
-            }
+
+        modelString = modelString.slice(1, -1);
+
+        // Using ugly regex, we will split the model string into an array by separating
+        // by commas not inside quotes
+        var parsedData = modelString.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+
+        if (index >= 0 && index < parsedData.length && parsedData[index] != "") {
+            return parsedData[index];
+        } else {
+            return "N/A";
         }
-        try {
-            const result = await get_systems();
-            createCSV(result.data, "allData");
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
-    };
+    }
 
     // True Constants
     const defaultFilters = {
@@ -828,7 +839,6 @@ function ExploreSystems() {
                         'aria-labelledby': 'basic-button',
                         }}
                     >
-                            <MenuItem onClick={() => {downloadAllData(); handleClose();}}>Download All Data</MenuItem>
                             <MenuItem onClick={() => {downloadSearchResults(); handleClose();}}>Download Search Results</MenuItem>
                             <MenuItem onClick={() => {downloadSageCode(); handleClose();}}>Download Sage Code</MenuItem>
                     </Menu>
