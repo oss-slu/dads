@@ -108,27 +108,56 @@ export default function FunctionAttributes({ data }) {
       <h3>Function Attributes</h3>
       <h6>Attributes identifying the type of conjugacy class.</h6>
       <Table aria-label="function attributes table">
-        <TableBody>
-          {/* Row for field labels */}
-          <TableRow>
-            <TableCell><b>Is Newton Function</b><HelpBox description="True if this conjugacy class represents a function from Newton’s method: f(z) = z- F(z)/F'(z)" title="Is Newton Function" /></TableCell>
-            <TableCell><b>Is Polynomial</b><HelpBox description="True if this conjugacy class represents a polynomial map; i.e., if it has a totally ramified fixed point." title="Is Polynomial" /></TableCell>
-            <TableCell><b>Is Postcritically Finite (PCF)</b><HelpBox description="True if every critical point is preperiodic." title="Is Postcritically Finite (PCF)" /></TableCell>
-            <TableCell><b>Is Lattès Function</b><HelpBox description="True if this conjugacy class represents a Lattes function. Note that the label for Lattes maps contains the LMFDB label of the elliptic curve rather than the sigma invariants." title="Is Lattès Function" /></TableCell>
-            <TableCell><b>Associated Polynomial</b></TableCell>
-            <TableCell><b>Automorphism Cardinality</b><HelpBox description="Shows how many elements are in the set." title="Automorphism Cardinality" /></TableCell>
-          </TableRow>
-          {/* Row for values */}
-          <TableRow>
-            <TableCell>{isNewtonFunction}</TableCell>
-            <TableCell>{String(data.is_polynomial)}</TableCell>
-            <TableCell>{String(data.is_pcf)}</TableCell>
-            {/* <TableCell>{String(data.is_lattes)}</TableCell> */}
-            <TableCell>{String(data.is_lattes)} {lattesLink}</TableCell>
-            <TableCell>{data.is_newton ? newtonPolynomial : ""}</TableCell>
-            <TableCell>{data.automorphism_group_cardinality !== undefined ? data.automorphism_group_cardinality: "N/A"}</TableCell>
-          </TableRow>
-        </TableBody>
+      <TableBody>
+        {/* Row for field labels */}
+        <TableRow>
+          <TableCell>
+            <b>Is Newton Function</b>
+            <HelpBox description="True if this conjugacy class represents a function from Newton’s method: f(z) = z- F(z)/F'(z)" title="Is Newton Function" />
+          </TableCell>
+          {data.is_newton && (
+            <TableCell>
+              <b>Newton Polynomial</b>
+            </TableCell>
+          )}
+          <TableCell>
+            <b>Is Polynomial</b>
+            <HelpBox description="True if this conjugacy class represents a polynomial map; i.e., if it has a totally ramified fixed point." title="Is Polynomial" />
+          </TableCell>
+          <TableCell>
+            <b>Is Postcritically Finite (PCF)</b>
+            <HelpBox description="True if every critical point is preperiodic." title="Is Postcritically Finite (PCF)" />
+          </TableCell>
+          <TableCell>
+            <b>Is Lattès Function</b>
+            <HelpBox description="True if this conjugacy class represents a Lattes function. Note that the label for Lattes maps contains the LMFDB label of the elliptic curve rather than the sigma invariants." title="Is Lattès Function" />
+          </TableCell>
+          <TableCell>
+            <b>Is Chebyshev</b>
+          </TableCell>
+          {data.is_chebyshev && (
+            <TableCell>
+              <b>Chebyshev Model</b>
+            </TableCell>
+          )}
+          <TableCell>
+            <b>Automorphism Cardinality</b>
+            <HelpBox description="Shows how many elements are in the set." title="Automorphism Cardinality" />
+          </TableCell>
+        </TableRow>
+
+        {/* Row for values */}
+        <TableRow>
+          <TableCell>{isNewtonFunction}</TableCell>
+          {data.is_newton && <TableCell>{newtonPolynomial}</TableCell>}
+          <TableCell>{String(data.is_polynomial)}</TableCell>
+          <TableCell>{String(data.is_pcf)}</TableCell>
+          <TableCell>{String(data.is_lattes)} {lattesLink}</TableCell>
+          <TableCell>{String(data.is_chebyshev)}</TableCell>
+          {data.is_chebyshev && <TableCell>{chebyshevModel}</TableCell>}
+          <TableCell>{data.automorphism_group_cardinality !== undefined ? data.automorphism_group_cardinality : "N/A"}</TableCell>
+        </TableRow>
+      </TableBody>
       </Table>
     </TableContainer>
   );
