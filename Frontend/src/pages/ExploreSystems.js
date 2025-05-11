@@ -389,6 +389,15 @@ function ExploreSystems() {
         marginRight: "12px",
     };
 
+    const smallStyles = {
+        inlineHelpLabel: {
+          fontSize: "0.9rem",
+          whiteSpace: "nowrap",
+          display: "inline-block",
+          verticalAlign: "middle"
+        }
+    };
+
     return (
         <>
             <div>
@@ -844,11 +853,11 @@ function ExploreSystems() {
             {filtersApplied && <ActiveFiltersBanner filters={filtersApplied} />}
                         <PaginatedDataTable
                             labels={[
-                                <>Label<HelpBox description="A unique identifier of the form N.S1.S2.M where N is the dimension of the domain, S1 is a hash of the sigma invariants of the fixed points, S2 is a hash of the sigma invariants of the points of period 2, and M is an ordinal to ensure uniqueness." title="Label" /></>,
-                                <>Domain<HelpBox description="The ambient domain of the map; a projective space" title="Domain" /></>,
-                                <>Degree<HelpBox description="Degree of the homogeneous polynomials of a representative of this map." title="Degree" /></>,
-                                <>Polynomial<HelpBox description="Representative polynomials in the selected standard model." title="Polynomials" /></>,
-                                <>Field<HelpBox description="The smallest field containing all coefficients of the standard representative polynomials." title="Field" /></>
+                                <><span style={smallStyles.inlineHelpLabel}>Label</span><HelpBox description="A unique identifier of the form N.S1.S2.M where N is the dimension of the domain, S1 is a hash of the sigma invariants of the fixed points, S2 is a hash of the sigma invariants of the points of period 2, and M is an ordinal to ensure uniqueness." title="Label" /></>,
+                                <><span style={smallStyles.inlineHelpLabel}>Domain</span><HelpBox description="The ambient domain of the map; a projective space" title="Domain" /></>,
+                                <><span style={smallStyles.inlineHelpLabel}>Degree</span><HelpBox description="Degree of the homogeneous polynomials of a representative of this map." title="Degree" /></>,
+                                <><span style={smallStyles.inlineHelpLabel}>Polynomial</span><HelpBox description="Representative polynomials in the selected standard model." title="Polynomials" /></>,
+                                <><span style={smallStyles.inlineHelpLabel}>Field</span><HelpBox description="The smallest field containing all coefficients of the standard representative polynomials." title="Field" /></>
                             ]}
                             data={
                                 systems === null
