@@ -1,0 +1,17 @@
+**What did you observe about the process?**
+- I observed that mob programming helps in building collective understanding of the problem. We took turns leading and navigating, and it helped keep everyone engaged while solving a technical issue together.
+
+**What did you contribute?**
+- I helped clone the rerum API and TinyNode repositories, togetherly written Dockerfiles for both services, and configured docker-compose.yml to spin MongoDB, Rerum API, and TinyNode together locally.
+
+**Did you have ideas that didn't get included?**
+- We three discussed and thought of adding volume mounts to persist MongoDB data, but again we decided to keep the setup simple.
+
+**Were you familiar with any of the tools before?**
+- I was somewhat familiar with Git and little bit about the Docker. I have learned how to structure Docker Compose services with communication with my teammates. They explained me what to do in docker-compose.yml, then i have started configuration.
+
+**How can we improve communication during mob programming?**
+- Assigning the roles for the each member in a team(Driver, navigator, observer) so that it goes in a smooth manner. Regularly check up and helping everyone if anyone getting any issue.
+
+**What worked well?**
+- Everyone in the team contributed and turn taking. We communicated well before dividing the tasks so that we achieved working integration quickly. After the tasks are done we kept meeting and explained everyone tasks shared the screen when it is needed. 
