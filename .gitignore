@@ -2,4 +2,4 @@
 pgdata/
 venv/
 database.ini
-
+.pytest_cache/
