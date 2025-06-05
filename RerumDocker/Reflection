@@ -1,1 +1,19 @@
 git link : https://github.com/slu-csci-5030/dads/tree/test-branch
+
+**What did you observe about the process?**
+- I observed that mob programming fosters real-time collaboration, continuous learning, and high-quality code by bringing together diverse expertise to work on a single task simultaneously, enhancing communication and reducing bottlenecks.
+
+**What did you contribute?**
+- I helped clean up and integrate the Rerum API and TinyNode into our project by turning them into regular folders and making sure everything runs smoothly together in Docker.
+
+**Did you have ideas that didn't get included?**
+- We three considered adding volume mounts to persist MongoDB data, but ultimately chose to keep the setup simple.
+
+**Were you familiar with any of the tools before?**
+- Before this, I only knew the basic features of Git. Since I had no knowledge of Docker or Docker Compose, I gained a lot by working on this project. I worked with my team and asked questions, slowly getting a sense of how everything fit in the system. Sharing information with them allowed me to setup things and discover more about using containers for applications..
+
+**How can we improve communication during mob programming?**
+- A greater understanding of each person’s task and regular check-ins will increase our team’s communication.
+
+**What worked well?**
+- Everyone in this team participated and took turns. We communicated effectively before dividing the duties, which allowed us to achieve working integration rapidly.  After the assignments were completed, we continued to meet and explained everyone's tasks, sharing the screen as needed.
