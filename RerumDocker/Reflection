@@ -10,7 +10,7 @@ git link : https://github.com/slu-csci-5030/dads/tree/test-branch
 - We three considered adding volume mounts to persist MongoDB data, but ultimately chose to keep the setup simple.
 
 **Were you familiar with any of the tools before?**
-- Before this, I only knew the basic features of Git. Since I had no knowledge of Docker or Docker Compose, I gained a lot by working on this project. I worked with my team and asked questions, slowly getting a sense of how everything fit in the system. Sharing information with them allowed me to setup things and discover more about using containers for applications..
+- Before this, I only knew the basic features of Git. Since I had no knowledge of Docker or Docker Compose, I gained a lot by working on this project. I worked with my team and asked questions, slowly getting a sense of how everything fit in the system. Sharing information with them allowed me to setup things and discover more about using containers for applications.
 
 **How can we improve communication during mob programming?**
 - A greater understanding of each person’s task and regular check-ins will increase our team’s communication.
