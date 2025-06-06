@@ -18,15 +18,10 @@ function AboutPage() {
     };
   return (
     <>
-    <Button onClick={scrollToTop} style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: '9999' }} title="Scroll to top of page" > **updated the code 
+    <Button onClick={scrollToTop} style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: '9999' }} title="Scroll to top of page" > 
     <KeyboardDoubleArrowUpIcon style={{color:'white'}}/>
     </Button>
-      /*<br>
-      </br>
-      <br>
-      </br>
-      <br>
-      </br>*/
+     
       <Container style={{ marginTop: '60px' }}>  
         <Row style={{ width: "100%" }}>
           <Col>
@@ -165,7 +160,7 @@ function AboutPage() {
               <Accordion.Item eventKey="3">
                 <Accordion.Header>About the Data</Accordion.Header>
                 <Accordion.Body>
-                  /*Lorem ipsum dolor sit amet, consectetur adipiscing elit*/
+                  /Lorem ipsum dolor sit amet, consectetur adipiscing elit
                   The DADs database contains detailed records of arithmetical dynamical systems, including properties like degree, automorphism group cardinality, and critical point portraits.
                 </Accordion.Body>
               </Accordion.Item>
