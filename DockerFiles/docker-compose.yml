@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  db:
+    build:
+      context: C:\Users\bramh\Documents\CS\PSD\dads\DockerFiles
+      dockerfile: docker-db
+    container_name: docker_img-container
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: dynamSystems
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
