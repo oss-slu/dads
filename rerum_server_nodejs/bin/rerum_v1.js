@@ -15,7 +15,7 @@ dotenv.config()
  * Get port from environment and store in Express.
  */
 
-const port = process.env.PORT ?? 3001
+const port = process.env.PORT ?? 3000
 app.set('port', port)
 
 /**

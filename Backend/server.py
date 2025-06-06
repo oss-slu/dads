@@ -2,6 +2,10 @@
 Module Dcstring: This file manages interactions
 between frontend and backend
 """
+
+
+
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from postgres_connector import PostgresConnector
@@ -95,3 +99,6 @@ def get_graph_metadata():
 
 if __name__ == '__main__':
     app.run()
+
+
+
