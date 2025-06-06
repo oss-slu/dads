@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:4.4
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  tinynode:
+    build: ./TinyNode
+    container_name: tinynode
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo
+
+  rerum:
+    build: ./rerum_server_nodejs
+    container_name: rerum
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      - tinynode
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/rerumDB
+      - TINYNODE_URL=http://tinynode:3001
+
+volumes:
+  mongo_data:

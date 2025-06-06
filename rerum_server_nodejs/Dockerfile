@@ -1,6 +1,7 @@
-FROM node:18
-WORKDIR /usr/src/rerum
-COPY . .
+FROM node:22
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
-EXPOSE 3030
-CMD ["node", "app.js"]
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
