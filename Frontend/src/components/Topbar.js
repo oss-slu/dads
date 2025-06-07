@@ -43,9 +43,10 @@ export default function Topbar() {
 			</Typography>
             </Link>
 
-			<PageLink text="Information" link="/" icon={<HomeIcon style={{color:'white'}} />} />
+			<PageLink text="Home" link="/" icon={<HomeIcon style={{color:'white'}} />} />
 			<PageLink text="Dynamical Systems" link="/exploreSystems" icon={<FunctionsIcon style={{color:'white'}}/>} />
             <PageLink text="Families" link="/families" icon={<GrainIcon style={{color:'white'}}/>} />
+            <PageLink text="Info Radiator" link="/radiator" icon={<FunctionsIcon style={{color:'white'}} />} />
 
 		    </Toolbar>
                 </AppBar>
