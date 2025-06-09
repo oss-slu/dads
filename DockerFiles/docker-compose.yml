@@ -1,17 +1,67 @@
-version: "3.9"
-
+version: "3.8"
+ 
 services:
+ 
   db:
     build:
-      context: C:\Users\bramh\Documents\CS\PSD\dads\DockerFiles
+      context: .
       dockerfile: docker-db
-    container_name: docker_img-container
+    container_name: dads-db
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: dynamSystems
+      POSTGRES_DB: dynamsystems
+    volumes:
+      - ./postgresdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - appnet
+ 
+  # MongoDB for Rerum
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb_dads
+    ports:
+      - "27017:27017"
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - mongo_data:/data/db
+    networks:
+      - appnet
+ 
+  # TinyNode (Rerum dependency)
+  tinynode:
+    build:
+      context: C:\Users\bramh\Documents\CS\PSD\dads\TinyNode
+      dockerfile: Dockerfile
+    container_name: tinynode_dads
+    ports:
+      - "3030:3030"
+    depends_on:
+      - mongodb
+    networks:
+      - appnet
+ 
+  # Rerum Server
+  rerum:
+    build:
+      context: C:\Users\bramh\Documents\CS\PSD\dads\rerum_server_nodejs
+      dockerfile: Dockerfile
+    container_name: rerum_dads
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+      - tinynode
+    env_file:
+      - C:\Users\bramh\Documents\CS\PSD\dads\DockerFiles\.env
+    networks:
+      - appnet
+ 
+volumes:
+  mongo_data:
+  pgdata:
+ 
+networks:
+  appnet:
