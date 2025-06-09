@@ -28,7 +28,7 @@ import Button from 'react-bootstrap/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import HelpBox from '../components/FunctionDetail/HelpBox';
-
+import { submit_annotation } from '../Services/api';
 
 
 function ExploreSystems() {
@@ -159,8 +159,8 @@ function ExploreSystems() {
         try {
             const result = await get_families()
             const autocompleteOptions = result.data.map((family) => ({
-                id: family[0], // Use the first element as id
-                name: family[1], // Use the second element as label
+                id: family[0], 
+                name: family[1],
             }));
             setFamilies(autocompleteOptions)
             setOptionsLoading(false)
@@ -170,6 +170,48 @@ function ExploreSystems() {
             setOptionsLoading(false);
         }
     }
+    const saveFilters = async () => {
+        try {
+            const filterData = JSON.stringify(filters);
+            const experiment_id = "filter_set";
+            const [success, result] = await submit_annotation(filterData, experiment_id);
+            if (success) {
+                
+                reportGeneralError("✅ Filters saved successfully!");
+            } else {
+                reportGeneralError("Failed to save filters: " + result);
+            }
+        } catch (error) {
+            reportGeneralError("Error saving filters: " + error.message);
+        }
+    };
+
+<>
+    <br></br>
+    <ul id="myUL">
+        <li style={{ paddingBottom: '10px' }}>
+            <Button
+                onClick={sendFilters}
+                variant="primary"
+                style={{width:'100%'}}
+            >
+                Get Results 
+            </Button>
+        </li>
+        <li style={{ paddingBottom: '10px' }}>
+            <Button onClick={clearFilters} variant="danger" style={{width:'100%'}}>
+                Clear Filters
+            </Button>
+        </li>
+        <li>
+            <Button onClick={saveFilters} variant="success" style={{width:'100%'}}>
+                Save Filters
+            </Button>
+        </li>
+    </ul>
+    <br />
+</>
+    
     const fetchFilteredSystems = async () => {
         try {
             const result = await get_filtered_systems(
@@ -309,8 +351,8 @@ function ExploreSystems() {
 
     const downloadSageCode = () => {
         const link = document.createElement('a');
-        link.href = '/sage.py'; // Path to your file in public/
-        link.download = 'sage.py'; // Desired filename
+        link.href = '/sage.py';
+        link.download = 'sage.py';
         link.click();
     };
 
@@ -342,8 +384,6 @@ function ExploreSystems() {
 
         modelString = modelString.slice(1, -1);
 
-        // Using ugly regex, we will split the model string into an array by separating
-        // by commas not inside quotes
         var parsedData = modelString.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
 
         if (index >= 0 && index < parsedData.length && parsedData[index] != "") {
@@ -808,6 +848,11 @@ function ExploreSystems() {
                                 <li>
                                     <Button onClick={clearFilters} variant="danger" style={{width:'100%'}}>
                                         Clear Filters
+                                    </Button>
+                                </li>
+                                <li>
+                                    <Button onClick={saveFilters} variant="success" style={{width:'100%'}}>
+                                        Save Filters
                                     </Button>
                                 </li>
                             </ul>
