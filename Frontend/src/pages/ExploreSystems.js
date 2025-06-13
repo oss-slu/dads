@@ -1049,19 +1049,7 @@ const handleDeletePreset = () => {
                                                 value={selectedPresetToDelete || ''} 
                                             />
                                         </li>
-                                        {/* Assuming you have a separate "Load Selected Preset (Edit)" button. Add it here if it exists. */}
-                                        {/* Example:
-                                        <li style={{ paddingBottom: '10px' }}>
-                                            <Button
-                                                onClick={() => handleLoadPreset(selectedPresetToDelete)}
-                                                variant="primary"
-                                                style={{width:'100%', marginTop: '0px'}}
-                                                disabled={!selectedPresetToDelete}
-                                            >
-                                                Load Selected Preset (Edit)
-                                            </Button>
-                                        </li>
-                                        */}
+                                       
                                         {selectedPresetToDelete && (
                                             <li>
                                                 <Button
