@@ -1,4 +1,7 @@
-// src/services/service.js
+// import exampleText from '../rerum_server_nodejs/token.txt';
+// console.log('Imported text:', exampleText);
+
+
 export const submit_annotation = async (annotation_text, experiment_id) => {
     try {
         const response = await fetch('http://localhost:3001/v1/api/create', {
@@ -31,5 +34,5 @@ export const submit_annotation = async (annotation_text, experiment_id) => {
 // Mock getToken function (replace with actual token retrieval logic)
 const getToken = () => {
     // Replace with logic to read token from a secure source
-    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZXYtdXNlciIsIm5hbWUiOiJEZXZlbG9wZXIiLCJhdWQiOiJsb2NhbC1kZXYiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAvIiwibG9jYWxob3N0L2FnZW50IjoidmFtc2lAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDk0NzM5MjEsImV4cCI6MTc0OTQ3NzUyMX0.8aRZSG2_4AAnKmFjvCTb--10rk17V0t3s6dHMuC9K_s';
+    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZXYtdXNlciIsIm5hbWUiOiJEZXZlbG9wZXIiLCJhdWQiOiJsb2NhbC1kZXYiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAvIiwibG9jYWxob3N0L2FnZW50IjoidmFtc2lAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDk3MDgyNzEsImV4cCI6MTc0OTcxMTg3MX0.N4raVqTXVGCsSnUweAW4p7-65zteN5bRNBXNTADkhP4';
 };
