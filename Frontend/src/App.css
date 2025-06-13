@@ -1,3 +1,166 @@
+/* --- Modern Color Palette --- */
+:root {
+  --primary-blue: #3f51b5;   /* A classic, slightly desaturated blue for main elements */
+  --secondary-green: #4CAF50; /* A friendly green for 'Save' actions */
+  --danger-red: #f44336;     /* A standard red for 'Clear' actions */
+  --neutral-light-gray: #f9f9f9; /* Very light background for sections */
+  --neutral-mid-gray: #e0e0e0;   /* For borders, subtle dividers */
+  --text-dark: #333333;       /* Dark text for good readability */
+  --text-light: #ffffff;     /* White text for dark backgrounds */
+  --box-shadow-light: rgba(0, 0, 0, 0.1); /* Subtle shadow for cards */
+}
+
+/* You might want to define base styles for buttons if you're overriding react-bootstrap's default */
+/* Example (adjust if you're heavily relying on react-bootstrap variants without overrides): */
+.btn-primary {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: var(--text-light);
+}
+.btn-success {
+  background-color: var(--secondary-green);
+  border-color: var(--secondary-green);
+  color: var(--text-light);
+}
+.btn-danger {
+  background-color: var(--danger-red);
+  border-color: var(--danger-red);
+  color: var(--text-light);
+}
+
+/*index.js*/
+body {
+  margin: 0;
+  /* REPLACE THIS LINE: */
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', '... */
+  /* WITH YOUR CHOSEN FONT: */
+  font-family: 'Inter', sans-serif; /* Example: Use 'Inter' for body text */
+  color: var(--text-dark); /* Use your new text color variable */
+  line-height: 1.6; /* Improve readability with more line height */
+  background-color: var(--neutral-light-gray); /* Set a subtle background for the whole app */
+}
+
+/* --- Heading Styles (New Section) --- */
+h1, h2, h3, h4, h5, h6, .sidebarHead {
+  font-family: 'Montserrat', sans-serif; /* Example: Use 'Montserrat' for headings */
+  font-weight: 700; /* Make headings bold */
+  color: var(--primary-blue); /* Use primary color for headings */
+  margin-top: 1.5em; /* Add some top margin to headings */
+  margin-bottom: 0.5em; /* Add some bottom margin */
+}
+
+/* Adjust specific sizes for your existing elements */
+.sidebarHead {
+  font-size: 1.6rem; /* Make sidebar headers a bit more prominent */
+  padding-bottom: 5px; /* Add slight padding below for visual separation from divider */
+  border-bottom: 1px solid var(--neutral-mid-gray); /* Subtle line below header */
+  margin-bottom: 15px; /* Space below header and divider */
+  color: var(--text-dark); /* Keep sidebar head dark for contrast */
+}
+
+/* --- Layout and Spacing --- */
+
+/* General container for main content area to prevent content from touching edges */
+.app-main-content-container {
+    padding: 20px;
+    background-color: var(--neutral-light-gray); /* Match body background */
+}
+
+/* Apply padding to the sidebar and results table grid items */
+.sidebar {
+    padding: 20px; /* Increase overall padding inside the sidebar grid cell */
+}
+
+.results-table {
+    padding: 20px; /* Consistent padding for the results table grid cell */
+}
+
+/* Adjust default list and link styles */
+ul, #myUL {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Add padding to list items within the filters for better spacing */
+#myUL li {
+  margin-bottom: 12px; /* Increase space between filter items */
+  padding: 0; /* Ensure no extra padding pushing content */
+}
+
+/* Adjust padding for the search input group if needed */
+.search-input-group { /* Assuming you have a class for the search input */
+    margin-bottom: 15px;
+}
+
+/* Clear the default caret styling if you're replacing with Material-UI icons */
+.caret, .caret::before, .caret-down::before {
+    content: none; /* Remove previous unicode caret */
+    /* You will manage icon display directly in ExploreSystems.js with MUI icons */
+}
+
+/* Remove border for table elements, if not already desired */
+table, td, th {
+  border: 1px solid var(--neutral-mid-gray); /* Use a softer border color */
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  box-shadow: 0 2px 8px var(--box-shadow-light); /* Subtle shadow for the table */
+  border-radius: 8px; /* Rounded corners for the table */
+  overflow: hidden; /* Ensure rounded corners clip content */
+}
+th, td {
+    padding: 12px 15px; /* More padding for table cells */
+    text-align: left;
+    border-bottom: 1px solid var(--neutral-mid-gray); /* Soft bottom border for rows */
+}
+th {
+    background-color: var(--primary-blue); /* Darker header for tables */
+    color: var(--text-light);
+    font-weight: 600;
+}
+/* Style for even/odd rows for better readability */
+.even-row {
+  background-color: #f2f6fa; /* A very light blue tint */
+}
+.odd-row {
+  background-color: var(--text-light); /* White */
+}
+
+.active-filters-container {
+  max-width: 700px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  background-color: var(--neutral-mid-gray); /* Use a softer background */
+  border-radius: 5px; /* Slightly rounded corners */
+  margin-bottom: 20px; /* Add more space below the banner */
+}
+
+.filter-chip {
+  margin: 5px;
+  padding: 8px 12px; /* More padding for chips */
+  background-color: var(--primary-blue); /* Chip background */
+  color: var(--text-light); /* Text color for chips */
+  border-radius: 20px; /* Make chips more rounded */
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between text and close icon */
+}
+
+.filter-chip button { /* Style for the close button within the chip */
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-left: 5px;
+    padding: 0;
+    line-height: 1; /* Prevent extra space */
+} 
+
 table, td, th {
   border: 1px solid;
 }

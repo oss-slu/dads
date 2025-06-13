@@ -28,8 +28,10 @@ import Button from 'react-bootstrap/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import HelpBox from '../components/FunctionDetail/HelpBox';
-
-
+import Card from "@mui/material/Card";         
+import CardContent from "@mui/material/CardContent";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 function ExploreSystems() {
 
@@ -44,6 +46,8 @@ function ExploreSystems() {
     const [generalError, setGeneralError] = useState('');
     const [openGeneralErrorSnackbar, setOpenGeneralErrorSnackbar] = useState(false);
     const [filtersApplied, setFiltersApplied] = useState([]);
+    const [presetNameInput, setPresetNameInput] = useState('');
+    const [facetOptions, setFacetOptions] = useState({});
     const [stats, setStat] = useState({
         numMaps: "",
         avgAUT: "",
@@ -52,12 +56,29 @@ function ExploreSystems() {
         avgResultant: ""
     });
 
+    const [generalSuccess, setGeneralSuccess] = useState('');
+const [openGeneralSuccessSnackbar, setOpenGeneralSuccessSnackbar] = useState(false);
+
+const reportGeneralSuccess = (message) => {
+    setGeneralSuccess(message);
+    setOpenGeneralSuccessSnackbar(true);
+};
+
+const handleGeneralSuccessClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    setOpenGeneralSuccessSnackbar(false);
+    setGeneralSuccess(''); 
+};
+
+    
     const [families, setFamilies] = useState([]);
     const {page, setPage} = usePage();
-    // Context Hooks
+    
     const { filters, setFilters } = useFilters();
 
-    // Menu setup
+   
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -66,6 +87,140 @@ function ExploreSystems() {
     const handleClose = () => {
       setAnchorEl(null);
     };
+    
+    
+    const [savedPresetNames, setSavedPresetNames] = useState([]);
+    const loadSavedPresets = () => {
+        const presets = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('dynabaseFilterPreset_')) {
+                presets.push(key.substring('dynabaseFilterPreset_'.length));
+            }
+        }
+        setSavedPresetNames(presets);
+    };
+
+    const loadAvailableFacets = async () => { 
+        setOptionsLoading(true);
+        try {
+            const response = await get_systems("facets");
+            setFacetOptions(response.data);
+        } catch (error) {
+            reportMajorError(`Failed to load facet options: ${error.message}`);
+        } finally {
+            setOptionsLoading(false);
+        }
+    };
+  
+    
+    const [openFamilyAutocomplete, setOpenFamilyAutocomplete] = useState(false);
+
+    const handleLoadPreset = (presetName) => {
+        if (!presetName) { return; }
+        try {
+            
+            const savedFiltersJson = localStorage.getItem(`dynabaseFilterPreset_${presetName}`);
+            if (savedFiltersJson) {
+                const loadedFilters = JSON.parse(savedFiltersJson);
+                setFilters(loadedFilters); 
+                 setFiltersApplied(loadedFilters);                
+                 sendFilters(); 
+                reportGeneralError(`Filters "${presetName}" loaded successfully!`);
+                setOpenFamilyAutocomplete(true);
+            } else {
+                reportGeneralError(`Preset "${presetName}" not found.`); 
+            }
+        } catch (e) {
+            reportMajorError('Could not load filters. Data might be corrupted.');
+            console.error(e);
+        }
+    };
+
+    const [selectedPresetToDelete, setSelectedPresetToDelete] = useState(null); 
+
+    <Autocomplete
+            disablePortal
+            id="load-filter-preset-autocomplete"
+            options={savedPresetNames}
+            sx={{ width: '100%', marginBottom: '10px' }}
+            renderInput={(params) => <TextField {...params} label="Load Filter Preset" />}
+            onChange={(event, newValue) => {
+                if (newValue) {
+                    handleLoadPreset(newValue);
+                    setSelectedPresetToDelete(newValue);
+                    console.log("Autocomplete onChange - selectedPresetToDelete set to:", newValue);
+                } else {
+                    setSelectedPresetToDelete(null);
+                    setFilters({});
+                    sendFilters();
+                    console.log("Autocomplete onChange - selectedPresetToDelete cleared.");
+                }
+            }}
+            value={selectedPresetToDelete || ''}
+            renderOption={(props, option, { selected }) => {
+                console.log("renderOption - Option:", option, "Selected Status:", selected);
+                console.log("renderOption - Current Autocomplete Value:", selectedPresetToDelete);
+                console.log("renderOption - Match (option === selectedPresetToDelete):", option === selectedPresetToDelete);
+
+                return (
+                    <li {...props}>
+                        <Checkbox
+                            icon={icon}
+                            checkedIcon={checkedIcon}
+                            style={{ marginRight: 8 }}
+                            checked={selected} 
+                        />
+                        {option}
+                    </li>
+                );
+            }}
+        />
+             
+const handleDeletePreset = () => { 
+    if (!selectedPresetToDelete) {
+        reportGeneralError("Please select a preset to delete first.");
+        return;
+    }
+
+    const confirmDelete = window.confirm(`Are you sure you want to delete the preset "${selectedPresetToDelete}"?`);
+    if (!confirmDelete) {
+        return;
+    }
+
+    try {
+        localStorage.removeItem(`dynabaseFilterPreset_${selectedPresetToDelete}`);
+        loadSavedPresets(); 
+        setSelectedPresetToDelete(null); 
+        setFilters({}); 
+        sendFilters(); 
+        reportGeneralError(`Preset "${selectedPresetToDelete}" deleted successfully.`);
+    } catch (e) {
+        reportMajorError(`Failed to delete preset "${selectedPresetToDelete}".`);
+        console.error(e);
+    }
+};
+    useEffect(() => {
+        sendFilters();
+        loadAvailableFacets(); 
+        loadSavedPresets();
+        
+    }, []);
+
+    const handleSaveFilters = (presetName) => {
+    if (presetName.trim() === '') {
+        reportGeneralError('Preset name cannot be empty.');
+        return;
+    }
+    try {
+        localStorage.setItem(`dynabaseFilterPreset_${presetName}`, JSON.stringify(filters));
+        loadSavedPresets(); 
+        reportGeneralError(`Filters saved as "${presetName}"!`);
+    } catch (e) {
+        reportMajorError('Could not save filters. Browser storage might be full or blocked.');
+        console.error(e);
+    }
+};
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -98,7 +253,6 @@ function ExploreSystems() {
         fetchFamilies();
     }, [triggerFetch]);
 
-    // Handler Functions
     const handleAutocompleteChange = (event, value) => {
         const selectedIds = value.map((option) => option.id);
         setFilters((prevFilters) => ({
@@ -106,6 +260,8 @@ function ExploreSystems() {
           family: selectedIds,
         }));
       };
+
+      
     
     const handleCheckboxChange = (filterName, filterValue) => {
         const updatedFilters = filters[filterName].includes(filterValue)
@@ -154,13 +310,13 @@ function ExploreSystems() {
         setPage(1);
     };
 
-    // API Call Functions
+  
     const fetchFamilies = async () => {
         try {
             const result = await get_families()
             const autocompleteOptions = result.data.map((family) => ({
-                id: family[0], // Use the first element as id
-                name: family[1], // Use the second element as label
+                id: family[0], 
+                name: family[1], 
             }));
             setFamilies(autocompleteOptions)
             setOptionsLoading(false)
@@ -226,7 +382,12 @@ function ExploreSystems() {
         }
     };
 
-    // Utility Functions
+    const handleClearFilters = () => {
+    setFilters({});
+    setSelectedPresetToDelete(null);
+    sendFilters();
+};
+
     const reportMajorError = (message) => {
         setMajorError(message);
         setOpenMajorErrorModal(true);
@@ -249,10 +410,8 @@ function ExploreSystems() {
                 reportGeneralError('There is nothing to download.');
             }
             else {
-                // For handing non-empty data
                 let csvData = 'model_label,newton_polynomial_coeffs,base_field_label,automorphism_group_cardinality,base_field_degree,citations,cp_cardinality,cp_field_of_defn,critical_portrait_graph_id,degree,display_model,family,function_id,is_chebyshev,is_lattes,is_newton,is_pcf,is_polynomial,monic_centered.coeffs,monic_centered.resultant,monic_centered.bad_primes,monic_centered.height,monic_centered.base_field_label,ordinal,original_model.coeffs,original_model.resultant,original_model.bad_primes,original_model.height,original_model.base_field_label,rational_twists,reduced_model.coeffs,reduced_model.resultant,reduced_model.bad_primes,reduced_model.height,reduced_model.base_field_label,sigma_one,sigma_two\n'
                 for (let i = 0; i < csvSystems.length; i++) {
-                    // Going one data entry (one row) at a time
                     csvData += "\"" + String("1." + csvSystems[i].sigma_one + "." + csvSystems[i].sigma_two + "." + csvSystems[i].ordinal).replace(/"/g, '') + "\"" + ","
                     csvData += "\"" + String(csvSystems[i].newton_polynomial_coeffs).replace(/"/g, '') + "\"" + ","
                     csvData += "\"" + String(csvSystems[i].base_field_label).replace(/"/g, '') + "\"" + ","
@@ -309,8 +468,8 @@ function ExploreSystems() {
 
     const downloadSageCode = () => {
         const link = document.createElement('a');
-        link.href = '/sage.py'; // Path to your file in public/
-        link.download = 'sage.py'; // Desired filename
+        link.href = '/sage.py'; 
+        link.download = 'sage.py'; 
         link.click();
     };
 
@@ -341,9 +500,6 @@ function ExploreSystems() {
         }
 
         modelString = modelString.slice(1, -1);
-
-        // Using ugly regex, we will split the model string into an array by separating
-        // by commas not inside quotes
         var parsedData = modelString.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
 
         if (index >= 0 && index < parsedData.length && parsedData[index] != "") {
@@ -353,7 +509,7 @@ function ExploreSystems() {
         }
     }
 
-    // True Constants
+   
     const defaultFilters = {
         dimension: [],
         degree: [],
@@ -403,11 +559,13 @@ function ExploreSystems() {
             <div>
                 <div className="results-container" container>
                     <Grid className="sidebar" item xs={3}>
-                        <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-                            <p className="sidebarHead">Filters</p>
-                            <Divider />
+                        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: '8px', boxShadow: 3 }}>
+                            <CardContent>
+                        <       div style={{ marginLeft: "10px", marginRight: "10px" }}>
+                                <p className="sidebarHead">Filters</p>
+                                <Divider />
 
-                            <ul id="myUL">
+                                <ul id="myUL">
                                 <li>
                                     <span
                                         className="caret"
@@ -719,6 +877,8 @@ function ExploreSystems() {
                                         Family
                                     </span>
                                     <ul className="nested">
+                                        <li className="filter-item"></li>
+                                        
                                     {optionsLoading ? (
                                         <div>Loading...</div>
                                       ) : (<Autocomplete
@@ -737,12 +897,23 @@ function ExploreSystems() {
                                                     />
                                                     {option.name}
                                                 </li>
+                                            
                                             )}
                                             renderInput={(params) => (
-                                                <TextField {...params} label="Checkboxes" placeholder="Families" />
+                                                <TextField {...params} label="Select Families" placeholder="Families" />
                                             )}
-                                            value={filters.family.map((id) => families.find((option) => option.id === id))}
-                                            onChange={handleAutocompleteChange}
+                                            value={
+                                                    Array.isArray(filters.family) && families.length > 0
+                                                        ? filters.family
+                                                              .map((id) => families.find((option) => option.id === id))
+                                                              .filter(Boolean)
+                                                        : []
+                                                }
+                                                onChange={handleAutocompleteChange}
+                                                open={openFamilyAutocomplete} 
+                                                onClose={() => setOpenFamilyAutocomplete(false)}
+                                                
+
                                         />)}
                                     </ul>
                                 </li>
@@ -761,7 +932,6 @@ function ExploreSystems() {
                                         <label>Sigma 1</label>
                                             <input
                                                 type="text"
-                                                // style={textBoxStyle} if we want to apply the same style for all text boxes, we can adjust textBoxStyle
                                                 style={{ width: "150px", marginRight: "12px" }}
                                                 value={filters.sigma_one || ''}
                                                 onChange={(e) => handleTextChange("sigma_one", e.target.value)}
@@ -772,7 +942,7 @@ function ExploreSystems() {
                                         <label>Sigma 2</label>
                                             <input
                                                 type="text"
-                                                // style={textBoxStyle}
+                                                
                                                 style={{ width: "150px", marginRight: "12px" }}
                                                 value={filters.sigma_two || ''}
                                                 onChange={(e) => handleTextChange("sigma_two", e.target.value)}
@@ -780,10 +950,10 @@ function ExploreSystems() {
                                         </li>
                                         <li>
                                         <label>Label</label>
-                                        {/* <label style={{ display: "block", marginBottom: "5px" }}>Label</label> */}
+                                        {}
                                             <input
                                                 type="text"
-                                                // style={textBoxStyle}
+                                            
                                                 style={{ width: "150px", marginLeft: "22px",marginRight: "12px" }}
                                                 value={filters.model_label || ''}
                                                 onChange={(e) => handleTextChange("model_label", e.target.value)}
@@ -805,14 +975,112 @@ function ExploreSystems() {
                                         Get Results 
                                     </Button>
                                 </li>
-                                <li>
-                                    <Button onClick={clearFilters} variant="danger" style={{width:'100%'}}>
-                                        Clear Filters
+
+                                
+                                <li style={{ paddingBottom: '10px' }}>
+                                    <Button
+                                        onClick={handleClearFilters} 
+                                        variant="secondary" 
+                                        style={{ width: '100%', marginTop: '10px' }} 
+                                    >
+                                        Clear All Filters
                                     </Button>
                                 </li>
+                                <li style={{ paddingBottom: '10px' }}>
+                                <Button
+                                    onClick={() => {
+                                        if (selectedPresetToDelete) {
+                                    
+                                            handleSaveFilters(selectedPresetToDelete);
+                                            alert(`Filter preset "${selectedPresetToDelete}" updated successfully.`);
+                                        } else {
+                                            
+                                            const name = prompt("Enter a name for this filter preset:");
+                                            if (name) {
+                                                handleSaveFilters(name);
+                                            }
+                                        }
+                                    }}
+                                    variant="success" 
+                                    style={{width:'100%'}}
+                                >
+                                    Save and Update Filters
+                                </Button>
+                            </li>
+
+                         <ul id="myUL">
+                                <li>
+                                    <span
+                                        className="caret" 
+                                        onClick={toggleTree} 
+                                    >
+                                        Load/Save Filter Presets {}
+                                    </span>
+                                    <ul className="nested"> {}
+                                        <li style={{ paddingBottom: '10px' }}>
+                                            <Autocomplete
+                                                disablePortal
+                                                id="load-filter-preset-autocomplete"
+                                                options={savedPresetNames}
+                                                sx={{ width: '100%', marginBottom: '10px' }}
+                                                renderInput={(params) => <TextField {...params} label="Load Filter Preset" />}
+                                                onChange={(event, newValue) => {
+                                                    if (newValue) {
+                                                        handleLoadPreset(newValue);
+                                                        setSelectedPresetToDelete(newValue);
+                                                    } else {
+                                                        setSelectedPresetToDelete(null);
+                                                        setFilters({});
+                                                        sendFilters();
+                                                    }
+                                                }}
+                                               
+                                                renderOption={(props, option, { selected }) => (
+                                                    <li {...props}>
+                                                        <Checkbox
+                                                            icon={icon}
+                                                            checkedIcon={checkedIcon}
+                                                            style={{ marginRight: 8 }}
+                                                            checked={selected}
+                                                        />
+                                                        {option}
+                                                    </li>
+                                                )}
+                                                value={selectedPresetToDelete || ''} 
+                                            />
+                                        </li>
+                                        {/* Assuming you have a separate "Load Selected Preset (Edit)" button. Add it here if it exists. */}
+                                        {/* Example:
+                                        <li style={{ paddingBottom: '10px' }}>
+                                            <Button
+                                                onClick={() => handleLoadPreset(selectedPresetToDelete)}
+                                                variant="primary"
+                                                style={{width:'100%', marginTop: '0px'}}
+                                                disabled={!selectedPresetToDelete}
+                                            >
+                                                Load Selected Preset (Edit)
+                                            </Button>
+                                        </li>
+                                        */}
+                                        {selectedPresetToDelete && (
+                                            <li>
+                                                <Button
+                                                    onClick={handleDeletePreset}
+                                                    variant="danger"
+                                                    style={{ width: '100%', marginTop: '10px' }}
+                                                >
+                                                    Delete Selected Preset
+                                                </Button>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </li>
+                            </ul>
                             </ul>
                             <br />
                         </div>
+                        </CardContent>
+                        </Card>
                     </Grid>
 
                     <Grid className="results-table" item xs={6}>
@@ -912,9 +1180,11 @@ function ExploreSystems() {
                     </Grid>
 
                     <Grid className="sidebar" item xs={3}>
+                        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: '8px', boxShadow: 3 }}>
+                            <CardContent>
                         <div style={{ marginLeft: "10px", marginRight: "10px" }}>
                             <p className="sidebarHead" >RESULT STATISTICS </p>
-                            <Divider />
+                            <Divider sx={{mb: 2}} />
 
                             <br />
                             <div className='statcontainer'>
@@ -984,6 +1254,8 @@ function ExploreSystems() {
                             </div>
                             <br />
                         </div>
+                        </CardContent>
+                        </Card>
                     </Grid>
                 </div>
             </div>
