@@ -2,8 +2,9 @@ name: Frontend Linting ESLint
 
 on:
   push:
-    branches:
-      - '*'
+    paths:
+      - 'Frontend/**'
+      - '.github/workflows/jslint.yml'
 
 jobs:
   lint:
@@ -11,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Check frontend/package.json
         run: |
@@ -21,9 +22,11 @@ jobs:
           fi
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
 
       - name: Install Dependencies
         working-directory: Frontend
@@ -32,3 +35,7 @@ jobs:
       - name: Run ESLint
         working-directory: Frontend
         run: npm run lint
+
+      - name: Check formatting with Prettier
+        working-directory: Frontend
+        run: npx prettier --check .
