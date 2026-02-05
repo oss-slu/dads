@@ -14,8 +14,8 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { Link } from "react-router-dom";
 
-const PageLink = ({ link, text, icon }) => {
-    return (
+const PageLink = ({ link, text, icon }) => { // Component to create a navigation link in the top bar.
+    return ( // Renders a link with an icon and text, styled to fit within the top bar. Uses Material-UI components for consistent styling and layout.
         <>
             <Link to={link} style={{ color: "white", textDecoration: "none" }}>
                 <ListItem disablePadding>
@@ -30,8 +30,8 @@ const PageLink = ({ link, text, icon }) => {
         </>)
 }
 
-export default function Topbar() {
-    return (
+export default function Topbar() { // Main component for the top navigation bar of the application. Contains links to different pages and is styled using Material-UI components.
+    return ( // Renders the top bar with a title and navigation links. The AppBar component is fixed at the top of the page, and the links are styled to match the overall design of the application.
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
 		<AppBar style={{ background: '#2E3B55' }}

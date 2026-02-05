@@ -14,7 +14,7 @@ import FunctionsIcon from '@mui/icons-material/Functions';
 import { Link } from "react-router-dom";
 
 
-
+/* NOT IN ACTIVE USE. CURRENTLY REPLACED BY TOPBAR */
 
 
 const PageLink = ({ link, text, icon }) => {

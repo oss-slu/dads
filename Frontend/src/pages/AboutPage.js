@@ -2,6 +2,8 @@
 This is the homepage of the application which displays some general background
 information to the user. 
 */
+
+/* Additional information in Frontend 'Documentation.md' */
 import React from 'react';
 import { Container, Row, Col, Button,ListGroup,Tab } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';

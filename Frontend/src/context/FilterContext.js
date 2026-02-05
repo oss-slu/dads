@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState } from 'react';
 
-const FilterContext = createContext();
+const FilterContext = createContext(); // Creates a new context for managing filter state across the application.
 
-export const useFilters = () => useContext(FilterContext);
+export const useFilters = () => useContext(FilterContext); // Custom hook to access the filter context easily within components.
 
-export const FilterProvider = ({ children }) => {
+export const FilterProvider = ({ children }) => { // Provider component that wraps around parts of the app that need access to filter state.
     const [filters, setFilters] = useState({
         dimension: [],
         degree: [],
@@ -28,7 +28,7 @@ export const FilterProvider = ({ children }) => {
         journal_label: ""
     });
 
-    return (
+    return ( // Provides the filter state and updater function to its children components.
         <FilterContext.Provider value={{ filters, setFilters }}>
             {children}
         </FilterContext.Provider>

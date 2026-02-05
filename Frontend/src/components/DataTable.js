@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
-//component to render a dynamic tabel
+//component to render a dynamic table
 //labels is list of strings for column titles
 //data is a list of lists 
 export default function DataTable({ labels, data }) {

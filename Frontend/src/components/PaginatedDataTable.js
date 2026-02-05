@@ -6,15 +6,15 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage, current
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentData = data.slice(indexOfFirstItem, indexOfLastItem)
 
-    const Superscript = ({ children }) => {
-      return (
+    const Superscript = ({ children }) => { // Component to render superscript text for exponents.
+      return ( // Renders the children in a superscript style.
         <sup style={{ fontSize: '0.6em'}}>
           {children}
         </sup>
       );
     };
     
-    const renderExponent = (exponent) => {
+    const renderExponent = (exponent) => { // Function to format and render exponents in the table.
       const parts = exponent.split(/(\^[\d]+)/);
       const formattedExpression = [];
 
@@ -27,16 +27,16 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage, current
         }
       }
 
-      return formattedExpression;
+      return formattedExpression; // Returns the formatted expression with superscripts.
     };
     
-  const handlePageChange = (pageNumber) => {
+  const handlePageChange = (pageNumber) => { // Function to handle page changes in the pagination.
     if(pageNumber <= totalPages && pageNumber >= 1) {
 	    setCurrentPage(pageNumber);
     }
   };
 
-  return (
+  return ( // Renders the paginated data table with navigation controls.
     <>
       <table id="resultstable" className="table table-sm table-bordered table-striped" style={{ width: '700px' }}>
         <thead>

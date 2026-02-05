@@ -11,7 +11,7 @@ import AutomorphismGroupTable from '../components/FunctionDetail/AutomorphismGro
 import FunctionAttributes from '../components/FunctionDetail/FunctionAttributes';
 import RationalTwistsTable from '../components/FunctionDetail/RationalTwistsTable'; // Import the new component
 
-function SystemDetails() {
+function SystemDetails() { // Component to display detailed information about a specific system based on its label.
     const [data, setData] = useState({});
     const { label } = useParams();
 
@@ -19,7 +19,7 @@ function SystemDetails() {
         fetchDataForCSV();
     }, []);
 
-    const fetchDataForCSV = async () => {
+    const fetchDataForCSV = async () => { // Asynchronous function to fetch system data from the backend API using the provided label.
         try {
             const result = await get_system({ id: label });
             setData(result.data);
@@ -28,7 +28,7 @@ function SystemDetails() {
         }
     };
 
-    return (
+    return ( // Renders various tables displaying different aspects of the system's data.
         <div className="info-container">
             <div className="row">
                 <InfoTable data={data} />
@@ -62,4 +62,4 @@ function SystemDetails() {
     );
 }
 
-export default SystemDetails;
+export default SystemDetails; // Exports the SystemDetails component as the default export of this module, allowing it to be imported and used in other parts of the application.

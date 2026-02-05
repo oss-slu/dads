@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { get_family } from '../api/routes';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
-function FamilyDetailsTable({ family }) {
-  const formatModelCoeffs = (coeffs) => {
+function FamilyDetailsTable({ family }) { // Component to display detailed information about a specific family in tabular format.
+  const formatModelCoeffs = (coeffs) => { // Function to format model coefficients into a readable polynomial string.
     const superscripts = {"0": "\u2070",
       "1": "\u00B9",
       "2": "\u00B2",
@@ -16,7 +16,7 @@ function FamilyDetailsTable({ family }) {
       "8": "\u2078",
       "9": "\u2079"};
 
-    const toSuperscript = (num) => String(num).split("").map(digit => superscripts[digit]).join("");
+    const toSuperscript = (num) => String(num).split("").map(digit => superscripts[digit]).join(""); // Helper function to convert a number to its superscript representation.
     let result = coeffs.map((poly, polyIndex) => {
       let terms = [];
       let degree = poly.length - 1;
@@ -36,7 +36,7 @@ function FamilyDetailsTable({ family }) {
     return `[${result.join(", ")}]`;
   };
 
-  const formatCitations = (citations) => {
+  const formatCitations = (citations) => { // Function to format citations for display.
     // Separate array, return single string, or show None
     if (Array.isArray(citations)) {
       return citations.join(', ');
@@ -47,7 +47,7 @@ function FamilyDetailsTable({ family }) {
     }
   };
 
-  return (
+  return ( // Renders the family details in a series of tables categorized by general information, mathematical properties, and citations.
     <>
       <TableContainer className='table-component' component={Paper}>
         <h3>General Information</h3>
@@ -109,7 +109,7 @@ function FamilyDetailsTable({ family }) {
   );
 }
 
-function FamilyDetails() {
+function FamilyDetails() { // Component to fetch and display detailed information about a specific family.
   const [family, setFamily] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -145,4 +145,4 @@ function FamilyDetails() {
   );
 }
 
-export default FamilyDetails;
+export default FamilyDetails; // Exports the FamilyDetails component as the default export of this module, allowing it to be imported and used in other parts of the application.
