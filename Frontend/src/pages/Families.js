@@ -6,12 +6,12 @@ import Grid from "@mui/material/Grid";
 import { useFilters } from '../context/FilterContext';
 import { useNavigate } from 'react-router-dom';
 
-function Families() {
+function Families() { // Component that displays a list of families with pagination. Fetches family data from the backend API and allows navigation to detailed views of each family.
     const navigate = useNavigate();
     const { filters, setFilters } = useFilters();
     const [families, setFamilies] = useState(null);
     const [pagesPer] = useState('20');
-    const fetchFamilies = async () => {
+    const fetchFamilies = async () => { // Asynchronous function to fetch family data from the backend API.
         try {
             const result = await get_families()
             setFamilies(result.data)
@@ -24,19 +24,19 @@ function Families() {
     useEffect(() => {
         fetchFamilies()
     }, []); 
-    const updateAutocompleteSelections = (newSelections) => {
+    const updateAutocompleteSelections = (newSelections) => { // Function to update the filter context with new family selections.
         setFilters((prevFilters) => ({
           ...prevFilters,
           family: newSelections,
         }));
       };
 
-      const handleLinkClick = (selection) => {
+      const handleLinkClick = (selection) => { // Function to handle clicks on family links. Updates the filter context and navigates to the family details page.
         updateAutocompleteSelections([selection]);
         navigate(`/family-details/${selection}`);
     };
 
-    return (
+    return ( // Renders the families in a paginated data table with clickable links for each family ID.
         <>
         <div className="results-container" container>
         <Grid className="results-table" item xs={6}>
@@ -76,4 +76,4 @@ function Families() {
     );
 }
 
-export default Families;
+export default Families; // Exports the Families component as the default export of this module, allowing it to be imported and used in other parts of the application.
