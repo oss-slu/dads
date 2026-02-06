@@ -17,8 +17,8 @@
     "react-bootstrap": "^2.10.1",
     "react-dom": "^18.2.0",
     "react-pdf": "^10.2.0",
-    "react-router": "^7.9.6",
-    "react-router-dom": "^6.8.2",
+    "react-router": "^7.13.0",
+    "react-router-dom": "^6.30.3",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
