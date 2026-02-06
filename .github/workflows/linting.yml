@@ -7,17 +7,34 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8"]
+        python-version: ["3.10"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: "pip"
+        cache-dependency-path: Backend/requirements.txt
+
     - name: Install dependencies
+      working-directory: Backend
       run: |
         python -m pip install --upgrade pip
-        pip install pylint
-    - name: Analysing the code with pylint
+        pip install -r requirements.txt
+        pip install pylint black isort
+
+    - name: Check formatting with Black
+      working-directory: Backend
       run: |
-        pylint $(find . -name '*.py' ! -path './Backend/static/*')
+        black --check .
+
+    - name: Check import setting with isort
+      working-directory: Backend
+      run: |
+        isort --check-only .
+
+    - name: Analysing the code with pylint
+      working-directory: Backend
+      run: |
+        pylint .
