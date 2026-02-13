@@ -6,6 +6,9 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage, current
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentData = data.slice(indexOfFirstItem, indexOfLastItem)
 
+	// Recommend separating Superscript into a utility file if they are used in multiple places, to avoid code duplication.
+    const Superscript = ({ children }) => {
+      return (
     const Superscript = ({ children }) => {
       return (
         <sup style={{ fontSize: '0.6em'}}>
@@ -13,7 +16,10 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage, current
         </sup>
       );
     };
-    
+
+    const Superscript = ({ children }) => {
+      return (
+	// Recommend separating renderExponent into a utility file if they are used in multiple places, to avoid code duplication.
     const renderExponent = (exponent) => {
       const parts = exponent.split(/(\^[\d]+)/);
       const formattedExpression = [];
