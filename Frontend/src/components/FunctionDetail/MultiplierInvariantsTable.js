@@ -1,3 +1,4 @@
+/* DEPRECATED: This component is no longer used. If it is updated, please change export function name to MultiplierInvariantsTable().
 
 import * as React from 'react';
 import Table from '@mui/material/Table';
@@ -45,3 +46,5 @@ export default function InfoTable() {
     </TableContainer>
   );
 }
+
+*/

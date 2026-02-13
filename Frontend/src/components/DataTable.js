@@ -1,3 +1,5 @@
+/* DEPRECATED: This component is no longer used. It was replaced by PaginatedDataTable, which has functional pagination and can display more information.
+
 import * as React from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
@@ -48,3 +50,5 @@ export default function DataTable({ labels, data }) {
         </>
     );
 }
+
+*/
