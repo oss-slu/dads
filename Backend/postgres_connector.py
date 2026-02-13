@@ -2,6 +2,7 @@
 Module Docstring
 manages  server data queries
 """
+from warnings import filters
 import psycopg2
 import psycopg2.extras
 from config import load_config
@@ -39,19 +40,36 @@ class PostgresConnector:
         except Exception:
             return False
 
-    def get_rational_periodic_data(self, function_id):
-        sql = """SELECT * FROM rational_preperiodic_dim_1_nf
-                WHERE function_id = %s"""
+    def try_query(self, sql, params=None, fetch="all"):
+        self.connect()
+        result = None
+        cur = None
+
         try:
-            with self.connection.cursor() as cur:
-                cur.execute(sql, (function_id,))
-                result = cur.fetchall()
-        except Exception:
+            with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+                cur.execute(sql, params)
+                if fetch == "all":
+                    result = cur.fetchall()
+                elif fetch == "one":
+                    result = cur.fetchone()
+
+        except Exception as e:
             self.connection.rollback()
-            result = None
+            print(f'Database error occurred: {e}')
+            
         finally:
             if cur:
                 cur.close()
+            if self.connection:
+                self.connection.close()
+
+        return result
+
+    def get_rational_periodic_data(self, function_id):
+        sql = """SELECT * FROM rational_preperiodic_dim_1_nf
+                WHERE function_id = %s"""
+        result = self.try_query(sql, (function_id,), fetch="all")
+        
         return result
 
     def get_graph_metadata(self, graph_id):
@@ -60,16 +78,8 @@ class PostgresConnector:
             FROM graphs_dim_1_nf
             WHERE graph_id = %s
         """
-        try:
-            with self.connection.cursor() as cur:
-                cur.execute(sql, (graph_id,))
-                result = cur.fetchone()
-        except Exception:
-            self.connection.rollback()
-            result = None
-        finally:
-            if cur:
-                cur.close()
+        
+        result = self.try_query(sql, (graph_id,), fetch="one")
 
         if result:
             return {
@@ -84,43 +94,23 @@ class PostgresConnector:
     def get_label(self, function_id):
         sql = """SELECT sigma_one, sigma_two, ordinal
                FROM functions_dim_1_nf WHERE function_id = %s"""
-        try:
-            with self.connection.cursor() as cur:
-                cur.execute(sql, (function_id,))
-                row = cur.fetchone()
-                if row:
-                    return f'1.{row[0]}.{row[1]}.{row[2]}'
-                else:
-                    return None
-        except Exception:
-            self.connection.rollback()
-            return None
-        finally:
-            if cur:
-                cur.close()
+        
+        result = self.try_query(sql, (function_id,), fetch="one")
+
+        if result:
+            return f'1.{result[0]}.{result[1]}.{result[2]}'
 
     def get_graph_data(self, graph_id):
         # Get all graph data associated with that graph ID
         sql = """SELECT * FROM graphs_dim_1_nf
                 WHERE graphs_dim_1_nf.graph_id = %s"""
-        try:
-            with self.connection.cursor() as cur:
-                cur.execute(sql, (graph_id,))
-                row = cur.fetchone()
+        
+        result = self.try_query(sql, (graph_id,), fetch="one")
 
-                if row is None:
-                    return None
+        if result:
+            column_names = [desc[0] for desc in cur.description]
+            result = dict(zip(column_names, row))
 
-                # Put the data together as column name: value
-                column_names = [desc[0] for desc in cur.description]
-                result = dict(zip(column_names, row))
-
-        except Exception:
-            self.connection.rollback()
-            result = None
-        finally:
-            if cur:
-                cur.close()
         return result
 
     def construct_label(self, data):
@@ -139,19 +129,8 @@ class PostgresConnector:
         if not self.is_connection_active():
             self.connect()
 
-        try:
-            with self.connection.cursor() as cur:
-                cur.execute(sql)
-                # Get all rows, return with column names as well
-                rows = cur.fetchall()
-                column_names = [desc[0] for desc in cur.description]
-                result = [dict(zip(column_names, row)) for row in rows]
-        except Exception:
-            self.connection.rollback()
-            result = None
-        finally:
-            if cur:
-                cur.close()
+        result = self.try_query(sql)
+
         return result
 
     def get_all_families(self):
@@ -159,31 +138,12 @@ class PostgresConnector:
         sql = 'SELECT ' + columns + ' FROM families_dim_1_NF'
 
         # Reconnect if connection to database closed
-        if not self.is_connection_active():
-            self.connect()
-
-        try:
-            with self.connection.cursor() as cur:
-                cur.execute(sql)
-                result = cur.fetchall()
-        except Exception:
-            self.connection.rollback()
-            result = None
-        finally:
-            if cur:
-                cur.close()
+        result = self.try_query(sql)
         return result
 
     # gets a system identified by its label, input is string
-    def get_system(self, ip):
-        cur = None
-
-        # Reconnect if connection to database closed
-        if not self.is_connection_active():
-            self.connect()
-
-        try:
-            sql = """
+    def get_system(self, function_id):
+        sql = """
                 SELECT
                 functions_dim_1_nf.base_field_label
                 AS functions_base_field_label,
@@ -200,46 +160,46 @@ class PostgresConnector:
                 LEFT JOIN citations ON citations.id = citation_id
                 WHERE functions_dim_1_nf.function_id = %s
                 """
-            with self.connection.cursor(
-                cursor_factory=psycopg2.extras.DictCursor
-                ) as cur:
-                cur.execute(sql, (ip,))
-                temp = cur.fetchone()
-                if temp:
-                    model_label = self.construct_label(temp)
-                    result = {'modelLabel': model_label, **temp}
-                else:
-                    result = {}
-        except Exception:
-            self.connection.rollback()
-            result = {}
 
-        finally:
-            if cur:
-                cur.close()
-        return result
+        result = self.try_query(sql, (function_id, ), fetch="one")  
+        
+        if result:
+            model_label = self.construct_label(result)
+            return {'modelLabel': model_label, **result}
+        return {}
 
     # gets systems that match the passed in filters, input should be json object
     def get_filtered_systems(self, filters):
         # return a list of strings of the form:
         #    label, dimension, degree, polynomials, field_label
-
-        # Reconnect if connection to database closed
-        if not self.is_connection_active():
-            self.connect()
-
-        # Which column data to grab from the database:
-        columns = (
-            'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal,'
-            ' degree, (original_model).coeffs, '
-            'functions_dim_1_nf.base_field_label '
-        )
         dims = filters['N']
         del filters['N']
 
         # The "where text" is the filters for the database
         where_text = self.build_where_text(filters)
-        print(where_text)
+        stats= self.get_statistics(where_text)
+
+        result = []
+        if dims == [] or 1 in dims:
+            sql = (f"""
+                    SELECT 'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal, degree, (original_model).coeffs, base_field_label '
+                    FROM functions_dim_1_nf
+                    JOIN rational_preperiodic_dim_1_nf
+                    ON functions_dim_1_nf.function_id = 
+                    rational_preperiodic_dim_1_nf.function_id
+                    AND functions_dim_1_nf.base_field_label = 
+                    rational_preperiodic_dim_1_nf.base_field_label
+                    JOIN graphs_dim_1_nf ON graphs_dim_1_nf.graph_id = 
+                    rational_preperiodic_dim_1_nf.graph_id
+                    LEFT JOIN LATERAL UNNEST(
+                    COALESCE(functions_dim_1_nf.citations,
+                    ARRAY[NULL]::INTEGER[]))
+                    AS citation_id ON true
+                    LEFT JOIN citations AS citationsTable
+                    ON citationsTable.id = citation_id
+                    {where_text}
+                    """
+                )
 
         cur = None
         try:
