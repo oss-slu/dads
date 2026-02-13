@@ -8,7 +8,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import HelpBox from '../FunctionDetail/HelpBox'
 
+// Recommend separating renderExponent into a utility file if they are used in multiple places, to avoid code duplication.
 export const renderExponent = (expressionArray) => {
+	// Recommend separating Superscript into a utility file if they are used in multiple places, to avoid code duplication.
 	const Superscript = ({ children }) => (
 		<sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>{children}</sup>
 	  );
