@@ -1,8 +1,6 @@
 
-import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
+/* DEPRECATED: This component is no longer used. It was replaced by InfoTable, which is dynamic and can display more information.
+
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -68,4 +66,5 @@ export default function InfoTable2() {
       </Table>
     </TableContainer>
   );
-}
+
+*/

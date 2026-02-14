@@ -6,7 +6,6 @@ import React from 'react';
 import { Container, Row, Col, Button,ListGroup,Tab } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import PDFViewer from '../components/PDFViewer';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
 function AboutPage() {
@@ -149,9 +148,6 @@ function AboutPage() {
               </Accordion.Item>
               <Accordion.Item eventKey="1">
                 <Accordion.Header>Mathematical Background</Accordion.Header>
-                <Accordion.Body>
-                <PDFViewer/>
-                </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="2">
                 <Accordion.Header>Getting Started with DynaBase</Accordion.Header>
