@@ -15,7 +15,7 @@
     "react-pdf": "^10.2.0",
     "react-router": "^7.9.6",
     "react-router-dom": "^6.8.2",
-    "react-scripts": "5.0.1"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,7 +43,7 @@
     ]
   },
   "devDependencies": {
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-n": "^17.4.0"
+    "eslint-config-standard": "^17.x.x",
+    "eslint-plugin-n": "^17.x.x || ^16"
   }
 }

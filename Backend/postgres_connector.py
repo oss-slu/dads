@@ -182,7 +182,7 @@ class PostgresConnector:
         result = []
         if dims == [] or 1 in dims:
             sql = (f"""
-                    SELECT 'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal, degree, (original_model).coeffs, base_field_label '
+                    SELECT 'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal, degree, (original_model).coeffs, functions_dim_1_nf.base_field_label '
                     FROM functions_dim_1_nf
                     JOIN rational_preperiodic_dim_1_nf
                     ON functions_dim_1_nf.function_id = 
@@ -213,7 +213,7 @@ class PostgresConnector:
                 # (with each row corresponding to the same ID)
                 # We also add "where text" for filtering
                 sql = (f"""
-                    SELECT {columns}
+                    SELECT functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal,degree, (original_model).coeffs, functions_dim_1_nf.base_field_label
                     FROM functions_dim_1_nf
                     JOIN rational_preperiodic_dim_1_nf
                     ON functions_dim_1_nf.function_id = 
