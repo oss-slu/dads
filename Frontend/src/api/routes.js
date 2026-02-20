@@ -34,6 +34,13 @@ export const get_families= () => axios({
     url: "http://127.0.0.1:5000/get_all_families",
 })
 
+// dreyes: used to filter families based on the filters selected in the UI
+export const get_filtered_families = (filters) => axios({
+    method: "post",
+    url: "http://127.0.0.1:5000/get_filtered_families",
+    data: filters
+})
+
 export const get_family = (familyId) => axios({
     method: "post",
     url: "http://127.0.0.1:5000/get_family",
