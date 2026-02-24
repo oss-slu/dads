@@ -8,6 +8,7 @@ import Paper from '@mui/material/Paper';
 import HelpBox from '../FunctionDetail/HelpBox'
 
 export default function FunctionAttributes({ data }) {
+  // Recommend separating Superscript into a utility file if they are used in multiple places, to avoid code duplication.
   const Superscript = ({ children }) => (
     <sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>{children}</sup>
   );
@@ -46,6 +47,7 @@ export default function FunctionAttributes({ data }) {
     return result;
   };
 
+  // Recommend separating renderExponent into a utility file if they are used in multiple places, to avoid code duplication.
   const renderExponent = (expressionArray) => {
     return expressionArray.map((expression, index) => (
       <React.Fragment key={index}>

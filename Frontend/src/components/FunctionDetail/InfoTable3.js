@@ -1,3 +1,5 @@
+/* DEPRECATED: This component is no longer used. It was replaced by InfoTable, which is dynamic and can display more information.
+
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -40,3 +42,5 @@ export default function InfoTable3() {
     </TableContainer>
   );
 }
+
+*/

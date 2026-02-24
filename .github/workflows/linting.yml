@@ -1,5 +1,9 @@
 name: Linting
 
+permissions:
+  contents: read
+  pull-requests: write
+
 on: push
 
 jobs:
