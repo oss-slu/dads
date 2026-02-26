@@ -5,11 +5,24 @@ between frontend and backend
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from postgres_connector import PostgresConnector
+import uuid
+import traceback
 
 app = Flask(__name__)
-CORS(app, origins=['http://localhost:3000', 'http://127.0.0.1:3000', '*'])
+CORS(app, origins='*')
 
 connector = PostgresConnector()
+
+@app.errorhandler(Exception)
+def handle_error(e, custom_message="An unexpected server error occurred."):
+    error_id = str(uuid.uuid4())[:8]
+    print(f"--- ERROR {error_id} ---")
+    traceback.print_exc()
+    response = {
+        "error": "A server error occurred. Please report this ID if the issue persists.",
+        "error_id": error_id
+    }
+    return jsonify(response), 500
 
 @app.route('/get_family', methods=['POST'])
 def get_family():
@@ -86,12 +99,8 @@ def get_graph_metadata():
     graph_id = request.get_json().get('graph_id')
     if graph_id is None:
         return jsonify({'error': 'graph_id is required'}), 400
-
-    try:
-        metadata = connector.get_graph_metadata(graph_id)
-        return jsonify(metadata)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
+    metadata = connector.get_graph_metadata(graph_id)
+    return jsonify(metadata)
+    
 if __name__ == '__main__':
     app.run()

@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 
-const ReportMajorError = ({open, onClose, errorMessage}) => {
+const ReportMajorError = ({open, onClose, errorMessage, errorId}) => {
     return (
       <Dialog
         open={open}
@@ -19,6 +19,11 @@ const ReportMajorError = ({open, onClose, errorMessage}) => {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {errorMessage}
+            {errorId && (
+              <p style={{marginTop: '10px', color: 'black'}}>
+                Error Reference: <strong>{errorId}</strong>
+              </p>
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

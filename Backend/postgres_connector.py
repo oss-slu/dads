@@ -55,7 +55,7 @@ class PostgresConnector:
 
         except Exception as e:
             self.connection.rollback()
-            print(f'Database error occurred: {e}')
+            raise e
             
         finally:
             if cur:
