@@ -63,6 +63,12 @@ def data6():
     data = connector.get_all_families()
     return jsonify(data)
 
+@app.route('/get_filtered_families', methods=['POST'])
+def get_filtered_families():
+    filters = request.get_json()
+    data = connector.get_filtered_families(filters)
+    return jsonify(data)
+
 @app.route('/get_rational_periodic_data', methods=['POST', 'GET'])
 def data7():
     function_id = request.get_json()['function_id']

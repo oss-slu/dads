@@ -25,7 +25,12 @@ export const FilterProvider = ({ children }) => {
         sigma_one: "",
         sigma_two: "",
         model_label: "",
-        journal_label: ""
+        journal_label: "",
+
+        // dreyes: Family page filters
+        family_id: "",
+        family_name: "",
+        family_degree: []
     });
 
     return (

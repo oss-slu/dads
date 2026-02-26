@@ -711,3 +711,61 @@ class PostgresConnector:
             if cur:
                 cur.close()
         return result
+    
+    # dreyes: gets families that match the passed in filters, input should be json object, similar to get_filtered_systems but for families instead of systems
+    def get_filtered_families(self, filters):
+        """
+        Get families matching the provided filters.
+        Filters can include: family_id, name, degree
+        """
+        where_text = self.build_family_where_text(filters)
+        sql = f'SELECT * FROM families_dim_1_nf {where_text}'
+        
+        result = self.try_query(sql)
+        return result
+
+    # dreyes: this is a helper function for get_filtered_systems, it converts the filters from the UI into SQL "WHERE" text 
+    # that can be added to the SQL query. I couldve used the build_where_text function, but I wanted to keep the family filters 
+    # separate since they are different from the system filters and I didnt want to mess with the existing code too much
+    def build_family_where_text(self, filters):
+        """
+        Build SQL WHERE clause for family filters.
+        Similar to build_where_text but specific to families table.
+        """
+        # Remove empty filters
+        for fil in filters.copy():
+            if (
+                not filters[fil]
+                or filters[fil] == []
+            ):
+                del filters[fil]
+
+        if len(filters) == 0:
+            return ''
+
+        filter_text = ' WHERE '
+        conditions = []
+
+        for fil, values in filters.items():
+            if fil == 'family_id':
+                # Exact match for family_id (numeric)
+                conditions.append(f'family_id = {int(values)}')
+
+            elif fil == 'name':
+                # Text search with ILIKE for partial matching
+                conditions.append(
+                    f"name ILIKE '%' || TRIM('{values}') || '%'"
+                )
+
+            elif fil == 'degree':
+                # Array of degrees: degree IN (2, 3)
+                if isinstance(values, list) and len(values) > 0:
+                    conditions.append(
+                        'degree IN (' + ', '.join(str(e) for e in values) + ')'
+                    )
+                else:
+                    # Single value
+                    conditions.append(f'degree = {int(values)}')
+
+        filter_text += ' AND '.join(conditions)
+        return filter_text  
