@@ -2,11 +2,12 @@
 Module Dcstring: This file manages interactions
 between frontend and backend
 """
+
+import uuid
+import traceback
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from postgres_connector import PostgresConnector
-import uuid
-import traceback
 
 app = Flask(__name__)
 CORS(app, origins='*')
@@ -14,7 +15,7 @@ CORS(app, origins='*')
 connector = PostgresConnector()
 
 @app.errorhandler(Exception)
-def handle_error(e, custom_message="An unexpected server error occurred."):
+def handle_error(e):
     error_id = str(uuid.uuid4())[:8]
     print(f"--- ERROR {error_id} ---")
     traceback.print_exc()

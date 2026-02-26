@@ -2,7 +2,6 @@
 Module Docstring
 manages  server data queries
 """
-from warnings import filters
 import psycopg2
 import psycopg2.extras
 from config import load_config
@@ -79,15 +78,12 @@ class PostgresConnector:
         
         result = self.try_query(sql, (graph_id,), fetch="one")
 
-        if result:
-            return {
+        return {
                 'cardinality': result[0],
                 'periodic_cycles': result[1],
                 'preperiodic_components': result[2],
                 'max_tail': result[3],
-            }
-        else:
-            return {}
+        }
 
     def get_label(self, function_id):
         sql = """SELECT sigma_one, sigma_two, ordinal
