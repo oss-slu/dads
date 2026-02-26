@@ -2,7 +2,6 @@
 Module Docstring
 manages  server data queries
 """
-from warnings import filters
 import psycopg2
 import psycopg2.extras
 from config import load_config
@@ -55,13 +54,11 @@ class PostgresConnector:
 
         except Exception as e:
             self.connection.rollback()
-            print(f'Database error occurred: {e}')
+            raise e
             
         finally:
             if cur:
                 cur.close()
-            if self.connection:
-                self.connection.close()
 
         return result
 
@@ -81,15 +78,12 @@ class PostgresConnector:
         
         result = self.try_query(sql, (graph_id,), fetch="one")
 
-        if result:
-            return {
+        return {
                 'cardinality': result[0],
                 'periodic_cycles': result[1],
                 'preperiodic_components': result[2],
                 'max_tail': result[3],
-            }
-        else:
-            return {}
+        }
 
     def get_label(self, function_id):
         sql = """SELECT sigma_one, sigma_two, ordinal
@@ -106,10 +100,6 @@ class PostgresConnector:
                 WHERE graphs_dim_1_nf.graph_id = %s"""
         
         result = self.try_query(sql, (graph_id,), fetch="one")
-
-        if result:
-            column_names = [desc[0] for desc in cur.description]
-            result = dict(zip(column_names, row))
 
         return result
 
@@ -182,7 +172,7 @@ class PostgresConnector:
         result = []
         if dims == [] or 1 in dims:
             sql = (f"""
-                    SELECT 'functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal, degree, (original_model).coeffs, functions_dim_1_nf.base_field_label '
+                    SELECT functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal, degree, (original_model).coeffs, functions_dim_1_nf.base_field_label
                     FROM functions_dim_1_nf
                     JOIN rational_preperiodic_dim_1_nf
                     ON functions_dim_1_nf.function_id = 
@@ -201,102 +191,59 @@ class PostgresConnector:
                     """
                 )
 
-        cur = None
-        try:
-            # Get overall statistics
-            stats= self.get_statistics(where_text)
-
-            result = []
-            if dims == [] or 1 in dims:
-                # Basically we are pulling the data from the database
-                # First, we join many different tables
-                # (with each row corresponding to the same ID)
-                # We also add "where text" for filtering
-                sql = (f"""
-                    SELECT functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal,degree, (original_model).coeffs, functions_dim_1_nf.base_field_label
-                    FROM functions_dim_1_nf
-                    JOIN rational_preperiodic_dim_1_nf
-                    ON functions_dim_1_nf.function_id = 
-                    rational_preperiodic_dim_1_nf.function_id
-                    AND functions_dim_1_nf.base_field_label = 
-                    rational_preperiodic_dim_1_nf.base_field_label
-                    JOIN graphs_dim_1_nf ON graphs_dim_1_nf.graph_id = 
-                    rational_preperiodic_dim_1_nf.graph_id
-                    LEFT JOIN LATERAL UNNEST(
-                    COALESCE(functions_dim_1_nf.citations,
-                    ARRAY[NULL]::INTEGER[]))
-                    AS citation_id ON true
-                    LEFT JOIN citations AS citationsTable
-                    ON citationsTable.id = citation_id
-                    {where_text}
-                    """
-                )
-                with self.connection.cursor(
-                    cursor_factory=psycopg2.extras.DictCursor
-                    ) as cur:
-                    cur.execute(sql)
-                    # TODO: limit the total number that can be returned
-                    mon_dict = {}
-                    for row in cur:
-                        d = int(row['degree'])
-                        if d in mon_dict:
-                            mon = mon_dict[d]
-                        else:
-                            # create the monomial list
-                            mon = []
-                            for i in range(d+1):
-                                if i == 0:
-                                    mon.append('x^'+str(d))
-                                elif i == d:
-                                    mon.append('y^'+str(d))
+            rows = self.try_query(sql, fetch="all")
+            if rows:
+                mon_dict = {}
+                for row in rows:
+                    d = int(row['degree'])
+                    if d in mon_dict:
+                        mon = mon_dict[d]
+                    else:
+                        # create the monomial list
+                        mon = []
+                        for i in range(d+1):
+                            if i == 0:
+                                mon.append('x^'+str(d))
+                            elif i == d:
+                                mon.append('y^'+str(d))
+                            else:
+                                if (d-i) == 1 and i == 1:
+                                    mon.append('xy')
+                                elif i == 1:
+                                    mon.append('x^'+str(d-i) + 'y')
+                                elif (d-i) == 1:
+                                    mon.append('x' + 'y^' + str(i))
                                 else:
-                                    if (d-i) == 1 and i == 1:
-                                        mon.append('xy')
-                                    elif i == 1:
-                                        mon.append('x^'+str(d-i) + 'y')
-                                    elif (d-i) == 1:
-                                        mon.append('x' + 'y^' + str(i))
-                                    else:
-                                        mon.append('x^'+str(d-i) + 'y^'+str(i))
-                            mon_dict[d] = mon
-                        poly = '['
-                        c = row['coeffs']
-                        for j in range(2):
-                            first_term = True
-                            for i in range(d+1):
-                                if c[j][i] != '0':
-                                    if c[j][i][0] != '-' and not first_term:
-                                        poly += '+'
-                                    if c[j][i] == '1':
-                                        poly += mon[i]
-                                    elif c[j][i] == '-1':
-                                        poly += '-' + mon[i]
-                                    else:
-                                        poly += c[j][i] + mon[i]
-                                    first_term = False
-                            if j == 0:
-                                poly += ' : '
-                        poly += ']'
-                        label = self.construct_label(row)
+                                    mon.append('x^'+str(d-i) + 'y^'+str(i))
+                        mon_dict[d] = mon
+                    poly = '['
+                    c = row['coeffs']
+                    for j in range(2):
+                        first_term = True
+                        for i in range(d+1):
+                            if c[j][i] != '0':
+                                if c[j][i][0] != '-' and not first_term:
+                                    poly += '+'
+                                if c[j][i] == '1':
+                                    poly += mon[i]
+                                elif c[j][i] == '-1':
+                                    poly += '-' + mon[i]
+                                else:
+                                    poly += c[j][i] + mon[i]
+                                first_term = False
+                        if j == 0:
+                            poly += ' : '
+                    poly += ']'
+                    label = self.construct_label(row)
 
-                        # This is the data that is actually sent back
-                        result.append(
-                            [label, '1',
-                            d,
-                            poly,
-                            row['base_field_label'],
-                            row['function_id']],
-                            )
-
-        except Exception as error:
-            print(error)
-            self.connection.rollback()
-            result = []
-            stats = []
-
-        finally:
-            if cur:
-                cur.close()
+                    # This is the data that is actually sent back
+                    result.append(
+                        [label, '1',
+                        d,
+                        poly,
+                        row['base_field_label'],
+                        row['function_id']],
+                        )
         return result,stats
 
     # gets a subset of the systems identified by the labels
@@ -321,244 +268,200 @@ class PostgresConnector:
             + labels
         )
 
-        # Reconnect if connection to database closed
-        if not self.is_connection_active():
-            self.connect()
-
-        try:
-            with self.connection.cursor() as cur:
-                cur.execute(sql)
-                # Get all rows, return with column names as well
-                rows = cur.fetchall()
-                column_names = [desc[0] for desc in cur.description]
-                result = [dict(zip(column_names, row)) for row in rows]
-        except Exception:
-            self.connection.rollback()
+        rows = self.try_query(sql, fetch="all")
+        if rows is not None:
+            result = [dict(row) for row in rows]
+        else:
             result = None
         return result
 
     def get_statistics(self, where_text):
         # whereText = self.buildWhereText(filters)
         # number of maps
-        cur = None
+        sql = (
+            'SELECT COUNT( (original_model).height )'
+            ' FROM functions_dim_1_NF'
+            ' JOIN rational_preperiodic_dim_1_nf'
+            ' ON functions_dim_1_nf.function_id ='
+            ' rational_preperiodic_dim_1_nf.function_id'
+            ' AND functions_dim_1_nf.base_field_label ='
+            ' rational_preperiodic_dim_1_nf.base_field_label'
+            ' JOIN graphs_dim_1_nf'
+            ' ON graphs_dim_1_nf.graph_id ='
+            ' rational_preperiodic_dim_1_nf.graph_id'
+            ' LEFT JOIN LATERAL UNNEST('
+            ' COALESCE(functions_dim_1_nf.citations, '
+            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+            ' LEFT JOIN citations AS citationsTable ON '
+            ' citationsTable.id = citation_id'
+            + where_text
+        )
+        maps = self.try_query(sql, fetch="all")
+        # AUT
+        sql = (
+            'SELECT AVG(automorphism_group_cardinality::int)'
+            ' FROM functions_dim_1_NF'
+            ' JOIN rational_preperiodic_dim_1_nf'
+            ' ON functions_dim_1_nf.function_id ='
+            ' rational_preperiodic_dim_1_nf.function_id'
+            ' AND functions_dim_1_nf.base_field_label ='
+            ' rational_preperiodic_dim_1_nf.base_field_label'
+            ' JOIN graphs_dim_1_nf'
+            ' ON graphs_dim_1_nf.graph_id ='
+            ' rational_preperiodic_dim_1_nf.graph_id'
+            ' LEFT JOIN LATERAL UNNEST('
+            ' COALESCE(functions_dim_1_nf.citations, '
+            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+            ' LEFT JOIN citations AS citationsTable ON '
+            ' citationsTable.id = citation_id'
+            + where_text
+        )
+        aut = self.try_query(sql, fetch="all")
+        # number of PCF
+        sql = (
+            'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF'
+            ' JOIN rational_preperiodic_dim_1_nf'
+            ' ON functions_dim_1_nf.function_id ='
+            ' rational_preperiodic_dim_1_nf.function_id'
+            ' AND functions_dim_1_nf.base_field_label ='
+            ' rational_preperiodic_dim_1_nf.base_field_label'
+            ' JOIN graphs_dim_1_nf'
+            ' ON graphs_dim_1_nf.graph_id ='
+            ' rational_preperiodic_dim_1_nf.graph_id'
+            ' LEFT JOIN LATERAL UNNEST('
+            ' COALESCE(functions_dim_1_nf.citations, '
+            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+            ' LEFT JOIN citations AS citationsTable ON '
+            ' citationsTable.id = citation_id'
+            + where_text
+        )
+        pcf = self.try_query(sql, fetch="all")
+        # Average Height
+        sql = (
+            ' SELECT AVG( (original_model).height )'
+            ' FROM functions_dim_1_NF'
+            ' JOIN rational_preperiodic_dim_1_nf'
+            ' ON functions_dim_1_nf.function_id ='
+            ' rational_preperiodic_dim_1_nf.function_id'
+            ' AND functions_dim_1_nf.base_field_label ='
+            ' rational_preperiodic_dim_1_nf.base_field_label'
+            ' JOIN graphs_dim_1_nf'
+            ' ON graphs_dim_1_nf.graph_id ='
+            ' rational_preperiodic_dim_1_nf.graph_id'
+            ' LEFT JOIN LATERAL UNNEST('
+            ' COALESCE(functions_dim_1_nf.citations, '
+            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+            ' LEFT JOIN citations AS citationsTable ON '
+            ' citationsTable.id = citation_id'
+            + where_text
+        )
+        height = self.try_query(sql, fetch="all")
+        resultant = 0
 
-        # Reconnect if connection to database closed
-        if not self.is_connection_active():
-            self.connect()
+        sql = (
+            'SELECT '
+            'AVG(positive_in_degree) AS avg_positive_in_degree, '
+            'MAX(positive_in_degree) AS max_positive_in_degree '
+            'FROM graphs_dim_1_nf '
+            'JOIN functions_dim_1_nf '
+            'ON graphs_dim_1_nf.graph_id = '
+            'CAST(functions_dim_1_nf.critical_portrait_graph_id ' 
+            'AS integer)'
+            ' LEFT JOIN LATERAL UNNEST('
+            ' COALESCE(functions_dim_1_nf.citations, '
+            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+            ' LEFT JOIN citations AS citationsTable ON '
+            ' citationsTable.id = citation_id'
+            + where_text
+        )
+        positive_in_degree_stats = self.try_query(sql, fetch="one")
+        avg_pc_set = positive_in_degree_stats[0]
+        largeset_pc_set = positive_in_degree_stats[1]
 
-        try:
-            with self.connection.cursor() as cur:
-                sql = (
-                    'SELECT COUNT( (original_model).height )'
-                    ' FROM functions_dim_1_NF'
-                    ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id ='
-                    ' rational_preperiodic_dim_1_nf.function_id'
-                    ' AND functions_dim_1_nf.base_field_label ='
-                    ' rational_preperiodic_dim_1_nf.base_field_label'
-                    ' JOIN graphs_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id ='
-                    ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' LEFT JOIN LATERAL UNNEST('
-                    ' COALESCE(functions_dim_1_nf.citations, '
-                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON '
-                    ' citationsTable.id = citation_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                maps = cur.fetchall()
-                # AUT
-                sql = (
-                    'SELECT AVG(automorphism_group_cardinality::int)'
-                    ' FROM functions_dim_1_NF'
-                    ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id ='
-                    ' rational_preperiodic_dim_1_nf.function_id'
-                    ' AND functions_dim_1_nf.base_field_label ='
-                    ' rational_preperiodic_dim_1_nf.base_field_label'
-                    ' JOIN graphs_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id ='
-                    ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' LEFT JOIN LATERAL UNNEST('
-                    ' COALESCE(functions_dim_1_nf.citations, '
-                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON '
-                    ' citationsTable.id = citation_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                aut = cur.fetchall()
-                # number of PCF
-                sql = (
-                    'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF'
-                    ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id ='
-                    ' rational_preperiodic_dim_1_nf.function_id'
-                    ' AND functions_dim_1_nf.base_field_label ='
-                    ' rational_preperiodic_dim_1_nf.base_field_label'
-                    ' JOIN graphs_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id ='
-                    ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' LEFT JOIN LATERAL UNNEST('
-                    ' COALESCE(functions_dim_1_nf.citations, '
-                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON '
-                    ' citationsTable.id = citation_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                pcf = cur.fetchall()
-                # Average Height
-                sql = (
-                    ' SELECT AVG( (original_model).height )'
-                    ' FROM functions_dim_1_NF'
-                    ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id ='
-                    ' rational_preperiodic_dim_1_nf.function_id'
-                    ' AND functions_dim_1_nf.base_field_label ='
-                    ' rational_preperiodic_dim_1_nf.base_field_label'
-                    ' JOIN graphs_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id ='
-                    ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' LEFT JOIN LATERAL UNNEST('
-                    ' COALESCE(functions_dim_1_nf.citations, '
-                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON '
-                    ' citationsTable.id = citation_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                height = cur.fetchall()
-                resultant = 0
+        sql = (
+            'SELECT periodic_cardinality'
+            ' FROM graphs_dim_1_nf'
+            ' JOIN rational_preperiodic_dim_1_nf'
+            ' ON graphs_dim_1_nf.graph_id ='
+            ' rational_preperiodic_dim_1_nf.graph_id'
+            ' JOIN functions_dim_1_nf'
+            ' ON functions_dim_1_nf.function_id = '
+            'rational_preperiodic_dim_1_nf.function_id'
+            ' LEFT JOIN LATERAL UNNEST('
+            ' COALESCE(functions_dim_1_nf.citations, '
+            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+            ' LEFT JOIN citations AS citationsTable ON '
+            ' citationsTable.id = citation_id'
+            + where_text
+        )
+        res_periodic = self.try_query(sql, fetch="all")
+        periodic_cardinalities = [row[0] for row in res_periodic]
+        avg_num_periodic = sum(periodic_cardinalities) / len(periodic_cardinalities)
+        most_periodic = max(periodic_cardinalities)
+        
+        sql = (
+            'SELECT periodic_cycles'
+            ' FROM graphs_dim_1_nf'
+            ' JOIN rational_preperiodic_dim_1_nf'
+            ' ON graphs_dim_1_nf.graph_id = '
+            ' rational_preperiodic_dim_1_nf.graph_id'
+            ' JOIN functions_dim_1_nf'
+            ' ON functions_dim_1_nf.function_id = '
+            'rational_preperiodic_dim_1_nf.function_id'
+            ' LEFT JOIN LATERAL UNNEST('
+            ' COALESCE(functions_dim_1_nf.citations, '
+            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+            ' LEFT JOIN citations AS citationsTable ON '
+            ' citationsTable.id = citation_id'
+            + where_text
+        )
+        res_cycles = self.try_query(sql, fetch="all")
+        periodic_cycles = [row[0] for row in res_cycles]
+        longest_cycles = [max(val) for val in periodic_cycles if val]
+        largest_cycle = max(longest_cycles) if longest_cycles else 0
 
-                sql = (
-                    'SELECT '
-                    'AVG(positive_in_degree) AS avg_positive_in_degree, '
-                    'MAX(positive_in_degree) AS max_positive_in_degree '
-                    'FROM graphs_dim_1_nf '
-                    'JOIN functions_dim_1_nf '
-                    'ON graphs_dim_1_nf.graph_id = '
-                    'CAST(functions_dim_1_nf.critical_portrait_graph_id ' 
-                    'AS integer)'
-                    ' LEFT JOIN LATERAL UNNEST('
-                    ' COALESCE(functions_dim_1_nf.citations, '
-                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON '
-                    ' citationsTable.id = citation_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                positive_in_degree_stats = cur.fetchone()
-                avg_pc_set = positive_in_degree_stats[0]
-                largeset_pc_set = positive_in_degree_stats[1]
+        sql = (
+            'SELECT preperiodic_components'
+            ' FROM graphs_dim_1_nf'
+            ' JOIN rational_preperiodic_dim_1_nf'
+            ' ON graphs_dim_1_nf.graph_id = '
+            'rational_preperiodic_dim_1_nf.graph_id'
+            ' JOIN functions_dim_1_nf'
+            ' ON functions_dim_1_nf.function_id = '
+            'rational_preperiodic_dim_1_nf.function_id'
+            ' LEFT JOIN LATERAL UNNEST('
+            ' COALESCE(functions_dim_1_nf.citations, '
+            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+            ' LEFT JOIN citations AS citationsTable ON '
+            ' citationsTable.id = citation_id'
+            + where_text
+        )
+        res_comp = self.try_query(sql, fetch="all")
+        preperiodic_components = [row[0] for row in res_comp] if res_comp else []
 
-                sql = (
-                    'SELECT periodic_cardinality'
-                    ' FROM graphs_dim_1_nf'
-                    ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id ='
-                    ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' JOIN functions_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id = '
-                    'rational_preperiodic_dim_1_nf.function_id'
-                    ' LEFT JOIN LATERAL UNNEST('
-                    ' COALESCE(functions_dim_1_nf.citations, '
-                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON '
-                    ' citationsTable.id = citation_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                periodic_cardinalities = [row[0] for row in cur.fetchall()]
-                avg_num_periodic = sum(periodic_cardinalities) / len(
-                    periodic_cardinalities)
-                most_periodic = max(periodic_cardinalities)
-                sql = (
-                    'SELECT periodic_cycles'
-                    ' FROM graphs_dim_1_nf'
-                    ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id = '
-                    ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' JOIN functions_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id = '
-                    'rational_preperiodic_dim_1_nf.function_id'
-                    ' LEFT JOIN LATERAL UNNEST('
-                    ' COALESCE(functions_dim_1_nf.citations, '
-                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON '
-                    ' citationsTable.id = citation_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                periodic_cycles = [row[0] for row in cur.fetchall()]
-                longest_cycles = [max(val) for val in periodic_cycles if val]
-                if len(longest_cycles) > 0:
-                    largest_cycle = max(longest_cycles)
-                else:
-                    largest_cycle = 0
-
-                print (largest_cycle)
-                sql = (
-                    'SELECT preperiodic_components'
-                    ' FROM graphs_dim_1_nf'
-                    ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id = '
-                    'rational_preperiodic_dim_1_nf.graph_id'
-                    ' JOIN functions_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id = '
-                    'rational_preperiodic_dim_1_nf.function_id'
-                    ' LEFT JOIN LATERAL UNNEST('
-                    ' COALESCE(functions_dim_1_nf.citations, '
-                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON '
-                    ' citationsTable.id = citation_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                preperiodic_components = [row[0] for row in cur.fetchall()]
-                sql = (
-                    'SELECT graphs_dim_1_nf.cardinality'
-                    ' FROM graphs_dim_1_nf'
-                    ' JOIN rational_preperiodic_dim_1_nf'
-                    ' ON graphs_dim_1_nf.graph_id ='
-                    ' rational_preperiodic_dim_1_nf.graph_id'
-                    ' JOIN functions_dim_1_nf'
-                    ' ON functions_dim_1_nf.function_id = '
-                    'rational_preperiodic_dim_1_nf.function_id'
-                    ' LEFT JOIN LATERAL UNNEST('
-                    ' COALESCE(functions_dim_1_nf.citations, '
-                    ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-                    ' LEFT JOIN citations AS citationsTable ON '
-                    ' citationsTable.id = citation_id'
-                    + where_text
-                )
-                cur.execute(sql)
-                cardinalities = [row[0] for row  in cur.fetchall()]
-                avg_num_preperiodic = sum(
-                    cardinalities
-                    ) / len(preperiodic_components)
-                most_preperiodic = max(cardinalities)
-                component_sizes = [
-                    max(comp) for comp in preperiodic_components if comp
-                ]
-                if len(component_sizes) > 0:
-                    largest_comp = max(component_sizes)
-                else:
-                    largest_comp = 0
-
-
-        except Exception:
-            self.connection.rollback()
-            maps = 0
-            aut = 0
-            pcf = 0
-            height = 0
-            resultant = 0
-            avg_pc_set = 0
-            largeset_pc_set = 0
-            avg_num_periodic = most_periodic = largest_cycle = 0
-            avg_num_preperiodic = most_preperiodic = largest_comp = 0
+        sql = (
+            'SELECT graphs_dim_1_nf.cardinality'
+            ' FROM graphs_dim_1_nf'
+            ' JOIN rational_preperiodic_dim_1_nf'
+            ' ON graphs_dim_1_nf.graph_id ='
+            ' rational_preperiodic_dim_1_nf.graph_id'
+            ' JOIN functions_dim_1_nf'
+            ' ON functions_dim_1_nf.function_id = '
+            'rational_preperiodic_dim_1_nf.function_id'
+            ' LEFT JOIN LATERAL UNNEST('
+            ' COALESCE(functions_dim_1_nf.citations, '
+            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
+            ' LEFT JOIN citations AS citationsTable ON '
+            ' citationsTable.id = citation_id'
+            + where_text
+        )
+        res_card = self.try_query(sql, fetch="all")
+        cardinalities = [row[0] for row in res_card]
+        avg_num_preperiodic = sum(cardinalities) / len(preperiodic_components)
+        most_preperiodic = max(cardinalities)
+        component_sizes = [max(comp) for comp in preperiodic_components if comp]
+        largest_comp = max(component_sizes) if component_sizes else 0
+              
         return [maps, aut, pcf, height, resultant,
                 avg_pc_set, largeset_pc_set,
                 avg_num_periodic, most_periodic,
@@ -694,22 +597,8 @@ class PostgresConnector:
             = ANY(familiesTable.citations)
             WHERE familiesTable.family_id = %s
         '''
-
-        # Reconnect if connection to database closed
-        if not self.is_connection_active():
-            self.connect()
-
-        try:
-            with self.connection.cursor() as cur:
-                cur.execute(sql, (family_id,))
-                result = cur.fetchone()
-        except Exception as e:
-            self.connection.rollback()
-            print(f'An error occurred: {e}')
-            result = None
-        finally:
-            if cur:
-                cur.close()
+        result = self.try_query(sql, (family_id,), fetch="one")
+        
         return result
     
     # dreyes: gets families that match the passed in filters, input should be json object, similar to get_filtered_systems but for families instead of systems
