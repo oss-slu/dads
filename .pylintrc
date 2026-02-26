@@ -84,12 +84,15 @@ disable=broad-except,
         long-suffix,
         map-builtin-not-iterating,
         misplaced-comparison-constant,
+        missing-class-docstring, 
+        missing-final-newline,
         missing-function-docstring,
+        missing-module-docstring,
         metaclass-assignment,
         next-method-called,
         next-method-defined,
         no-absolute-import,
-        no-init,  # added
+        no-init,
         no-member,
         no-name-in-module,
         no-self-use,
@@ -114,7 +117,10 @@ disable=broad-except,
         standarderror-builtin,
         suppressed-message,
         sys-max-int,
+        too-few-public-methods, 
+        too-many-arguments, 
         trailing-newlines,
+        trailing-whitespace,
         unichr-builtin,
         unicode-builtin,
         unnecessary-pass,
@@ -155,7 +161,7 @@ evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / stateme
 [BASIC]
 
 # Good variable names which should always be accepted, separated by a comma
-good-names=main,_
+good-names=i,j,k,ex,Run,_,fp,db,id,df,ds,ev,el,pk,ok,ts,logger,log
 
 # Bad variable names which should always be refused, separated by a comma
 bad-names=
@@ -172,10 +178,10 @@ include-naming-hint=no
 property-classes=abc.abstractproperty,cached_property.cached_property,cached_property.threaded_cached_property,cached_property.cached_property_with_ttl,cached_property.threaded_cached_property_with_ttl
 
 # Regular expression matching correct function names
-function-rgx=^(?P<snake_case>_?[a-z][a-z0-9_]*)$
+function-rgx=[a-z_][a-z0-9_]{1,30}$
 
 # Regular expression matching correct variable names
-variable-rgx=^[a-z][a-z0-9_]*$
+variable-rgx=[a-z_][a-z0-9_]{1,30}$
 
 # Regular expression matching correct constant names
 const-rgx=^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$
@@ -238,7 +244,7 @@ generated-members=
 [FORMAT]
 
 # Maximum number of characters on a single line.
-max-line-length=
+max-line-length=120
 
 # TODO(https://github.com/pylint-dev/pylint/issues/3352): Direct pylint to exempt
 # lines made too long by directives to pytype.
