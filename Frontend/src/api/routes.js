@@ -1,65 +1,33 @@
 import axios from 'axios';
 
-export const get_systems = () => axios({
-    method: "get",
-    url: "http://127.0.0.1:5000/get_all_systems",
-})
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://127.0.0.1:5000";
 
-export const get_system = (label) => axios({
-    method: "post",
-    url: "http://127.0.0.1:5000/get_system",
-    data: label
-})
+const api = axios.create({
+    baseURL: API_BASE_URL
+});
+
+export const get_systems = () => api.get("/get_all_systems");
+
+export const get_system = (label) => api.post("/get_system", label);
     
-export const get_selected_systems = (labels) => axios({
-    method: "post",
-    url: "http://127.0.0.1:5000/get_selected_systems",
-    data: labels
-})
+export const get_selected_systems = (labels) => api.post("/get_selected_systems", labels);
 
-export const get_filtered_systems = (filters) => axios({
-    method: "post",
-    url: "http://127.0.0.1:5000/get_filtered_systems",
-    data: filters
-})
+export const get_filtered_systems = (filters) => api.post("/get_filtered_systems", filters);
 
-export const get_statistics = (filters) => axios({
-    method: "post",
-    url: "http://127.0.0.1:5000/get_statistics",
-    data: filters
-})
+export const get_statistics = (filters) => api.post("/get_statistics", filters);
 
-export const get_families= () => axios({
-    method: "get",
-    url: "http://127.0.0.1:5000/get_all_families",
-})
+export const get_families = () => api.get("/get_all_families");
 
-export const get_family = (familyId) => axios({
-    method: "post",
-    url: "http://127.0.0.1:5000/get_family",
-    data: { id: familyId }
-})
+export const get_family = (familyId) => api.post("/get_family", { id: familyId });
 
-export const get_rational_periodic_data = (functionId) => axios({
-    method: "post",
-    url: "http://127.0.0.1:5000/get_rational_periodic_data",
-    data: { function_id: functionId }
-});
+export const get_rational_periodic_data = (functionId) => 
+    api.post("/get_rational_periodic_data", { function_id: functionId });
 
-export const get_label = (functionId) => axios({
-    method: "post",
-    url: "http://127.0.0.1:5000/get_label",
-    data: { function_id: functionId }
-});
+export const get_label = (functionId) => 
+    api.post("/get_label", { function_id: functionId });
 
-export const get_graph_data = (graphId) => axios({
-    method: "post",
-    url: "http://127.0.0.1:5000/get_graph_data",
-    data: { graph_id: graphId }
-});
+export const get_graph_data = (graphId) => 
+    api.post("/get_graph_data", { graph_id: graphId });
 
-export const get_graph_metadata = (graphId) => axios({
-    method: "post",
-    url: "http://127.0.0.1:5000/get_graph_metadata",
-    data: { graph_id: graphId }
-});
+export const get_graph_metadata = (graphId) => 
+    api.post("/get_graph_metadata", { graph_id: graphId });
