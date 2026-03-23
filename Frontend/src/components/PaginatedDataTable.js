@@ -52,7 +52,7 @@ export default function PaginatedDataTable({ labels, data, itemsPerPage, current
             <tr key={key} className={key % 2 === 0 ? 'even-row' : 'odd-row'} style={{ textAlign: 'center' }}>
               {item.map((element, id) => (
                 <td key={id}>
-                  <span>{id === 3 ? renderExponent(element) :element}</span>
+                  <span>{id === 3 && typeof element === 'string' ? renderExponent(element) : element}</span> 
                 </td>
               ))}
             </tr>
