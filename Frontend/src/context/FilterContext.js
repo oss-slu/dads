@@ -30,7 +30,13 @@ export const FilterProvider = ({ children }) => {
         // dreyes: Family page filters
         family_id: "",
         family_name: "",
-        family_degree: []
+        family_degree: [],
+
+        //dreyes: added more filters for domain, polynomial, and field labels
+        family_dimension: [],
+        family_custom_dimension: "",
+        family_is_polynomial: [],
+        family_base_field_label: ""
     });
 
     return (
