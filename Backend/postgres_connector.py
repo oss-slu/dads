@@ -39,18 +39,30 @@ class PostgresConnector:
         except Exception:
             return False
 
+    def rows_to_dicts(self, cursor, rows):
+        try:
+            if rows is None:
+                return None
+            colnames = [desc[0] for desc in cursor.description]
+            return [dict(zip(colnames, row)) for row in rows]
+        except Exception as e:
+            print(f"Error occurred while converting rows to dictionaries: {e}")
+            return None
+
     def try_query(self, sql, params=None, fetch="all"):
         self.connect()
         result = None
         cur = None
 
         try:
-            with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+            with self.connection.cursor() as cur:
                 cur.execute(sql, params)
                 if fetch == "all":
-                    result = cur.fetchall()
+                    rows = cur.fetchall()
+                    result = self.rows_to_dicts(cur, rows)
                 elif fetch == "one":
-                    result = cur.fetchone()
+                    rows = cur.fetchone()
+                    result = self.rows_to_dicts(cur, [rows]) if rows else None
 
         except Exception as e:
             self.connection.rollback()
@@ -79,10 +91,10 @@ class PostgresConnector:
         result = self.try_query(sql, (graph_id,), fetch="one")
 
         return {
-                'cardinality': result[0],
-                'periodic_cycles': result[1],
-                'preperiodic_components': result[2],
-                'max_tail': result[3],
+                'cardinality': result['cardinality'],
+                'periodic_cycles': result['periodic_cycles'],
+                'preperiodic_components': result['preperiodic_components'],
+                'max_tail': result['max_tail'],
         }
 
     def get_label(self, function_id):
@@ -92,7 +104,7 @@ class PostgresConnector:
         result = self.try_query(sql, (function_id,), fetch="one")
 
         if result:
-            return f'1.{result[0]}.{result[1]}.{result[2]}'
+            return f'1.{result["sigma_one"]}.{result["sigma_two"]}.{result["ordinal"]}'
 
     def get_graph_data(self, graph_id):
         # Get all graph data associated with that graph ID
@@ -270,7 +282,7 @@ class PostgresConnector:
 
         rows = self.try_query(sql, fetch="all")
         if rows is not None:
-            result = [dict(row) for row in rows]
+            result = rows
         else:
             result = None
         return result
