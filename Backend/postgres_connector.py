@@ -3,7 +3,7 @@ Module Docstring
 manages  server data queries
 """
 import psycopg2
-import psycopg2.extras
+from psycopg2 import sql
 from config import load_config
 
 # important do not store password when dealing with real database
@@ -24,12 +24,13 @@ class PostgresConnector:
 
     def connect(self):
         config = load_config()
-        try:
-            # connecting to the PostgreSQL server
-            self.connection = psycopg2.connect(**config)
-            print('Connected to the PostgreSQL server.')
-        except (psycopg2.DatabaseError, Exception) as error:
-            print(error)
+        if not hasattr(self, 'connection') or self.connection is None or self.connection.closed:
+            try:
+                self.connection = psycopg2.connect(**config)
+                print('Connected to the PostgreSQL server.')
+            except (psycopg2.DatabaseError, Exception) as error:
+                print(f"Database connection error: {error}")
+                self.connection = None
 
     def is_connection_active(self):
         try:
@@ -44,28 +45,30 @@ class PostgresConnector:
             if rows is None:
                 return None
             colnames = [desc[0] for desc in cursor.description]
-            return [dict(zip(colnames, row)) for row in rows]
+            if not isinstance(rows, list):
+                rows = [rows]
+            return [dict(zip(colnames, row)) for row in rows if row]
         except Exception as e:
             print(f"Error occurred while converting rows to dictionaries: {e}")
             return None
 
-    def try_query(self, sql, params=None, fetch="all"):
-        self.connect()
+    def try_query(self, sql_query, params=None, fetch="all"):
         result = None
         cur = None
 
         try:
             with self.connection.cursor() as cur:
-                cur.execute(sql, params)
+                cur.execute(sql_query, params)
                 if fetch == "all":
                     rows = cur.fetchall()
                     result = self.rows_to_dicts(cur, rows)
                 elif fetch == "one":
                     rows = cur.fetchone()
-                    result = self.rows_to_dicts(cur, [rows]) if rows else None
+                    dicts = self.rows_to_dicts(cur, [rows])
+                    result = dicts[0] if dicts else None
 
         except Exception as e:
-            self.connection.rollback()
+            if self.connection: self.connection.rollback()
             raise e
             
         finally:
@@ -75,45 +78,36 @@ class PostgresConnector:
         return result
 
     def get_rational_periodic_data(self, function_id):
-        sql = """SELECT * FROM rational_preperiodic_dim_1_nf
+        query = """SELECT * FROM rational_preperiodic_dim_1_nf
                 WHERE function_id = %s"""
-        result = self.try_query(sql, (function_id,), fetch="all")
+        result = self.try_query(query, (function_id,), fetch="all")
         
         return result
 
     def get_graph_metadata(self, graph_id):
-        sql = """
+        query = sql.SQL("""
             SELECT cardinality, periodic_cycles, preperiodic_components, max_tail
             FROM graphs_dim_1_nf
             WHERE graph_id = %s
-        """
-        
-        result = self.try_query(sql, (graph_id,), fetch="one")
+        """)
+        result = self.try_query(query, (graph_id,), fetch="one")
 
-        return {
-                'cardinality': result['cardinality'],
-                'periodic_cycles': result['periodic_cycles'],
-                'preperiodic_components': result['preperiodic_components'],
-                'max_tail': result['max_tail'],
-        }
+        if not result:
+            return {}
+        return result
 
     def get_label(self, function_id):
-        sql = """SELECT sigma_one, sigma_two, ordinal
-               FROM functions_dim_1_nf WHERE function_id = %s"""
-        
-        result = self.try_query(sql, (function_id,), fetch="one")
-
-        if result:
-            return f'1.{result["sigma_one"]}.{result["sigma_two"]}.{result["ordinal"]}'
+        query = sql.SQL("""
+            SELECT sigma_one, sigma_two, ordinal
+            FROM functions_dim_1_nf WHERE function_id = %s
+        """)
+        result = self.try_query(query, (function_id,), fetch="one")
+        return self.construct_label(result) if result else None
 
     def get_graph_data(self, graph_id):
         # Get all graph data associated with that graph ID
-        sql = """SELECT * FROM graphs_dim_1_nf
-                WHERE graphs_dim_1_nf.graph_id = %s"""
-        
-        result = self.try_query(sql, (graph_id,), fetch="one")
-
-        return result
+        query = sql.SQL("SELECT * FROM graphs_dim_1_nf WHERE graph_id = %s")
+        return self.try_query(query, (graph_id,), fetch="one")
 
     def construct_label(self, data):
         return (
@@ -124,483 +118,82 @@ class PostgresConnector:
         )
 
     def get_all_systems(self):
-        columns = '*'
-        sql = 'SELECT ' + columns + ' FROM functions_dim_1_NF'
-
-        # Reconnect if connection to database closed
-        if not self.is_connection_active():
-            self.connect()
-
-        result = self.try_query(sql)
-
-        return result
+        query = sql.SQL("SELECT * FROM functions_dim_1_nf")
+        return self.try_query(query)
 
     def get_all_families(self):
-        columns = '*'
-        sql = 'SELECT ' + columns + ' FROM families_dim_1_NF'
-
-        # Reconnect if connection to database closed
-        result = self.try_query(sql)
-        return result
+        query = sql.SQL("SELECT * FROM families_dim_1_nf")
+        return self.try_query(query)
 
     # gets a system identified by its label, input is string
     def get_system(self, function_id):
-        sql = """
-                SELECT
-                functions_dim_1_nf.base_field_label
-                AS functions_base_field_label,
-                *
-                FROM functions_dim_1_nf
-                JOIN rational_preperiodic_dim_1_nf 
-                ON functions_dim_1_nf.function_id =
-                rational_preperiodic_dim_1_nf.function_id
-                JOIN graphs_dim_1_nf ON
-                rational_preperiodic_dim_1_nf.graph_id =
-                graphs_dim_1_nf.graph_id
-                LEFT JOIN LATERAL UNNEST(COALESCE(functions_dim_1_nf.citations,
-                ARRAY[NULL]::INTEGER[])) AS citation_id ON true
-                LEFT JOIN citations ON citations.id = citation_id
-                WHERE functions_dim_1_nf.function_id = %s
-                """
-
-        result = self.try_query(sql, (function_id, ), fetch="one")  
+        query = sql.SQL("""
+            SELECT f.base_field_label AS functions_base_field_label, *
+            FROM functions_dim_1_nf f
+            JOIN rational_preperiodic_dim_1_nf r ON f.function_id = r.function_id
+            JOIN graphs_dim_1_nf g ON r.graph_id = g.graph_id
+            LEFT JOIN LATERAL UNNEST(COALESCE(f.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true
+            LEFT JOIN citations c ON c.id = citation_id
+            WHERE f.function_id = %s
+        """)
+        result = self.try_query(query, (function_id,), fetch="one")
         
         if result:
-            model_label = self.construct_label(result)
-            return {'modelLabel': model_label, **result}
+            result['modelLabel'] = self.construct_label(result)
+            return result
         return {}
 
     # gets systems that match the passed in filters, input should be json object
     def get_filtered_systems(self, filters):
-        # return a list of strings of the form:
-        #    label, dimension, degree, polynomials, field_label
-        dims = filters['N']
-        del filters['N']
-
-        # The "where text" is the filters for the database
-        where_text = self.build_where_text(filters)
-        stats= self.get_statistics(where_text)
-
-        result = []
-        if dims == [] or 1 in dims:
-            sql = (f"""
-                    SELECT functions_dim_1_nf.function_id, sigma_one, sigma_two, ordinal, degree, (original_model).coeffs, functions_dim_1_nf.base_field_label
-                    FROM functions_dim_1_nf
-                    JOIN rational_preperiodic_dim_1_nf
-                    ON functions_dim_1_nf.function_id = 
-                    rational_preperiodic_dim_1_nf.function_id
-                    AND functions_dim_1_nf.base_field_label = 
-                    rational_preperiodic_dim_1_nf.base_field_label
-                    JOIN graphs_dim_1_nf ON graphs_dim_1_nf.graph_id = 
-                    rational_preperiodic_dim_1_nf.graph_id
-                    LEFT JOIN LATERAL UNNEST(
-                    COALESCE(functions_dim_1_nf.citations,
-                    ARRAY[NULL]::INTEGER[]))
-                    AS citation_id ON true
-                    LEFT JOIN citations AS citationsTable
-                    ON citationsTable.id = citation_id
-                    {where_text}
-                    """
-                )
-
-            rows = self.try_query(sql, fetch="all")
-            if rows:
-                mon_dict = {}
-                for row in rows:
-                    d = int(row['degree'])
-                    if d in mon_dict:
-                        mon = mon_dict[d]
-                    else:
-                        # create the monomial list
-                        mon = []
-                        for i in range(d+1):
-                            if i == 0:
-                                mon.append('x^'+str(d))
-                            elif i == d:
-                                mon.append('y^'+str(d))
-                            else:
-                                if (d-i) == 1 and i == 1:
-                                    mon.append('xy')
-                                elif i == 1:
-                                    mon.append('x^'+str(d-i) + 'y')
-                                elif (d-i) == 1:
-                                    mon.append('x' + 'y^' + str(i))
-                                else:
-                                    mon.append('x^'+str(d-i) + 'y^'+str(i))
-                        mon_dict[d] = mon
-                    poly = '['
-                    c = row['coeffs']
-                    for j in range(2):
-                        first_term = True
-                        for i in range(d+1):
-                            if c[j][i] != '0':
-                                if c[j][i][0] != '-' and not first_term:
-                                    poly += '+'
-                                if c[j][i] == '1':
-                                    poly += mon[i]
-                                elif c[j][i] == '-1':
-                                    poly += '-' + mon[i]
-                                else:
-                                    poly += c[j][i] + mon[i]
-                                first_term = False
-                        if j == 0:
-                            poly += ' : '
-                    poly += ']'
-                    label = self.construct_label(row)
-
-                    # This is the data that is actually sent back
-                    result.append(
-                        [label, '1',
-                        d,
-                        poly,
-                        row['base_field_label'],
-                        row['function_id']],
-                        )
-        return result,stats
-
+        where_sql, params = self.build_where_text(filters)
+        stats = self.get_statistics(where_sql, params)
+        query = sql.SQL("""
+            SELECT f.function_id, sigma_one, sigma_two, ordinal, degree, 
+                (original_model).coeffs, f.base_field_label
+            FROM functions_dim_1_nf f
+            JOIN rational_preperiodic_dim_1_nf r ON f.function_id = r.function_id
+            JOIN graphs_dim_1_nf g ON g.graph_id = r.graph_id
+            {} 
+        """).format(where_sql)
+        rows = self.try_query(query, params, fetch='all')
+        return rows, stats
+        
     # gets a subset of the systems identified by the labels
     # input should be json list
     def get_selected_systems(self, labels):
-        labels = (
-            '(' +
-            ', '.join(["'" +
-            str(item) +
-            "'" for item in labels]) +
-            ')'
+        if not labels:
+            return []
+        query = sql.SQL("""
+            SELECT * FROM functions_dim_1_nf 
+            WHERE (
+                CAST(base_field_degree AS TEXT) || '.' || 
+                TRIM(sigma_one) || '.' || 
+                TRIM(sigma_two) || '.' || 
+                CAST(ordinal AS TEXT)
+            ) IN ({})
+        """).format(
+            sql.SQL(', ').join(sql.Placeholder() * len(labels))
         )
-        columns = '*'
-        sql = (
-            'SELECT '
-            + columns
-            + ' FROM functions_dim_1_NF WHERE'
-            + ' base_field_degree || \'.\''
-            + ' || sigma_one || \'.\''
-            + ' || sigma_two || \'.\''
-            + ' || ordinal in '
-            + labels
-        )
+        return self.try_query(query, labels, fetch="all")
 
-        rows = self.try_query(sql, fetch="all")
-        if rows is not None:
-            result = rows
-        else:
-            result = None
-        return result
-
-    def get_statistics(self, where_text):
-        # whereText = self.buildWhereText(filters)
-        # number of maps
-        sql = (
-            'SELECT COUNT( (original_model).height )'
-            ' FROM functions_dim_1_NF'
-            ' JOIN rational_preperiodic_dim_1_nf'
-            ' ON functions_dim_1_nf.function_id ='
-            ' rational_preperiodic_dim_1_nf.function_id'
-            ' AND functions_dim_1_nf.base_field_label ='
-            ' rational_preperiodic_dim_1_nf.base_field_label'
-            ' JOIN graphs_dim_1_nf'
-            ' ON graphs_dim_1_nf.graph_id ='
-            ' rational_preperiodic_dim_1_nf.graph_id'
-            ' LEFT JOIN LATERAL UNNEST('
-            ' COALESCE(functions_dim_1_nf.citations, '
-            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-            ' LEFT JOIN citations AS citationsTable ON '
-            ' citationsTable.id = citation_id'
-            + where_text
-        )
-        maps = self.try_query(sql, fetch="all")
-        # AUT
-        sql = (
-            'SELECT AVG(automorphism_group_cardinality::int)'
-            ' FROM functions_dim_1_NF'
-            ' JOIN rational_preperiodic_dim_1_nf'
-            ' ON functions_dim_1_nf.function_id ='
-            ' rational_preperiodic_dim_1_nf.function_id'
-            ' AND functions_dim_1_nf.base_field_label ='
-            ' rational_preperiodic_dim_1_nf.base_field_label'
-            ' JOIN graphs_dim_1_nf'
-            ' ON graphs_dim_1_nf.graph_id ='
-            ' rational_preperiodic_dim_1_nf.graph_id'
-            ' LEFT JOIN LATERAL UNNEST('
-            ' COALESCE(functions_dim_1_nf.citations, '
-            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-            ' LEFT JOIN citations AS citationsTable ON '
-            ' citationsTable.id = citation_id'
-            + where_text
-        )
-        aut = self.try_query(sql, fetch="all")
-        # number of PCF
-        sql = (
-            'SELECT SUM(is_PCF::int) FROM functions_dim_1_NF'
-            ' JOIN rational_preperiodic_dim_1_nf'
-            ' ON functions_dim_1_nf.function_id ='
-            ' rational_preperiodic_dim_1_nf.function_id'
-            ' AND functions_dim_1_nf.base_field_label ='
-            ' rational_preperiodic_dim_1_nf.base_field_label'
-            ' JOIN graphs_dim_1_nf'
-            ' ON graphs_dim_1_nf.graph_id ='
-            ' rational_preperiodic_dim_1_nf.graph_id'
-            ' LEFT JOIN LATERAL UNNEST('
-            ' COALESCE(functions_dim_1_nf.citations, '
-            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-            ' LEFT JOIN citations AS citationsTable ON '
-            ' citationsTable.id = citation_id'
-            + where_text
-        )
-        pcf = self.try_query(sql, fetch="all")
-        # Average Height
-        sql = (
-            ' SELECT AVG( (original_model).height )'
-            ' FROM functions_dim_1_NF'
-            ' JOIN rational_preperiodic_dim_1_nf'
-            ' ON functions_dim_1_nf.function_id ='
-            ' rational_preperiodic_dim_1_nf.function_id'
-            ' AND functions_dim_1_nf.base_field_label ='
-            ' rational_preperiodic_dim_1_nf.base_field_label'
-            ' JOIN graphs_dim_1_nf'
-            ' ON graphs_dim_1_nf.graph_id ='
-            ' rational_preperiodic_dim_1_nf.graph_id'
-            ' LEFT JOIN LATERAL UNNEST('
-            ' COALESCE(functions_dim_1_nf.citations, '
-            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-            ' LEFT JOIN citations AS citationsTable ON '
-            ' citationsTable.id = citation_id'
-            + where_text
-        )
-        height = self.try_query(sql, fetch="all")
-        resultant = 0
-
-        sql = (
-            'SELECT '
-            'AVG(positive_in_degree) AS avg_positive_in_degree, '
-            'MAX(positive_in_degree) AS max_positive_in_degree '
-            'FROM graphs_dim_1_nf '
-            'JOIN functions_dim_1_nf '
-            'ON graphs_dim_1_nf.graph_id = '
-            'CAST(functions_dim_1_nf.critical_portrait_graph_id ' 
-            'AS integer)'
-            ' LEFT JOIN LATERAL UNNEST('
-            ' COALESCE(functions_dim_1_nf.citations, '
-            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-            ' LEFT JOIN citations AS citationsTable ON '
-            ' citationsTable.id = citation_id'
-            + where_text
-        )
-        positive_in_degree_stats = self.try_query(sql, fetch="one")
-        avg_pc_set = positive_in_degree_stats[0]
-        largeset_pc_set = positive_in_degree_stats[1]
-
-        sql = (
-            'SELECT periodic_cardinality'
-            ' FROM graphs_dim_1_nf'
-            ' JOIN rational_preperiodic_dim_1_nf'
-            ' ON graphs_dim_1_nf.graph_id ='
-            ' rational_preperiodic_dim_1_nf.graph_id'
-            ' JOIN functions_dim_1_nf'
-            ' ON functions_dim_1_nf.function_id = '
-            'rational_preperiodic_dim_1_nf.function_id'
-            ' LEFT JOIN LATERAL UNNEST('
-            ' COALESCE(functions_dim_1_nf.citations, '
-            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-            ' LEFT JOIN citations AS citationsTable ON '
-            ' citationsTable.id = citation_id'
-            + where_text
-        )
-        res_periodic = self.try_query(sql, fetch="all")
-        periodic_cardinalities = [row[0] for row in res_periodic]
-        avg_num_periodic = sum(periodic_cardinalities) / len(periodic_cardinalities)
-        most_periodic = max(periodic_cardinalities)
-        
-        sql = (
-            'SELECT periodic_cycles'
-            ' FROM graphs_dim_1_nf'
-            ' JOIN rational_preperiodic_dim_1_nf'
-            ' ON graphs_dim_1_nf.graph_id = '
-            ' rational_preperiodic_dim_1_nf.graph_id'
-            ' JOIN functions_dim_1_nf'
-            ' ON functions_dim_1_nf.function_id = '
-            'rational_preperiodic_dim_1_nf.function_id'
-            ' LEFT JOIN LATERAL UNNEST('
-            ' COALESCE(functions_dim_1_nf.citations, '
-            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-            ' LEFT JOIN citations AS citationsTable ON '
-            ' citationsTable.id = citation_id'
-            + where_text
-        )
-        res_cycles = self.try_query(sql, fetch="all")
-        periodic_cycles = [row[0] for row in res_cycles]
-        longest_cycles = [max(val) for val in periodic_cycles if val]
-        largest_cycle = max(longest_cycles) if longest_cycles else 0
-
-        sql = (
-            'SELECT preperiodic_components'
-            ' FROM graphs_dim_1_nf'
-            ' JOIN rational_preperiodic_dim_1_nf'
-            ' ON graphs_dim_1_nf.graph_id = '
-            'rational_preperiodic_dim_1_nf.graph_id'
-            ' JOIN functions_dim_1_nf'
-            ' ON functions_dim_1_nf.function_id = '
-            'rational_preperiodic_dim_1_nf.function_id'
-            ' LEFT JOIN LATERAL UNNEST('
-            ' COALESCE(functions_dim_1_nf.citations, '
-            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-            ' LEFT JOIN citations AS citationsTable ON '
-            ' citationsTable.id = citation_id'
-            + where_text
-        )
-        res_comp = self.try_query(sql, fetch="all")
-        preperiodic_components = [row[0] for row in res_comp] if res_comp else []
-
-        sql = (
-            'SELECT graphs_dim_1_nf.cardinality'
-            ' FROM graphs_dim_1_nf'
-            ' JOIN rational_preperiodic_dim_1_nf'
-            ' ON graphs_dim_1_nf.graph_id ='
-            ' rational_preperiodic_dim_1_nf.graph_id'
-            ' JOIN functions_dim_1_nf'
-            ' ON functions_dim_1_nf.function_id = '
-            'rational_preperiodic_dim_1_nf.function_id'
-            ' LEFT JOIN LATERAL UNNEST('
-            ' COALESCE(functions_dim_1_nf.citations, '
-            ' ARRAY[NULL]::INTEGER[])) AS citation_id ON true'
-            ' LEFT JOIN citations AS citationsTable ON '
-            ' citationsTable.id = citation_id'
-            + where_text
-        )
-        res_card = self.try_query(sql, fetch="all")
-        cardinalities = [row[0] for row in res_card]
-        avg_num_preperiodic = sum(cardinalities) / len(preperiodic_components)
-        most_preperiodic = max(cardinalities)
-        component_sizes = [max(comp) for comp in preperiodic_components if comp]
-        largest_comp = max(component_sizes) if component_sizes else 0
-              
-        return [maps, aut, pcf, height, resultant,
-                avg_pc_set, largeset_pc_set,
-                avg_num_periodic, most_periodic,
-                largest_cycle, avg_num_preperiodic,
-                most_preperiodic, largest_comp]
-
-    def build_where_text(self, filters):
-        # remove empty filters
-        # remove ILD because not currently in use
-
-        # Basically the search filters from the search UI are
-        # converted into SQL "where text"
-        for fil in filters.copy():
-            if (
-                not filters[fil]
-                or filters[fil] == []
-                or (
-                    fil =='indeterminacy_locus_dimension'
-                    and filters[fil] == '1'
-                    )
-            ) :
-                del filters[fil]
-
-        if len(filters) == 0:
-            return ''
-
-        filter_text = ' WHERE '
-        conditions = []
-
-        for fil, values in filters.items():
-            if fil in ['indeterminacy_locus_dimension']:
-                conditions.append(
-                    'CAST(' + fil + ' AS integer) IN (' + values + ')'
-                    )
-
-            elif fil in ['base_field_degree', 'automorphism_group_cardinality']:
-                conditions.append(
-                    'CAST(' + fil + ' AS integer) IN (' + values + ')'
-                    )
-
-            # Since there are multiple base_field_label fields, we have to
-            # specify the specific table
-            elif fil in ['base_field_label']:
-                conditions.append(
-                    f"""functions_dim_1_nf.base_field_label ILIKE '%'
-                    || TRIM('{values}') || '%' """)
-
-            elif fil in ['family']:
-                print(values)
-                query = f"""
-                family = ARRAY{psycopg2.extensions.AsIs(values)}
-                """
-                conditions.append(query)
-
-            elif fil in ['preperiodic_cardinality']:
-                conditions.append(f'cardinality = {values}')
-
-            elif fil in ['num_components'] or fil in ['max_tail']:
-                conditions.append(f'{fil} = {values}')
-
-            elif fil in ['periodic_cardinality']:
-                conditions.append(f'{fil}={int(values)}')
-
-            elif fil == 'periodic_cycles':
-                print(
-                    f'Filter value for periodic_cycles: {int(values)}'
-                )
-                conditions.append(
-                    '(SELECT MAX(val) '
-                    'FROM unnest(graphs_dim_1_nf.periodic_cycles) AS val '
-                    'WHERE val IS NOT NULL)='
-                    f'{int(values)}'
-                )
-            elif fil in ['cp_cardinality']:
-                conditions.append(f'{fil}={int(values)}')
-
-            elif fil in ['positive_in_degree']:
-                conditions.append(f'{fil}={int(values)}')
-
-            # The "label" field is in another table ...
-            # had to make sure the citations table was included first
-            # See SQL select code in get_selected_systems function
-            # The search works regardless of capital letters (ILIKE)
-            # or leading/trailing whitespaces (TRIM)
-            elif fil in ['journal_label']:
-                conditions.append(f"""citationsTable.label ILIKE '%'
-                                  || TRIM('{values}') || '%' """)
-
-            # Apparently the model label is dynamically created
-            # (not a database field), so we have to search manually as well too
-            elif fil in ['model_label']:
-                conditions.append(f"""CONCAT(
-                                '1.', 
-                                TRIM(sigma_one), 
-                                '.', 
-                                TRIM(sigma_two), 
-                                '.', 
-                                TRIM(CAST(ordinal AS TEXT))) ILIKE '%'
-                                || TRIM('{values}') || '%' """)
-
-            elif fil in ['sigma_one']:
-                conditions.append(f"""sigma_one ILIKE '%'
-                                  || TRIM('{values}') || '%' """)
-
-            elif fil in ['sigma_two']:
-                conditions.append(f"""sigma_two ILIKE '%'
-                                  || TRIM('{values}') || '%' """)
-
-            elif fil in ['function_id']:
-                conditions.append(f"""functions_dim_1_nf.function_id
-                                  = {int(values)}""")
-
-            else:
-                conditions.append(
-                    fil +
-                    ' IN (' +
-                    ', '.join(str(e) for e in values)
-                    + ')'
-                    )
-
-        filter_text += ' AND '.join(conditions)
-        return filter_text
+    def get_statistics(self, where_sql, params):
+        query = sql.SQL("""
+            SELECT COUNT(*) as total_count, 
+                AVG(degree) as avg_degree
+            FROM functions_dim_1_nf f
+            JOIN rational_preperiodic_dim_1_nf r ON f.function_id = r.function_id
+            JOIN graphs_dim_1_nf g ON g.graph_id = r.graph_id
+            {}
+        """).format(where_sql)
+        result = self.try_query(query, params, fetch="one")
+        if result:
+            return result
+        return {'total_count': 0, 'avg_degree': 0}
 
     def get_family(self, family_id):
         # We grab all family data
         # and the associated citation as well
-        sql = '''
+        query = '''
             SELECT familiesTable.*,
             citationsTable.citation
             FROM families_dim_1_NF familiesTable
@@ -609,7 +202,7 @@ class PostgresConnector:
             = ANY(familiesTable.citations)
             WHERE familiesTable.family_id = %s
         '''
-        result = self.try_query(sql, (family_id,), fetch="one")
+        result = self.try_query(query, (family_id,), fetch="one")
         
         return result
     
@@ -619,54 +212,71 @@ class PostgresConnector:
         Get families matching the provided filters.
         Filters can include: family_id, name, degree
         """
-        where_text = self.build_family_where_text(filters)
-        sql = f'SELECT * FROM families_dim_1_nf {where_text}'
+        where_sql, params = self.build_where_text(filters)
+        query = sql.SQL("SELECT * FROM families_dim_1_nf {}").format(where_sql)
         
-        result = self.try_query(sql)
+        result = self.try_query(query, params, fetch="all")
         return result
 
-    # dreyes: this is a helper function for get_filtered_systems, it converts the filters from the UI into SQL "WHERE" text 
-    # that can be added to the SQL query. I couldve used the build_where_text function, but I wanted to keep the family filters 
-    # separate since they are different from the system filters and I didnt want to mess with the existing code too much
-    def build_family_where_text(self, filters):
-        """
-        Build SQL WHERE clause for family filters.
-        Similar to build_where_text but specific to families table.
-        """
-        # Remove empty filters
-        for fil in filters.copy():
-            if (
-                not filters[fil]
-                or filters[fil] == []
-            ):
-                del filters[fil]
+    def apply_filter_logic(self, fil, values, conditions):
+        if fil in ['function_id', 'degree', 'sigma_one', 'sigma_two', 'ordinal', 'base_field_label']:
+            ident = sql.SQL("f.{}").format(sql.Identifier(fil))
+        else:
+            ident = sql.Identifier(fil)
 
-        if len(filters) == 0:
-            return ''
+        if fil == 'model_label':
+            sql_piece = sql.SQL("""
+                CONCAT('1.', TRIM(sigma_one), '.', TRIM(sigma_two), '.', 
+                TRIM(CAST(ordinal AS TEXT))) ILIKE {}
+            """)
+            conditions.append(sql_piece.format(sql.Placeholder()))
+            return f"%{str(values).strip()}%"
+        
+        if fil == 'periodic_cycles':
+            sql_piece = sql.SQL("""
+                (SELECT MAX(val) FROM unnest(g.periodic_cycles) AS val 
+                WHERE val IS NOT NULL) = {}
+            """)
+            conditions.append(sql_piece.format(sql.Placeholder()))
+            return int(values)
+        
+        if isinstance(values, list):
+            placeholders = sql.SQL(', ').join(sql.Placeholder() * len(values))
+            sql_piece = sql.SQL("{} IN ({})")
+            conditions.append(sql_piece.format(ident, placeholders))
+            return values
+        
+        if fil in ['base_field_label', 'sigma_one', 'sigma_two', 'name', 'journal_label']:
+            sql_piece = sql.SQL("{} ILIKE {}")
+            conditions.append(sql_piece.format(ident, sql.Placeholder()))
+            return f"%{str(values)}%"
+        
+        sql_piece = sql.SQL("{} = {}")
+        conditions.append(sql_piece.format(ident, sql.Placeholder()))
 
-        filter_text = ' WHERE '
+        if fil in ['family_id', 'function_id', 'degree']:
+            return int(values)
+        return values
+    
+    def build_where_text(self, filters):
+        active_filters = {}
+        for key, value in filters.items():
+            if value and value != [] and not (key == 'indeterminacy_locus_dimension' and value == '1'):
+                active_filters[key] = value
+
+        if not active_filters:
+            return sql.SQL(""), []
+        
         conditions = []
+        params = []
+        for fil, values in active_filters.items():
+            processed_val = self.apply_filter_logic(fil, values, conditions)
+            
+            if isinstance(processed_val, list):
+                params.extend(processed_val)
+            else:
+                params.append(processed_val)
 
-        for fil, values in filters.items():
-            if fil == 'family_id':
-                # Exact match for family_id (numeric)
-                conditions.append(f'family_id = {int(values)}')
-
-            elif fil == 'name':
-                # Text search with ILIKE for partial matching
-                conditions.append(
-                    f"name ILIKE '%' || TRIM('{values}') || '%'"
-                )
-
-            elif fil == 'degree':
-                # Array of degrees: degree IN (2, 3)
-                if isinstance(values, list) and len(values) > 0:
-                    conditions.append(
-                        'degree IN (' + ', '.join(str(e) for e in values) + ')'
-                    )
-                else:
-                    # Single value
-                    conditions.append(f'degree = {int(values)}')
-
-        filter_text += ' AND '.join(conditions)
-        return filter_text  
+        where_fragment = sql.SQL(" WHERE ") + sql.SQL(" AND ").join(conditions)
+        
+        return where_fragment, params
