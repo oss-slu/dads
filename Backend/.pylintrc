@@ -132,7 +132,11 @@ disable=broad-except,
         xrange-builtin,
         zip-builtin-not-iterating,
         W0237,
-        C0202
+        C0202,
+        line-too-long,
+        inconsistent-quotes,
+        invalid-name,
+        unused-argument
 
 
 

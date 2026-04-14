@@ -280,6 +280,7 @@ class PostgresConnector:
         where_fragment = sql.SQL(" WHERE ") + sql.SQL(" AND ").join(conditions)
         
         return where_fragment, params
+<<<<<<< HEAD
         # for fil, values in filters.items():
         #     if fil == 'family_id':
         #         # Exact match for family_id (numeric)
@@ -323,3 +324,5 @@ class PostgresConnector:
 
         # filter_text += ' AND '.join(conditions)
         # return filter_text  
+=======
+>>>>>>> edaed198d4e0f86796bdfdb6b6e37135100a9c31

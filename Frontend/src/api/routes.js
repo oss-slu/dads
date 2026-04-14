@@ -21,7 +21,11 @@ export const get_families = () => api.get("/get_all_families");
 export const get_family = (familyId) => api.post("/get_family", { id: familyId });
 
 // dreyes: used to filter families based on the filters selected in the UI
+<<<<<<< HEAD
 export const get_filtered_families = (filters) => api.post("/get_filtered_familes", filters);
+=======
+export const get_filtered_families = (filters) => api.post("/get_filtered_families", filters);
+>>>>>>> edaed198d4e0f86796bdfdb6b6e37135100a9c31
 
 export const get_rational_periodic_data = (functionId) => 
     api.post("/get_rational_periodic_data", { function_id: functionId });
