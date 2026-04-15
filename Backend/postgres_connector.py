@@ -656,5 +656,25 @@ class PostgresConnector:
                     # Single value
                     conditions.append(f'degree = {int(values)}')
 
+            elif fil == 'dimension':
+                # families_dim_1_nf only contains dimension 1 objects
+                dims = values if isinstance(values, list) else [values]
+                dims = [int(d) for d in dims]
+                if 1 not in dims:
+                    # Requested dimension is not present in this table
+                    conditions.append('1 = 0')
+
+            elif fil == 'is_polynomial':
+                # Same style as system filter: IN (...)
+                conditions.append(
+                    'is_polynomial IN (' + ', '.join(str(v) for v in values) + ')'
+                )
+
+            elif fil == 'base_field_label':
+                # Partial match, case-insensitive
+                conditions.append(
+                    f"base_field_label ILIKE '%' || TRIM('{values}') || '%'"
+                )
+
         filter_text += ' AND '.join(conditions)
         return filter_text  
