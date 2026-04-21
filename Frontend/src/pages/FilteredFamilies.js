@@ -165,6 +165,26 @@ function FilteredFamilies() {
         return `[${left} : ${right}]`;
     };
 
+    const parseFamilyRecord = (family) => {
+        if (Array.isArray(family)) {
+            return {
+                id: family[0],
+                name: family[1],
+                degree: family[2],
+                modelCoeffs: family[4],
+                baseFieldLabel: family[6]
+            };
+        }
+
+        return {
+            id: family.family_id,
+            name: family.name,
+            degree: family.degree,
+            modelCoeffs: family.model_coeffs,
+            baseFieldLabel: family.base_field_label
+        };
+    };
+
     return (
         <>
             <div className="results-container" container>
@@ -356,9 +376,11 @@ function FilteredFamilies() {
                         data={
                             families === null
                                 ? []
-                                : families.map((x) => [
+                                : families.map((x) => {
+                                    const family = parseFamilyRecord(x);
+                                    return [
                                     <button
-                                        onClick={() => handleLinkClick(x[0])}
+                                        onClick={() => handleLinkClick(family.id)}
                                         style={{
                                             border: "None",
                                             color: "red",
@@ -366,16 +388,16 @@ function FilteredFamilies() {
                                             cursor: "pointer"
                                         }}
                                     >
-                                        {x[0]}
+                                        {family.id}
                                     </button>,
-                                    x[1],
-                                    x[2],
+                                    family.name,
+                                    family.degree,
                                     <>
                                         P<sup>1</sup> {String.fromCharCode(8594)} P<sup>1</sup>
                                     </>,
-                                    formatFamilyPolynomial(x[4], x[2]),
-                                    x[6]
-                                ])
+                                    formatFamilyPolynomial(family.modelCoeffs, family.degree),
+                                    family.baseFieldLabel
+                                ]})
                         }
                         itemsPerPage={pagesPer}
                         currentPage={page}

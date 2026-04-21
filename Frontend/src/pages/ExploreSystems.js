@@ -159,8 +159,8 @@ function ExploreSystems() {
         try {
             const result = await get_families()
             const autocompleteOptions = result.data.map((family) => ({
-                id: family[0], // Use the first element as id
-                name: family[1], // Use the second element as label
+                id: Array.isArray(family) ? family[0] : family.family_id,
+                name: Array.isArray(family) ? family[1] : family.name,
             }));
             setFamilies(autocompleteOptions)
             setOptionsLoading(false)
