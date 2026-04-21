@@ -274,6 +274,7 @@ class PostgresConnector:
         result = self.try_query(query, params, fetch="all")
         return result
 
+    # a bug exists when filtering for dimension 2 because the table being pulled from only contains systems dim 1. database should be refactored to fix bug, these systems should be contained in 1 table.
     def apply_filter_logic(self, fil, values, conditions):
         if fil in ['function_id', 'degree', 'sigma_one', 'sigma_two', 'ordinal', 'base_field_label']:
             ident = sql.SQL("f.{}").format(sql.Identifier(fil))
