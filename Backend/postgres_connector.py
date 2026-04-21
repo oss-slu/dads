@@ -3,8 +3,10 @@ Module Docstring
 manages  server data queries
 """
 import psycopg2
+import psycopg2.extras
 from psycopg2 import sql
 from config import load_config
+
 
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
@@ -53,6 +55,9 @@ class PostgresConnector:
             return None
 
     def try_query(self, sql_query, params=None, fetch="all"):
+        if not self.is_connection_active():
+            self.connect()
+
         result = None
         cur = None
 
@@ -147,19 +152,66 @@ class PostgresConnector:
     def get_filtered_systems(self, filters):
         where_sql, params = self.build_where_text(filters)
         stats = self.get_statistics(where_sql, params)
+        
         query = sql.SQL("""
-            SELECT f.function_id, sigma_one, sigma_two, ordinal, degree, 
-                (original_model).coeffs, f.base_field_label
+            SELECT f.function_id, f.sigma_one, f.sigma_two, f.ordinal, f.degree, 
+                   (f.original_model).coeffs, f.base_field_label
             FROM functions_dim_1_nf f
             JOIN rational_preperiodic_dim_1_nf r ON f.function_id = r.function_id
             JOIN graphs_dim_1_nf g ON g.graph_id = r.graph_id
             {} 
         """).format(where_sql)
-        rows = self.try_query(query, params, fetch='all')
-        return rows, stats
         
-    # gets a subset of the systems identified by the labels
-    # input should be json list
+        rows = self.try_query(query, params, fetch='all')
+        result = []
+
+        if rows:
+            mon_dict = {}
+            for row in rows:
+                try:
+                    d = int(row[4])
+                    coeffs = row[5]
+                    field_label = row[6]
+                    func_id = row[0]
+                except (KeyError, TypeError):
+                    d = int(row['degree'])
+                    coeffs = row['coeffs']
+                    field_label = row['base_field_label']
+                    func_id = row['function_id']
+                
+                if d not in mon_dict:
+                    mon = []
+                    for i in range(d+1):
+                        if i == 0: mon.append('x^'+str(d))
+                        elif i == d: mon.append('y^'+str(d))
+                        else:
+                            term = 'x' if (d-i) == 1 else 'x^'+str(d-i)
+                            term += 'y' if i == 1 else 'y^'+str(i)
+                            mon.append(term)
+                    mon_dict[d] = mon
+                else:
+                    mon = mon_dict[d]
+                
+                poly = '['
+                for j in range(2):
+                    first_term = True
+                    for i in range(d+1):
+                        val = str(coeffs[j][i])
+                        if val != '0':
+                            if val[0] != '-' and not first_term:
+                                poly += '+'
+                            if val == '1': poly += mon[i]
+                            elif val == '-1': poly += '-' + mon[i]
+                            else: poly += val + mon[i]
+                            first_term = False
+                    if j == 0: poly += ' : '
+                poly += ']'
+                
+                label = self.construct_label(row)
+                result.append([label, '1', d, poly, field_label, func_id])
+                
+        return result, stats
+        
     def get_selected_systems(self, labels):
         if not labels:
             return []
@@ -178,17 +230,21 @@ class PostgresConnector:
 
     def get_statistics(self, where_sql, params):
         query = sql.SQL("""
-            SELECT COUNT(*) as total_count, 
-                AVG(degree) as avg_degree
+            SELECT count(*)
             FROM functions_dim_1_nf f
             JOIN rational_preperiodic_dim_1_nf r ON f.function_id = r.function_id
             JOIN graphs_dim_1_nf g ON g.graph_id = r.graph_id
             {}
         """).format(where_sql)
-        result = self.try_query(query, params, fetch="one")
+
+        result = self.try_query(query, params, fetch='one')
+
         if result:
-            return result
-        return {'total_count': 0, 'avg_degree': 0}
+            try:
+                return result[0]
+            except KeyError:
+                return result['count']
+        return 0
 
     def get_family(self, family_id):
         # We grab all family data
@@ -280,7 +336,6 @@ class PostgresConnector:
         where_fragment = sql.SQL(" WHERE ") + sql.SQL(" AND ").join(conditions)
         
         return where_fragment, params
-<<<<<<< HEAD
         # for fil, values in filters.items():
         #     if fil == 'family_id':
         #         # Exact match for family_id (numeric)
@@ -324,5 +379,3 @@ class PostgresConnector:
 
         # filter_text += ' AND '.join(conditions)
         # return filter_text  
-=======
->>>>>>> edaed198d4e0f86796bdfdb6b6e37135100a9c31
