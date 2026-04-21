@@ -20,6 +20,22 @@ function Families() {
             console.log(error)
         }
      }
+
+    const parseFamilyRecord = (family) => {
+        if (Array.isArray(family)) {
+            return {
+                id: family[0],
+                name: family[1],
+                degree: family[2],
+            };
+        }
+
+        return {
+            id: family.family_id,
+            name: family.name,
+            degree: family.degree,
+        };
+    };
      
     useEffect(() => {
         fetchFamilies()
@@ -49,9 +65,11 @@ function Families() {
                             data={
                                 families === null
                                     ? []
-                                    : families.map((x) => [
+                                    : families.map((x) => {
+                                          const family = parseFamilyRecord(x);
+                                          return [
                                           <button
-                                              onClick={() => handleLinkClick(x[0])}
+                                              onClick={() => handleLinkClick(family.id)}
                                               style={{
                                                   border:"None",
                                                   color: "red",
@@ -60,11 +78,11 @@ function Families() {
                                 
                                               }}
                                           >
-                                              {x[0]}
+                                              {family.id}
                                           </button>,
-                                          x[1],
-                                          x[2],
-                                      ])
+                                          family.name,
+                                          family.degree,
+                                      ]})
                             }
                             itemsPerPage={pagesPer}
                             currentPage={1}
