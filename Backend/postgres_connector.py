@@ -22,11 +22,12 @@ class PostgresConnector:
     """
 
     def __init__(self):
+        self.connection = None
         self.connect()
 
     def connect(self):
         config = load_config()
-        if not hasattr(self, 'connection') or self.connection is None or self.connection.closed:
+        if self.connection is None or self.connection.closed:
             try:
                 self.connection = psycopg2.connect(**config)
                 print('Connected to the PostgreSQL server.')
@@ -73,7 +74,8 @@ class PostgresConnector:
                     result = dicts[0] if dicts else None
 
         except Exception as e:
-            if self.connection: self.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
             raise e
             
         finally:
@@ -182,8 +184,10 @@ class PostgresConnector:
                 if d not in mon_dict:
                     mon = []
                     for i in range(d+1):
-                        if i == 0: mon.append('x^'+str(d))
-                        elif i == d: mon.append('y^'+str(d))
+                        if i == 0:
+                            mon.append('x^'+str(d))
+                        elif i == d:
+                            mon.append('y^'+str(d))
                         else:
                             term = 'x' if (d-i) == 1 else 'x^'+str(d-i)
                             term += 'y' if i == 1 else 'y^'+str(i)
@@ -200,11 +204,15 @@ class PostgresConnector:
                         if val != '0':
                             if val[0] != '-' and not first_term:
                                 poly += '+'
-                            if val == '1': poly += mon[i]
-                            elif val == '-1': poly += '-' + mon[i]
-                            else: poly += val + mon[i]
+                            if val == '1':
+                                poly += mon[i]
+                            elif val == '-1':
+                                poly += '-' + mon[i]
+                            else:
+                                poly += val + mon[i]
                             first_term = False
-                    if j == 0: poly += ' : '
+                    if j == 0:
+                        poly += ' : '
                 poly += ']'
                 
                 label = self.construct_label(row)
