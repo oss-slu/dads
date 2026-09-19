@@ -2,3 +2,5 @@
 pgdata/
 venv/
 database.ini
+desktop/node_modules/
+desktop/dist/
