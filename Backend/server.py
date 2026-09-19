@@ -109,6 +109,10 @@ def get_graph_metadata():
         return jsonify({'error': 'graph_id is required'}), 400
     metadata = connector.get_graph_metadata(graph_id)
     return jsonify(metadata)
+
+@app.route('/health', methods=['GET'])
+def health ():
+    return jsonify({"status": "ok", "db": connector.is_connection_active()}), 200
     
 if __name__ == '__main__':
     app.run()
