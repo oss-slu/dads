@@ -14,6 +14,7 @@ function isExternal (url) {
   }
 }
 
+// True if the URL points at the app itself (same origin as APP_URL)
 function isSameOrigin (url) {
   try {
     return new URL(url).origin === appOrigin
@@ -22,6 +23,7 @@ function isSameOrigin (url) {
   }
 }
 
+// Opens the main DynaBase window, routes links, and loads the app
 function createWindow () {
   const win = new BrowserWindow({
     width: 1400,
