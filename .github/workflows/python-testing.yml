@@ -47,9 +47,9 @@ jobs:
           requirements.txt
 
     - name: Install dependencies
-      working-directory: Backend
       run: |
         python -m pip install --upgrade pip
+        pip install -r requirements.txt
         pip install flake8 pytest
         pip install pytest flake8 coverage
       
@@ -62,16 +62,17 @@ jobs:
         flake8 . --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Run tests with coverage
-      working-directory: Backend
+      if: success() || failure()
       env:
         PYTHONPATH: ${{ github.workspace }}/Backend
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/dads
       run: |
-        coverage run -m pytest -q
+        coverage run --source=Backend -m pytest tests/ -v
         coverage xml
 
     - name: Upload coverage report 
+      if: success() || failure()
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
-        path: Backend/coverage.xml
+        path: coverage.xml
