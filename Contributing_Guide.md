@@ -23,7 +23,7 @@ Please write a detailed description with the following details.
 - Details of how to run the app and review the changes.
 
 ### Checks
-There are two automated checks running on the codebase. Please make sure both of them are running without errors after your changes
+There are two automated checks running on the codebase. Please make sure both of them are running without errors after your changes.
 
 ### Approvals
-Any PR that needs merging to the main needs at least two approvals. Please make sure all the review comments are addressed before requesting for a review again
+Any PR that needs merging to the main needs at least two approvals. Please make sure all the review comments are addressed before requesting for a review again.
