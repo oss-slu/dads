@@ -1,0 +1,156 @@
+[
+  {
+    "function_id": 1,
+    "degree": 2,
+    "base_field_label": "1.1.1.1",
+    "base_field_degree": 1,
+    "sigma_one": "a68cf1ff",
+    "sigma_two": "024ac6d7",
+    "ordinal": 1,
+    "citations": [
+      4
+    ],
+    "family": [
+      1
+    ],
+    "original_model": "(\"{{1,0,0},{0,0,1}}\",1,{},0,1.1.1.1)",
+    "monic_centered": "(\"{{1,0,0},{0,0,1}}\",1,{},,1.1.1.1)",
+    "reduced_model": "(\"{{1,0,0},{0,0,1}}\",1,{},0,1.1.1.1)",
+    "newton_polynomial_coeffs": [
+      "0",
+      "1",
+      "-1"
+    ],
+    "display_model": "monic centered",
+    "is_polynomial": true,
+    "is_chebyshev": false,
+    "is_newton": true,
+    "is_lattes": false,
+    "is_pcf": true,
+    "cp_cardinality": 2,
+    "cp_field_of_defn": "1.1.1.1",
+    "automorphism_group_cardinality": 2,
+    "rational_twists": null,
+    "critical_portrait_graph_id": "1"
+  },
+  {
+    "function_id": 2,
+    "degree": 2,
+    "base_field_label": "1.1.1.1",
+    "base_field_degree": 1,
+    "sigma_one": "1a2a6bbf",
+    "sigma_two": "1ed2bf82",
+    "ordinal": 1,
+    "citations": [
+      4
+    ],
+    "family": [
+      1
+    ],
+    "original_model": "(\"{{1,0,1},{0,0,1}}\",1,{},0,1.1.1.1)",
+    "monic_centered": "(\"{{1,0,1},{0,0,1}}\",1,{},,1.1.1.1)",
+    "reduced_model": "(\"{{1,0,1},{0,0,1}}\",1,{},0,1.1.1.1)",
+    "newton_polynomial_coeffs": null,
+    "display_model": "monic centered",
+    "is_polynomial": true,
+    "is_chebyshev": false,
+    "is_newton": false,
+    "is_lattes": false,
+    "is_pcf": false,
+    "cp_cardinality": 2,
+    "cp_field_of_defn": "1.1.1.1",
+    "automorphism_group_cardinality": 1,
+    "rational_twists": null,
+    "critical_portrait_graph_id": null
+  },
+  {
+    "function_id": 3,
+    "degree": 2,
+    "base_field_label": "1.1.1.1",
+    "base_field_degree": 1,
+    "sigma_one": "b5876aa4",
+    "sigma_two": "6951d87f",
+    "ordinal": 1,
+    "citations": [
+      4
+    ],
+    "family": [
+      1
+    ],
+    "original_model": "(\"{{1,0,-1},{0,0,1}}\",1,{},0,1.1.1.1)",
+    "monic_centered": "(\"{{1,0,-1},{0,0,1}}\",1,{},,1.1.1.1)",
+    "reduced_model": "(\"{{1,0,-1},{0,0,1}}\",1,{},0,1.1.1.1)",
+    "newton_polynomial_coeffs": null,
+    "display_model": "monic centered",
+    "is_polynomial": true,
+    "is_chebyshev": false,
+    "is_newton": false,
+    "is_lattes": false,
+    "is_pcf": true,
+    "cp_cardinality": 2,
+    "cp_field_of_defn": "1.1.1.1",
+    "automorphism_group_cardinality": 1,
+    "rational_twists": null,
+    "critical_portrait_graph_id": "4"
+  },
+  {
+    "function_id": 4,
+    "degree": 2,
+    "base_field_label": "1.1.1.1",
+    "base_field_degree": 1,
+    "sigma_one": "0b88e8b9",
+    "sigma_two": "0989e2e1",
+    "ordinal": 1,
+    "citations": [
+      4
+    ],
+    "family": [
+      1
+    ],
+    "original_model": "(\"{{2,0,1},{0,0,2}}\",16,{2},0.6931472,1.1.1.1)",
+    "monic_centered": "(\"{{1,0,1/2},{0,0,1}}\",1,{2},,1.1.1.1)",
+    "reduced_model": "(\"{{2,0,1},{0,0,2}}\",16,{2},0.6931472,1.1.1.1)",
+    "newton_polynomial_coeffs": null,
+    "display_model": "monic centered",
+    "is_polynomial": true,
+    "is_chebyshev": false,
+    "is_newton": false,
+    "is_lattes": false,
+    "is_pcf": false,
+    "cp_cardinality": 2,
+    "cp_field_of_defn": "1.1.1.1",
+    "automorphism_group_cardinality": 1,
+    "rational_twists": null,
+    "critical_portrait_graph_id": null
+  },
+  {
+    "function_id": 5,
+    "degree": 2,
+    "base_field_label": "1.1.1.1",
+    "base_field_degree": 1,
+    "sigma_one": "c3da6343",
+    "sigma_two": "1cff8e8b",
+    "ordinal": 1,
+    "citations": [
+      4
+    ],
+    "family": [
+      1
+    ],
+    "original_model": "(\"{{2,0,-1},{0,0,2}}\",16,{2},0.6931472,1.1.1.1)",
+    "monic_centered": "(\"{{1,0,-1/2},{0,0,1}}\",1,{2},,1.1.1.1)",
+    "reduced_model": "(\"{{2,0,-1},{0,0,2}}\",16,{2},0.6931472,1.1.1.1)",
+    "newton_polynomial_coeffs": null,
+    "display_model": "monic centered",
+    "is_polynomial": true,
+    "is_chebyshev": false,
+    "is_newton": false,
+    "is_lattes": false,
+    "is_pcf": false,
+    "cp_cardinality": 2,
+    "cp_field_of_defn": "1.1.1.1",
+    "automorphism_group_cardinality": 1,
+    "rational_twists": null,
+    "critical_portrait_graph_id": null
+  }
+]
