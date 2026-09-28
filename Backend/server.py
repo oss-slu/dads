@@ -111,7 +111,7 @@ def get_graph_metadata():
     return jsonify(metadata)
 
 @app.route('/health', methods=['GET'])
-def health ():
+def health():
     return jsonify({"status": "ok", "db": connector.is_connection_active()}), 200
     
 if __name__ == '__main__':
