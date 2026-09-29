@@ -1,0 +1,15 @@
+{
+  "name": "dynabase-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Electron desktop shell that opens the DynaBase web app in a native window",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^44.4.3"
+  }
+}
