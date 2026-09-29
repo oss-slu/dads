@@ -4,3 +4,6 @@ venv/
 database.ini
 desktop/node_modules/
 desktop/dist/
+__pycache__/
+*.pyc
+.pytest_cache/
