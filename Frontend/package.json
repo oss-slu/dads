@@ -43,6 +43,8 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^14.3.1",
     "eslint-config-standard": "^17.x.x",
     "eslint-plugin-n": "^17.x.x || ^16"
   }
