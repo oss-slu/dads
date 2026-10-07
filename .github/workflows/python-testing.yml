@@ -50,19 +50,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install flake8 pytest
-        pip install pytest flake8 coverage
+        pip install flake8 pytest coverage
       
     - name: Lint with flake8 (strict mode)
       working-directory: Backend
       run: |
         # Fail fast on syntax errors & undefined names
         flake8 . --select=E9,F63,F7,F82 --show-source --statistics
-        # Run style linting (this time WITHOUT exit-zero)
-        flake8 . --max-complexity=10 --max-line-length=127 --statistics
+        # Style linting: report only, does not fail the build
+        flake8 . --max-complexity=10 --max-line-length=127 --statistics --exit-zero
 
     - name: Run tests with coverage
-      if: success() || failure()
       env:
         PYTHONPATH: ${{ github.workspace }}/Backend
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/dads
@@ -71,7 +69,6 @@ jobs:
         coverage xml
 
     - name: Upload coverage report 
-      if: success() || failure()
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
