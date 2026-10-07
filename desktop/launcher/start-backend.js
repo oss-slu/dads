@@ -43,16 +43,19 @@ forward(child.stderr, (line) => console.error(line));
 
 child.on('error', (err) => {
     console.error(`failed to start backend with ${PYTHON}: ${err.message}`);
-    process.exit(1);
+    shuttingDown = true;
+    clearInterval(pollTimer);
+    process.exitCode = 1;
 });
 
 child.on('exit', (code, signal) => {
     clearInterval(pollTimer);
     if (shuttingDown) {
-        process.exit(exitCode);
+        process.exitCode = exitCode;
+        return;
     }
     console.error(`backend exited on its own (code ${code}, signal ${signal})`);
-    process.exit(code || 1);
+    process.exitCode = code || 1;
 });
 
 // kill the backend and exit with the given code once it is really gone
@@ -62,7 +65,8 @@ const stop = (code) => {
     exitCode = code;
     clearInterval(pollTimer);
     if (child.exitCode !== null) {
-        process.exit(code);
+        process.exitCode = code;
+        return;
     }
     child.kill();
 };
