@@ -7,6 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
 import { get_label } from '../../api/routes';
+import { Link } from 'react-router-dom';
 
 export default function RationalTwistsTable({ data }) {
   console.log(data);
@@ -45,9 +46,9 @@ export default function RationalTwistsTable({ data }) {
               {data.rational_twists && data.rational_twists.length > 0 ? (
                 data.rational_twists.map((id, index) => (
                   <React.Fragment key={id}>
-                    <a href={`${window.location.href.split('/')[0]}/system/${id}/`} target="_blank" rel="noopener noreferrer">
+                    <Link to={`/system/${id}`}>
                       {<ModelLabel id={id} />}
-                    </a>
+                    </Link>
                     <br></br>
                   </React.Fragment>
                 ))

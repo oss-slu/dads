@@ -17,7 +17,7 @@ function SystemDetails() {
 
     useEffect(() => {
         fetchDataForCSV();
-    }, []);
+    }, [label]);
 
     const fetchDataForCSV = async () => {
         try {
