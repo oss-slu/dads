@@ -296,7 +296,9 @@ def copy_graphs(pg_conn, sqlite_conn):
                 max_tail,
                 graph_type,
             )
-            for graph_id, cardinality, edges, num_components, periodic_cycles, periodic_cardinality, preperiodic_components, positive_in_degree, max_tail, graph_type in cursor
+            for graph_id, cardinality, edges, num_components, periodic_cycles,
+            periodic_cardinality, preperiodic_components, positive_in_degree,
+            max_tail, graph_type in cursor
         ]
     sqlite_conn.executemany(insert_sql, rows)
     return len(rows)
