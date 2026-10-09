@@ -127,6 +127,22 @@ Models in `functions_dim_1_nf` are read with decomposed `SELECT` columns such
 as `(original_model).coeffs` and stored as JSON objects in `TEXT` columns with
 the same names as PostgreSQL.
 
+After building, verify against Postgres (Docker or local):
+
+```bash
+python scripts/verify_sqlite_export.py
+```
+
+This checks row counts, metadata keys, and five sample `function_id` values
+(11, 2400, 26, 306, 302). System **11** has a NULL `monic_centered` model;
+**2400** has a NULL `height` inside `monic_centered` in Postgres.
+
+Unit tests without Postgres:
+
+```bash
+python -m pytest tests/test_build_sqlite.py -q
+```
+
 ## Findings (SQLite build)
 
 - Decomposing `model_type` in SQL returns real `NULL`s for missing subfields
