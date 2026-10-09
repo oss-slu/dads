@@ -127,13 +127,17 @@ Models in `functions_dim_1_nf` are read with decomposed `SELECT` columns such
 as `(original_model).coeffs` and stored as JSON objects in `TEXT` columns with
 the same names as PostgreSQL.
 
-After building, verify against Postgres (Docker or local):
+### Optional: verify against Postgres
+
+`verify_sqlite_export.py` is a **local QA helper** (not used by the app or CI).
+Run it after a successful build when Docker Postgres and `Backend/database.ini`
+are available:
 
 ```bash
 python scripts/verify_sqlite_export.py
 ```
 
-This checks row counts, metadata keys, and five sample `function_id` values
+It checks row counts, metadata keys, and five sample `function_id` values
 (11, 2400, 26, 306, 302). System **11** has a NULL `monic_centered` model;
 **2400** has a NULL `height` inside `monic_centered` in Postgres.
 
