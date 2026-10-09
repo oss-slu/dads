@@ -21,6 +21,14 @@ SCHEMA_VERSION = "1"
 
 JSON_SEPARATORS = (",", ":")
 
+EXPORT_TABLES = (
+    "citations",
+    "families_dim_1_nf",
+    "graphs_dim_1_nf",
+    "functions_dim_1_nf",
+    "rational_preperiodic_dim_1_nf",
+)
+
 sys.path.insert(0, str(BACKEND_DIRECTORY))
 from config import load_config  # pylint: disable=wrong-import-position
 
@@ -50,26 +58,28 @@ def bool_to_sqlite(value):
     return 1 if value else 0
 
 
-def composite_model_is_null(coeffs, resultant, bad_primes, height, base_field_label):
-    return (
+def model_from_parts(coeffs, resultant, bad_primes, height, base_field_label):
+    if (
         coeffs is None
         and resultant is None
         and bad_primes is None
         and height is None
         and base_field_label is None
-    )
-
-
-def pack_model(coeffs, resultant, bad_primes, height, base_field_label):
-    if composite_model_is_null(coeffs, resultant, bad_primes, height, base_field_label):
+    ):
         return None
-    payload = {
+    return {
         "coeffs": coeffs,
         "resultant": resultant,
         "bad_primes": bad_primes,
         "height": height,
         "base_field_label": base_field_label,
     }
+
+
+def pack_model(coeffs, resultant, bad_primes, height, base_field_label):
+    payload = model_from_parts(coeffs, resultant, bad_primes, height, base_field_label)
+    if payload is None:
+        return None
     return json.dumps(payload, separators=JSON_SEPARATORS)
 
 
@@ -461,16 +471,9 @@ def copy_functions(pg_conn, sqlite_conn):
 
 
 def postgres_row_counts(pg_conn):
-    tables = [
-        "citations",
-        "families_dim_1_nf",
-        "graphs_dim_1_nf",
-        "functions_dim_1_nf",
-        "rational_preperiodic_dim_1_nf",
-    ]
     counts = {}
     with pg_conn.cursor() as cursor:
-        for table in tables:
+        for table in EXPORT_TABLES:
             cursor.execute(
                 sql.SQL("SELECT COUNT(*) FROM {}").format(sql.Identifier(table))
             )
@@ -495,7 +498,7 @@ def build_sqlite(output_path):
         output_path.unlink()
 
     pg_conn = connect_postgres()
-    sqlite_conn = sqlite3_connect(output_path)
+    sqlite_conn = sqlite3.connect(output_path)
 
     try:
         create_sqlite_schema(sqlite_conn)
@@ -523,10 +526,6 @@ def build_sqlite(output_path):
         sqlite_conn.close()
 
     return counts, output_path
-
-
-def sqlite3_connect(output_path):
-    return sqlite3.connect(output_path)
 
 
 def main():

@@ -1,4 +1,4 @@
-"""Compare a built dads.sqlite file against local PostgreSQL (issue #306 checks)."""
+"""Verify SQLite export against PostgreSQL."""
 
 import argparse
 import json
@@ -13,16 +13,7 @@ BACKEND_DIRECTORY = REPOSITORY_ROOT / "Backend"
 DATABASE_CONFIG = BACKEND_DIRECTORY / "database.ini"
 DEFAULT_SQLITE = REPOSITORY_ROOT / "data" / "exports" / "dads.sqlite"
 
-# Issue #306: system 11 (whole monic_centered NULL) + empty model height + three more.
 SAMPLE_FUNCTION_IDS = (11, 2400, 26, 306, 302)
-
-TABLES = (
-    "citations",
-    "families_dim_1_nf",
-    "graphs_dim_1_nf",
-    "functions_dim_1_nf",
-    "rational_preperiodic_dim_1_nf",
-)
 
 METADATA_KEYS = (
     "schema_version",
@@ -33,6 +24,10 @@ METADATA_KEYS = (
 
 sys.path.insert(0, str(BACKEND_DIRECTORY))
 from config import load_config  # pylint: disable=wrong-import-position
+
+SCRIPTS_DIRECTORY = REPOSITORY_ROOT / "scripts"
+sys.path.insert(0, str(SCRIPTS_DIRECTORY))
+from build_sqlite import EXPORT_TABLES, model_from_parts  # pylint: disable=wrong-import-position
 
 
 def parse_arguments():
@@ -56,7 +51,7 @@ def pg_connect():
 def fetch_pg_counts(connection):
     counts = {}
     with connection.cursor() as cursor:
-        for table in TABLES:
+        for table in EXPORT_TABLES:
             cursor.execute(f"SELECT COUNT(*) FROM {table}")
             counts[table] = cursor.fetchone()[0]
     return counts
@@ -64,7 +59,7 @@ def fetch_pg_counts(connection):
 
 def fetch_sqlite_counts(connection):
     counts = {}
-    for table in TABLES:
+    for table in EXPORT_TABLES:
         counts[table] = connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
     return counts
 
@@ -106,24 +101,6 @@ def pg_function_row(connection, function_id):
     if row is None:
         raise ValueError(f"function_id {function_id} not found in Postgres")
     return row
-
-
-def model_dict(coeffs, resultant, bad_primes, height, label):
-    if (
-        coeffs is None
-        and resultant is None
-        and bad_primes is None
-        and height is None
-        and label is None
-    ):
-        return None
-    return {
-        "coeffs": coeffs,
-        "resultant": resultant,
-        "bad_primes": bad_primes,
-        "height": height,
-        "base_field_label": label,
-    }
 
 
 def sqlite_function_row(connection, function_id):
@@ -184,17 +161,17 @@ def compare_function(connection_pg, connection_sqlite, function_id):
         ("cp_field_of_defn", pg_cp_field, sq_cp_field),
         (
             "original_model",
-            model_dict(om_c, om_r, om_bp, om_h, om_l),
+            model_from_parts(om_c, om_r, om_bp, om_h, om_l),
             loads_json_nullable(sq_om),
         ),
         (
             "monic_centered",
-            model_dict(mc_c, mc_r, mc_bp, mc_h, mc_l),
+            model_from_parts(mc_c, mc_r, mc_bp, mc_h, mc_l),
             loads_json_nullable(sq_mc),
         ),
         (
             "reduced_model",
-            model_dict(rm_c, rm_r, rm_bp, rm_h, rm_l),
+            model_from_parts(rm_c, rm_r, rm_bp, rm_h, rm_l),
             loads_json_nullable(sq_rm),
         ),
     ]
@@ -221,7 +198,7 @@ def main():
         pg_counts = fetch_pg_counts(pg_conn)
         sqlite_counts = fetch_sqlite_counts(sqlite_conn)
         print("Row counts:")
-        for table in TABLES:
+        for table in EXPORT_TABLES:
             match = pg_counts[table] == sqlite_counts[table]
             status = "ok" if match else "MISMATCH"
             print(f"  {table}: postgres={pg_counts[table]} sqlite={sqlite_counts[table]} [{status}]")
