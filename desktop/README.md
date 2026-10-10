@@ -43,3 +43,12 @@ $env:DADS_URL='http://127.0.0.1:5000'; npm start
 ## Links
 
 Links to other sites, such as lmfdb.org or the GitHub button, open in your normal browser instead of a new Electron window. Links to other pages of the app stay inside the app.
+
+## Tests
+
+The link helpers in `src/main/links.js` have unit tests that run with Node's built-in test runner (no Electron needed):
+
+```
+cd desktop
+npm test
+```
