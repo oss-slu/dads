@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
-import { get_rational_periodic_data, get_label, get_graph_metadata } from '../../api/routes';
+import { get_rational_periodic_data, get_graph_data } from '../../api/routes';
 import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix';
 import Copy from '../FunctionDetail/Copy';
 import HelpBox from '../FunctionDetail/HelpBox';
@@ -20,59 +20,44 @@ const ScrollableTableContainer = styled(TableContainer)({
 });
 
 export default function RationalPointsTable({ data }) {
-  const [rationalData, setRationalData] = useState([]);
-  const [label, setLabel] = useState('');
-  const [graphMetaMap, setGraphMetaMap] = useState({});
+    const [rows, setRows] = useState([]);
+    const [status, setStatus] = useState('loading'); //'loading', 'loaded', 'error'
+    
+    const functionId = data?.function_id;
 
-  const functionId = data?.function_id;
-
-  const formatData = (key) => {
-    const items = data[key];
-    if (items && items.length > 0) {
-      if (Array.isArray(items[0])) {
-        return `[${items[0].join(', ')}]`;
-      } else {
-        return `[${items.join(', ')}]`;
+    const formatEdges = (edges) => {
+      if (edges && edges.length > 0) {
+        return Array.isArray(edges[0]) ? `[${edges[0].join(', ')}]` : `[${edges.join(', ')}]`
       }
-    }
     return '[]';
   };
 
   useEffect(() => {
-    if (functionId) {
-      get_rational_periodic_data(functionId)
-        .then(async response => {
-          const rawData = response.data;
-          setRationalData(rawData);
-
-          const metaMap = {};
-          for (const item of rawData) {
-            const graphId = item[4];
-            try {
-              const metaResponse = await get_graph_metadata(graphId);
-              metaMap[graphId] = metaResponse.data;
-            } catch (error) {
-              console.error(`Error fetching metadata for graph_id ${graphId}:`, error);
-            }
-          }
-          setGraphMetaMap(metaMap);
-        })
-        .catch(error => {
-          console.error("Error fetching rational periodic data:", error);
-        });
-
-      get_label(functionId)
-        .then(response => {
-          setLabel(response.data.label);
-        })
-        .catch(error => {
-          console.error("Error fetching label:", error);
-        });
-    }
+    if (!functionId) return;
+    setStatus('loading');
+    get_rational_periodic_data(functionId)
+      .then(async (response) => {
+        const records = response.data;
+        const graphs = await Promise.all(
+          records.map((r) =>
+            get_graph_data(r.graph_id)
+              .then((res) => res.data)
+              .catch(() => null)
+          )
+        );
+        setRows(records.map((r, i) => ({ ...r, graph: graphs[i] })));
+        setStatus('loaded');
+      })
+      .catch((error) => {
+        console.error('Error fetching rational periodic data:', error);
+        setStatus('error');
+      });
   }, [functionId]);
 
-  if (!rationalData.length) return <p>Loading rational periodic data...</p>;
-
+  if (status === 'loading') return <p>Loading rational periodic data...</p>;
+  if (status === 'error') return <p>Could not load rational preperiodic data.</p>;
+  if (rows.length === 0) return <p>No rational preperiodic data for this system.</p>;
+  
   return (
     <>
       <h3>Rational Points Table</h3>
@@ -131,39 +116,40 @@ export default function RationalPointsTable({ data }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rationalData.map((item, index) => {
-              const graphId = item[4];
-              const meta = graphMetaMap[graphId] || {};
+            {rows.map((item) => {
+              const meta = item.graph || {};
+              const edges = formatEdges(meta.edges);
+              const points = item.rational_periodic_points;
 
               return (
-            <TableRow key={index}>
+              <TableRow key={item.id}>
               <TableCell sx={{ width: '100px', maxWidth: '100px' }}><a
-                  href={`https://www.lmfdb.org/NumberField/${item[2]}`}
+                  href={`https://www.lmfdb.org/NumberField/${item.base_field_label}`}
                   style={{
                     color: "blue",
                     textDecoration: "underline"
                   }}
                   target="_blank"
                   rel="noopener noreferrer">
-                    {item[2]}
+                    {item.base_field_label}
                 </a></TableCell>
               <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.cardinality !== undefined && meta.cardinality !== null ? meta.cardinality : 'N/A'}</TableCell>
               <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
                 <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
-                  <Copy edges={formatData("edges")} type={2} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                  <Copy edges={edges} type={2} size="small" sx={{ whiteSpace: 'nowrap' }} />
                 </Box>
               </TableCell>
               <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
                 <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
-                  <Copy edges={formatData("edges")} type={1} size="small" sx={{ whiteSpace: 'nowrap' }} />
-                  <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={formatData("edges")} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                  <Copy edges={edges} type={1} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                  <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={edges} size="small" sx={{ whiteSpace: 'nowrap' }} />
                 </Box>
               </TableCell>
               <TableCell sx={{ width: '100px', maxWidth: '100px' }}>{Array.isArray(meta.periodic_cycles) && meta.periodic_cycles.length > 0 ? `[${meta.periodic_cycles.join(', ')}]` : 'N/A'}</TableCell>
               <TableCell sx={{ width: '120px', maxWidth: '120px' }}>{Array.isArray(meta.preperiodic_components) && meta.preperiodic_components.length > 0 ? `[${meta.preperiodic_components.join(', ')}]` : 'N/A'}</TableCell>
               <TableCell sx={{ width: '100px', maxWidth: '100px' }}>
-                {Array.isArray(item[3]) && item[3].length > 0 ? (
-                  item[3].map((point, idx) => <div key={idx}>{`(${point[0]} : ${point[1]})`}</div>)
+                {Array.isArray(points) && points.length > 0 ? (
+                  points.map((point, idx) => <div key={idx}>{`(${point[0]} : ${point[1]})`}</div>)
                 ) : ('N/A')}
               </TableCell>
               <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.max_tail !== undefined && meta.max_tail !== null ? meta.max_tail : 'N/A'}</TableCell>
