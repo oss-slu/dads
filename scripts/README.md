@@ -105,3 +105,51 @@ For SQLite, two reasonable approaches are:
 
 The JSON-object approach is closest to the current data shape and avoids
 continuing to depend on positional composite-string parsing.
+
+# SQLite build
+
+`build_sqlite.py` copies the five approved tables from local PostgreSQL into a
+single SQLite file for offline desktop use.
+
+## Usage
+
+From the repository root:
+
+```bash
+python scripts/build_sqlite.py [--out PATH]
+```
+
+Connection settings come from `Backend/database.ini` (same as the JSON export).
+Default output is `data/exports/dads.sqlite`. The file is gitignored; do not
+commit it.
+
+Models in `functions_dim_1_nf` are read with decomposed `SELECT` columns such
+as `(original_model).coeffs` and stored as JSON objects in `TEXT` columns with
+the same names as PostgreSQL.
+
+### Optional: verify against Postgres
+
+`verify_sqlite_export.py` is a **local QA helper** (not used by the app or CI).
+Run it after a successful build when Docker Postgres and `Backend/database.ini`
+are available:
+
+```bash
+python scripts/verify_sqlite_export.py
+```
+
+It checks row counts, metadata keys, and five sample `function_id` values
+(11, 2400, 26, 306, 302). System **11** has a NULL `monic_centered` model;
+**2400** has a NULL `height` inside `monic_centered` in Postgres.
+
+Unit tests without Postgres:
+
+```bash
+python -m pytest tests/test_build_sqlite.py -q
+```
+
+## Findings (SQLite build)
+
+- Decomposing `model_type` in SQL returns real `NULL`s for missing subfields
+  and for whole-model `NULL` (for example system 11 `monic_centered`).
+- Casting `display_model` with `::text` yields the enum label string for
+  SQLite `TEXT` storage.
