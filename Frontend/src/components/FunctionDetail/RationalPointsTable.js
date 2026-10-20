@@ -21,7 +21,7 @@ const ScrollableTableContainer = styled(TableContainer)({
 
 export default function RationalPointsTable({ data }) {
     const [rows, setRows] = useState([]);
-    const [status, setStatus] = useState('loading'); //'loading', 'loaded', 'error'
+    const [status, setStatus] = useState('loading'); // 'loading', 'loaded', 'error'
     
     const functionId = data?.function_id;
 
@@ -34,24 +34,24 @@ export default function RationalPointsTable({ data }) {
 
   useEffect(() => {
     if (!functionId) return;
+    let ignore = false;
     setStatus('loading');
     get_rational_periodic_data(functionId)
       .then(async (response) => {
         const records = response.data;
         const graphs = await Promise.all(
-          records.map((r) =>
-            get_graph_data(r.graph_id)
-              .then((res) => res.data)
-              .catch(() => null)
-          )
+          records.map((r) => get_graph_data(r.graph_id).then((res) => res.data).catch(() => null))
         );
+        if (ignore) return;
         setRows(records.map((r, i) => ({ ...r, graph: graphs[i] })));
         setStatus('loaded');
       })
       .catch((error) => {
+        if (ignore) return;
         console.error('Error fetching rational periodic data:', error);
         setStatus('error');
       });
+    return () => { ignore = true; };
   }, [functionId]);
 
   if (status === 'loading') return <p>Loading rational periodic data...</p>;
@@ -134,16 +134,20 @@ export default function RationalPointsTable({ data }) {
                     {item.base_field_label}
                 </a></TableCell>
               <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.cardinality !== undefined && meta.cardinality !== null ? meta.cardinality : 'N/A'}</TableCell>
-              <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
-                <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
-                  <Copy edges={edges} type={2} size="small" sx={{ whiteSpace: 'nowrap' }} />
-                </Box>
+                            <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
+                {item.graph ? (
+                  <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
+                    <Copy edges={edges} type={2} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                  </Box>
+                ) : 'N/A'}
               </TableCell>
               <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
-                <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
-                  <Copy edges={edges} type={1} size="small" sx={{ whiteSpace: 'nowrap' }} />
-                  <AdjacencyMatrix modalTitle={"Adjacency Matrix"} edges={edges} size="small" sx={{ whiteSpace: 'nowrap' }} />
-                </Box>
+                {item.graph ? (
+                  <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" gap={0.5} minWidth="200px">
+                    <Copy edges={edges} type={1} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                    <AdjacencyMatrix modalTitle={'Adjacency Matrix'} edges={edges} size="small" sx={{ whiteSpace: 'nowrap' }} />
+                  </Box>
+                ) : 'N/A'}
               </TableCell>
               <TableCell sx={{ width: '100px', maxWidth: '100px' }}>{Array.isArray(meta.periodic_cycles) && meta.periodic_cycles.length > 0 ? `[${meta.periodic_cycles.join(', ')}]` : 'N/A'}</TableCell>
               <TableCell sx={{ width: '120px', maxWidth: '120px' }}>{Array.isArray(meta.preperiodic_components) && meta.preperiodic_components.length > 0 ? `[${meta.preperiodic_components.join(', ')}]` : 'N/A'}</TableCell>
