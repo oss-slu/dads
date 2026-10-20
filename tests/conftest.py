@@ -7,5 +7,5 @@ import os
 
 # This code will run before any tests are executed
 sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend'))
+    os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Backend'))
     )

@@ -1,27 +1,9 @@
 const { app, BrowserWindow, shell } = require('electron')
+const { isExternal, isSameOrigin } = require('./src/main/links')
 
 // 3000 is the React dev server; DADS_URL lets us point the window somewhere else
 const APP_URL = process.env.DADS_URL || 'http://localhost:3000'
 const appOrigin = new URL(APP_URL).origin
-
-// True for http(s) links that leave the app, e.g. lmfdb.org or github.com
-function isExternal (url) {
-  try {
-    const { protocol, origin } = new URL(url)
-    return (protocol === 'http:' || protocol === 'https:') && origin !== appOrigin
-  } catch {
-    return false
-  }
-}
-
-// True if the URL points at the app itself (same origin as APP_URL)
-function isSameOrigin (url) {
-  try {
-    return new URL(url).origin === appOrigin
-  } catch {
-    return false
-  }
-}
 
 // Opens the main DynaBase window, routes links, and loads the app
 function createWindow () {
@@ -37,9 +19,9 @@ function createWindow () {
   // target="_blank" links: external sites go to the user's browser,
   // app pages (e.g. twist links) load in this window instead of a new one
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (isExternal(url)) {
+    if (isExternal(url, appOrigin)) {
       shell.openExternal(url)
-    } else if (isSameOrigin(url)) {
+    } else if (isSameOrigin(url, appOrigin)) {
       win.loadURL(url)
     }
     return { action: 'deny' }
@@ -48,7 +30,7 @@ function createWindow () {
   // Plain links to other sites (e.g. the GitHub button) would otherwise
   // navigate this window away from the app
   win.webContents.on('will-navigate', (event, url) => {
-    if (isExternal(url)) {
+    if (isExternal(url, appOrigin)) {
       event.preventDefault()
       shell.openExternal(url)
     }

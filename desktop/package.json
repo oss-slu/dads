@@ -5,7 +5,8 @@
   "description": "Electron desktop shell that opens the DynaBase web app in a native window",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "test": "node --test"
   },
   "license": "MIT",
   "type": "commonjs",

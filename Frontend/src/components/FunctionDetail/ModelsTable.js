@@ -157,17 +157,17 @@ export default function ModelsTable({ data }) {
                 <TableCell>{renderExponent([buildModelString(modelData[0], data.degree)])}</TableCell>
                 <TableCell>{modelData[1]}</TableCell>
                 <TableCell>{modelData[2]}</TableCell>
-                <TableCell>{data.cp_field_of_defn ? (
+                <TableCell>{modelData[4] ? (
                 <a
-                  href={`https://www.lmfdb.org/NumberField/${data.cp_field_of_defn}`}
+                  href={`https://www.lmfdb.org/NumberField/${modelData[4]}`}
                   style={{
                     color: "blue",
                     textDecoration: "underline"
                   }}
                   target="_blank"
                   rel="noopener noreferrer">
-                    {data.cp_field_of_defn}
-                </a>): ('N/A')}
+                    {modelData[4]}
+                </a>): ('–')}
                 </TableCell>
               </TableRow>
 
