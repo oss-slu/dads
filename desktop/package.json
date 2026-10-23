@@ -4,6 +4,7 @@
   "private": true,
   "description": "Electron desktop shell that opens the DynaBase web app in a native window",
   "main": "main.js",
+  "engines": { "node": ">=22.12" },
   "scripts": {
     "start": "electron .",
     "test": "node --test"

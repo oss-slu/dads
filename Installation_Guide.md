@@ -10,8 +10,8 @@ Before installing the DADS application, you need to ensure your system has the f
 https://www.python.org/downloads/
 
 **Node.js and NPM** - The frontend of our application is built with React, which requires Node.js and npm for dependency management and to run the application locally. 
-Download and install Node.js from Node.js Official Website. Installing Node.js will also install npm automatically.
-https://nodejs.org/en/download/current
+Download and install Node.js 22 or newer from Node.js Official Website. Installing Node.js will also install npm automatically.
+https://nodejs.org/en/download
 
 **PostgreSQL** - Our application uses PostgreSQL for the database. Download and install PostgreSQL from PostgreSQL Official Website.
 https://www.postgresql.org/download/
@@ -41,8 +41,8 @@ Install the necessary Python dependencies by running <code>pip install -r requir
 **Setup the Frontend** - 
 
 Navigate to the frontend directory using <code>cd ../frontend</code>
-Install necessary node modules by running <code>npm install</code>
-- Note: You may need to run <code>npm install --force</code> for the command to work properly.
+Install necessary node modules by running <code>npm ci --legacy-peer-deps</code>
+    - The `--legacy-peer-deps` flag is required: some older dependencies (from Create React App) have peer-dependency conflicts that npm refuses to install without it.
 
 **Running the Application** - 
 
