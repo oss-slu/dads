@@ -116,8 +116,12 @@ single SQLite file for offline desktop use.
 From the repository root:
 
 ```bash
-python scripts/build_sqlite.py [--out PATH]
+python scripts/build_sqlite.py [--out PATH] [--data-version VERSION]
 ```
+
+`--data-version` must match `YYYY.M.N` (for example `2026.11.1`). If omitted,
+the default `2026.10.1` is stored in `metadata`. Invalid values exit with
+code 1 before any file is written.
 
 Connection settings come from `Backend/database.ini` (same as the JSON export).
 Default output is `data/exports/dads.sqlite`. The file is gitignored; do not
@@ -149,6 +153,7 @@ python -m pytest tests/test_build_sqlite.py -q
 
 ## Findings (SQLite build)
 
+- `schema_version` is `2` (adds `UNIQUE` on `citations.label` to match Postgres).
 - Decomposing `model_type` in SQL returns real `NULL`s for missing subfields
   and for whole-model `NULL` (for example system 11 `monic_centered`).
 - Casting `display_model` with `::text` yields the enum label string for

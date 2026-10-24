@@ -72,6 +72,40 @@ def test_sha256_dump_matches_known_file():
     assert digest == digest.lower()
 
 
+def test_resolve_data_version_default():
+    assert build_sqlite.resolve_data_version(None) == build_sqlite.DEFAULT_DATA_VERSION
+
+
+def test_resolve_data_version_accepts_dotted_form():
+    assert build_sqlite.resolve_data_version("2026.11.2") == "2026.11.2"
+
+
+def test_resolve_data_version_rejects_invalid():
+    import pytest
+
+    with pytest.raises(ValueError, match="Invalid data version"):
+        build_sqlite.resolve_data_version("banana")
+
+
+def test_citations_label_is_unique_in_schema():
+    import sqlite3
+
+    connection = sqlite3.connect(":memory:")
+    build_sqlite.create_sqlite_schema(connection)
+    connection.execute(
+        "INSERT INTO citations (label, id) VALUES ('a', 1)"
+    )
+    try:
+        connection.execute(
+            "INSERT INTO citations (label, id) VALUES ('a', 2)"
+        )
+        raised = False
+    except sqlite3.IntegrityError:
+        raised = True
+    assert raised
+    connection.close()
+
+
 def test_temporary_output_path_suffix():
     output = Path("data/exports/dads.sqlite")
     assert build_sqlite.temporary_output_path(output) == Path(

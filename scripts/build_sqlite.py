@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import sys
 from datetime import datetime, timezone
@@ -18,9 +19,10 @@ DATABASE_CONFIG = BACKEND_DIRECTORY / "database.ini"
 DUMP_SQL_PATH = REPOSITORY_ROOT / "schema" / "dads_prod_backup.sql"
 DEFAULT_OUTPUT = REPOSITORY_ROOT / "data" / "exports" / "dads.sqlite"
 DEFAULT_DATA_VERSION = "2026.10.1"
-SCHEMA_VERSION = "1"
+SCHEMA_VERSION = "2"
 
 JSON_SEPARATORS = (",", ":")
+DATA_VERSION_RE = re.compile(r"^\d{4}\.\d+\.\d+$")
 
 EXPORT_TABLES = (
     "citations",
@@ -44,7 +46,27 @@ def parse_arguments():
         default=DEFAULT_OUTPUT,
         help=f"output SQLite path (default: {DEFAULT_OUTPUT})",
     )
+    parser.add_argument(
+        "--data-version",
+        default=None,
+        metavar="VERSION",
+        help=(
+            "value for metadata data_version "
+            f"(default: {DEFAULT_DATA_VERSION}); format YYYY.M.N"
+        ),
+    )
     return parser.parse_args()
+
+
+def resolve_data_version(cli_value):
+    if cli_value is None:
+        return DEFAULT_DATA_VERSION
+    if not DATA_VERSION_RE.fullmatch(cli_value):
+        raise ValueError(
+            f"Invalid data version '{cli_value}': expected YYYY.M.N "
+            "(e.g. 2026.11.1)"
+        )
+    return cli_value
 
 
 def json_text(value):
@@ -101,7 +123,7 @@ def create_sqlite_schema(connection):
     connection.executescript(
         """
         CREATE TABLE citations (
-            label TEXT NOT NULL,
+            label TEXT NOT NULL UNIQUE,
             authors TEXT,
             journal TEXT,
             year INTEGER,
@@ -189,10 +211,10 @@ def create_sqlite_schema(connection):
     )
 
 
-def insert_metadata(connection, built_at, source_dump_sha256):
+def insert_metadata(connection, built_at, source_dump_sha256, data_version):
     rows = [
         ("schema_version", SCHEMA_VERSION),
-        ("data_version", DEFAULT_DATA_VERSION),
+        ("data_version", data_version),
         ("built_at", built_at),
         ("source_dump_sha256", source_dump_sha256),
     ]
@@ -487,7 +509,7 @@ def temporary_output_path(output_path):
     return output_path.with_name(output_path.name + ".tmp")
 
 
-def build_sqlite(output_path):
+def build_sqlite(output_path, data_version=DEFAULT_DATA_VERSION):
     if not DATABASE_CONFIG.is_file():
         raise FileNotFoundError(
             f"Missing {DATABASE_CONFIG}. Copy Backend/database.ini.example "
@@ -522,7 +544,7 @@ def build_sqlite(output_path):
                 pg_conn, sqlite_conn
             ),
         }
-        insert_metadata(sqlite_conn, built_at, source_dump_sha256)
+        insert_metadata(sqlite_conn, built_at, source_dump_sha256, data_version)
         sqlite_conn.commit()
 
         pg_counts = postgres_row_counts(pg_conn)
@@ -553,13 +575,20 @@ def build_sqlite(output_path):
 def main():
     arguments = parse_arguments()
     try:
-        counts, output_path = build_sqlite(arguments.out)
+        data_version = resolve_data_version(arguments.data_version)
+    except ValueError as error:
+        print(f"Error: {error}", file=sys.stderr)
+        return 1
+
+    try:
+        counts, output_path = build_sqlite(arguments.out, data_version=data_version)
     except (FileNotFoundError, OSError, psycopg2.Error, RuntimeError) as error:
         print(f"Error: {error}", file=sys.stderr)
         return 1
 
     for table in sorted(counts):
         print(f"{table}: {counts[table]} rows")
+    print(f"data_version: {data_version}")
     print(f"Wrote {output_path}")
     return 0
 
