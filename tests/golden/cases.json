@@ -1,0 +1,168 @@
+[
+  {
+    "name": "search-empty",
+    "route": "/get_filtered_systems",
+    "body": {},
+    "compact_large": true
+  },
+  {
+    "name": "search-degree-2",
+    "route": "/get_filtered_systems",
+    "body": {"degree": [2]}
+  },
+  {
+    "name": "search-degree-3-4",
+    "route": "/get_filtered_systems",
+    "body": {"degree": [3, 4]}
+  },
+  {
+    "name": "search-is-polynomial",
+    "route": "/get_filtered_systems",
+    "body": {"is_polynomial": [true]}
+  },
+  {
+    "name": "search-is-pcf-true",
+    "route": "/get_filtered_systems",
+    "body": {"is_pcf": [true]}
+  },
+  {
+    "name": "search-base-field-label",
+    "route": "/get_filtered_systems",
+    "body": {"base_field_label": "1.1.1.1"}
+  },
+  {
+    "name": "search-sigma-one",
+    "route": "/get_filtered_systems",
+    "body": {"sigma_one": "a68cf1ff"}
+  },
+  {
+    "name": "search-model-label",
+    "route": "/get_filtered_systems",
+    "body": {"model_label": "a68cf1ff"}
+  },
+  {
+    "name": "search-periodic-cycles",
+    "route": "/get_filtered_systems",
+    "body": {"periodic_cycles": "2"}
+  },
+  {
+    "name": "search-automorphism-cardinality",
+    "route": "/get_filtered_systems",
+    "body": {"automorphism_group_cardinality": "2"}
+  },
+  {
+    "name": "search-family-1",
+    "route": "/get_filtered_systems",
+    "body": {"family": [1]}
+  },
+  {
+    "name": "search-is-lattes",
+    "route": "/get_filtered_systems",
+    "body": {"is_Lattes": [true]}
+  },
+  {
+    "name": "search-combo-degree-pcf-false",
+    "route": "/get_filtered_systems",
+    "body": {"degree": [2], "is_pcf": [false]}
+  },
+  {
+    "name": "search-combo-polynomial-degree-2",
+    "route": "/get_filtered_systems",
+    "body": {"is_polynomial": [true], "degree": [2]}
+  },
+  {
+    "name": "search-combo-field-and-degree",
+    "route": "/get_filtered_systems",
+    "body": {"base_field_label": "1.1.1.1", "degree": [2]}
+  },
+  {
+    "name": "system-11",
+    "route": "/get_system",
+    "body": {"id": 11}
+  },
+  {
+    "name": "system-7",
+    "route": "/get_system",
+    "body": {"id": 7}
+  },
+  {
+    "name": "system-3",
+    "route": "/get_system",
+    "body": {"id": 3}
+  },
+  {
+    "name": "system-81",
+    "route": "/get_system",
+    "body": {"id": 81}
+  },
+  {
+    "name": "system-2400",
+    "route": "/get_system",
+    "body": {"id": 2400}
+  },
+  {
+    "name": "rational-periodic-7",
+    "route": "/get_rational_periodic_data",
+    "body": {"function_id": 7}
+  },
+  {
+    "name": "rational-periodic-3",
+    "route": "/get_rational_periodic_data",
+    "body": {"function_id": 3}
+  },
+  {
+    "name": "graph-3",
+    "route": "/get_graph_data",
+    "body": {"graph_id": 3}
+  },
+  {
+    "name": "graph-10",
+    "route": "/get_graph_data",
+    "body": {"graph_id": 10}
+  },
+  {
+    "name": "graph-31",
+    "route": "/get_graph_data",
+    "body": {"graph_id": 31}
+  },
+  {
+    "name": "all-families",
+    "route": "/get_all_families",
+    "body": {}
+  },
+  {
+    "name": "family-1",
+    "route": "/get_family",
+    "body": {"id": 1}
+  },
+  {
+    "name": "family-2",
+    "route": "/get_family",
+    "body": {"id": 2}
+  },
+  {
+    "name": "label-system-7",
+    "route": "/get_label",
+    "body": {"function_id": 7}
+  },
+  {
+    "name": "label-system-11",
+    "route": "/get_label",
+    "body": {"function_id": 11}
+  },
+  {
+    "name": "statistics-degree-2",
+    "route": "/get_statistics",
+    "body": {"degree": [2]}
+  },
+  {
+    "name": "statistics-is-polynomial",
+    "route": "/get_statistics",
+    "body": {"is_polynomial": [true]}
+  },
+  {
+    "name": "statistics-combo-degree-field",
+    "route": "/get_statistics",
+    "body": {"degree": [2], "base_field_label": "1.1.1.1"}
+  }
+]

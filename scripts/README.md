@@ -105,3 +105,31 @@ For SQLite, two reasonable approaches are:
 
 The JSON-object approach is closest to the current data shape and avoids
 continuing to depend on positional composite-string parsing.
+
+## Golden API snapshots (#326)
+
+Record known-good HTTP responses from a running Postgres-backed backend so
+future SQLite parity work can detect unintended API changes.
+
+**Prerequisites:** Docker database up, `Backend/database.ini` configured, backend
+listening on `http://127.0.0.1:5000`:
+
+```bash
+docker compose up -d --wait
+cd Backend && python server.py
+```
+
+From the repository root:
+
+```bash
+python scripts/capture_golden.py
+python scripts/check_golden.py
+```
+
+Case definitions live in `tests/golden/cases.json`; expected JSON files are
+written to `tests/golden/expected/`. Large search results store row count,
+SHA-256 of the normalized payload, and a 20-row preview.
+
+**Re-capture only when a change is meant to alter API output.** PRs that
+update golden files must list which cases changed and why. Do not re-capture to
+paper over bugs unless the bug fix is intentional.
