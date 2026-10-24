@@ -72,6 +72,13 @@ def test_sha256_dump_matches_known_file():
     assert digest == digest.lower()
 
 
+def test_temporary_output_path_suffix():
+    output = Path("data/exports/dads.sqlite")
+    assert build_sqlite.temporary_output_path(output) == Path(
+        "data/exports/dads.sqlite.tmp"
+    )
+
+
 def test_sqlite_schema_creates_metadata_table():
     import sqlite3
 

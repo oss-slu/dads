@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 import sqlite3
 import sys
 from datetime import datetime, timezone
@@ -481,6 +482,11 @@ def postgres_row_counts(pg_conn):
     return counts
 
 
+def temporary_output_path(output_path):
+    """Path for a partial build; replaced into place only after verification."""
+    return output_path.with_name(output_path.name + ".tmp")
+
+
 def build_sqlite(output_path):
     if not DATABASE_CONFIG.is_file():
         raise FileNotFoundError(
@@ -493,14 +499,19 @@ def build_sqlite(output_path):
     built_at = datetime.now(timezone.utc).isoformat()
     source_dump_sha256 = sha256_file(DUMP_SQL_PATH)
 
+    output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    if output_path.exists():
-        output_path.unlink()
+    temp_path = temporary_output_path(output_path)
+    if temp_path.exists():
+        temp_path.unlink()
 
-    pg_conn = connect_postgres()
-    sqlite_conn = sqlite3.connect(output_path)
-
+    pg_conn = None
+    sqlite_conn = None
+    counts = None
     try:
+        pg_conn = connect_postgres()
+        sqlite_conn = sqlite3.connect(temp_path)
+
         create_sqlite_schema(sqlite_conn)
         counts = {
             "citations": copy_citations(pg_conn, sqlite_conn),
@@ -521,9 +532,20 @@ def build_sqlite(output_path):
                     f"Row count mismatch for {table}: "
                     f"sqlite={row_count} postgres={pg_counts[table]}"
                 )
-    finally:
-        pg_conn.close()
+
         sqlite_conn.close()
+        sqlite_conn = None
+        pg_conn.close()
+        pg_conn = None
+        os.replace(temp_path, output_path)
+    except Exception:
+        if sqlite_conn is not None:
+            sqlite_conn.close()
+        if pg_conn is not None:
+            pg_conn.close()
+        if temp_path.exists():
+            temp_path.unlink()
+        raise
 
     return counts, output_path
 
