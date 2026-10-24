@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require('electron')
+const path = require('path')
+const { app, BrowserWindow, dialog } = require('electron')
 const { createWindow } = require('./window')
 const { startBackend, stopBackend } = require('./backend')
 
@@ -6,13 +7,19 @@ let quitting = false
 let backendStopped = false
 
 app.whenReady().then(async () => {
+  const logFile = path.join(app.getPath('logs'), 'backend.log')
+
   // Only open the window once the backend can answer, never a blank page
   try {
-    await startBackend()
+    await startBackend({ logFile })
   } catch (err) {
     // quitting stops the backend before it is ready, that is not an error
     if (quitting) return
-    console.error(err.message)
+    const output = err.output.length ? err.output.join('\n') : '(no output)'
+    dialog.showErrorBox(
+      'DynaBase could not start the backend',
+      `${err.message}\n\nLast backend output:\n${output}\n\nFull log: ${logFile}`
+    )
     // Electron ignores process.exitCode, so exit with 1 ourselves
     await stopBackend()
     app.exit(1)

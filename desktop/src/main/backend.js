@@ -2,6 +2,7 @@
 // and stops it again when the app quits. Kept free of `require('electron')`
 // so it can be unit tested with plain Node.
 
+const fs = require('fs')
 const path = require('path')
 const http = require('http')
 const { spawn } = require('child_process')
@@ -12,8 +13,13 @@ const HEALTH_URL = 'http://127.0.0.1:5000/health'
 const POLL_INTERVAL = 250
 const READY_TIMEOUT = 20000
 const KILL_TIMEOUT = 5000
+// how many lines of backend output to keep for the error dialog
+const OUTPUT_LINES = 20
 
 let child = null
+
+// Flask colors some of its output, which shows up as junk in the log and dialog
+const stripColors = (line) => line.replace(/\x1b\[[0-9;]*m/g, '')
 
 // prefix each line of backend output so it is easy to tell apart from ours
 function forward (stream, write) {
@@ -22,10 +28,10 @@ function forward (stream, write) {
     buffer += chunk
     const lines = buffer.split(/\r?\n/)
     buffer = lines.pop()
-    lines.forEach((line) => write(`[backend] ${line}`))
+    lines.forEach((line) => write(`[backend] ${stripColors(line)}`))
   })
   stream.on('end', () => {
-    if (buffer) write(`[backend] ${buffer}`)
+    if (buffer) write(`[backend] ${stripColors(buffer)}`)
   })
 }
 
@@ -52,11 +58,37 @@ function checkHealth (healthUrl) {
 }
 
 // Runs `python server.py` and resolves once the backend is ready. Rejects if it
-// is not ready within `timeout` ms or exits first. `onExit` is called if the backend
-// exits after it was ready. Set PYTHON to pick the interpreter.
-function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, onExit } = {}) {
+// is not ready within `timeout` ms or exits first; the error's `output` has the
+// last OUTPUT_LINES lines. All output also goes to `logFile` if one is given.
+// `onExit` is called if the backend exits after it was ready.
+// Set PYTHON to pick the interpreter.
+function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFile, onExit } = {}) {
   const python = process.env.PYTHON || 'python'
   const startTime = Date.now()
+
+  let log = null
+  if (logFile) {
+    fs.mkdirSync(path.dirname(logFile), { recursive: true })
+    log = fs.createWriteStream(logFile)
+  }
+
+  const recent = []
+
+  // console + log file + recent lines; our own messages go through here too
+  const record = (line, write) => {
+    write(line)
+    if (log && !log.writableEnded) log.write(line + '\n')
+    // the /health polls are logged by Flask every 250 ms and would push out
+    // the lines that explain what went wrong
+    if (line.includes('"GET /health ')) return
+    recent.push(line)
+    if (recent.length > OUTPUT_LINES) recent.shift()
+  }
+  const info = (line) => record(line, console.log)
+  const warn = (line) => record(line, console.error)
+  const closeLog = () => {
+    if (log && !log.writableEnded) log.end()
+  }
 
   return new Promise((resolve, reject) => {
     let ready = false
@@ -67,7 +99,7 @@ function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, onExit
       if (ready || failed) return
       ready = true
       clearInterval(pollTimer)
-      console.log(`backend ready after ${Date.now() - startTime} ms`)
+      info(`backend ready after ${Date.now() - startTime} ms`)
       resolve()
     }
 
@@ -75,7 +107,10 @@ function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, onExit
       if (ready || failed) return
       failed = true
       clearInterval(pollTimer)
-      reject(new Error(message))
+      const err = new Error(message)
+      err.output = recent.slice()
+      warn(message)
+      reject(err)
     }
 
     // stdin stays open so the backend can tell when we are gone (see server.py)
@@ -86,20 +121,24 @@ function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, onExit
     })
     child = proc
 
-    forward(proc.stdout, (line) => console.log(line))
-    forward(proc.stderr, (line) => console.error(line))
+    forward(proc.stdout, info)
+    forward(proc.stderr, warn)
 
     proc.on('error', (err) => {
       fail(`failed to start backend with ${python}: ${err.message}`)
+      closeLog()
     })
 
-    proc.on('exit', (code, signal) => {
+    // 'close' comes after the output streams have ended, so the last lines
+    // the backend printed before dying are already in `recent`
+    proc.on('close', (code, signal) => {
       if (ready) {
-        console.log(`backend exited (code ${code}, signal ${signal})`)
+        info(`backend exited (code ${code}, signal ${signal})`)
         if (onExit) onExit(code, signal)
       } else {
         fail(`backend exited before it was ready (code ${code}, signal ${signal})`)
       }
+      closeLog()
     })
 
     pollTimer = setInterval(() => {

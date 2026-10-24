@@ -1,5 +1,7 @@
 const { describe, it, afterEach } = require('node:test')
 const assert = require('node:assert/strict')
+const fs = require('fs')
+const os = require('os')
 const path = require('path')
 const { startBackend, stopBackend } = require('../src/main/backend')
 
@@ -68,5 +70,43 @@ describe('backend', { skip: process.platform === 'win32' && 'fake backends are s
     process.env.PYTHON = fake('exit-early.sh')
     await assert.rejects(start())
     await stopBackend()
+  })
+
+  it('the error has the backend output, including stderr', async () => {
+    process.env.PYTHON = fake('exit-early.sh')
+    await assert.rejects(startBackend(), (err) => {
+      // stdout and stderr are separate pipes, so their order is not fixed
+      assert.deepEqual(err.output.slice().sort(), [
+        '[backend] Database connection error: fake',
+        '[backend] starting fake backend'
+      ])
+      return true
+    })
+  })
+
+  it('the error keeps only the last 20 lines of output', async () => {
+    process.env.PYTHON = fake('noisy-exit.sh')
+    await assert.rejects(startBackend(), (err) => {
+      assert.equal(err.output.length, 20)
+      assert.equal(err.output[0], '[backend] line 11')
+      assert.equal(err.output[19], '[backend] line 30')
+      return true
+    })
+  })
+
+  it('writes the output and the reason it failed to the log file', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dads-backend-'))
+    const logFile = path.join(dir, 'logs', 'backend.log')
+    process.env.PYTHON = fake('exit-early.sh')
+
+    await assert.rejects(startBackend({ logFile }))
+    // the log stream finishes writing after the promise rejects
+    await wait(100)
+
+    const log = fs.readFileSync(logFile, 'utf8')
+    assert.match(log, /\[backend\] starting fake backend/)
+    assert.match(log, /\[backend\] Database connection error: fake/)
+    assert.match(log, /backend exited before it was ready \(code 3/)
+    fs.rmSync(dir, { recursive: true })
   })
 })
