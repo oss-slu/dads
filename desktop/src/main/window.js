@@ -1,5 +1,5 @@
-const { app, BrowserWindow, shell } = require('electron')
-const { isExternal, isSameOrigin } = require('./src/main/links')
+const { BrowserWindow, shell } = require('electron')
+const { isExternal, isSameOrigin } = require('./links')
 
 // 3000 is the React dev server; DADS_URL lets us point the window somewhere else
 const APP_URL = process.env.DADS_URL || 'http://localhost:3000'
@@ -39,16 +39,4 @@ function createWindow () {
   win.loadURL(APP_URL)
 }
 
-app.whenReady().then(() => {
-  createWindow()
-
-  // macOS: re-create a window when the dock icon is clicked and none are open
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
-
-// Quit when all windows are closed, except on macOS where apps stay open
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
-})
+module.exports = { createWindow }
