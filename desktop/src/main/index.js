@@ -2,6 +2,7 @@ const { app, BrowserWindow } = require('electron')
 const { createWindow } = require('./window')
 const { startBackend, stopBackend } = require('./backend')
 
+let quitting = false
 let backendStopped = false
 
 app.whenReady().then(async () => {
@@ -9,6 +10,8 @@ app.whenReady().then(async () => {
   try {
     await startBackend()
   } catch (err) {
+    // quitting stops the backend before it is ready, that is not an error
+    if (quitting) return
     console.error(err.message)
     // Electron ignores process.exitCode, so exit with 1 ourselves
     await stopBackend()
@@ -16,6 +19,7 @@ app.whenReady().then(async () => {
     return
   }
 
+  if (quitting) return
   createWindow()
 
   // macOS: re-create a window when the dock icon is clicked and none are open
@@ -31,6 +35,7 @@ app.on('window-all-closed', () => {
 
 // Hold the quit until the backend has exited, then quit for real
 app.on('before-quit', (event) => {
+  quitting = true
   if (backendStopped) return
   event.preventDefault()
   stopBackend().then(() => {

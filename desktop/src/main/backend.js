@@ -29,12 +29,12 @@ function forward (stream, write) {
   })
 }
 
-// Resolves true only when /health answers 200 with "db": true.
+// Resolves true only when the health URL answers 200 with "db": true.
 // agent: false opens a new connection each time; with keep-alive, a socket that
 // reached AirPlay before Flask was listening would be reused for every poll.
-function checkHealth () {
+function checkHealth (healthUrl) {
   return new Promise((resolve) => {
-    const req = http.get(HEALTH_URL, { agent: false }, (res) => {
+    const req = http.get(healthUrl, { agent: false }, (res) => {
       let body = ''
       res.setEncoding('utf8')
       res.on('data', (chunk) => { body += chunk })
@@ -52,8 +52,9 @@ function checkHealth () {
 }
 
 // Runs `python server.py` and resolves once the backend is ready. Rejects if it
-// is not ready within `timeout` ms or exits first. Set PYTHON to pick the interpreter.
-function startBackend ({ timeout = READY_TIMEOUT } = {}) {
+// is not ready within `timeout` ms or exits first. `onExit` is called if the backend
+// exits after it was ready. Set PYTHON to pick the interpreter.
+function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, onExit } = {}) {
   const python = process.env.PYTHON || 'python'
   const startTime = Date.now()
 
@@ -95,6 +96,7 @@ function startBackend ({ timeout = READY_TIMEOUT } = {}) {
     proc.on('exit', (code, signal) => {
       if (ready) {
         console.log(`backend exited (code ${code}, signal ${signal})`)
+        if (onExit) onExit(code, signal)
       } else {
         fail(`backend exited before it was ready (code ${code}, signal ${signal})`)
       }
@@ -105,7 +107,7 @@ function startBackend ({ timeout = READY_TIMEOUT } = {}) {
         fail(`backend not ready after ${timeout} ms`)
         return
       }
-      checkHealth().then((ok) => {
+      checkHealth(healthUrl).then((ok) => {
         if (ok) markReady()
       })
     }, POLL_INTERVAL)
