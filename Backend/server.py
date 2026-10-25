@@ -3,7 +3,11 @@ Module Dcstring: This file manages interactions
 between frontend and backend
 """
 
+import os
+import sys
+import signal
 import uuid
+import threading
 import traceback
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -112,7 +116,17 @@ def get_graph_metadata():
 
 @app.route('/health', methods=['GET'])
 def health():
+    # reconnect in case the database was not up yet when the server started
+    if not connector.is_connection_active():
+        connector.connect()
     return jsonify({"status": "ok", "db": connector.is_connection_active()}), 200
-    
+
+# exits once stdin closes, so the backend does not outlive the desktop app
+def watch_stdin():
+    sys.stdin.read()
+    os.kill(os.getpid(), signal.SIGTERM)
+
 if __name__ == '__main__':
+    if os.environ.get("DADS_WATCH_STDIN") and sys.stdin:
+        threading.Thread(target=watch_stdin, daemon=True).start()
     app.run()
