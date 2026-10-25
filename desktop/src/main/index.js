@@ -15,13 +15,15 @@ app.whenReady().then(async () => {
   } catch (err) {
     // quitting stops the backend before it is ready, that is not an error
     if (quitting) return
-    const output = err.output.length ? err.output.join('\n') : '(no output)'
+    // stop it first so a backend that missed the timeout doesn't keep running
+    // behind the dialog
+    await stopBackend()
+    const output = err.output && err.output.length ? err.output.join('\n') : '(no output)'
     dialog.showErrorBox(
       'DynaBase could not start the backend',
       `${err.message}\n\nLast backend output:\n${output}\n\nFull log: ${logFile}`
     )
     // Electron ignores process.exitCode, so exit with 1 ourselves
-    await stopBackend()
     app.exit(1)
     return
   }

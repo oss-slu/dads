@@ -74,7 +74,7 @@ describe('backend', { skip: process.platform === 'win32' && 'fake backends are s
 
   it('the error has the backend output, including stderr', async () => {
     process.env.PYTHON = fake('exit-early.sh')
-    await assert.rejects(startBackend(), (err) => {
+    await assert.rejects(start(), (err) => {
       // stdout and stderr are separate pipes, so their order is not fixed
       assert.deepEqual(err.output.slice().sort(), [
         '[backend] Database connection error: fake',
@@ -86,7 +86,7 @@ describe('backend', { skip: process.platform === 'win32' && 'fake backends are s
 
   it('the error keeps only the last 20 lines of output', async () => {
     process.env.PYTHON = fake('noisy-exit.sh')
-    await assert.rejects(startBackend(), (err) => {
+    await assert.rejects(start(), (err) => {
       assert.equal(err.output.length, 20)
       assert.equal(err.output[0], '[backend] line 11')
       assert.equal(err.output[19], '[backend] line 30')
@@ -99,14 +99,29 @@ describe('backend', { skip: process.platform === 'win32' && 'fake backends are s
     const logFile = path.join(dir, 'logs', 'backend.log')
     process.env.PYTHON = fake('exit-early.sh')
 
-    await assert.rejects(startBackend({ logFile }))
-    // the log stream finishes writing after the promise rejects
-    await wait(100)
+    await assert.rejects(start({ logFile }))
 
-    const log = fs.readFileSync(logFile, 'utf8')
+    // the log stream finishes writing a moment after the promise rejects
+    let log = ''
+    for (let i = 0; i < 40 && !log.includes('exited before it was ready'); i++) {
+      await wait(50)
+      log = fs.readFileSync(logFile, 'utf8')
+    }
+
     assert.match(log, /\[backend\] starting fake backend/)
     assert.match(log, /\[backend\] Database connection error: fake/)
     assert.match(log, /backend exited before it was ready \(code 3/)
+    fs.rmSync(dir, { recursive: true })
+  })
+
+  it('keeps going without a log file if it can\'t be created', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dads-backend-'))
+    // a file where the logs folder should be, so mkdir fails
+    fs.writeFileSync(path.join(dir, 'logs'), '')
+    process.env.PYTHON = fake('exit-early.sh')
+
+    await assert.rejects(start({ logFile: path.join(dir, 'logs', 'backend.log') }),
+      /exited before it was ready \(code 3/)
     fs.rmSync(dir, { recursive: true })
   })
 })

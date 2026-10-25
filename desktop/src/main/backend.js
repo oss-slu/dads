@@ -66,10 +66,20 @@ function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFil
   const python = process.env.PYTHON || 'python'
   const startTime = Date.now()
 
+  // a log file we can't write shouldn't stop the app, it just runs without one
   let log = null
+  const logFailed = (err) => {
+    console.error(`can't write ${logFile}: ${err.message}`)
+    log = null
+  }
   if (logFile) {
-    fs.mkdirSync(path.dirname(logFile), { recursive: true })
-    log = fs.createWriteStream(logFile)
+    try {
+      fs.mkdirSync(path.dirname(logFile), { recursive: true })
+      log = fs.createWriteStream(logFile)
+      log.on('error', logFailed)
+    } catch (err) {
+      logFailed(err)
+    }
   }
 
   const recent = []
