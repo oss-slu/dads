@@ -2,7 +2,7 @@
 
 from flask import current_app, jsonify, request
 
-from dads.app import CONNECTOR_CONFIG_KEY
+from dads.constants import CONNECTOR_CONFIG_KEY
 
 
 def get_connector():
