@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import psycopg2
+from psycopg2 import sql
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 BACKEND_DIRECTORY = REPOSITORY_ROOT / "Backend"
@@ -52,7 +53,9 @@ def fetch_pg_counts(connection):
     counts = {}
     with connection.cursor() as cursor:
         for table in EXPORT_TABLES:
-            cursor.execute(f"SELECT COUNT(*) FROM {table}")
+            cursor.execute(
+                sql.SQL("SELECT COUNT(*) FROM {}").format(sql.Identifier(table))
+            )
             counts[table] = cursor.fetchone()[0]
     return counts
 
