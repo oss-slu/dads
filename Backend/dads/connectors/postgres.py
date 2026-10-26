@@ -7,6 +7,8 @@ import psycopg2.extras
 from psycopg2 import sql
 from dads.config import load_config
 from dads.connectors.base import DadsConnector
+from dads.services.formatting import format_search_result_row
+from dads.services.labels import construct_label
 
 
 # important do not store password when dealing with real database
@@ -118,12 +120,7 @@ class PostgresConnector(DadsConnector):
         return self.try_query(query, (graph_id,), fetch="one")
 
     def construct_label(self, data):
-        return (
-            '1.' +
-            data['sigma_one'] +
-            '.' + data['sigma_two'] +
-            '.' + str(data['ordinal'])
-        )
+        return construct_label(data)
 
     def get_all_systems(self):
         query = sql.SQL("SELECT * FROM functions_dim_1_nf")
@@ -171,54 +168,8 @@ class PostgresConnector(DadsConnector):
         if rows:
             mon_dict = {}
             for row in rows:
-                try:
-                    d = int(row[4])
-                    coeffs = row[5]
-                    field_label = row[6]
-                    func_id = row[0]
-                except (KeyError, TypeError):
-                    d = int(row['degree'])
-                    coeffs = row['coeffs']
-                    field_label = row['base_field_label']
-                    func_id = row['function_id']
-                
-                if d not in mon_dict:
-                    mon = []
-                    for i in range(d+1):
-                        if i == 0:
-                            mon.append('x^'+str(d))
-                        elif i == d:
-                            mon.append('y^'+str(d))
-                        else:
-                            term = 'x' if (d-i) == 1 else 'x^'+str(d-i)
-                            term += 'y' if i == 1 else 'y^'+str(i)
-                            mon.append(term)
-                    mon_dict[d] = mon
-                else:
-                    mon = mon_dict[d]
-                
-                poly = '['
-                for j in range(2):
-                    first_term = True
-                    for i in range(d+1):
-                        val = str(coeffs[j][i])
-                        if val != '0':
-                            if val[0] != '-' and not first_term:
-                                poly += '+'
-                            if val == '1':
-                                poly += mon[i]
-                            elif val == '-1':
-                                poly += '-' + mon[i]
-                            else:
-                                poly += val + mon[i]
-                            first_term = False
-                    if j == 0:
-                        poly += ' : '
-                poly += ']'
-                
-                label = self.construct_label(row)
-                result.append([label, '1', d, poly, field_label, func_id])
-                
+                result.append(format_search_result_row(row, mon_dict))
+
         return result, stats
         
     def get_selected_systems(self, labels):
