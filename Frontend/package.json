@@ -25,8 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ../Frontend/src/**/*.js",
-    "lint:fix": "eslint --fix ."
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src"
   },
   "eslintConfig": {
     "extends": [
@@ -49,8 +49,6 @@
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
-    "ajv": "^8.20.0",
-    "eslint-config-standard": "^17.x.x",
-    "eslint-plugin-n": "^17.x.x || ^16"
+    "ajv": "^8.20.0"
   }
 }

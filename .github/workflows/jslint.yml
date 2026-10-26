@@ -6,9 +6,9 @@ permissions:
 
 on:
   push:
-    paths:
-      - 'Frontend/**'
-      - '.github/workflows/jslint.yml'
+    paths: ['Frontend/**', '.github/workflows/jslint.yml']
+  pull_request:
+    paths: ['Frontend/**', '.github/workflows/jslint.yml']
 
 jobs:
   lint:
