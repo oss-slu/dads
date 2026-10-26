@@ -6,9 +6,9 @@ import uuid
 from flask import Flask, jsonify
 from flask_cors import CORS
 
+from dads.api.routes import register_routes
 from dads.connectors.postgres import PostgresConnector
-
-CONNECTOR_CONFIG_KEY = "DADS_CONNECTOR"
+from dads.constants import CONNECTOR_CONFIG_KEY
 
 
 def create_app(connector=None):
@@ -29,8 +29,6 @@ def create_app(connector=None):
             "error_id": error_id,
         }
         return jsonify(response), 500
-
-    from dads.api.routes import register_routes
 
     register_routes(application)
     return application
