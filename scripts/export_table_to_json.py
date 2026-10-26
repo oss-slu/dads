@@ -15,7 +15,7 @@ DATABASE_CONFIG = BACKEND_DIRECTORY / "database.ini"
 
 # Import the existing configuration loader without duplicating its behavior.
 sys.path.insert(0, str(BACKEND_DIRECTORY))
-from config import load_config  # pylint: disable=wrong-import-position
+from dads.config import load_config  # pylint: disable=wrong-import-position
 
 
 ALLOWED_TABLES = {
