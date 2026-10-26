@@ -1,7 +1,10 @@
 """Unit tests for postgres_connector module."""
 
 from unittest.mock import MagicMock, patch
+
 import pytest
+from psycopg2 import sql
+
 from dads.connectors.postgres import PostgresConnector
 
 COMMON_MOCK_CONFIG = {
@@ -12,7 +15,6 @@ COMMON_MOCK_CONFIG = {
 }
 
 
-@pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_get_all_systems(mock_connect, mock_config):  # pylint: disable=unused-argument
@@ -26,36 +28,43 @@ def test_get_all_systems(mock_connect, mock_config):  # pylint: disable=unused-a
     connector.connection = mock_conn
     result = connector.get_all_systems()
 
-    mock_cur.execute.assert_any_call("SELECT * FROM functions_dim_1_NF")
+    executed = mock_cur.execute.call_args[0][0]
+    assert "functions_dim_1_nf" in executed.as_string(mock_conn).lower()
     assert result[0]["name"] == "System1"
     assert result[1]["name"] == "System2"
 
 
-@pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
+@patch.object(PostgresConnector, "is_connection_active", return_value=True)
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
-@patch("psycopg2.connect", side_effect=Exception("fail"))
+@patch("psycopg2.connect")
 def test_get_all_systems_connection_failure(
-    mock_connect, mock_config
+    mock_connect, mock_config, mock_active
 ):  # pylint: disable=unused-argument
+    mock_conn = mock_connect.return_value
+    mock_cur = MagicMock()
+    mock_cur.execute.side_effect = Exception("db down")
+    mock_conn.cursor.return_value.__enter__.return_value = mock_cur
+
     connector = PostgresConnector()
-    connector.connection = MagicMock()
-    result = connector.get_all_systems()
-    assert result == []
+    connector.connection = mock_conn
+
+    with pytest.raises(Exception, match="db down"):
+        connector.get_all_systems()
 
 
-@pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_get_system(mock_connect, mock_config):  # pylint: disable=unused-argument
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_conn.cursor.return_value.__enter__.return_value = mock_cur
-    mock_cur.fetchone.return_value = {
-        "sigma_one": "a",
-        "sigma_two": "b",
-        "ordinal": 1,
-        "function_id": 123,
-    }
+    mock_cur.description = [
+        ("sigma_one",),
+        ("sigma_two",),
+        ("ordinal",),
+        ("function_id",),
+    ]
+    mock_cur.fetchone.return_value = ("a", "b", 1, 123)
 
     connector = PostgresConnector()
     connector.connection = mock_conn
@@ -88,8 +97,8 @@ def test_get_selected_systems(
     mock_cur = MagicMock()
     mock_conn.cursor.return_value.__enter__.return_value = mock_cur
     mock_cur.fetchall.return_value = [
-    ("SelectedSystem1",),
-    ("SelectedSystem2",),
+        ("SelectedSystem1",),
+        ("SelectedSystem2",),
     ]
     mock_cur.description = [("name",)]
 
@@ -117,57 +126,28 @@ def test_get_label_not_found(
     assert result is None
 
 
-# @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
-# @patch("psycopg2.connect")
-# def test_get_statistics(mock_connect, mock_config):
-#     mock_conn = mock_connect.return_value
-#     mock_cur = MagicMock()
-#     mock_conn.cursor.return_value = mock_cur
-#     mock_cur.fetchall.side_effect = [
-#         [(10,)],  # Maps
-#         [(2.5,)],  # AUT
-#         [(5,)],  # PCF
-#         [(3.0,)],  # Average Height
-#         [(100,)]  # Average Resultant
-#     ]
-
-#     connector = PostgresConnector()
-#     result = connector.get_statistics("WHERE degree IN (2) AND N IN (4)")
-#     assert len(result) == 13
-#     assert result[1] == 2.5     # AUT
-#     assert result[2] == 5       # PCF
-#     assert result[3] == 3.0     # Avg Heighta
-#     # assert result[4][0][0] == 100  # Average Resultant
-
-
-@pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_get_statistics_empty_lists(
+def test_get_statistics_empty_where(
     mock_connect, mock_config
 ):  # pylint: disable=unused-argument
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_conn.cursor.return_value.__enter__.return_value = mock_cur
-
-    mock_cur.fetchall.side_effect = [[(0,)], [(0,)], [(0,)], [(0,)]] + [[]] * 9
-    mock_cur.fetchone.return_value = (0, 0)
+    mock_cur.fetchone.return_value = (0,)
 
     connector = PostgresConnector()
     connector.connection = mock_conn
-    result = connector.get_statistics("")
-    assert result[0] == 0
-    assert result[1] == 0
-    assert result[2] == 0
-    assert result[3] == 0
+    result = connector.get_statistics(sql.SQL(""), [])
+    assert result == 0
 
 
-@pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_build_where_text(mock_connect, mock_config):  # pylint: disable=unused-argument
+    mock_conn = mock_connect.return_value
     connector = PostgresConnector()
-    connector.connection = mock_connect.return_value
+    connector.connection = mock_conn
 
     filters = {
         "dimension": [2],
@@ -185,17 +165,11 @@ def test_build_where_text(mock_connect, mock_config):  # pylint: disable=unused-
         "indeterminacy_locus_dimension": "",
     }
 
-    where_clause = connector.build_where_text(filters)
-    expected = (
-        " WHERE dimension IN (2) AND degree IN (3, 4) AND is_polynomial"
-        " IN (True) AND is_Chebyshev IN (False) AND is_Newton IN (True) "
-        "AND is_pcf IN (True) AND CAST(automorphism_group_cardinality AS "
-        "integer) IN (5) AND CAST(base_field_degree AS integer) IN (2)"
-    )
-    assert where_clause == expected
+    where_sql, params = connector.build_where_text(filters)
+    assert where_sql != sql.SQL("")
+    assert params == [2, 3, 4, True, False, True, True, "5", "2"]
 
 
-@pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_build_where_text_empty(
@@ -203,4 +177,6 @@ def test_build_where_text_empty(
 ):  # pylint: disable=unused-argument
     connector = PostgresConnector()
     connector.connection = mock_connect.return_value
-    assert connector.build_where_text({}) == ""
+    where_sql, params = connector.build_where_text({})
+    assert where_sql == sql.SQL("")
+    assert params == []
