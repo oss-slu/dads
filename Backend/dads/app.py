@@ -26,4 +26,4 @@ def handle_error(e):
     return jsonify(response), 500
 
 
-from dads.api import routes  # noqa: F401,E402
+import dads.api.routes  # pylint: disable=wrong-import-position,unused-import
