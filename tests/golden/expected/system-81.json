@@ -1,0 +1,81 @@
+{
+  "body": {
+    "authors": null,
+    "automorphism_group_cardinality": 6,
+    "base_field_degree": 1,
+    "base_field_label": "1.1.1.1",
+    "cardinality": 6,
+    "citation": null,
+    "citation_id": null,
+    "citations": null,
+    "cp_cardinality": 2,
+    "cp_field_of_defn": "2.0.3.1",
+    "critical_portrait_graph_id": "20",
+    "degree": 2,
+    "display_model": "reduced",
+    "edges": [
+      4,
+      1,
+      3,
+      3,
+      4,
+      1
+    ],
+    "family": [],
+    "function_id": 81,
+    "functions_base_field_label": "1.1.1.1",
+    "graph_id": 21,
+    "id": null,
+    "is_chebyshev": false,
+    "is_lattes": false,
+    "is_newton": false,
+    "is_pcf": true,
+    "is_polynomial": false,
+    "journal": null,
+    "label": null,
+    "mathscinet": null,
+    "max_tail": 1,
+    "modelLabel": "1.a35a25cc.024ac6d7.1",
+    "monic_centered": null,
+    "newton_polynomial_coeffs": null,
+    "num_components": 3,
+    "ordinal": 1,
+    "original_model": "(\"{{1,-2,0},{0,-2,1}}\",-3,{3},0.6931472,1.1.1.1)",
+    "periodic_cardinality": 3,
+    "periodic_cycles": [
+      1,
+      1,
+      1
+    ],
+    "positive_in_degree": 3,
+    "preperiodic_components": [
+      2,
+      2,
+      2
+    ],
+    "rational_periodic_points": [
+      [
+        "1",
+        "0"
+      ],
+      [
+        "0",
+        "1"
+      ],
+      [
+        "1",
+        "1"
+      ]
+    ],
+    "rational_twists": [
+      82,
+      83
+    ],
+    "reduced_model": "(\"{{1,-2,0},{0,-2,1}}\",-3,{3},0.6931472,1.1.1.1)",
+    "sigma_one": "a35a25cc",
+    "sigma_two": "024ac6d7",
+    "type": 1,
+    "year": null
+  },
+  "status_code": 200
+}

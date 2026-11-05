@@ -1,0 +1,77 @@
+{
+  "body": [
+    {
+      "base_field_label": "1.1.1.1",
+      "function_id": 3,
+      "graph_id": 5,
+      "id": 3,
+      "rational_periodic_points": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "-1",
+          "1"
+        ]
+      ]
+    },
+    {
+      "base_field_label": "2.2.8.1",
+      "function_id": 3,
+      "graph_id": 25,
+      "id": 89,
+      "rational_periodic_points": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "-1",
+          "1"
+        ]
+      ]
+    },
+    {
+      "base_field_label": "2.2.12.1",
+      "function_id": 3,
+      "graph_id": 5,
+      "id": 112,
+      "rational_periodic_points": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "-1",
+          "1"
+        ]
+      ]
+    },
+    {
+      "base_field_label": "2.2.5.1",
+      "function_id": 3,
+      "graph_id": 30,
+      "id": 141,
+      "rational_periodic_points": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "-a + 1",
+          "1"
+        ],
+        [
+          "a",
+          "1"
+        ],
+        [
+          "-1",
+          "1"
+        ]
+      ]
+    }
+  ],
+  "status_code": 200
+}
