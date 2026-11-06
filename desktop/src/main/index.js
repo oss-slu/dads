@@ -49,7 +49,9 @@ app.on('before-quit', (event) => {
   event.preventDefault()
   stopBackend().then(() => {
     backendStopped = true
-    app.quit()
+    // quit on the next tick: calling app.quit() while Electron is still in
+    // the first before-quit is ignored when stopBackend() resolves right away
+    setImmediate(() => app.quit())
   })
 })
 
