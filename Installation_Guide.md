@@ -42,7 +42,7 @@ Install the necessary Python dependencies by running <code>pip install -r requir
 
 Navigate to the frontend directory using <code>cd ../frontend</code>
 Install necessary node modules by running <code>npm ci --legacy-peer-deps</code>
-    - The `--legacy-peer-deps` flag is required: some older dependencies (from Create React App) have peer-dependency conflicts that npm refuses to install without it.
+- The `--legacy-peer-deps` flag is required: some older dependencies (from Create React App) have peer-dependency conflicts that npm refuses to install without it.
 
 **Running the Application** - 
 
