@@ -65,4 +65,34 @@ describe('ModelsTable component', () => {
     render(<ModelsTable data={mockData} />);
     expect(screen.getByTestId('models-table')).toBeInTheDocument();
   });
+
+  // System 11: both models are over 1.1.1.1, but the critical points are over 2.2.124.1
+  test('shows each model\'s own field of definition, not the critical point field', () => {
+    const systemData = {
+      degree: 2,
+      original_model: '("{{4,4,4},{-2,4,3}}",496,"{2,31}",1.3862944,1.1.1.1)',
+      reduced_model: '("{{4,4,4},{-2,4,3}}",496,"{2,31}",1.3862944,1.1.1.1)',
+      cp_field_of_defn: '2.2.124.1',
+    };
+    render(<ModelsTable data={systemData} />);
+
+    const fieldLinks = screen.getAllByRole('link', { name: '1.1.1.1' });
+    expect(fieldLinks).toHaveLength(2);
+    fieldLinks.forEach(link => {
+      expect(link).toHaveAttribute('href', 'https://www.lmfdb.org/NumberField/1.1.1.1');
+    });
+    expect(screen.queryByText('2.2.124.1')).not.toBeInTheDocument();
+  });
+
+  // Empty field label: the model string ends in ",1.3862944,)"
+  test('shows a dash and no link when the field label is empty', () => {
+    const emptyFieldData = {
+      degree: 2,
+      original_model: '("{{4,4,4},{-2,4,3}}",496,"{2,31}",1.3862944,)',
+    };
+    render(<ModelsTable data={emptyFieldData} />);
+
+    expect(screen.getByText('–')).toBeInTheDocument();
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+  });
 });
