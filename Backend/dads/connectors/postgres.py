@@ -3,7 +3,6 @@ Module Docstring
 manages  server data queries
 """
 import psycopg2
-import psycopg2.extras
 from psycopg2 import sql
 from dads.config import load_config
 from dads.connectors.base import DadsConnector
@@ -80,7 +79,7 @@ class PostgresConnector(DadsConnector):
             if self.connection:
                 self.connection.rollback()
             raise e
-            
+
         finally:
             if cur:
                 cur.close()
@@ -91,7 +90,7 @@ class PostgresConnector(DadsConnector):
         query = """SELECT * FROM rational_preperiodic_dim_1_nf
                 WHERE function_id = %s"""
         result = self.try_query(query, (function_id,), fetch="all")
-        
+
         return result
 
     def get_graph_metadata(self, graph_id):
@@ -142,7 +141,7 @@ class PostgresConnector(DadsConnector):
             WHERE f.function_id = %s
         """)
         result = self.try_query(query, (function_id,), fetch="one")
-        
+
         if result:
             result['modelLabel'] = self.construct_label(result)
             return result
@@ -152,16 +151,16 @@ class PostgresConnector(DadsConnector):
     def get_filtered_systems(self, filters):
         where_sql, params = self.build_where_text(filters)
         stats = self.get_statistics(where_sql, params)
-        
+
         query = sql.SQL("""
-            SELECT f.function_id, f.sigma_one, f.sigma_two, f.ordinal, f.degree, 
+            SELECT f.function_id, f.sigma_one, f.sigma_two, f.ordinal, f.degree,
                    (f.original_model).coeffs, f.base_field_label
             FROM functions_dim_1_nf f
             JOIN rational_preperiodic_dim_1_nf r ON f.function_id = r.function_id
             JOIN graphs_dim_1_nf g ON g.graph_id = r.graph_id
-            {} 
+            {}
         """).format(where_sql)
-        
+
         rows = self.try_query(query, params, fetch='all')
         result = []
 
@@ -171,16 +170,16 @@ class PostgresConnector(DadsConnector):
                 result.append(format_search_result_row(row, mon_dict))
 
         return result, stats
-        
+
     def get_selected_systems(self, labels):
         if not labels:
             return []
         query = sql.SQL("""
-            SELECT * FROM functions_dim_1_nf 
+            SELECT * FROM functions_dim_1_nf
             WHERE (
-                CAST(base_field_degree AS TEXT) || '.' || 
-                TRIM(sigma_one) || '.' || 
-                TRIM(sigma_two) || '.' || 
+                CAST(base_field_degree AS TEXT) || '.' ||
+                TRIM(sigma_one) || '.' ||
+                TRIM(sigma_two) || '.' ||
                 CAST(ordinal AS TEXT)
             ) IN ({})
         """).format(
@@ -219,10 +218,10 @@ class PostgresConnector(DadsConnector):
             WHERE familiesTable.family_id = %s
         '''
         result = self.try_query(query, (family_id,), fetch="one")
-        
+
         return result
-    
-    # dreyes: gets families that match the passed in filters, input should be json object, similar to get_filtered_systems but for families instead of systems
+
+    # dreyes: gets families matching filters (json object); like get_filtered_systems for families
     def get_filtered_families(self, filters):
         """
         Get families matching the provided filters.
@@ -230,7 +229,7 @@ class PostgresConnector(DadsConnector):
         """
         where_sql, params = self.build_where_text(filters)
         query = sql.SQL("SELECT * FROM families_dim_1_nf {}").format(where_sql)
-        
+
         result = self.try_query(query, params, fetch="all")
         return result
 
@@ -242,38 +241,38 @@ class PostgresConnector(DadsConnector):
 
         if fil == 'model_label':
             sql_piece = sql.SQL("""
-                CONCAT('1.', TRIM(sigma_one), '.', TRIM(sigma_two), '.', 
+                CONCAT('1.', TRIM(sigma_one), '.', TRIM(sigma_two), '.',
                 TRIM(CAST(ordinal AS TEXT))) ILIKE {}
             """)
             conditions.append(sql_piece.format(sql.Placeholder()))
             return f"%{str(values).strip()}%"
-        
+
         if fil == 'periodic_cycles':
             sql_piece = sql.SQL("""
-                (SELECT MAX(val) FROM unnest(g.periodic_cycles) AS val 
+                (SELECT MAX(val) FROM unnest(g.periodic_cycles) AS val
                 WHERE val IS NOT NULL) = {}
             """)
             conditions.append(sql_piece.format(sql.Placeholder()))
             return int(values)
-        
+
         if isinstance(values, list):
             placeholders = sql.SQL(', ').join(sql.Placeholder() * len(values))
             sql_piece = sql.SQL("{} IN ({})")
             conditions.append(sql_piece.format(ident, placeholders))
             return values
-        
+
         if fil in ['base_field_label', 'sigma_one', 'sigma_two', 'name', 'journal_label']:
             sql_piece = sql.SQL("{} ILIKE {}")
             conditions.append(sql_piece.format(ident, sql.Placeholder()))
             return f"%{str(values)}%"
-        
+
         sql_piece = sql.SQL("{} = {}")
         conditions.append(sql_piece.format(ident, sql.Placeholder()))
 
         if fil in ['family_id', 'function_id', 'degree']:
             return int(values)
         return values
-    
+
     def build_where_text(self, filters):
         active_filters = {}
         for key, value in filters.items():
@@ -282,17 +281,17 @@ class PostgresConnector(DadsConnector):
 
         if not active_filters:
             return sql.SQL(""), []
-        
+
         conditions = []
         params = []
         for fil, values in active_filters.items():
             processed_val = self.apply_filter_logic(fil, values, conditions)
-            
+
             if isinstance(processed_val, list):
                 params.extend(processed_val)
             else:
                 params.append(processed_val)
 
         where_fragment = sql.SQL(" WHERE ") + sql.SQL(" AND ").join(conditions)
-        
+
         return where_fragment, params

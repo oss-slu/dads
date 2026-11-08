@@ -41,9 +41,9 @@ def filter_data():
             for fil in filters:
                 if filters[fil] != []:
                     if (
-                        filter in item and
-                        str(item[fil]) not in str(filters[fil])
-                        ):
+                            filter in item and
+                            str(item[fil]) not in str(filters[fil])
+                            ):
                         add = False
                         break
             if add:
@@ -54,6 +54,7 @@ def filter_data():
     except Exception as error:
         print('An exception occurred:', error)
         return
+
 
 if __name__ == '__main__':
     app.run()
