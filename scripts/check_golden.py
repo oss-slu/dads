@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import urllib.error
 from pathlib import Path
 
 _SCRIPTS_DIR = Path(__file__).resolve().parent
@@ -12,7 +13,14 @@ if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
 from capture_golden import fetch_case
-from golden_common import first_diff, load_cases, prepare_snapshot, read_expected
+from golden_common import (
+    case_names,
+    first_diff,
+    format_connection_error,
+    load_cases,
+    prepare_snapshot,
+    read_expected,
+)
 
 
 def main() -> int:
@@ -32,12 +40,24 @@ def main() -> int:
     cases = load_cases()
     if args.case:
         wanted = set(args.case)
+        known = case_names()
+        unknown = sorted(wanted - known)
+        if unknown:
+            print(f"Unknown case name(s): {', '.join(unknown)}", file=sys.stderr)
+            return 1
         cases = [case for case in cases if case["name"] in wanted]
+        if not cases:
+            print("No matching cases.", file=sys.stderr)
+            return 1
 
     failures = 0
     for case in cases:
         name = case["name"]
-        status, body = fetch_case(args.base_url, case)
+        try:
+            status, body = fetch_case(args.base_url, case)
+        except urllib.error.URLError:
+            print(format_connection_error(args.base_url), file=sys.stderr)
+            return 1
         actual = prepare_snapshot(
             status,
             body,

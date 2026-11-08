@@ -14,7 +14,13 @@ _SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
-from golden_common import load_cases, prepare_snapshot, write_expected
+from golden_common import (
+    case_names,
+    format_connection_error,
+    load_cases,
+    prepare_snapshot,
+    write_expected,
+)
 
 
 def fetch_case(base_url: str, case: dict) -> tuple[int, object]:
@@ -59,13 +65,22 @@ def main() -> int:
     cases = load_cases()
     if args.case:
         wanted = set(args.case)
+        known = case_names()
+        unknown = sorted(wanted - known)
+        if unknown:
+            print(f"Unknown case name(s): {', '.join(unknown)}", file=sys.stderr)
+            return 1
         cases = [case for case in cases if case["name"] in wanted]
         if not cases:
             print("No matching cases.", file=sys.stderr)
             return 1
 
     for case in cases:
-        status, body = fetch_case(args.base_url, case)
+        try:
+            status, body = fetch_case(args.base_url, case)
+        except urllib.error.URLError:
+            print(format_connection_error(args.base_url), file=sys.stderr)
+            return 1
         snapshot = prepare_snapshot(
             status,
             body,

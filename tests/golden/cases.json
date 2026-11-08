@@ -8,7 +8,8 @@
   {
     "name": "search-degree-2",
     "route": "/get_filtered_systems",
-    "body": {"degree": [2]}
+    "body": {"degree": [2]},
+    "compact_large": true
   },
   {
     "name": "search-degree-3-4",
@@ -18,7 +19,8 @@
   {
     "name": "search-is-polynomial",
     "route": "/get_filtered_systems",
-    "body": {"is_polynomial": [true]}
+    "body": {"is_polynomial": [true]},
+    "compact_large": true
   },
   {
     "name": "search-is-pcf-true",
@@ -28,7 +30,8 @@
   {
     "name": "search-base-field-label",
     "route": "/get_filtered_systems",
-    "body": {"base_field_label": "1.1.1.1"}
+    "body": {"base_field_label": "1.1.1.1"},
+    "compact_large": true
   },
   {
     "name": "search-sigma-one",
@@ -63,17 +66,20 @@
   {
     "name": "search-combo-degree-pcf-false",
     "route": "/get_filtered_systems",
-    "body": {"degree": [2], "is_pcf": [false]}
+    "body": {"degree": [2], "is_pcf": [false]},
+    "compact_large": true
   },
   {
     "name": "search-combo-polynomial-degree-2",
     "route": "/get_filtered_systems",
-    "body": {"is_polynomial": [true], "degree": [2]}
+    "body": {"is_polynomial": [true], "degree": [2]},
+    "compact_large": true
   },
   {
     "name": "search-combo-field-and-degree",
     "route": "/get_filtered_systems",
-    "body": {"base_field_label": "1.1.1.1", "degree": [2]}
+    "body": {"base_field_label": "1.1.1.1", "degree": [2]},
+    "compact_large": true
   },
   {
     "name": "system-11",

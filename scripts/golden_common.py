@@ -22,14 +22,8 @@ def load_cases() -> list[dict[str, Any]]:
         return json.load(handle)
 
 
-def _round_floats(value: Any) -> Any:
-    if isinstance(value, float):
-        return round(value, FLOAT_DECIMALS)
-    if isinstance(value, dict):
-        return {key: _round_floats(item) for key, item in value.items()}
-    if isinstance(value, list):
-        return [_round_floats(item) for item in value]
-    return value
+def case_names() -> set[str]:
+    return {case["name"] for case in load_cases()}
 
 
 def _row_sort_key(row: Any) -> tuple:
@@ -53,16 +47,28 @@ def _row_sort_key(row: Any) -> tuple:
     return (repr(row),)
 
 
-def _sort_row_lists(value: Any) -> Any:
+def _should_sort_root_list(body: Any) -> bool:
+    if not isinstance(body, list) or not body:
+        return False
+    return all(isinstance(item, dict) for item in body)
+
+
+def _normalize_tree(value: Any, *, sort_list: bool) -> Any:
+    if isinstance(value, float):
+        return round(value, FLOAT_DECIMALS)
     if isinstance(value, dict):
-        return {key: _sort_row_lists(item) for key, item in value.items()}
+        return {
+            key: _normalize_tree(item, sort_list=(key == "results"))
+            for key, item in value.items()
+        }
     if isinstance(value, list):
-        if value and all(isinstance(item, (dict, list)) for item in value):
+        items = [_normalize_tree(item, sort_list=False) for item in value]
+        if sort_list and items:
             try:
-                return sorted([_sort_row_lists(item) for item in value], key=_row_sort_key)
+                return sorted(items, key=_row_sort_key)
             except TypeError:
                 pass
-        return [_sort_row_lists(item) for item in value]
+        return items
     return value
 
 
@@ -79,7 +85,8 @@ def _strip_unstable_fields(value: Any) -> Any:
 
 
 def normalize_body(body: Any) -> Any:
-    return _strip_unstable_fields(_sort_row_lists(_round_floats(deepcopy(body))))
+    tree = _normalize_tree(deepcopy(body), sort_list=_should_sort_root_list(body))
+    return _strip_unstable_fields(tree)
 
 
 def _compact_large_results(body: Any) -> Any:
@@ -102,7 +109,8 @@ def _compact_large_results(body: Any) -> Any:
 
 def prepare_snapshot(status_code: int, body: Any, compact_large: bool = False) -> dict[str, Any]:
     normalized = normalize_body(body)
-    normalized = _compact_large_results(normalized)
+    if compact_large:
+        normalized = _compact_large_results(normalized)
     return {"status_code": status_code, "body": normalized}
 
 
@@ -148,4 +156,18 @@ def first_diff(expected: Any, actual: Any, path: str = "") -> str | None:
         return None
     if expected != actual:
         return f"{path}: {expected!r} != {actual!r}"
+    return None
+
+
+def format_connection_error(base_url: str) -> str:
+    return f"Can't reach {base_url.rstrip('/')}, is server.py running?"
+
+
+def rational_periodic_points_in_order(snapshot_body: Any) -> list[Any] | None:
+    """Return rational_periodic_points from get_system-shaped dict, if present."""
+    if not isinstance(snapshot_body, dict):
+        return None
+    points = snapshot_body.get("rational_periodic_points")
+    if isinstance(points, list):
+        return points
     return None
