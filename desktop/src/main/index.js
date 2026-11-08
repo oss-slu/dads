@@ -6,22 +6,35 @@ const { startBackend, stopBackend } = require('./backend')
 let quitting = false
 let backendStopped = false
 
+const lastOutput = (lines) => lines && lines.length ? lines.join('\n') : '(no output)'
+
 app.whenReady().then(async () => {
   const logFile = path.join(app.getPath('logs'), 'backend.log')
 
+  // A backend that stops while the app is open leaves every page without data,
+  // so say so and quit. A normal quit stops it too, that is not an error.
+  const onExit = (code, signal, output) => {
+    if (quitting) return
+    dialog.showErrorBox(
+      'The DynaBase backend stopped',
+      `backend exited (code ${code}, signal ${signal})\n\nLast backend output:\n${lastOutput(output)}\n\nFull log: ${logFile}`
+    )
+    // the backend is already gone, so there is nothing to wait for
+    app.exit(1)
+  }
+
   // Only open the window once the backend can answer, never a blank page
   try {
-    await startBackend({ logFile })
+    await startBackend({ logFile, onExit })
   } catch (err) {
     // quitting stops the backend before it is ready, that is not an error
     if (quitting) return
     // stop it first so a backend that missed the timeout doesn't keep running
     // behind the dialog
     await stopBackend()
-    const output = err.output && err.output.length ? err.output.join('\n') : '(no output)'
     dialog.showErrorBox(
       'DynaBase could not start the backend',
-      `${err.message}\n\nLast backend output:\n${output}\n\nFull log: ${logFile}`
+      `${err.message}\n\nLast backend output:\n${lastOutput(err.output)}\n\nFull log: ${logFile}`
     )
     // Electron ignores process.exitCode, so exit with 1 ourselves
     app.exit(1)
