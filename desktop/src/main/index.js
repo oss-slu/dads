@@ -1,20 +1,42 @@
-const { app, BrowserWindow } = require('electron')
+const path = require('path')
+const { app, BrowserWindow, dialog } = require('electron')
 const { createWindow } = require('./window')
 const { startBackend, stopBackend } = require('./backend')
 
 let quitting = false
 let backendStopped = false
 
+const lastOutput = (lines) => lines && lines.length ? lines.join('\n') : '(no output)'
+
 app.whenReady().then(async () => {
+  const logFile = path.join(app.getPath('logs'), 'backend.log')
+
+  // A backend that stops while the app is open leaves every page without data,
+  // so say so and quit. A normal quit stops it too, that is not an error.
+  const onExit = (code, signal, output) => {
+    if (quitting) return
+    dialog.showErrorBox(
+      'The DynaBase backend stopped',
+      `backend exited (code ${code}, signal ${signal})\n\nLast backend output:\n${lastOutput(output)}\n\nFull log: ${logFile}`
+    )
+    // the backend is already gone, so there is nothing to wait for
+    app.exit(1)
+  }
+
   // Only open the window once the backend can answer, never a blank page
   try {
-    await startBackend()
+    await startBackend({ logFile, onExit })
   } catch (err) {
     // quitting stops the backend before it is ready, that is not an error
     if (quitting) return
-    console.error(err.message)
-    // Electron ignores process.exitCode, so exit with 1 ourselves
+    // stop it first so a backend that missed the timeout doesn't keep running
+    // behind the dialog
     await stopBackend()
+    dialog.showErrorBox(
+      'DynaBase could not start the backend',
+      `${err.message}\n\nLast backend output:\n${lastOutput(err.output)}\n\nFull log: ${logFile}`
+    )
+    // Electron ignores process.exitCode, so exit with 1 ourselves
     app.exit(1)
     return
   }
@@ -40,7 +62,9 @@ app.on('before-quit', (event) => {
   event.preventDefault()
   stopBackend().then(() => {
     backendStopped = true
-    app.quit()
+    // quit on the next tick: calling app.quit() while Electron is still in
+    // the first before-quit is ignored when stopBackend() resolves right away
+    setImmediate(() => app.quit())
   })
 })
 
