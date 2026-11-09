@@ -12,49 +12,24 @@ _SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
-from capture_golden import fetch_case
 from golden_common import (
-    case_names,
+    add_golden_cli_args,
+    fetch_case,
     first_diff,
     format_connection_error,
-    load_cases,
     prepare_snapshot,
     read_expected,
-    validate_base_url,
+    resolve_cases_for_cli,
 )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--base-url",
-        default="http://127.0.0.1:5000",
-        help="Backend base URL (default: http://127.0.0.1:5000)",
-    )
-    parser.add_argument(
-        "--case",
-        action="append",
-        help="Check only these case names (repeatable)",
-    )
+    add_golden_cli_args(parser)
     args = parser.parse_args()
-    try:
-        validate_base_url(args.base_url)
-    except ValueError as error:
-        print(error, file=sys.stderr)
-        return 1
-
-    cases = load_cases()
-    if args.case:
-        wanted = set(args.case)
-        known = case_names()
-        unknown = sorted(wanted - known)
-        if unknown:
-            print(f"Unknown case name(s): {', '.join(unknown)}", file=sys.stderr)
-            return 1
-        cases = [case for case in cases if case["name"] in wanted]
-        if not cases:
-            print("No matching cases.", file=sys.stderr)
-            return 1
+    cases, exit_code = resolve_cases_for_cli(args)
+    if exit_code != 0 or cases is None:
+        return exit_code
 
     failures = 0
     for case in cases:

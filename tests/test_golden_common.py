@@ -2,7 +2,13 @@
 
 import pytest
 
-from golden_common import first_diff, normalize_body, prepare_snapshot, validate_base_url
+from golden_common import (
+    first_diff,
+    normalize_body,
+    prepare_snapshot,
+    validate_base_url,
+    validate_case_route,
+)
 
 
 def test_round_floats_and_sort_search_rows():
@@ -91,3 +97,14 @@ def test_validate_base_url_allows_local(base_url):
 def test_validate_base_url_rejects_non_local(base_url):
     with pytest.raises(ValueError):
         validate_base_url(base_url)
+
+
+def test_validate_case_route_accepts_api_paths():
+    validate_case_route("/get_filtered_systems")
+    validate_case_route("/get_system")
+
+
+@pytest.mark.parametrize("route", ("", "get_system", "//evil.com", "http://evil.com/x"))
+def test_validate_case_route_rejects_unsafe(route):
+    with pytest.raises(ValueError):
+        validate_case_route(route)

@@ -4,10 +4,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
+import urllib.error
+import urllib.request
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 _ALLOWED_BASE_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
 
@@ -176,6 +179,86 @@ def validate_base_url(base_url: str) -> None:
         raise ValueError(
             f"Base URL host must be localhost, 127.0.0.1, or ::1, not {host!r}"
         )
+
+
+def validate_case_route(route: str) -> None:
+    """Golden routes must be fixed relative paths from cases.json (no off-host requests)."""
+    if not route or not route.startswith("/") or route.startswith("//"):
+        raise ValueError(f"Invalid route {route!r}: must be an absolute path like /get_system")
+    if "://" in route:
+        raise ValueError(f"Invalid route {route!r}: must not contain a scheme")
+
+
+def fetch_case(base_url: str, case: dict) -> tuple[int, object]:
+    """POST/GET one golden case against a validated local backend URL."""
+    validate_base_url(base_url)
+    route = case.get("route", "")
+    validate_case_route(route)
+    joined = urljoin(base_url.rstrip("/") + "/", route.lstrip("/"))
+    parsed = urlparse(joined)
+    host = (parsed.hostname or "").lower()
+    if host not in _ALLOWED_BASE_HOSTS:
+        raise ValueError(f"Resolved URL left localhost: {joined!r}")
+
+    method = case.get("method", "POST").upper()
+    body = case.get("body", {})
+    data = json.dumps(body).encode("utf-8")
+    request = urllib.request.Request(
+        joined,
+        data=data,
+        method=method,
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=120) as response:
+            raw = response.read().decode("utf-8")
+            status = response.status
+    except urllib.error.HTTPError as error:
+        status = error.code
+        raw = error.read().decode("utf-8")
+    try:
+        parsed_body = json.loads(raw) if raw else None
+    except json.JSONDecodeError:
+        parsed_body = raw
+    return status, parsed_body
+
+
+def add_golden_cli_args(parser) -> None:
+    parser.add_argument(
+        "--base-url",
+        default="http://127.0.0.1:5000",
+        help="Backend base URL (default: http://127.0.0.1:5000)",
+    )
+    parser.add_argument(
+        "--case",
+        action="append",
+        help="Only these case names (repeatable)",
+    )
+
+
+def resolve_cases_for_cli(args) -> tuple[list[dict[str, Any]] | None, int]:
+    """Validate --base-url and optional --case filter; return (cases, exit_code)."""
+    try:
+        validate_base_url(args.base_url)
+    except ValueError as error:
+        print(error, file=sys.stderr)
+        return None, 1
+
+    cases = load_cases()
+    if not args.case:
+        return cases, 0
+
+    wanted = set(args.case)
+    known = case_names()
+    unknown = sorted(wanted - known)
+    if unknown:
+        print(f"Unknown case name(s): {', '.join(unknown)}", file=sys.stderr)
+        return None, 1
+    cases = [case for case in cases if case["name"] in wanted]
+    if not cases:
+        print("No matching cases.", file=sys.stderr)
+        return None, 1
+    return cases, 0
 
 
 def rational_periodic_points_in_order(snapshot_body: Any) -> list[Any] | None:
