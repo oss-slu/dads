@@ -15,6 +15,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write           # sign the SBOM attestation with GitHub's OIDC token (no secrets)
+      attestations: write       # store the attestation
+      artifact-metadata: write  # link the attestation to this repository
 
     services:
       postgres:
@@ -73,3 +78,44 @@ jobs:
       with:
         name: coverage-report
         path: coverage.xml
+
+    # Syft finds no packages in Backend/ (its requirements.txt is empty) or in the
+    # root requirements.txt (no pinned versions). So install requirements.txt into
+    # its own folder, at the versions the tests above used, and scan that folder.
+    - name: Collect backend dependencies for the SBOM
+      run: |
+        pip freeze > "$RUNNER_TEMP/tested-versions.txt"
+        pip install --target "$RUNNER_TEMP/dads-backend" -r requirements.txt -c "$RUNNER_TEMP/tested-versions.txt"
+
+    - name: Generate backend SBOM
+      uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+      env:
+        SYFT_SOURCE_NAME: dads-backend
+        SYFT_SOURCE_VERSION: ${{ github.sha }}
+      with:
+        path: ${{ runner.temp }}/dads-backend
+        format: spdx-json
+        output-file: Backend/dads-backend-sbom.spdx.json
+        upload-artifact: false
+
+    - name: Upload backend SBOM
+      uses: actions/upload-artifact@v7
+      with:
+        name: dads-backend-sbom
+        path: Backend/dads-backend-sbom.spdx.json
+        if-no-files-found: error
+
+    - name: Attest backend SBOM
+      if: github.ref == 'refs/heads/main'
+      uses: actions/attest@v4
+      with:
+        subject-path: Backend/dads-backend-sbom.spdx.json
+
+    - name: Verify backend SBOM attestation
+      if: github.ref == 'refs/heads/main'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh attestation verify Backend/dads-backend-sbom.spdx.json --repo "$GITHUB_REPOSITORY" \
+          --format json \
+          --jq '.[].verificationResult.signature.certificate | "Verified: built by \(.buildSignerURI) from commit \(.sourceRepositoryDigest)"'
