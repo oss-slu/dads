@@ -1,0 +1,76 @@
+{
+  "body": {
+    "authors": [
+      "Bjorn Poonen"
+    ],
+    "automorphism_group_cardinality": 1,
+    "base_field_degree": 1,
+    "base_field_label": "1.1.1.1",
+    "cardinality": 4,
+    "citation": "Bjorn Poonen. The classificiation of rational preperiodic points of quadratic polynomials over Q: a refined conjecture. Math. Z., 228(1):11--29, 1998.",
+    "citation_id": 4,
+    "citations": [
+      4
+    ],
+    "cp_cardinality": 2,
+    "cp_field_of_defn": "1.1.1.1",
+    "critical_portrait_graph_id": "4",
+    "degree": 2,
+    "display_model": "monic centered",
+    "edges": [
+      1,
+      0,
+      2,
+      1
+    ],
+    "family": [
+      1
+    ],
+    "function_id": 3,
+    "functions_base_field_label": "1.1.1.1",
+    "graph_id": 5,
+    "id": 4,
+    "is_chebyshev": false,
+    "is_lattes": false,
+    "is_newton": false,
+    "is_pcf": true,
+    "is_polynomial": true,
+    "journal": "Math. Z.",
+    "label": "Poonen1998",
+    "mathscinet": "MR1617987",
+    "max_tail": 1,
+    "modelLabel": "1.b5876aa4.6951d87f.1",
+    "monic_centered": "(\"{{1,0,-1},{0,0,1}}\",1,{},,1.1.1.1)",
+    "newton_polynomial_coeffs": null,
+    "num_components": 2,
+    "ordinal": 1,
+    "original_model": "(\"{{1,0,-1},{0,0,1}}\",1,{},0,1.1.1.1)",
+    "periodic_cardinality": 3,
+    "periodic_cycles": [
+      2,
+      1
+    ],
+    "positive_in_degree": 3,
+    "preperiodic_components": [
+      3,
+      1
+    ],
+    "rational_periodic_points": [
+      [
+        "1",
+        "0"
+      ],
+      [
+        "-1",
+        "1"
+      ]
+    ],
+    "rational_twists": null,
+    "reduced_model": "(\"{{1,0,-1},{0,0,1}}\",1,{},0,1.1.1.1)",
+    "sigma_one": "b5876aa4",
+    "sigma_two": "6951d87f",
+    "type": 1,
+    "year": 1998
+  },
+  "status_code": 200
+}
