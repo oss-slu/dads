@@ -1,6 +1,8 @@
 """Unit tests for golden snapshot normalization."""
 
-from golden_common import first_diff, normalize_body, prepare_snapshot
+import pytest
+
+from golden_common import first_diff, normalize_body, prepare_snapshot, validate_base_url
 
 
 def test_round_floats_and_sort_search_rows():
@@ -64,3 +66,28 @@ def test_sorts_top_level_record_list_not_inner_points():
     normalized = normalize_body(body)
     assert [row["id"] for row in normalized] == [3, 7]
     assert normalized[1]["rational_periodic_points"] == [["2", "1"], ["1", "0"]]
+
+
+@pytest.mark.parametrize(
+    "base_url",
+    (
+        "http://127.0.0.1:5000",
+        "http://localhost:5000/",
+        "https://127.0.0.1:5000",
+    ),
+)
+def test_validate_base_url_allows_local(base_url):
+    validate_base_url(base_url)
+
+
+@pytest.mark.parametrize(
+    "base_url",
+    (
+        "http://example.com:5000",
+        "file:///etc/passwd",
+        "ftp://127.0.0.1:5000",
+    ),
+)
+def test_validate_base_url_rejects_non_local(base_url):
+    with pytest.raises(ValueError):
+        validate_base_url(base_url)

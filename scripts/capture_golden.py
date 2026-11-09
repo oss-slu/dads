@@ -19,6 +19,7 @@ from golden_common import (
     format_connection_error,
     load_cases,
     prepare_snapshot,
+    validate_base_url,
     write_expected,
 )
 
@@ -61,6 +62,11 @@ def main() -> int:
         help="Capture only these case names (repeatable)",
     )
     args = parser.parse_args()
+    try:
+        validate_base_url(args.base_url)
+    except ValueError as error:
+        print(error, file=sys.stderr)
+        return 1
 
     cases = load_cases()
     if args.case:

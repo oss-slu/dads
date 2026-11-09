@@ -7,6 +7,9 @@ import json
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
+
+_ALLOWED_BASE_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CASES_PATH = REPO_ROOT / "tests" / "golden" / "cases.json"
@@ -161,6 +164,18 @@ def first_diff(expected: Any, actual: Any, path: str = "") -> str | None:
 
 def format_connection_error(base_url: str) -> str:
     return f"Can't reach {base_url.rstrip('/')}, is server.py running?"
+
+
+def validate_base_url(base_url: str) -> None:
+    """Reject non-local base URLs (dev golden scripts only; guards SSRF scanners)."""
+    parsed = urlparse(base_url.strip())
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError(f"Unsupported URL scheme: {parsed.scheme!r}")
+    host = (parsed.hostname or "").lower()
+    if host not in _ALLOWED_BASE_HOSTS:
+        raise ValueError(
+            f"Base URL host must be localhost, 127.0.0.1, or ::1, not {host!r}"
+        )
 
 
 def rational_periodic_points_in_order(snapshot_body: Any) -> list[Any] | None:

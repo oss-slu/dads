@@ -20,6 +20,7 @@ from golden_common import (
     load_cases,
     prepare_snapshot,
     read_expected,
+    validate_base_url,
 )
 
 
@@ -36,6 +37,11 @@ def main() -> int:
         help="Check only these case names (repeatable)",
     )
     args = parser.parse_args()
+    try:
+        validate_base_url(args.base_url)
+    except ValueError as error:
+        print(error, file=sys.stderr)
+        return 1
 
     cases = load_cases()
     if args.case:
