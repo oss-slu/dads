@@ -49,6 +49,15 @@ https://github.com/oss-slu/dads/blob/main/Contributing_Guide.txt
 - newDataTable.js - Renders a dynamic table that displays systems based on the search and filter criteria, complete with pagination functionality.
 - Topbar.js - Contains navigation logic for the site 
 
+### SBOM
+Each run of the [Backend Python Tests](https://github.com/oss-slu/dads/actions/workflows/python-testing.yml) workflow generates an SPDX JSON SBOM for the backend. It lists the packages in `requirements.txt` and the packages they depend on, at the versions the tests used. Download `dads-backend-sbom` from the **Artifacts** section of a run summary, or with the GitHub CLI: `gh run download <run-id> -R oss-slu/dads -n dads-backend-sbom`.
+
+On pushes to `main`, the workflow also signs a build provenance attestation for the SBOM. To check that a downloaded SBOM came from this workflow and hasn't been changed:
+```
+gh attestation verify ./dads-backend-sbom.spdx.json --owner oss-slu
+```
+SBOMs from pull request runs are not attested.
+
 ### License
 This project is licensed under the terms of the MIT license.
 
