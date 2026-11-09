@@ -28,7 +28,7 @@ from config import load_config  # pylint: disable=wrong-import-position
 
 SCRIPTS_DIRECTORY = REPOSITORY_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIRECTORY))
-from build_sqlite import EXPORT_TABLES, model_from_parts  # pylint: disable=wrong-import-position
+from build_sqlite import EXPORT_TABLES  # pylint: disable=wrong-import-position
 
 
 def parse_arguments():
@@ -127,6 +127,25 @@ def loads_json_nullable(text):
     return json.loads(text)
 
 
+def model_dict_from_postgres(coeffs, resultant, bad_primes, height, base_field_label):
+    """Expected model JSON shape from raw Postgres columns (not build_sqlite.pack_model)."""
+    if (
+        coeffs is None
+        and resultant is None
+        and bad_primes is None
+        and height is None
+        and base_field_label is None
+    ):
+        return None
+    return {
+        "coeffs": coeffs,
+        "resultant": resultant,
+        "bad_primes": bad_primes,
+        "height": height,
+        "base_field_label": base_field_label,
+    }
+
+
 def compare_function(connection_pg, connection_sqlite, function_id):
     pg_row = pg_function_row(connection_pg, function_id)
     (
@@ -164,17 +183,17 @@ def compare_function(connection_pg, connection_sqlite, function_id):
         ("cp_field_of_defn", pg_cp_field, sq_cp_field),
         (
             "original_model",
-            model_from_parts(om_c, om_r, om_bp, om_h, om_l),
+            model_dict_from_postgres(om_c, om_r, om_bp, om_h, om_l),
             loads_json_nullable(sq_om),
         ),
         (
             "monic_centered",
-            model_from_parts(mc_c, mc_r, mc_bp, mc_h, mc_l),
+            model_dict_from_postgres(mc_c, mc_r, mc_bp, mc_h, mc_l),
             loads_json_nullable(sq_mc),
         ),
         (
             "reduced_model",
-            model_from_parts(rm_c, rm_r, rm_bp, rm_h, rm_l),
+            model_dict_from_postgres(rm_c, rm_r, rm_bp, rm_h, rm_l),
             loads_json_nullable(sq_rm),
         ),
     ]
