@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 MOCK_CONFIG = {"dbname": "test", "user": "test", "password": "test", "host": "localhost"}
 
-with patch("postgres_connector.load_config", return_value=MOCK_CONFIG), \
+with patch("dads.connectors.postgres.load_config", return_value=MOCK_CONFIG), \
      patch("psycopg2.connect"):
     from server import app
 

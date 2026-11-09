@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock, patch
 import pytest
-from postgres_connector import PostgresConnector
+from dads.connectors.postgres import PostgresConnector
 
 COMMON_MOCK_CONFIG = {
     "dbname": "test",
@@ -13,7 +13,7 @@ COMMON_MOCK_CONFIG = {
 
 
 @pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
-@patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_get_all_systems(mock_connect, mock_config):  # pylint: disable=unused-argument
     mock_conn = mock_connect.return_value
@@ -32,7 +32,7 @@ def test_get_all_systems(mock_connect, mock_config):  # pylint: disable=unused-a
 
 
 @pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
-@patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect", side_effect=Exception("fail"))
 def test_get_all_systems_connection_failure(
     mock_connect, mock_config
@@ -44,7 +44,7 @@ def test_get_all_systems_connection_failure(
 
 
 @pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
-@patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_get_system(mock_connect, mock_config):  # pylint: disable=unused-argument
     mock_conn = mock_connect.return_value
@@ -63,7 +63,7 @@ def test_get_system(mock_connect, mock_config):  # pylint: disable=unused-argume
     assert result["modelLabel"] == "1.a.b.1"
 
 
-@patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_get_system_no_result(
     mock_connect, mock_config
@@ -79,7 +79,7 @@ def test_get_system_no_result(
     assert result == {}
 
 
-@patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_get_selected_systems(
     mock_connect, mock_config
@@ -101,7 +101,7 @@ def test_get_selected_systems(
     assert result[1]["name"] == "SelectedSystem2"
 
 
-@patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_get_label_not_found(
     mock_connect, mock_config
@@ -117,7 +117,7 @@ def test_get_label_not_found(
     assert result is None
 
 
-# @patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+# @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 # @patch("psycopg2.connect")
 # def test_get_statistics(mock_connect, mock_config):
 #     mock_conn = mock_connect.return_value
@@ -141,7 +141,7 @@ def test_get_label_not_found(
 
 
 @pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
-@patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_get_statistics_empty_lists(
     mock_connect, mock_config
@@ -163,7 +163,7 @@ def test_get_statistics_empty_lists(
 
 
 @pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
-@patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_build_where_text(mock_connect, mock_config):  # pylint: disable=unused-argument
     connector = PostgresConnector()
@@ -196,7 +196,7 @@ def test_build_where_text(mock_connect, mock_config):  # pylint: disable=unused-
 
 
 @pytest.mark.xfail(strict=True, reason="pre-psycopg2.sql string API; needs rewrite")
-@patch("postgres_connector.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_build_where_text_empty(
     mock_connect, mock_config
