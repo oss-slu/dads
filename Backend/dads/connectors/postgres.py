@@ -5,13 +5,14 @@ manages  server data queries
 import psycopg2
 from psycopg2 import sql
 from dads.config import load_config
+from dads.connectors.base import DadsConnector
 
 
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
 # gets all systems from the database
 
-class PostgresConnector:
+class PostgresConnector(DadsConnector):
     """
     Class Docstring
     Manages connection to a PostgreSQL database and executes queries.
