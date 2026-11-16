@@ -1,6 +1,7 @@
 const { describe, it, afterEach } = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('fs')
+const http = require('http')
 const os = require('os')
 const path = require('path')
 const { startBackend, stopBackend } = require('../src/main/backend')
@@ -92,6 +93,33 @@ describe('backend', { skip: process.platform === 'win32' && 'fake backends are s
       assert.equal(err.output[19], '[backend] line 30')
       return true
     })
+  })
+
+  it('calls onExit with the code and output when the backend exits after it was ready', async () => {
+    // a /health that always reports the database is reachable, so the fake
+    // backend counts as ready
+    const server = http.createServer((req, res) => {
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify({ status: 'ok', db: true }))
+    })
+    await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
+    const healthUrl = `http://127.0.0.1:${server.address().port}/health`
+    process.env.PYTHON = fake('exit-after-ready.sh')
+
+    let onExit
+    const exited = new Promise((resolve) => { onExit = (...args) => resolve(args) })
+    try {
+      await start({ healthUrl, onExit })
+      const [code, signal, output] = await exited
+      assert.equal(code, 2)
+      assert.equal(signal, null)
+      assert.equal(output[0], '[backend] starting fake backend')
+      assert.match(output[1], /^backend ready after \d+ ms$/)
+      assert.equal(output[2], '[backend] fake backend crashed')
+      assert.equal(output.length, 3)
+    } finally {
+      server.close()
+    }
   })
 
   it('writes the output and the reason it failed to the log file', async () => {

@@ -60,7 +60,8 @@ function checkHealth (healthUrl) {
 // Runs `python server.py` and resolves once the backend is ready. Rejects if it
 // is not ready within `timeout` ms or exits first; the error's `output` has the
 // last OUTPUT_LINES lines. All output also goes to `logFile` if one is given.
-// `onExit` is called if the backend exits after it was ready.
+// `onExit(code, signal, output)` is called if the backend exits after it was
+// ready, with the same last lines of output.
 // Set PYTHON to pick the interpreter.
 function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFile, onExit } = {}) {
   const python = process.env.PYTHON || 'python'
@@ -143,8 +144,10 @@ function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFil
     // the backend printed before dying are already in `recent`
     proc.on('close', (code, signal) => {
       if (ready) {
+        // copy before our own exit line is added, like fail() does
+        const output = recent.slice()
         info(`backend exited (code ${code}, signal ${signal})`)
-        if (onExit) onExit(code, signal)
+        if (onExit) onExit(code, signal, output)
       } else {
         fail(`backend exited before it was ready (code ${code}, signal ${signal})`)
       }

@@ -38,6 +38,8 @@ $env:PYTHON='..\venv\Scripts\python.exe'; npm start
 
 If the backend isn't ready within 20 seconds, or exits before it is ready, the app shows an error with the last 20 lines of backend output and quits instead of opening a blank window. Common causes are the database not running, a wrong `PYTHON`, or another program already using port 5000 (on macOS, AirPlay Receiver can, see System Settings).
 
+If the backend stops while the app is open (it crashes or is killed), the app shows an error with its exit code and last lines of output, then quits. It does not restart the backend.
+
 Everything the backend prints is also written to `backend.log`, and the error shows the full path. It is overwritten each time the app starts.
 
 | OS | Log file |
@@ -84,7 +86,7 @@ cd desktop
 npm test
 ```
 
-The backend tests don't run the real backend. They point `PYTHON` at small shell scripts in `test/fake-backends` that sleep, ignore the stop signal, or exit right away, so they are skipped on Windows.
+The backend tests don't run the real backend. They point `PYTHON` at small shell scripts in `test/fake-backends` that sleep, ignore the stop signal, exit right away, or exit a second after starting, so they are skipped on Windows.
 
 ## Limitations
 
