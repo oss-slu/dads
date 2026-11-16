@@ -18,6 +18,7 @@ CORS(app, origins='*')
 
 connector = PostgresConnector()
 
+
 @app.errorhandler(Exception)
 def handle_error(e):
     error_id = str(uuid.uuid4())[:8]
@@ -29,17 +30,20 @@ def handle_error(e):
     }
     return jsonify(response), 500
 
+
 @app.route('/get_family', methods=['POST'])
 def get_family():
     target = request.get_json()
     data = connector.get_family(target['id'])
     return jsonify(data)
 
+
 # return all dynamical systems
 @app.route('/get_all_systems', methods=['POST', 'GET'])
 def data1():
     data = connector.get_all_systems()
     return jsonify(data)
+
 
 # expects json with attribute 'label' and value as the label of the system
 @app.route('/get_system', methods=['POST', 'GET'])
@@ -48,12 +52,14 @@ def data2():
     data = connector.get_system(target['id'])
     return jsonify(data)
 
+
 # expects json with attribute 'labels' and value as list of labels
 @app.route('/get_selected_systems', methods=['POST', 'GET'])
 def data3():
     target = request.get_json()
     data = connector.get_selected_systems(target['labels'])
     return jsonify(data)
+
 
 # expects json describing filters, returns the systems that satisfy filters
 # example call json data that would return systems with degree of 2 and 3,
@@ -68,6 +74,7 @@ def data4():
     }
     return jsonify(data)
 
+
 # expects json describing filters, returns stats on the systems that
 # satisfy those filters in an array
 @app.route('/get_statistics', methods=['POST', 'GET'])
@@ -77,10 +84,12 @@ def data5():
     data = connector.get_statistics(where_sql, params)
     return jsonify(data)
 
+
 @app.route('/get_all_families', methods=['POST', 'GET'])
 def data6():
     data = connector.get_all_families()
     return jsonify(data)
+
 
 @app.route('/get_filtered_families', methods=['POST'])
 def get_filtered_families():
@@ -88,11 +97,13 @@ def get_filtered_families():
     data = connector.get_filtered_families(filters)
     return jsonify(data)
 
+
 @app.route('/get_rational_periodic_data', methods=['POST', 'GET'])
 def data7():
     function_id = request.get_json()['function_id']
     data = connector.get_rational_periodic_data(function_id)
     return jsonify(data)
+
 
 @app.route('/get_label', methods=['POST', 'GET'])
 def data8():
@@ -100,11 +111,13 @@ def data8():
     label = connector.get_label(function_id)
     return jsonify({'label': label})
 
+
 @app.route('/get_graph_data', methods=['POST', 'GET'])
 def data9():
     graph_id = request.get_json()['graph_id']
     data = connector.get_graph_data(graph_id)
     return jsonify(data)
+
 
 @app.route('/get_graph_metadata', methods=['POST'])
 def get_graph_metadata():
@@ -114,6 +127,7 @@ def get_graph_metadata():
     metadata = connector.get_graph_metadata(graph_id)
     return jsonify(metadata)
 
+
 @app.route('/health', methods=['GET'])
 def health():
     # reconnect in case the database was not up yet when the server started
@@ -121,10 +135,12 @@ def health():
         connector.connect()
     return jsonify({"status": "ok", "db": connector.is_connection_active()}), 200
 
+
 # exits once stdin closes, so the backend does not outlive the desktop app
 def watch_stdin():
     sys.stdin.read()
     os.kill(os.getpid(), signal.SIGTERM)
+
 
 if __name__ == '__main__':
     if os.environ.get("DADS_WATCH_STDIN") and sys.stdin:
