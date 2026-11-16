@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -85,6 +86,100 @@ def test_resolve_data_version_rejects_invalid():
 
     with pytest.raises(ValueError, match="Invalid data version"):
         build_sqlite.resolve_data_version("banana")
+
+
+def test_resolve_data_version_rejects_invalid_month():
+    import pytest
+
+    with pytest.raises(ValueError, match="month must be 1-12"):
+        build_sqlite.resolve_data_version("2026.13.1")
+
+
+def test_resolve_data_version_rejects_zero_patch():
+    import pytest
+
+    with pytest.raises(ValueError, match="N must be at least 1"):
+        build_sqlite.resolve_data_version("2026.1.0")
+
+
+def test_resolve_data_version_rejects_zero_month():
+    import pytest
+
+    with pytest.raises(ValueError, match="month must be 1-12"):
+        build_sqlite.resolve_data_version("2026.0.0")
+
+
+def test_sqlite_row_count_mismatch_raises(monkeypatch, tmp_path):
+    import pytest
+
+    ini = tmp_path / "database.ini"
+    ini.write_text("x", encoding="utf-8")
+    dump = tmp_path / "dump.sql"
+    dump.write_text("x", encoding="utf-8")
+    monkeypatch.setattr(build_sqlite, "DATABASE_CONFIG", ini)
+    monkeypatch.setattr(build_sqlite, "DUMP_SQL_PATH", dump)
+
+    def fake_pg_counts(_pg_conn):
+        return {table: 10 for table in build_sqlite.EXPORT_TABLES}
+
+    def fake_sqlite_counts(_sqlite_conn):
+        counts = {table: 10 for table in build_sqlite.EXPORT_TABLES}
+        counts["citations"] = 9
+        return counts
+
+    monkeypatch.setattr(build_sqlite, "postgres_row_counts", fake_pg_counts)
+    monkeypatch.setattr(build_sqlite, "sqlite_row_counts", fake_sqlite_counts)
+
+    class DummyPgConn:
+        def close(self):
+            pass
+
+    class DummySqliteConn:
+        def commit(self):
+            pass
+
+        def close(self):
+            pass
+
+    def fake_connect_postgres():
+        return DummyPgConn()
+
+    def fake_sqlite_connect(_path):
+        return DummySqliteConn()
+
+    monkeypatch.setattr(build_sqlite, "connect_postgres", fake_connect_postgres)
+    monkeypatch.setattr(build_sqlite.sqlite3, "connect", fake_sqlite_connect)
+    monkeypatch.setattr(build_sqlite, "create_sqlite_schema", lambda _c: None)
+    monkeypatch.setattr(
+        build_sqlite,
+        "copy_citations",
+        lambda _p, _s: 10,
+    )
+    monkeypatch.setattr(build_sqlite, "copy_families", lambda _p, _s: 10)
+    monkeypatch.setattr(build_sqlite, "copy_graphs", lambda _p, _s: 10)
+    monkeypatch.setattr(build_sqlite, "copy_functions", lambda _p, _s: 10)
+    monkeypatch.setattr(
+        build_sqlite,
+        "copy_rational_preperiodic",
+        lambda _p, _s: 10,
+    )
+    monkeypatch.setattr(build_sqlite, "insert_metadata", lambda *_a, **_k: None)
+
+    output = build_sqlite.REPOSITORY_ROOT / "data" / "exports" / "test_mismatch.sqlite"
+    with pytest.raises(RuntimeError, match="Row count mismatch"):
+        build_sqlite.build_sqlite(output)
+
+
+def test_main_handles_sqlite_error(monkeypatch, capsys):
+    def boom(*_args, **_kwargs):
+        raise sqlite3.OperationalError("disk I/O error")
+
+    monkeypatch.setattr(sys, "argv", ["build_sqlite.py"])
+    monkeypatch.setattr(build_sqlite, "resolve_data_version", lambda _v: "2026.10.1")
+    monkeypatch.setattr(build_sqlite, "build_sqlite", boom)
+
+    assert build_sqlite.main() == 1
+    assert "disk I/O error" in capsys.readouterr().err
 
 
 def test_citations_label_is_unique_in_schema():
