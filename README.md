@@ -17,20 +17,7 @@ DADS is a web application designed for researchers to access information about a
 * Set up the PostgreSQL database.
 * Run the application using <code>python server.py</code> and <code>npm start</code> commands in backend and frontend directories respectively. 
 * Please see the installation guide for more details.
-
-### Backend Launcher
-The <code>desktop/launcher/start-backend.js</code> script starts the Python backend, waits until it is actually accepting requests, and shuts it down cleanly when you quit. It is the first piece of the desktop app, where the window should only open once the backend can answer.
-
-Run it from the repository root with <code>node desktop/launcher/start-backend.js</code>. It uses <code>python</code> by default; set the <code>PYTHON</code> environment variable to use another interpreter, for example <code>PYTHON=python3 node desktop/launcher/start-backend.js</code> on macOS. The database must be running and the Python dependencies installed.
-
-What it does:
-* Runs <code>python server.py</code> in the Backend directory and prints its output with a <code>[backend]</code> prefix.
-* Polls <code>http://127.0.0.1:5000/get_all_families</code> every 250 ms and prints <code>backend ready after N ms</code> on the first 200 response.
-* Gives up after 20 seconds, stops the backend, and exits with code 1 if it never becomes ready.
-* On Ctrl+C the backend is stopped and the script waits for it to exit, so no Python process is left behind.
-* If the backend dies on its own, the script prints its exit code and exits non-zero.
-
-Polling an endpoint is more reliable than sleeping for a fixed few seconds. Startup time varies with the machine and with how long the database takes to connect, so a fixed delay is either too short and races the backend or too long and wastes time on every launch. Checking a real route also confirms the backend can serve data, not just that the process started.
+* To run DynaBase as a desktop app, see <code>desktop/README.md</code>.
 
 ### Contributing
 We welcome contributions from the community. Please refer to the Contributing Guide for more information.
@@ -48,6 +35,15 @@ https://github.com/oss-slu/dads/blob/main/Contributing_Guide.txt
 - AboutPage.js - Contains static information about the site
 - newDataTable.js - Renders a dynamic table that displays systems based on the search and filter criteria, complete with pagination functionality.
 - Topbar.js - Contains navigation logic for the site 
+
+### SBOM
+Each run of the [Backend Python Tests](https://github.com/oss-slu/dads/actions/workflows/python-testing.yml) workflow generates an SPDX JSON SBOM for the backend. It lists the packages in `requirements.txt` and the packages they depend on, at the versions the tests used. Download `dads-backend-sbom` from the **Artifacts** section of a run summary, or with the GitHub CLI: `gh run download <run-id> -R oss-slu/dads -n dads-backend-sbom`.
+
+On pushes to `main`, the workflow also signs a build provenance attestation for the SBOM. To check that a downloaded SBOM came from this workflow and hasn't been changed:
+```
+gh attestation verify ./dads-backend-sbom.spdx.json --owner oss-slu
+```
+SBOMs from pull request runs are not attested.
 
 ### License
 This project is licensed under the terms of the MIT license.

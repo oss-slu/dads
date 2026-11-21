@@ -9,8 +9,6 @@ import { useEffect, useState } from 'react';
 import { get_label } from '../../api/routes';
 
 export default function RationalTwistsTable({ data }) {
-  console.log(data);
-
   const ModelLabel = ({ id }) => {
     const [modelLabel, setModelLabel] = useState(null);
   
