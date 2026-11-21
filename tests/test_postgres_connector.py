@@ -51,9 +51,20 @@ def test_get_all_systems_connection_failure(
         connector.get_all_systems()
 
 
+@patch.object(
+    PostgresConnector,
+    "_fetch_models_by_function_ids",
+    return_value={
+        123: {
+            "original_model": None,
+            "reduced_model": None,
+            "monic_centered": None,
+        }
+    },
+)
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
-def test_get_system(mock_connect, mock_config):  # pylint: disable=unused-argument
+def test_get_system(mock_connect, mock_config, mock_models):  # pylint: disable=unused-argument
     mock_conn = mock_connect.return_value
     mock_cur = MagicMock()
     mock_conn.cursor.return_value.__enter__.return_value = mock_cur

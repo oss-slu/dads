@@ -8,11 +8,7 @@ from dads.config import load_config
 from dads.connectors.base import DadsConnector
 from dads.services.formatting import format_search_result_row
 from dads.services.labels import construct_label
-from dads.services.models import (
-    hydrate_models_in_row,
-    hydrate_models_in_rows,
-    model_field_aliases,
-)
+from dads.services.models import MODEL_NAMES, hydrate_models_in_row, model_field_aliases
 
 
 # important do not store password when dealing with real database
@@ -126,12 +122,51 @@ class PostgresConnector(DadsConnector):
     def construct_label(self, data):
         return construct_label(data)
 
-    def get_all_systems(self):
+    def _fetch_models_by_function_ids(self, function_ids):
+        if not function_ids:
+            return {}
         table = sql.Identifier('f')
-        query = sql.SQL("SELECT f.*, {model_cols} FROM functions_dim_1_nf f").format(
-            model_cols=model_field_aliases(table),
+        query = sql.SQL("""
+            SELECT f.function_id, {model_cols}
+            FROM functions_dim_1_nf f
+            WHERE f.function_id = ANY(%s)
+        """).format(model_cols=model_field_aliases(table))
+        rows = self.try_query(query, (list(function_ids),), fetch="all") or []
+        model_map = {}
+        for row in rows:
+            fid = row.pop('function_id')
+            hydrate_models_in_row(row)
+            model_map[fid] = {name: row[name] for name in MODEL_NAMES}
+        return model_map
+
+    def _apply_model_objects_to_rows(self, rows):
+        if not rows:
+            return rows
+        model_map = self._fetch_models_by_function_ids(
+            [row['function_id'] for row in rows if row.get('function_id') is not None]
         )
-        return hydrate_models_in_rows(self.try_query(query))
+        for row in rows:
+            models = model_map.get(row.get('function_id'), {})
+            for name in MODEL_NAMES:
+                row.pop(name, None)
+                row[name] = models.get(name)
+        return rows
+
+    def _apply_model_objects_to_row(self, row):
+        if not row or row.get('function_id') is None:
+            return row
+        models = self._fetch_models_by_function_ids([row['function_id']]).get(
+            row['function_id'], {}
+        )
+        for name in MODEL_NAMES:
+            row.pop(name, None)
+            row[name] = models.get(name)
+        return row
+
+    def get_all_systems(self):
+        query = sql.SQL("SELECT * FROM functions_dim_1_nf")
+        rows = self.try_query(query) or []
+        return self._apply_model_objects_to_rows(rows)
 
     def get_all_families(self):
         query = sql.SQL("SELECT * FROM families_dim_1_nf")
@@ -139,21 +174,19 @@ class PostgresConnector(DadsConnector):
 
     # gets a system identified by its label, input is string
     def get_system(self, function_id):
-        table = sql.Identifier('f')
         query = sql.SQL("""
-            SELECT f.base_field_label AS functions_base_field_label, f.*, {model_cols},
-                   r.*, g.*, c.*
+            SELECT f.base_field_label AS functions_base_field_label, *
             FROM functions_dim_1_nf f
             JOIN rational_preperiodic_dim_1_nf r ON f.function_id = r.function_id
             JOIN graphs_dim_1_nf g ON r.graph_id = g.graph_id
             LEFT JOIN LATERAL UNNEST(COALESCE(f.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true
             LEFT JOIN citations c ON c.id = citation_id
             WHERE f.function_id = %s
-        """).format(model_cols=model_field_aliases(table))
+        """)
         result = self.try_query(query, (function_id,), fetch="one")
 
         if result:
-            hydrate_models_in_row(result)
+            self._apply_model_objects_to_row(result)
             result['modelLabel'] = self.construct_label(result)
             return result
         return {}
@@ -185,22 +218,19 @@ class PostgresConnector(DadsConnector):
     def get_selected_systems(self, labels):
         if not labels:
             return []
-        table = sql.Identifier('f')
         query = sql.SQL("""
-            SELECT f.*, {model_cols} FROM functions_dim_1_nf f
+            SELECT * FROM functions_dim_1_nf
             WHERE (
-                CAST(f.base_field_degree AS TEXT) || '.' ||
-                TRIM(f.sigma_one) || '.' ||
-                TRIM(f.sigma_two) || '.' ||
-                CAST(f.ordinal AS TEXT)
-            ) IN ({in_list})
+                CAST(base_field_degree AS TEXT) || '.' ||
+                TRIM(sigma_one) || '.' ||
+                TRIM(sigma_two) || '.' ||
+                CAST(ordinal AS TEXT)
+            ) IN ({})
         """).format(
-            model_cols=model_field_aliases(table),
-            in_list=sql.SQL(', ').join(sql.Placeholder() * len(labels)),
+            sql.SQL(', ').join(sql.Placeholder() * len(labels))
         )
-        return hydrate_models_in_rows(
-            self.try_query(query, labels, fetch="all")
-        )
+        rows = self.try_query(query, labels, fetch="all") or []
+        return self._apply_model_objects_to_rows(rows)
 
     def get_statistics(self, where_sql, params):
         query = sql.SQL("""
