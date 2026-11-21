@@ -66,6 +66,10 @@ class DadsConnector(ABC):
         """Return whether the database connection can run a simple query."""
 
     @abstractmethod
+    def connect(self) -> None:
+        """Open or refresh the database connection."""
+
+    @abstractmethod
     def build_where_text(
         self, filters: dict[str, Any]
     ) -> Tuple[sql.Composed, list[Any]]:
