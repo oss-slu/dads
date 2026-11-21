@@ -42,11 +42,45 @@
     "mathscinet": "MR1617987",
     "max_tail": 2,
     "modelLabel": "1.a6935bbd.880302df.1",
-    "monic_centered": "(\"{{1,0,-2},{0,0,1}}\",1,{},,1.1.1.1)",
+    "monic_centered": {
+      "bad_primes": [],
+      "base_field_label": "1.1.1.1",
+      "coeffs": [
+        [
+          "1",
+          "0",
+          "-2"
+        ],
+        [
+          "0",
+          "0",
+          "1"
+        ]
+      ],
+      "height": null,
+      "resultant": "1"
+    },
     "newton_polynomial_coeffs": null,
     "num_components": 3,
     "ordinal": 1,
-    "original_model": "(\"{{1,0,-2},{0,0,1}}\",1,{},0.6931472,1.1.1.1)",
+    "original_model": {
+      "bad_primes": [],
+      "base_field_label": "1.1.1.1",
+      "coeffs": [
+        [
+          "1",
+          "0",
+          "-2"
+        ],
+        [
+          "0",
+          "0",
+          "1"
+        ]
+      ],
+      "height": 0.693147,
+      "resultant": "1"
+    },
     "periodic_cardinality": 3,
     "periodic_cycles": [
       1,
@@ -74,7 +108,24 @@
       ]
     ],
     "rational_twists": null,
-    "reduced_model": "(\"{{1,0,-2},{0,0,1}}\",1,{},0.6931472,1.1.1.1)",
+    "reduced_model": {
+      "bad_primes": [],
+      "base_field_label": "1.1.1.1",
+      "coeffs": [
+        [
+          "1",
+          "0",
+          "-2"
+        ],
+        [
+          "0",
+          "0",
+          "1"
+        ]
+      ],
+      "height": 0.693147,
+      "resultant": "1"
+    },
     "sigma_one": "a6935bbd",
     "sigma_two": "880302df",
     "type": 1,

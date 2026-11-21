@@ -37,11 +37,49 @@
     "mathscinet": "MR1617987",
     "max_tail": 0,
     "modelLabel": "1.c135350d.49a1878b.1",
-    "monic_centered": "(\"{{1,0,43/27},{0,0,1}}\",1,{3},,1.1.1.1)",
+    "monic_centered": {
+      "bad_primes": [
+        3
+      ],
+      "base_field_label": "1.1.1.1",
+      "coeffs": [
+        [
+          "1",
+          "0",
+          "43/27"
+        ],
+        [
+          "0",
+          "0",
+          "1"
+        ]
+      ],
+      "height": null,
+      "resultant": "1"
+    },
     "newton_polynomial_coeffs": null,
     "num_components": 1,
     "ordinal": 1,
-    "original_model": "(\"{{27,0,43},{0,0,27}}\",531441,{3},3.7612002,1.1.1.1)",
+    "original_model": {
+      "bad_primes": [
+        3
+      ],
+      "base_field_label": "1.1.1.1",
+      "coeffs": [
+        [
+          "27",
+          "0",
+          "43"
+        ],
+        [
+          "0",
+          "0",
+          "27"
+        ]
+      ],
+      "height": 3.7612,
+      "resultant": "531441"
+    },
     "periodic_cardinality": 1,
     "periodic_cycles": [
       1
