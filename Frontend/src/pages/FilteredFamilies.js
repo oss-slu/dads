@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { get_filtered_families } from '../api/routes';
 import PaginatedDataTable from "../components/PaginatedDataTable";
 import Grid from "@mui/material/Grid";
@@ -21,34 +21,36 @@ function FilteredFamilies() {
     const [triggerFetch, setTriggerFetch] = useState(false);
     const [filtersApplied, setFiltersApplied] = useState([]);
 
-    // Fetch families with current filters
-    const fetchFilteredFamilies = async () => {
-        try {
-            const familyFilters = {
-                family_id: filters.family_id,
-                name: filters.family_name,
-                degree: filters.family_degree,
+    // Always holds the latest filters, so the fetch effect can read them
+    // without refetching on every keystroke.
+    const filtersRef = useRef(filters);
+    filtersRef.current = filters;
 
-                dimension: filters.family_custom_dimension === ""
-                    ? filters.family_dimension
-                    : [...filters.family_dimension, Number(filters.family_custom_dimension)],
-                is_polynomial: filters.family_is_polynomial,
-                base_field_label: filters.family_base_field_label
-            };
-            const result = await get_filtered_families(familyFilters);
-            setFamilies(result.data);
-            setFiltersApplied({ ...familyFilters });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
+    // Fetch families on mount and whenever filters are applied or cleared.
     useEffect(() => {
-        fetchFilteredFamilies();
-    }, []);
+        let ignore = false;
+        const currentFilters = filtersRef.current;
+        const familyFilters = {
+            family_id: currentFilters.family_id,
+            name: currentFilters.family_name,
+            degree: currentFilters.family_degree,
 
-    useEffect(() => {
-        fetchFilteredFamilies();
+            dimension: currentFilters.family_custom_dimension === ""
+                ? currentFilters.family_dimension
+                : [...currentFilters.family_dimension, Number(currentFilters.family_custom_dimension)],
+            is_polynomial: currentFilters.family_is_polynomial,
+            base_field_label: currentFilters.family_base_field_label
+        };
+        get_filtered_families(familyFilters)
+            .then((result) => {
+                if (ignore) return;
+                setFamilies(result.data);
+                setFiltersApplied({ ...familyFilters });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        return () => { ignore = true; };
     }, [triggerFetch]);
 
     // Handler for text inputs
