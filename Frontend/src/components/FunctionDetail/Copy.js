@@ -1,28 +1,10 @@
 import React, { useState } from 'react';
 import {Button } from 'react-bootstrap';
-import SageMathCell from './SageMathCell';
+import DirectedGraph from './DirectedGraph';
+import { generateAdjacencyMatrix } from './graphEdges';
 import Modal from 'react-bootstrap/Modal';
 
 const Copy = ({ edges, type }) => {
-
-    const generateAdjacencyMatrix = (adjacencyString) => {
-	const adjacencyList = adjacencyString.replace(/\[|\]/g, '').split(', ');
-
-	const adjacencyListInt = adjacencyList.map(Number);
-
-
-	const numVertices = adjacencyList.length;
-
-	const adjacencyMatrix = Array.from({ length: numVertices }, () => Array(numVertices).fill(0));
-
-	for (let i = 0; i < adjacencyListInt.length; i++) {
-	    const adjacentVertex = adjacencyListInt[i];
-	    adjacencyMatrix[i][adjacentVertex] = 1;
-	}
-
-	return adjacencyMatrix;
-    }
-    
     const matrix = generateAdjacencyMatrix(edges);
     const dimNum = matrix.length;
 
@@ -53,11 +35,9 @@ const Copy = ({ edges, type }) => {
   };
   
   const [showGraphModal, setShowGraphModal] = useState(false);
-	const [edgesCommand, setEdgesCommand] = useState('');
     const handleCloseGraph = () => setShowGraphModal(false);
     const handleShowGraph = () => {
         setShowGraphModal(true);
-        setEdgesCommand(stringToCopy);
     };
 
   return (
@@ -67,9 +47,7 @@ const Copy = ({ edges, type }) => {
                     <Modal.Title>Directed Graph</Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{maxHeight:'60vh',overflow:'scroll'}}>
-					<SageMathCell
-					command={edgesCommand}
-					></SageMathCell>
+                <DirectedGraph edges={edges} />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseGraph}>

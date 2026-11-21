@@ -91,4 +91,7 @@ def register_routes(application):
     @application.route('/health', methods=['GET'])
     def health():
         connector = get_connector()
+        # reconnect in case the database was not up yet when the server started
+        if not connector.is_connection_active():
+            connector.connect()
         return jsonify({"status": "ok", "db": connector.is_connection_active()}), 200
