@@ -8,6 +8,11 @@ from dads.config import load_config
 from dads.connectors.base import DadsConnector
 from dads.services.formatting import format_search_result_row
 from dads.services.labels import construct_label
+from dads.services.models import (
+    hydrate_models_in_row,
+    hydrate_models_in_rows,
+    model_field_aliases,
+)
 
 
 # important do not store password when dealing with real database
@@ -122,8 +127,11 @@ class PostgresConnector(DadsConnector):
         return construct_label(data)
 
     def get_all_systems(self):
-        query = sql.SQL("SELECT * FROM functions_dim_1_nf")
-        return self.try_query(query)
+        table = sql.Identifier('f')
+        query = sql.SQL("SELECT f.*, {model_cols} FROM functions_dim_1_nf f").format(
+            model_cols=model_field_aliases(table),
+        )
+        return hydrate_models_in_rows(self.try_query(query))
 
     def get_all_families(self):
         query = sql.SQL("SELECT * FROM families_dim_1_nf")
@@ -131,18 +139,21 @@ class PostgresConnector(DadsConnector):
 
     # gets a system identified by its label, input is string
     def get_system(self, function_id):
+        table = sql.Identifier('f')
         query = sql.SQL("""
-            SELECT f.base_field_label AS functions_base_field_label, *
+            SELECT f.base_field_label AS functions_base_field_label, f.*, {model_cols},
+                   r.*, g.*, c.*
             FROM functions_dim_1_nf f
             JOIN rational_preperiodic_dim_1_nf r ON f.function_id = r.function_id
             JOIN graphs_dim_1_nf g ON r.graph_id = g.graph_id
             LEFT JOIN LATERAL UNNEST(COALESCE(f.citations, ARRAY[NULL]::INTEGER[])) AS citation_id ON true
             LEFT JOIN citations c ON c.id = citation_id
             WHERE f.function_id = %s
-        """)
+        """).format(model_cols=model_field_aliases(table))
         result = self.try_query(query, (function_id,), fetch="one")
 
         if result:
+            hydrate_models_in_row(result)
             result['modelLabel'] = self.construct_label(result)
             return result
         return {}
@@ -174,18 +185,22 @@ class PostgresConnector(DadsConnector):
     def get_selected_systems(self, labels):
         if not labels:
             return []
+        table = sql.Identifier('f')
         query = sql.SQL("""
-            SELECT * FROM functions_dim_1_nf
+            SELECT f.*, {model_cols} FROM functions_dim_1_nf f
             WHERE (
-                CAST(base_field_degree AS TEXT) || '.' ||
-                TRIM(sigma_one) || '.' ||
-                TRIM(sigma_two) || '.' ||
-                CAST(ordinal AS TEXT)
-            ) IN ({})
+                CAST(f.base_field_degree AS TEXT) || '.' ||
+                TRIM(f.sigma_one) || '.' ||
+                TRIM(f.sigma_two) || '.' ||
+                CAST(f.ordinal AS TEXT)
+            ) IN ({in_list})
         """).format(
-            sql.SQL(', ').join(sql.Placeholder() * len(labels))
+            model_cols=model_field_aliases(table),
+            in_list=sql.SQL(', ').join(sql.Placeholder() * len(labels)),
         )
-        return self.try_query(query, labels, fetch="all")
+        return hydrate_models_in_rows(
+            self.try_query(query, labels, fetch="all")
+        )
 
     def get_statistics(self, where_sql, params):
         query = sql.SQL("""
