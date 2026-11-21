@@ -9,3 +9,6 @@ import os
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Backend'))
     )
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'scripts'))
+    )

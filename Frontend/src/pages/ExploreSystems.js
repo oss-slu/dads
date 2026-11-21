@@ -12,7 +12,7 @@ import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import PaginatedDataTable from "../components/PaginatedDataTable";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { get_filtered_systems, get_selected_systems, get_systems, get_families } from '../api/routes';
 import ReportGeneralError from '../errorreport/ReportGeneralError';
 import ReportMajorError from '../errorreport/ReportMajorError';
@@ -31,12 +31,70 @@ import HelpBox from '../components/FunctionDetail/HelpBox';
 
 
 
+const PAGE_SIZE_OPTIONS = ['10', '20', '50', '100', 'All'];
+
+// Fetches systems for the given filters. Resolves to the data the page needs,
+// or null on error. Lives outside the component so effects don't depend on it.
+async function fetchFilteredSystems(filters) {
+    try {
+        const result = await get_filtered_systems(
+            {
+                degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)],
+                N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
+                is_polynomial: filters.is_polynomial,
+                is_Lattes: filters.is_Lattes,
+                is_Chebyshev: filters.is_Chebyshev,
+                is_Newton: filters.is_Newton,
+                is_pcf: filters.is_pcf,
+                periodic_cardinality: filters.periodic_cardinality,
+                periodic_cycles: (filters.periodic_cycles),
+                automorphism_group_cardinality: filters.automorphism_group_cardinality,
+                base_field_label: filters.base_field_label,
+                base_field_degree: filters.base_field_degree,
+                indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension,
+                family: filters.family,
+                preperiodic_cardinality: filters.rationalPreperiodicCardinality,
+                num_components: filters.rationalPreperiodicComponents,
+                max_tail: filters.rationalPreperiodicLongestTail,
+                cp_cardinality: filters.cp_cardinality,
+                positive_in_degree: filters.positive_in_degree,
+                sigma_one: filters.sigma_one,
+                sigma_two: filters.sigma_two,
+                model_label: filters.model_label,
+                journal_label: filters.journal_label
+            }
+        );
+        const statistics = result.data['statistics'];
+        return {
+            results: result.data['results'],
+            appliedFilters: { ...filters },
+            stats: {
+                numMaps: statistics[0],
+                avgAUT: Math.round(statistics[1] * 100) / 100,
+                numPCF: statistics[2],
+                avgHeight: Math.round(statistics[3] * 100) / 100,
+                avgResultant: Math.round(statistics[4] * 100) / 100,
+                avgPCSet: Math.round(statistics[5] * 100) / 100,
+                largestPCSet: statistics[6],
+                avgNumPeriodic: Math.round(statistics[7] * 100) / 100,
+                mostPeriodic: statistics[8],
+                largestPeriodicCycle: statistics[9],
+                avgNumPrePeriodic: Math.round(statistics[10] * 100) / 100,
+                mostPreperiodic: statistics[11],
+                largestComp: statistics[12]
+            }
+        };
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 function ExploreSystems() {
 
     // State Hooks
     const [optionsLoading, setOptionsLoading] = useState(true);
     const [systems, setSystems] = useState(null);
-    const [pagesPer, setPagesPer] = useState('20');
     const [pagesDisplay, setPagesDisplay] = useState('20');
     const [triggerFetch, setTriggerFetch] = useState(false);
     const [majorError, setMajorError] = useState('');
@@ -57,6 +115,16 @@ function ExploreSystems() {
     // Context Hooks
     const { filters, setFilters } = useFilters();
 
+    // Always holds the latest filters, so the fetch effect below can read them
+    // without listing `filters` as a dependency (which would refetch on every keystroke).
+    const filtersRef = useRef(filters);
+    filtersRef.current = filters;
+
+    // "All" is stored as-is; its numeric page size comes from the current results.
+    const pagesPer = pagesDisplay === 'All'
+        ? String(Math.max(systems?.length ?? 0, 1))
+        : pagesDisplay;
+
     // Menu setup
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -70,6 +138,7 @@ function ExploreSystems() {
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
+    // On mount: restore saved state and load the family list once.
     useEffect(() => {
         const savedFilters = sessionStorage.getItem('filters');
         const savedPage = sessionStorage.getItem('currentPage');
@@ -78,6 +147,8 @@ function ExploreSystems() {
         if (savedFilters) {
             const parsedFilters = JSON.parse(savedFilters);
             setFilters(parsedFilters);
+            // Let the first systems fetch use the restored filters.
+            filtersRef.current = parsedFilters;
         }
 
         if (savedPage) {
@@ -85,17 +156,45 @@ function ExploreSystems() {
         }
 
         if (savedResultsPerPage) {
-            setPagesPer(savedResultsPerPage);
-            setPagesDisplay(savedResultsPerPage === systems?.length.toString() ? 'All' : savedResultsPerPage);
+            // Older sessions stored the result count for "All"; treat any non-standard size as "All".
+            setPagesDisplay(PAGE_SIZE_OPTIONS.includes(savedResultsPerPage) ? savedResultsPerPage : 'All');
         }
 
-        fetchFilteredSystems();
-        fetchFamilies();
-    }, []);
+        let ignore = false;
+        get_families()
+            .then((result) => {
+                if (ignore) return;
+                const autocompleteOptions = result.data.map((family) => ({
+                    id: Array.isArray(family) ? family[0] : family.family_id,
+                    name: Array.isArray(family) ? family[1] : family.name,
+                }));
+                setFamilies(autocompleteOptions);
+                setOptionsLoading(false);
+            })
+            .catch((error) => {
+                if (ignore) return;
+                console.log(error);
+                setOptionsLoading(false);
+            });
+        return () => { ignore = true; };
+    }, [setFilters, setPage]);
 
+    // Fetch systems on mount and whenever filters are applied or cleared.
     useEffect(() => {
-        fetchFilteredSystems();
-        fetchFamilies();
+        let ignore = false;
+        fetchFilteredSystems(filtersRef.current).then((data) => {
+            if (ignore) return;
+            if (data === null) {
+                setSystems(null);
+                setMajorError("There was an error while fetching the information requested. Please contact the system administrator.");
+                setOpenMajorErrorModal(true);
+                return;
+            }
+            setSystems(data.results);
+            setFiltersApplied(data.appliedFilters);
+            setStat((previousState) => ({ ...previousState, ...data.stats }));
+        });
+        return () => { ignore = true; };
     }, [triggerFetch]);
 
     // Handler Functions
@@ -125,9 +224,8 @@ function ExploreSystems() {
     };
 
     const handlePagePerChange = (event) => {
-        const value = event.target.value === 'All' ? systems?.length.toString() : event.target.value;
-        setPagesPer(value);
-        setPagesDisplay(event.target.value === 'All' ? 'All' : value);
+        const value = event.target.value;
+        setPagesDisplay(value);
         sessionStorage.setItem('resultsPerPage', value);
     };
 
@@ -144,7 +242,6 @@ function ExploreSystems() {
     const sendFilters = () => {
         setPage(1);
         setSystems(null);
-        fetchFilteredSystems();
         setTriggerFetch(prev => !prev);
     };
 
@@ -152,78 +249,6 @@ function ExploreSystems() {
         setFilters(defaultFilters);
         setTriggerFetch(prev => !prev);
         setPage(1);
-    };
-
-    // API Call Functions
-    const fetchFamilies = async () => {
-        try {
-            const result = await get_families()
-            const autocompleteOptions = result.data.map((family) => ({
-                id: Array.isArray(family) ? family[0] : family.family_id,
-                name: Array.isArray(family) ? family[1] : family.name,
-            }));
-            setFamilies(autocompleteOptions)
-            setOptionsLoading(false)
-        }
-        catch (error) {
-            console.log(error)
-            setOptionsLoading(false);
-        }
-    }
-    const fetchFilteredSystems = async () => {
-        try {
-            const result = await get_filtered_systems(
-                {
-                    degree: filters.customDegree === "" ? filters.degree : [...filters.degree, Number(filters.customDegree)],
-                    N: filters.customDimension === "" ? filters.dimension : [...filters.dimension, Number(filters.customDimension)],
-                    is_polynomial: filters.is_polynomial,
-                    is_Lattes: filters.is_Lattes,
-                    is_Chebyshev: filters.is_Chebyshev,
-                    is_Newton: filters.is_Newton,
-                    is_pcf: filters.is_pcf,
-                    periodic_cardinality: filters.periodic_cardinality,
-                    periodic_cycles: (filters.periodic_cycles),
-                    automorphism_group_cardinality: filters.automorphism_group_cardinality,
-                    base_field_label: filters.base_field_label,
-                    base_field_degree: filters.base_field_degree,
-                    indeterminacy_locus_dimension: filters.indeterminacy_locus_dimension,
-                    family: filters.family,
-                    preperiodic_cardinality: filters.rationalPreperiodicCardinality,
-                    num_components: filters.rationalPreperiodicComponents,
-                    max_tail: filters.rationalPreperiodicLongestTail,
-                    cp_cardinality: filters.cp_cardinality,
-                    positive_in_degree: filters.positive_in_degree,
-                    sigma_one: filters.sigma_one,
-                    sigma_two: filters.sigma_two,
-                    model_label: filters.model_label,
-                    journal_label: filters.journal_label
-                }
-            )
-            setSystems(result.data['results']);
-            setFiltersApplied({...filters})
-            setStat((previousState => {
-                return { ...previousState, 
-                        numMaps: result.data['statistics'][0], 
-                        avgAUT: Math.round(result.data['statistics'][1] * 100) / 100, 
-                        numPCF: result.data['statistics'][2], 
-                        avgHeight: Math.round(result.data['statistics'][3] * 100) / 100, 
-                        avgResultant: Math.round(result.data['statistics'][4] * 100) / 100, 
-                        avgPCSet: Math.round(result.data['statistics'][5] * 100) / 100, 
-                        largestPCSet: result.data['statistics'][6],
-                        avgNumPeriodic: Math.round(result.data['statistics'][7] * 100) / 100,
-                        mostPeriodic: result.data['statistics'][8],
-                        largestPeriodicCycle: result.data['statistics'][9],
-                        avgNumPrePeriodic: Math.round(result.data['statistics'][10] * 100) / 100,
-                        mostPreperiodic: result.data['statistics'][11],
-                        largestComp: result.data['statistics'][12]
-                    }
-            }))
-        } catch (error) {
-            setSystems(null);
-            reportMajorError("There was an error while fetching the information requested. Please contact the system administrator.");
-            connectionStatus = false;
-            console.log(error)
-        }
     };
 
     // Utility Functions

@@ -66,6 +66,18 @@ def resolve_data_version(cli_value):
             f"Invalid data version '{cli_value}': expected YYYY.M.N "
             "(e.g. 2026.11.1)"
         )
+    parts = cli_value.split(".")
+    year, month, patch = int(parts[0]), int(parts[1]), int(parts[2])
+    if month < 1 or month > 12:
+        raise ValueError(
+            f"Invalid data version '{cli_value}': month must be 1-12, got {month}"
+        )
+    if patch < 1:
+        raise ValueError(
+            f"Invalid data version '{cli_value}': N must be at least 1, got {patch}"
+        )
+    if year < 1:
+        raise ValueError(f"Invalid data version '{cli_value}': year must be positive")
     return cli_value
 
 
@@ -504,6 +516,16 @@ def postgres_row_counts(pg_conn):
     return counts
 
 
+def sqlite_row_counts(sqlite_conn):
+    counts = {}
+    for table in EXPORT_TABLES:
+        row = sqlite_conn.execute(
+            f"SELECT COUNT(*) FROM {table}"
+        ).fetchone()
+        counts[table] = row[0]
+    return counts
+
+
 def temporary_output_path(output_path):
     """Path for a partial build; replaced into place only after verification."""
     return output_path.with_name(output_path.name + ".tmp")
@@ -548,11 +570,17 @@ def build_sqlite(output_path, data_version=DEFAULT_DATA_VERSION):
         sqlite_conn.commit()
 
         pg_counts = postgres_row_counts(pg_conn)
-        for table, row_count in counts.items():
-            if row_count != pg_counts[table]:
+        sqlite_counts = sqlite_row_counts(sqlite_conn)
+        for table in EXPORT_TABLES:
+            if sqlite_counts[table] != pg_counts[table]:
                 raise RuntimeError(
                     f"Row count mismatch for {table}: "
-                    f"sqlite={row_count} postgres={pg_counts[table]}"
+                    f"sqlite={sqlite_counts[table]} postgres={pg_counts[table]}"
+                )
+            if counts[table] != sqlite_counts[table]:
+                raise RuntimeError(
+                    f"Row count mismatch for {table}: "
+                    f"copy reported {counts[table]} sqlite has {sqlite_counts[table]}"
                 )
 
         sqlite_conn.close()
@@ -582,7 +610,13 @@ def main():
 
     try:
         counts, output_path = build_sqlite(arguments.out, data_version=data_version)
-    except (FileNotFoundError, OSError, psycopg2.Error, RuntimeError) as error:
+    except (
+        FileNotFoundError,
+        OSError,
+        psycopg2.Error,
+        RuntimeError,
+        sqlite3.Error,
+    ) as error:
         print(f"Error: {error}", file=sys.stderr)
         return 1
 

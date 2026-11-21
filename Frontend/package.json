@@ -12,11 +12,11 @@
     "@mui/material": "^5.11.12",
     "axios": "^1.12.0",
     "bootstrap": "^5.3.3",
+    "cytoscape": "^3.34.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
     "react-dom": "^18.2.0",
     "react-pdf": "^10.2.0",
-    "react-router": "^7.9.6",
     "react-router-dom": "^6.8.2",
     "react-scripts": "^5.0.1"
   },

@@ -1,0 +1,15 @@
+{
+  "body": {
+    "cardinality": 0,
+    "edges": [],
+    "graph_id": 10,
+    "max_tail": 0,
+    "num_components": 0,
+    "periodic_cardinality": 0,
+    "periodic_cycles": [],
+    "positive_in_degree": 0,
+    "preperiodic_components": [],
+    "type": 1
+  },
+  "status_code": 200
+}
