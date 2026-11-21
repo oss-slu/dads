@@ -180,3 +180,21 @@ def test_build_where_text_empty(
     where_sql, params = connector.build_where_text({})
     assert where_sql == sql.SQL("")
     assert params == []
+
+
+@patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
+@patch("psycopg2.connect")
+def test_build_where_text_family_filter(
+    mock_connect, mock_config
+):  # pylint: disable=unused-argument
+    mock_conn = mock_connect.return_value
+    connector = PostgresConnector()
+    connector.connection = mock_conn
+
+    where_sql, params = connector.build_where_text({"family": [1]})
+    fragment = where_sql.as_string(mock_conn)
+    assert "family &&" in fragment
+    assert params == [[1]]
+
+    where_sql_two, params_two = connector.build_where_text({"family": [1, 2]})
+    assert params_two == [[1, 2]]
