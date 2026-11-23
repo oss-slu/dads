@@ -167,7 +167,7 @@ def test_build_where_text(mock_connect, mock_config):  # pylint: disable=unused-
 
     where_sql, params = connector.build_where_text(filters)
     assert where_sql != sql.SQL("")
-    assert params == [2, 3, 4, True, False, True, True, "5", "2"]
+    assert params == [3, 4, True, False, True, True, "5", "2"]
 
 
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
@@ -180,3 +180,29 @@ def test_build_where_text_empty(
     where_sql, params = connector.build_where_text({})
     assert where_sql == sql.SQL("")
     assert params == []
+
+
+@pytest.mark.parametrize(
+    ("filters", "families", "expected_sql", "expected_params"),
+    [
+        ({"is_Lattes": [True]}, False, ' WHERE "f"."is_lattes" IN (%s)', [True]),
+        ({"is_Chebyshev": [False]}, False, ' WHERE "f"."is_chebyshev" IN (%s)', [False]),
+        ({"is_Newton": [True]}, False, ' WHERE "f"."is_newton" IN (%s)', [True]),
+        ({"N": [1, 2]}, False, "", []),
+        ({"N": [2]}, False, " WHERE FALSE", []),
+        ({"preperiodic_cardinality": "5"}, False, ' WHERE "g"."cardinality" = %s', [5]),
+        ({"degree": [2]}, True, ' WHERE "degree" IN (%s)', [2]),
+        ({"base_field_label": "1.1.1.1"}, True, ' WHERE "base_field_label" ILIKE %s', ["%1.1.1.1%"]),
+        ({"dimension": [1]}, True, "", []),
+        ({"dimension": [2], "degree": [2]}, True, ' WHERE FALSE AND "degree" IN (%s)', [2]),
+    ],
+)
+def test_build_where_text_search_filters(filters, families, expected_sql, expected_params):
+    with patch.object(PostgresConnector, "connect"):
+        connector = PostgresConnector()
+
+    where_sql, params = connector.build_where_text(filters, families=families)
+
+    with patch("psycopg2.extensions.quote_ident", side_effect=lambda name, _: f'"{name}"'):
+        assert where_sql.as_string(None) == expected_sql
+    assert params == expected_params
