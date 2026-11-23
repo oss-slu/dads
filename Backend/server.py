@@ -11,6 +11,7 @@ import threading
 import traceback
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from static_site import register_static
 from postgres_connector import PostgresConnector
 
 app = Flask(__name__)
@@ -140,6 +141,11 @@ def health():
 def watch_stdin():
     sys.stdin.read()
     os.kill(os.getpid(), signal.SIGTERM)
+
+
+static_dir = os.environ.get("DADS_STATIC_DIR")
+if static_dir:
+    register_static(app, static_dir)
 
 
 if __name__ == '__main__':
