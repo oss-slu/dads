@@ -10,6 +10,20 @@ from dads.services.formatting import format_search_result_row
 from dads.services.labels import construct_label
 
 
+SYSTEM_FILTER_COLUMNS = {
+    "function_id": ("f", "function_id"),
+    "degree": ("f", "degree"),
+    "sigma_one": ("f", "sigma_one"),
+    "sigma_two": ("f", "sigma_two"),
+    "ordinal": ("f", "ordinal"),
+    "base_field_label": ("f", "base_field_label"),
+    "is_Lattes": ("f", "is_lattes"),
+    "is_Chebyshev": ("f", "is_chebyshev"),
+    "is_Newton": ("f", "is_newton"),
+    "preperiodic_cardinality": ("g", "cardinality"),
+}
+
+
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
 # gets all systems from the database
@@ -227,17 +241,15 @@ class PostgresConnector(DadsConnector):
         Get families matching the provided filters.
         Filters can include: family_id, name, degree
         """
-        where_sql, params = self.build_where_text(filters)
+        where_sql, params = self.build_where_text(filters, families=True)
         query = sql.SQL("SELECT * FROM families_dim_1_nf {}").format(where_sql)
 
         result = self.try_query(query, params, fetch="all")
         return result
 
-    def apply_filter_logic(self, fil, values, conditions):
-        if fil in ['function_id', 'degree', 'sigma_one', 'sigma_two', 'ordinal', 'base_field_label']:
-            ident = sql.SQL("f.{}").format(sql.Identifier(fil))
-        else:
-            ident = sql.Identifier(fil)
+    def apply_filter_logic(self, fil, values, conditions, *, families=False):
+        columns = {} if families else SYSTEM_FILTER_COLUMNS
+        ident = sql.Identifier(*columns.get(fil, (fil,)))
 
         if fil == 'model_label':
             sql_piece = sql.SQL("""
@@ -269,29 +281,30 @@ class PostgresConnector(DadsConnector):
         sql_piece = sql.SQL("{} = {}")
         conditions.append(sql_piece.format(ident, sql.Placeholder()))
 
-        if fil in ['family_id', 'function_id', 'degree']:
+        if fil in ['family_id', 'function_id', 'degree', 'preperiodic_cardinality']:
             return int(values)
         return values
 
-    def build_where_text(self, filters):
-        active_filters = {}
-        for key, value in filters.items():
-            if value and value != [] and not (key == 'indeterminacy_locus_dimension' and value == '1'):
-                active_filters[key] = value
-
-        if not active_filters:
-            return sql.SQL(""), []
-
+    def build_where_text(self, filters, *, families=False):
         conditions = []
         params = []
-        for fil, values in active_filters.items():
-            processed_val = self.apply_filter_logic(fil, values, conditions)
+        for fil, values in filters.items():
+            if not values or (fil == 'indeterminacy_locus_dimension' and values == '1'):
+                continue
 
+            if fil in ('N', 'dimension'):
+                dimensions = values if isinstance(values, list) else [values]
+                if not any(value in (1, '1') for value in dimensions):
+                    conditions.append(sql.SQL("FALSE"))
+                continue
+
+            processed_val = self.apply_filter_logic(fil, values, conditions, families=families)
             if isinstance(processed_val, list):
                 params.extend(processed_val)
             else:
                 params.append(processed_val)
 
+        if not conditions:
+            return sql.SQL(""), []
         where_fragment = sql.SQL(" WHERE ") + sql.SQL(" AND ").join(conditions)
-
         return where_fragment, params
