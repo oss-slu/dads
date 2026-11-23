@@ -9,6 +9,7 @@ const { spawn } = require('child_process')
 
 const ROOT_DIR = path.join(__dirname, '..', '..', '..')
 const BACKEND_DIR = path.join(ROOT_DIR, 'Backend')
+const BACKEND_EXECUTABLE = process.platform === 'win32' ? 'dads-backend.exe' : 'dads-backend'
 const FRONTEND_BUILD_DIR = path.join(ROOT_DIR, 'Frontend', 'build')
 // 127.0.0.1, not localhost: on macOS AirPlay also listens on port 5000
 const HEALTH_URL = 'http://127.0.0.1:5000/health'
@@ -59,14 +60,14 @@ function checkHealth (healthUrl) {
   })
 }
 
-// Runs `python server.py` and resolves once the backend is ready. Rejects if it
+// Starts the backend and resolves once it is ready. Rejects if it
 // is not ready within `timeout` ms or exits first; the error's `output` has the
 // last OUTPUT_LINES lines. All output also goes to `logFile` if one is given.
 // `onExit(code, signal, output)` is called if the backend exits after it was
 // ready, with the same last lines of output.
 // Set PYTHON to pick the interpreter.
-function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFile, onExit, staticDir } = {}) {
-  const python = process.env.PYTHON || 'python'
+function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFile, onExit, staticDir, sqlitePath, executable } = {}) {
+  const command = executable || process.env.PYTHON || 'python'
   const startTime = Date.now()
 
   // a log file we can't write shouldn't stop the app, it just runs without one
@@ -127,23 +128,27 @@ function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFil
     }
 
     // stdin stays open so the backend can tell when we are gone (see server.py)
-    const proc = spawn(python, ['server.py'], {
-      cwd: BACKEND_DIR,
+    const proc = spawn(command, executable ? [] : ['server.py'], {
+      cwd: executable ? path.dirname(executable) : BACKEND_DIR,
+      windowsHide: Boolean(executable),
       env: {
         ...process.env,
         PYTHONUNBUFFERED: '1',
         DADS_WATCH_STDIN: '1',
-        ...(staticDir && { DADS_STATIC_DIR: staticDir })
+        ...(staticDir && { DADS_STATIC_DIR: staticDir }),
+        ...(sqlitePath && { DADS_SQLITE_PATH: sqlitePath })
       },
       stdio: ['pipe', 'pipe', 'pipe']
     })
-    child = proc
+    child = { proc, usesStdin: Boolean(executable) }
+    // The process can exit before we finish closing its stdin.
+    proc.stdin.on('error', () => {})
 
     forward(proc.stdout, info)
     forward(proc.stderr, warn)
 
     proc.on('error', (err) => {
-      fail(`failed to start backend with ${python}: ${err.message}`)
+      fail(`failed to start backend with ${command}: ${err.message}`)
       closeLog()
     })
 
@@ -176,7 +181,7 @@ function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFil
 // Asks the backend to stop and resolves once the process has actually exited.
 // If it is still running KILL_TIMEOUT ms later, it is killed with SIGKILL.
 function stopBackend () {
-  const proc = child
+  const proc = child?.proc
   if (!proc || !proc.pid || proc.exitCode !== null || proc.signalCode !== null) {
     return Promise.resolve()
   }
@@ -191,8 +196,12 @@ function stopBackend () {
       clearTimeout(killTimer)
       resolve()
     })
-    proc.kill()
+    if (child.usesStdin) {
+      proc.stdin.end()
+    } else {
+      proc.kill()
+    }
   })
 }
 
-module.exports = { FRONTEND_BUILD_DIR, startBackend, stopBackend }
+module.exports = { BACKEND_EXECUTABLE, FRONTEND_BUILD_DIR, startBackend, stopBackend }

@@ -4,15 +4,31 @@
   "private": true,
   "description": "Electron desktop shell that opens the DynaBase web app in a native window",
   "main": "src/main/index.js",
-  "engines": { "node": ">=22.12" },
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "start": "electron .",
     "build:frontend": "node scripts/build-frontend.js",
-    "test": "node --test"
+    "test": "node --test",
+    "dist": "node scripts/check-dist-inputs.js && electron-builder --publish never"
+  },
+  "build": {
+    "appId": "org.oss-slu.dynabase",
+    "productName": "DynaBase",
+    "files": ["src/main/**/*"],
+    "extraResources": [
+      { "from": "build/backend/dads-backend", "to": "backend" },
+      { "from": "../Frontend/build", "to": "frontend" },
+      { "from": "../data/exports/dads.sqlite", "to": "dads.sqlite" }
+    ],
+    "mac": { "target": "dmg", "identity": null },
+    "win": { "target": "nsis", "signExecutable": false }
   },
   "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
-    "electron": "^44.4.3"
+    "electron": "^44.4.3",
+    "electron-builder": "^26.18.0"
   }
 }

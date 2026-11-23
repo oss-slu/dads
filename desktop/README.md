@@ -18,6 +18,34 @@ Run `npm run build:frontend` again after changing the frontend.
 
 You don't need to run `python server.py` yourself. The desktop app runs it, waits until `http://127.0.0.1:5000/health` answers with `"db": true`, and then opens a window titled "DynaBase" with the About page. When you quit the app, it stops the backend and waits for it to exit.
 
+## Building installers
+
+Build on the macOS or Windows machine the installer is for. First prepare
+`data/exports/dads.sqlite` using `python scripts/build_sqlite.py` from the
+repository root. See the [export instructions](../scripts/README.md) for the
+required data files. Install the frontend dependencies with
+`npm --prefix Frontend ci --legacy-peer-deps` from the repository root. Then run
+these commands from `desktop/`:
+
+```sh
+npm ci
+npm run build:frontend
+npm run build:backend
+npm run dist
+```
+
+The PyInstaller build should put the one-folder backend in
+`desktop/build/backend/dads-backend/`. The installer will be in `desktop/dist/`.
+
+## Installing
+
+- **macOS:** Open the DMG and drag DynaBase to Applications. Right-click the app
+  and choose **Open**. If macOS blocks it, try opening it once, then go to
+  **System Settings → Privacy & Security → Open Anyway**.
+  [Apple's instructions](https://support.apple.com/en-us/102445)
+- **Windows:** Open the installer EXE. If SmartScreen prompts you, choose
+  **More info → Run anyway**.
+
 ## Picking the Python interpreter
 
 The backend is started with `python` by default. On macOS that is usually not the one you want, so set `PYTHON` to `python3` or to your virtualenv's python:
