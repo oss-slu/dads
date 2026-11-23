@@ -1,5 +1,6 @@
 """Flask application factory for DADS."""
 
+import os
 import traceback
 import uuid
 
@@ -16,7 +17,13 @@ def create_app(connector=None):
     application = Flask(__name__)
     CORS(application, origins="*")
     if connector is None:
-        connector = PostgresConnector()
+        sqlite_path = os.environ.get("DADS_SQLITE_PATH")
+        if sqlite_path:
+            from dads.connectors.sqlite import SqliteConnector
+
+            connector = SqliteConnector(sqlite_path)
+        else:
+            connector = PostgresConnector()
     application.config[CONNECTOR_CONFIG_KEY] = connector
 
     @application.errorhandler(Exception)

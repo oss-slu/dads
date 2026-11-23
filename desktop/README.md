@@ -6,7 +6,7 @@ A minimal [Electron](https://www.electronjs.org/) shell that opens the DynaBase 
 
 Start these in order, each in its own terminal:
 
-1. **Database**: make sure your PostgreSQL database is running and `Backend/database.ini` points at it (see the [Installation Guide](../Installation_Guide.md)). The Python dependencies need to be installed too.
+1. **Database**: the desktop app uses **`data/exports/dads.sqlite`** when that file exists (no Docker or Postgres needed). Build it once with `python scripts/build_sqlite.py` (requires Docker + `Backend/database.ini` for the copy step). If the SQLite file is missing, the backend falls back to PostgreSQL — make sure the database is running and `Backend/database.ini` points at it (see the [Installation Guide](../Installation_Guide.md)). The Python dependencies need to be installed too.
 2. **Frontend** (React dev server on http://localhost:3000):
    ```
    cd Frontend
