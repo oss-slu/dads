@@ -1,7 +1,8 @@
+const fs = require('fs')
 const path = require('path')
 const { app, BrowserWindow, dialog } = require('electron')
 const { createWindow } = require('./window')
-const { startBackend, stopBackend } = require('./backend')
+const { FRONTEND_BUILD_DIR, startBackend, stopBackend } = require('./backend')
 
 let quitting = false
 let backendStopped = false
@@ -9,6 +10,16 @@ let backendStopped = false
 const lastOutput = (lines) => lines && lines.length ? lines.join('\n') : '(no output)'
 
 app.whenReady().then(async () => {
+  const staticDir = process.env.DADS_URL ? undefined : FRONTEND_BUILD_DIR
+  if (staticDir && !fs.existsSync(path.join(staticDir, 'index.html'))) {
+    dialog.showErrorBox(
+      'DynaBase frontend build is missing',
+      'Run npm run build:frontend in the desktop directory, then start DynaBase again.'
+    )
+    app.exit(1)
+    return
+  }
+
   const logFile = path.join(app.getPath('logs'), 'backend.log')
 
   // A backend that stops while the app is open leaves every page without data,
@@ -25,7 +36,7 @@ app.whenReady().then(async () => {
 
   // Only open the window once the backend can answer, never a blank page
   try {
-    await startBackend({ logFile, onExit })
+    await startBackend({ logFile, onExit, staticDir })
   } catch (err) {
     // quitting stops the backend before it is ready, that is not an error
     if (quitting) return
