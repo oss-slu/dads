@@ -138,7 +138,7 @@ def test_get_statistics_empty_where(
 
     connector = PostgresConnector()
     connector.connection = mock_conn
-    result = connector.get_statistics(sql.SQL(""), [])
+    result = connector.get_statistics({})
     assert result == 0
 
 
@@ -168,6 +168,9 @@ def test_build_where_text(mock_connect, mock_config):  # pylint: disable=unused-
     where_sql, params = connector.build_where_text(filters)
     assert where_sql != sql.SQL("")
     assert params == [2, 3, 4, True, False, True, True, "5", "2"]
+    where_repr = repr(where_sql)
+    assert "Identifier('degree')" in where_repr
+    assert "Identifier('is_polynomial')" in where_repr
 
 
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)

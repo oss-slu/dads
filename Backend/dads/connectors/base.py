@@ -5,8 +5,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Optional, Tuple
 
-from psycopg2 import sql
-
 
 class DadsConnector(ABC):
     """Interface implemented by Postgres and (future) SQLite connectors."""
@@ -30,8 +28,8 @@ class DadsConnector(ABC):
         """Return search result rows and a statistics value for the filters."""
 
     @abstractmethod
-    def get_statistics(self, where_sql: sql.Composed, params: list[Any]) -> Any:
-        """Return the count of systems matching a SQL WHERE fragment."""
+    def get_statistics(self, filters: dict[str, Any]) -> Any:
+        """Return the count of systems matching the search filters."""
 
     @abstractmethod
     def get_family(self, family_id: Any) -> Optional[dict[str, Any]]:
@@ -68,9 +66,3 @@ class DadsConnector(ABC):
     @abstractmethod
     def connect(self) -> None:
         """Open or refresh the database connection."""
-
-    @abstractmethod
-    def build_where_text(
-        self, filters: dict[str, Any]
-    ) -> Tuple[sql.Composed, list[Any]]:
-        """Build a SQL WHERE clause and parameters from search filters."""
