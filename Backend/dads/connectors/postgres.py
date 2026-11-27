@@ -6,7 +6,7 @@ import psycopg2
 from psycopg2 import sql
 from dads.config import load_config
 from dads.connectors.base import DadsConnector
-from dads.services.formatting import format_search_result_row
+from dads.services.formatting import assemble_filtered_system_result
 from dads.services.labels import construct_label
 
 
@@ -165,11 +165,31 @@ class PostgresConnector(DadsConnector):
         result = []
 
         if rows:
-            mon_dict = {}
             for row in rows:
-                result.append(format_search_result_row(row, mon_dict))
+                result.append(self._filtered_system_entry_from_row(row))
 
         return result, stats
+
+    def _filtered_system_entry_from_row(self, row):
+        if isinstance(row, dict):
+            return assemble_filtered_system_result(
+                function_id=row['function_id'],
+                sigma_one=row['sigma_one'],
+                sigma_two=row['sigma_two'],
+                ordinal=row['ordinal'],
+                degree=row['degree'],
+                coeffs=row['coeffs'],
+                base_field_label=row['base_field_label'],
+            )
+        return assemble_filtered_system_result(
+            function_id=row[0],
+            sigma_one=row[1],
+            sigma_two=row[2],
+            ordinal=row[3],
+            degree=row[4],
+            coeffs=row[5],
+            base_field_label=row[6],
+        )
 
     def get_selected_systems(self, labels):
         if not labels:
