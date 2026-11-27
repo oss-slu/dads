@@ -46,9 +46,7 @@ def register_routes(application):
     @application.route('/get_statistics', methods=['POST', 'GET'])
     def data5():
         filters = request.get_json()
-        connector = get_connector()
-        where_sql, params = connector.build_where_text(filters)
-        data = connector.get_statistics(where_sql, params)
+        data = get_connector().get_statistics(filters)
         return jsonify(data)
 
     @application.route('/get_all_families', methods=['POST', 'GET'])
