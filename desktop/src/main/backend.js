@@ -7,16 +7,10 @@ const path = require('path')
 const http = require('http')
 const { spawn } = require('child_process')
 
-const BACKEND_DIR = path.join(__dirname, '..', '..', '..', 'Backend')
-const DEFAULT_SQLITE = path.join(
-  __dirname,
-  '..',
-  '..',
-  '..',
-  'data',
-  'exports',
-  'dads.sqlite'
-)
+const ROOT_DIR = path.join(__dirname, '..', '..', '..')
+const BACKEND_DIR = path.join(ROOT_DIR, 'Backend')
+const FRONTEND_BUILD_DIR = path.join(ROOT_DIR, 'Frontend', 'build')
+const DEFAULT_SQLITE = path.join(ROOT_DIR, 'data', 'exports', 'dads.sqlite')
 // 127.0.0.1, not localhost: on macOS AirPlay also listens on port 5000
 const HEALTH_URL = 'http://127.0.0.1:5000/health'
 const POLL_INTERVAL = 250
@@ -72,7 +66,7 @@ function checkHealth (healthUrl) {
 // `onExit(code, signal, output)` is called if the backend exits after it was
 // ready, with the same last lines of output.
 // Set PYTHON to pick the interpreter.
-function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFile, onExit } = {}) {
+function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFile, onExit, staticDir } = {}) {
   const python = process.env.PYTHON || 'python'
   const startTime = Date.now()
 
@@ -133,12 +127,17 @@ function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFil
       reject(err)
     }
 
-    // stdin stays open so the backend can tell when we are gone (see server.py)
-    const childEnv = { ...process.env, PYTHONUNBUFFERED: '1', DADS_WATCH_STDIN: '1' }
+    const childEnv = {
+      ...process.env,
+      PYTHONUNBUFFERED: '1',
+      DADS_WATCH_STDIN: '1',
+      ...(staticDir && { DADS_STATIC_DIR: staticDir }),
+    }
     if (!childEnv.DADS_SQLITE_PATH && fs.existsSync(DEFAULT_SQLITE)) {
       childEnv.DADS_SQLITE_PATH = DEFAULT_SQLITE
     }
 
+    // stdin stays open so the backend can tell when we are gone (see server.py)
     const proc = spawn(python, ['server.py'], {
       cwd: BACKEND_DIR,
       env: childEnv,
@@ -202,4 +201,4 @@ function stopBackend () {
   })
 }
 
-module.exports = { startBackend, stopBackend }
+module.exports = { FRONTEND_BUILD_DIR, startBackend, stopBackend }
