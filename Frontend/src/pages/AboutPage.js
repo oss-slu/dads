@@ -7,8 +7,10 @@ import { Container, Row, Col, Button,ListGroup,Tab } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import useOnline from '../hooks/useOnline';
 
 function AboutPage() {
+    const online = useOnline();
     const scrollToTop = () => {
       window.scrollTo({
         top: 0,
@@ -152,7 +154,7 @@ function AboutPage() {
               <Accordion.Item eventKey="2">
                 <Accordion.Header>Getting Started with DynaBase</Accordion.Header>
                 <Accordion.Body>
-                  <p>Visit our <Button variant="dark" href="https://github.com/bhutz/DynaBase"> <GitHubIcon style={{color:'white'}} /> Github</Button></p>
+                  <p>Visit our <Button variant="dark" href="https://github.com/bhutz/DynaBase" target="_blank" rel="noopener noreferrer" disabled={!online}> <GitHubIcon style={{color:'white'}} /> Github</Button></p>
                   <p>
                     Search for dynamical systems with certain properties on the “Dynamical Systems” page. Refine the filters on the left-hand side of the page to narrow down your selection. Click on the label of a dynamical system in the results table to see all data on that specific system. Collected statistics on the returned results are displayed on a table on the right hand side of the page.
                   </p>

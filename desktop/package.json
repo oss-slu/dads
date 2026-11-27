@@ -7,6 +7,7 @@
   "engines": { "node": ">=22.12" },
   "scripts": {
     "start": "electron .",
+    "build:frontend": "node scripts/build-frontend.js",
     "test": "node --test"
   },
   "license": "MIT",
