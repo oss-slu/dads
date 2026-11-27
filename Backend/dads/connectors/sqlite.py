@@ -10,7 +10,7 @@ from typing import Any, Optional
 from psycopg2 import sql
 
 from dads.connectors.base import DadsConnector
-from dads.services.formatting import format_search_result_row
+from dads.services.formatting import assemble_filtered_system_result
 from dads.services.labels import construct_label
 from dads.services.models import MODEL_NAMES
 
@@ -297,7 +297,7 @@ class SqliteConnector(DadsConnector):
         self, filters: dict[str, Any]
     ) -> tuple[list[list[Any]], Any]:
         where_sql, params = self.build_where_text(filters)
-        stats = self.get_statistics(where_sql, params)
+        stats = self.get_statistics(filters)
         fragment = self._where_fragment(where_sql)
         query = f"""
             SELECT f.function_id, f.sigma_one, f.sigma_two, f.ordinal, f.degree,
@@ -311,12 +311,22 @@ class SqliteConnector(DadsConnector):
         rows = self.try_query(query, params, fetch="all") or []
         result: list[list[Any]] = []
         if rows:
-            mon_dict: dict[int, list[str]] = {}
             for row in rows:
                 if row.get("coeffs") is not None:
                     row["coeffs"] = json.loads(row["coeffs"])
-                result.append(format_search_result_row(row, mon_dict))
+                result.append(self._filtered_system_entry_from_row(row))
         return result, stats
+
+    def _filtered_system_entry_from_row(self, row: dict[str, Any]) -> list[Any]:
+        return assemble_filtered_system_result(
+            function_id=row["function_id"],
+            sigma_one=row["sigma_one"],
+            sigma_two=row["sigma_two"],
+            ordinal=row["ordinal"],
+            degree=row["degree"],
+            coeffs=row["coeffs"],
+            base_field_label=row["base_field_label"],
+        )
 
     def get_selected_systems(self, labels: list[str]) -> list[dict[str, Any]]:
         if not labels:
@@ -341,7 +351,8 @@ class SqliteConnector(DadsConnector):
             return where_sql.as_string(self.connection)  # type: ignore[arg-type]
         return str(where_sql)
 
-    def get_statistics(self, where_sql: Any, params: list[Any]) -> Any:
+    def get_statistics(self, filters: dict[str, Any]) -> Any:
+        where_sql, params = self.build_where_text(filters)
         fragment = self._where_fragment(where_sql)
         query = f"""
             SELECT count(*) AS count
