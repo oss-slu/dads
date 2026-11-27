@@ -5,13 +5,14 @@ manages  server data queries
 import psycopg2
 from psycopg2 import sql
 from dads.config import load_config
+from dads.connectors.base import DadsConnector
 
 
 # important do not store password when dealing with real database
 # might want to consider SQL injection down the line
 # gets all systems from the database
 
-class PostgresConnector:
+class PostgresConnector(DadsConnector):
     """
     Class Docstring
     Manages connection to a PostgreSQL database and executes queries.
@@ -152,7 +153,7 @@ class PostgresConnector:
     # gets systems that match the passed in filters, input should be json object
     def get_filtered_systems(self, filters):
         where_sql, params = self.build_where_text(filters)
-        stats = self.get_statistics(where_sql, params)
+        stats = self.get_statistics(filters)
 
         query = sql.SQL("""
             SELECT f.function_id, f.sigma_one, f.sigma_two, f.ordinal, f.degree,
@@ -235,7 +236,8 @@ class PostgresConnector:
         )
         return self.try_query(query, labels, fetch="all")
 
-    def get_statistics(self, where_sql, params):
+    def get_statistics(self, filters):
+        where_sql, params = self.build_where_text(filters)
         query = sql.SQL("""
             SELECT count(*)
             FROM functions_dim_1_nf f
