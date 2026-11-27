@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import HelpBox from '../FunctionDetail/HelpBox'
+import ExternalLink from '../ExternalLink';
 
 export default function FunctionAttributes({ data }) {
   // Recommend separating Superscript into a utility file if they are used in multiple places, to avoid code duplication.
@@ -139,9 +140,9 @@ export default function FunctionAttributes({ data }) {
 
   //For Lattes maps, the label is N.(LMFDB label).degree.M
   const lattesLink = data.is_lattes ? (
-    <a href={`https://www.lmfdb.org/EllipticCurve/Q/${data.sigma_one.replace(/[()]/g, '').replace(/\./, '/').replace(/([a-z])(\d+)/, "$1/$2")}`} target="_blank" rel="noopener noreferrer">
+    <ExternalLink href={`https://www.lmfdb.org/EllipticCurve/Q/${data.sigma_one.replace(/[()]/g, '').replace(/\./, '/').replace(/([a-z])(\d+)/, "$1/$2")}`}>
       {data.sigma_one}
-    </a>
+    </ExternalLink>
   ) : null;
 
   return (

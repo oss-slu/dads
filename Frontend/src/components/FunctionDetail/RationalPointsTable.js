@@ -13,6 +13,7 @@ import { get_rational_periodic_data, get_graph_data } from '../../api/routes';
 import AdjacencyMatrix from '../FunctionDetail/AdjacencyMatrix';
 import Copy from '../FunctionDetail/Copy';
 import HelpBox from '../FunctionDetail/HelpBox';
+import ExternalLink from '../ExternalLink';
 
 const ScrollableTableContainer = styled(TableContainer)({
   maxHeight: '400px',
@@ -123,16 +124,14 @@ export default function RationalPointsTable({ data }) {
 
               return (
               <TableRow key={item.id}>
-              <TableCell sx={{ width: '100px', maxWidth: '100px' }}><a
+              <TableCell sx={{ width: '100px', maxWidth: '100px' }}><ExternalLink
                   href={`https://www.lmfdb.org/NumberField/${item.base_field_label}`}
                   style={{
                     color: "blue",
                     textDecoration: "underline"
-                  }}
-                  target="_blank"
-                  rel="noopener noreferrer">
+                  }}>
                     {item.base_field_label}
-                </a></TableCell>
+                </ExternalLink></TableCell>
               <TableCell sx={{ width: '60px', maxWidth: '60px', textAlign: 'center' }}>{meta.cardinality !== undefined && meta.cardinality !== null ? meta.cardinality : 'N/A'}</TableCell>
                             <TableCell sx={{ width: '200px', maxWidth: '200px' }}>
                 {item.graph ? (
