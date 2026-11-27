@@ -10,6 +10,7 @@ const { spawn } = require('child_process')
 const ROOT_DIR = path.join(__dirname, '..', '..', '..')
 const BACKEND_DIR = path.join(ROOT_DIR, 'Backend')
 const FRONTEND_BUILD_DIR = path.join(ROOT_DIR, 'Frontend', 'build')
+const DEFAULT_SQLITE = path.join(ROOT_DIR, 'data', 'exports', 'dads.sqlite')
 // 127.0.0.1, not localhost: on macOS AirPlay also listens on port 5000
 const HEALTH_URL = 'http://127.0.0.1:5000/health'
 const POLL_INTERVAL = 250
@@ -126,15 +127,20 @@ function startBackend ({ timeout = READY_TIMEOUT, healthUrl = HEALTH_URL, logFil
       reject(err)
     }
 
+    const childEnv = {
+      ...process.env,
+      PYTHONUNBUFFERED: '1',
+      DADS_WATCH_STDIN: '1',
+      ...(staticDir && { DADS_STATIC_DIR: staticDir }),
+    }
+    if (!childEnv.DADS_SQLITE_PATH && fs.existsSync(DEFAULT_SQLITE)) {
+      childEnv.DADS_SQLITE_PATH = DEFAULT_SQLITE
+    }
+
     // stdin stays open so the backend can tell when we are gone (see server.py)
     const proc = spawn(python, ['server.py'], {
       cwd: BACKEND_DIR,
-      env: {
-        ...process.env,
-        PYTHONUNBUFFERED: '1',
-        DADS_WATCH_STDIN: '1',
-        ...(staticDir && { DADS_STATIC_DIR: staticDir })
-      },
+      env: childEnv,
       stdio: ['pipe', 'pipe', 'pipe']
     })
     child = proc

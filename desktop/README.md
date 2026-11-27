@@ -6,6 +6,8 @@ A minimal [Electron](https://www.electronjs.org/) shell that opens the DynaBase 
 
 Start PostgreSQL and configure `Backend/database.ini` and the Python dependencies using the [Installation Guide](../Installation_Guide.md). From the repository root, install the frontend and desktop dependencies and build the frontend:
 
+**Database:** when **`data/exports/dads.sqlite`** exists, the desktop backend uses it (set via `DADS_SQLITE_PATH`). Build the file once with `python scripts/build_sqlite.py` (Docker + `Backend/database.ini` for the copy step). If the file is missing, the backend uses PostgreSQL; keep the database running and `database.ini` correct (see the [Installation Guide](../Installation_Guide.md)).
+
 ```sh
 npm --prefix Frontend ci --legacy-peer-deps
 cd desktop
