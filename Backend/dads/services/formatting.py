@@ -1,38 +1,29 @@
 """Format polynomial models as display strings for search results."""
 
+from __future__ import annotations
+
+from typing import Any
+
 from dads.services.labels import construct_label
 
 
-def format_search_result_row(row, mon_dict: dict) -> list:
-    """Turn one filtered-systems SQL row into the API result list format."""
-    try:
-        degree = int(row[4])
-        coeffs = row[5]
-        field_label = row[6]
-        func_id = row[0]
-        label_row = row
-    except (KeyError, TypeError):
-        degree = int(row['degree'])
-        coeffs = row['coeffs']
-        field_label = row['base_field_label']
-        func_id = row['function_id']
-        label_row = row
+def _monomials_for_degree(degree: int) -> list[str]:
+    monomials: list[str] = []
+    for i in range(degree + 1):
+        if i == 0:
+            monomials.append('x^' + str(degree))
+        elif i == degree:
+            monomials.append('y^' + str(degree))
+        else:
+            term = 'x' if (degree - i) == 1 else 'x^' + str(degree - i)
+            term += 'y' if i == 1 else 'y^' + str(i)
+            monomials.append(term)
+    return monomials
 
-    if degree not in mon_dict:
-        monomials = []
-        for i in range(degree + 1):
-            if i == 0:
-                monomials.append('x^' + str(degree))
-            elif i == degree:
-                monomials.append('y^' + str(degree))
-            else:
-                term = 'x' if (degree - i) == 1 else 'x^' + str(degree - i)
-                term += 'y' if i == 1 else 'y^' + str(i)
-                monomials.append(term)
-        mon_dict[degree] = monomials
-    else:
-        monomials = mon_dict[degree]
 
+def format_polynomial(degree: int, coeffs: Any) -> str:
+    """Render a bivariate model as the bracketed string used in search results."""
+    monomials = _monomials_for_degree(degree)
     poly = '['
     for j in range(2):
         first_term = True
@@ -51,6 +42,23 @@ def format_search_result_row(row, mon_dict: dict) -> list:
         if j == 0:
             poly += ' : '
     poly += ']'
+    return poly
 
-    label = construct_label(label_row)
-    return [label, '1', degree, poly, field_label, func_id]
+
+def assemble_filtered_system_result(
+    *,
+    function_id: Any,
+    sigma_one: Any,
+    sigma_two: Any,
+    ordinal: Any,
+    degree: Any,
+    coeffs: Any,
+    base_field_label: Any,
+) -> list[Any]:
+    """Build one `/get_filtered_systems` results entry from explicit fields."""
+    label = construct_label(
+        {'sigma_one': sigma_one, 'sigma_two': sigma_two, 'ordinal': ordinal}
+    )
+    degree_int = int(degree)
+    poly = format_polynomial(degree_int, coeffs)
+    return [label, '1', degree_int, poly, base_field_label, function_id]
