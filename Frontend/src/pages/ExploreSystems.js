@@ -28,6 +28,7 @@ import Button from 'react-bootstrap/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import HelpBox from '../components/FunctionDetail/HelpBox';
+import ExternalLink from '../components/ExternalLink';
 
 
 
@@ -904,17 +905,15 @@ function ExploreSystems() {
                                           </>,
                                           x[2],
                                           x[3],
-                                          <Link
-                                              to={`https://www.lmfdb.org/NumberField/${x[4]}`}
+                                          <ExternalLink
+                                              href={`https://www.lmfdb.org/NumberField/${x[4]}`}
                                               style={{
                                                   color: "red",
                                                   textDecoration: "none",
                                               }}
-                                              target="_blank"
-                                              rel="noopener noreferrer"
                                           >
                                               {x[4]}
-                                          </Link>,
+                                          </ExternalLink>,
                                       ])
                             }
                             itemsPerPage={pagesPer}

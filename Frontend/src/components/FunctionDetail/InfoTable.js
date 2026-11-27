@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 import { renderExponent, splitOutermostCommas, buildModelString } from './ModelsTable';
 import HelpBox from '../FunctionDetail/HelpBox'
+import ExternalLink from '../ExternalLink';
 import { useEffect, useState } from 'react';
 import { get_filtered_systems } from '../../api/routes';
 
@@ -128,17 +129,15 @@ export default function InfoTable({ data }) {
             <TableCell align="right">{polynomialExpression}</TableCell>
             <TableCell align="right">{data.degree}</TableCell>
             <TableCell align="right">
-            <a
+            <ExternalLink
                 href={`https://www.lmfdb.org/NumberField/${data.functions_base_field_label}`}
                 style={{
                   color: "blue",
                   textDecoration: "underline"
                 }}
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 {data.functions_base_field_label}
-              </a>
+              </ExternalLink>
             </TableCell>
             <TableCell align="right">
               {(data.family && data.family.length > 0) ? (
