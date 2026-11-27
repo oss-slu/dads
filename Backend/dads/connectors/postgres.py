@@ -276,6 +276,12 @@ class PostgresConnector(DadsConnector):
             conditions.append(sql_piece.format(sql.Placeholder()))
             return int(values)
 
+        if fil == 'family':
+            family_ids = values if isinstance(values, list) else [values]
+            sql_piece = sql.SQL("f.family && {}::int[]")
+            conditions.append(sql_piece.format(sql.Placeholder()))
+            return family_ids
+
         if isinstance(values, list):
             placeholders = sql.SQL(', ').join(sql.Placeholder() * len(values))
             sql_piece = sql.SQL("{} IN ({})")
@@ -308,7 +314,9 @@ class PostgresConnector(DadsConnector):
         for fil, values in active_filters.items():
             processed_val = self.apply_filter_logic(fil, values, conditions)
 
-            if isinstance(processed_val, list):
+            if fil == 'family':
+                params.append(processed_val)
+            elif isinstance(processed_val, list):
                 params.extend(processed_val)
             else:
                 params.append(processed_val)
