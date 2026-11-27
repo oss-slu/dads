@@ -153,7 +153,7 @@ class PostgresConnector(DadsConnector):
     # gets systems that match the passed in filters, input should be json object
     def get_filtered_systems(self, filters):
         where_sql, params = self.build_where_text(filters)
-        stats = self.get_statistics(where_sql, params)
+        stats = self.get_statistics(filters)
 
         query = sql.SQL("""
             SELECT f.function_id, f.sigma_one, f.sigma_two, f.ordinal, f.degree,
@@ -236,7 +236,8 @@ class PostgresConnector(DadsConnector):
         )
         return self.try_query(query, labels, fetch="all")
 
-    def get_statistics(self, where_sql, params):
+    def get_statistics(self, filters):
+        where_sql, params = self.build_where_text(filters)
         query = sql.SQL("""
             SELECT count(*)
             FROM functions_dim_1_nf f
