@@ -9,6 +9,7 @@ from flask_cors import CORS
 
 from dads.api.routes import register_routes
 from dads.connectors.postgres import PostgresConnector
+from dads.connectors.sqlite import SqliteConnector
 from dads.constants import CONNECTOR_CONFIG_KEY
 
 
@@ -19,8 +20,6 @@ def create_app(connector=None):
     if connector is None:
         sqlite_path = os.environ.get("DADS_SQLITE_PATH")
         if sqlite_path:
-            from dads.connectors.sqlite import SqliteConnector
-
             connector = SqliteConnector(sqlite_path)
         else:
             connector = PostgresConnector()
