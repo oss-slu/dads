@@ -8,6 +8,7 @@ from dads.config import load_config
 from dads.connectors.base import DadsConnector
 from dads.services.formatting import assemble_filtered_system_result
 from dads.services.labels import construct_label
+from dads.services.models import MODEL_NAMES, hydrate_models_in_row, model_field_aliases
 
 
 # important do not store password when dealing with real database
@@ -121,9 +122,51 @@ class PostgresConnector(DadsConnector):
     def construct_label(self, data):
         return construct_label(data)
 
+    def _fetch_models_by_function_ids(self, function_ids):
+        if not function_ids:
+            return {}
+        table = sql.Identifier('f')
+        query = sql.SQL("""
+            SELECT f.function_id, {model_cols}
+            FROM functions_dim_1_nf f
+            WHERE f.function_id = ANY(%s)
+        """).format(model_cols=model_field_aliases(table))
+        rows = self.try_query(query, (list(function_ids),), fetch="all") or []
+        model_map = {}
+        for row in rows:
+            fid = row.pop('function_id')
+            hydrate_models_in_row(row)
+            model_map[fid] = {name: row[name] for name in MODEL_NAMES}
+        return model_map
+
+    def _apply_model_objects_to_rows(self, rows):
+        if not rows:
+            return rows
+        model_map = self._fetch_models_by_function_ids(
+            [row['function_id'] for row in rows if row.get('function_id') is not None]
+        )
+        for row in rows:
+            models = model_map.get(row.get('function_id'), {})
+            for name in MODEL_NAMES:
+                row.pop(name, None)
+                row[name] = models.get(name)
+        return rows
+
+    def _apply_model_objects_to_row(self, row):
+        if not row or row.get('function_id') is None:
+            return row
+        models = self._fetch_models_by_function_ids([row['function_id']]).get(
+            row['function_id'], {}
+        )
+        for name in MODEL_NAMES:
+            row.pop(name, None)
+            row[name] = models.get(name)
+        return row
+
     def get_all_systems(self):
         query = sql.SQL("SELECT * FROM functions_dim_1_nf")
-        return self.try_query(query)
+        rows = self.try_query(query) or []
+        return self._apply_model_objects_to_rows(rows)
 
     def get_all_families(self):
         query = sql.SQL("SELECT * FROM families_dim_1_nf")
@@ -143,6 +186,7 @@ class PostgresConnector(DadsConnector):
         result = self.try_query(query, (function_id,), fetch="one")
 
         if result:
+            self._apply_model_objects_to_row(result)
             result['modelLabel'] = self.construct_label(result)
             return result
         return {}
@@ -205,7 +249,8 @@ class PostgresConnector(DadsConnector):
         """).format(
             sql.SQL(', ').join(sql.Placeholder() * len(labels))
         )
-        return self.try_query(query, labels, fetch="all")
+        rows = self.try_query(query, labels, fetch="all") or []
+        return self._apply_model_objects_to_rows(rows)
 
     def get_statistics(self, filters):
         where_sql, params = self.build_where_text(filters)
@@ -276,6 +321,12 @@ class PostgresConnector(DadsConnector):
             conditions.append(sql_piece.format(sql.Placeholder()))
             return int(values)
 
+        if fil == 'family':
+            family_ids = values if isinstance(values, list) else [values]
+            sql_piece = sql.SQL("f.family && {}::int[]")
+            conditions.append(sql_piece.format(sql.Placeholder()))
+            return family_ids
+
         if isinstance(values, list):
             placeholders = sql.SQL(', ').join(sql.Placeholder() * len(values))
             sql_piece = sql.SQL("{} IN ({})")
@@ -308,7 +359,9 @@ class PostgresConnector(DadsConnector):
         for fil, values in active_filters.items():
             processed_val = self.apply_filter_logic(fil, values, conditions)
 
-            if isinstance(processed_val, list):
+            if fil == 'family':
+                params.append(processed_val)
+            elif isinstance(processed_val, list):
                 params.extend(processed_val)
             else:
                 params.append(processed_val)

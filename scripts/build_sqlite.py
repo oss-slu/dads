@@ -34,6 +34,7 @@ EXPORT_TABLES = (
 
 sys.path.insert(0, str(BACKEND_DIRECTORY))
 from config import load_config  # pylint: disable=wrong-import-position
+from dads.services.models import model_from_parts  # pylint: disable=wrong-import-position
 
 
 def parse_arguments():
@@ -91,24 +92,6 @@ def bool_to_sqlite(value):
     if value is None:
         return None
     return 1 if value else 0
-
-
-def model_from_parts(coeffs, resultant, bad_primes, height, base_field_label):
-    if (
-        coeffs is None
-        and resultant is None
-        and bad_primes is None
-        and height is None
-        and base_field_label is None
-    ):
-        return None
-    return {
-        "coeffs": coeffs,
-        "resultant": resultant,
-        "bad_primes": bad_primes,
-        "height": height,
-        "base_field_label": base_field_label,
-    }
 
 
 def pack_model(coeffs, resultant, bad_primes, height, base_field_label):

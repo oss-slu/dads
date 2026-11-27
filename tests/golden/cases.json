@@ -56,7 +56,8 @@
   {
     "name": "search-family-1",
     "route": "/get_filtered_systems",
-    "body": {"family": [1]}
+    "body": {"family": [1]},
+    "compact_large": true
   },
   {
     "name": "search-is-lattes",
