@@ -8,8 +8,10 @@ import sys
 import signal
 import threading
 
-from dads.app import app
+from dads.app import create_app
 from static_site import register_static
+
+app = create_app()
 
 
 # exits once stdin closes, so the backend does not outlive the desktop app
