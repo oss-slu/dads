@@ -6,7 +6,7 @@ import psycopg2
 from psycopg2 import sql
 from dads.config import load_config
 from dads.connectors.base import DadsConnector
-from dads.services.formatting import format_search_result_row
+from dads.services.formatting import assemble_filtered_system_result
 from dads.services.labels import construct_label
 from dads.services.models import MODEL_NAMES, hydrate_models_in_row, model_field_aliases
 
@@ -194,7 +194,7 @@ class PostgresConnector(DadsConnector):
     # gets systems that match the passed in filters, input should be json object
     def get_filtered_systems(self, filters):
         where_sql, params = self.build_where_text(filters)
-        stats = self.get_statistics(where_sql, params)
+        stats = self.get_statistics(filters)
 
         query = sql.SQL("""
             SELECT f.function_id, f.sigma_one, f.sigma_two, f.ordinal, f.degree,
@@ -209,11 +209,31 @@ class PostgresConnector(DadsConnector):
         result = []
 
         if rows:
-            mon_dict = {}
             for row in rows:
-                result.append(format_search_result_row(row, mon_dict))
+                result.append(self._filtered_system_entry_from_row(row))
 
         return result, stats
+
+    def _filtered_system_entry_from_row(self, row):
+        if isinstance(row, dict):
+            return assemble_filtered_system_result(
+                function_id=row['function_id'],
+                sigma_one=row['sigma_one'],
+                sigma_two=row['sigma_two'],
+                ordinal=row['ordinal'],
+                degree=row['degree'],
+                coeffs=row['coeffs'],
+                base_field_label=row['base_field_label'],
+            )
+        return assemble_filtered_system_result(
+            function_id=row[0],
+            sigma_one=row[1],
+            sigma_two=row[2],
+            ordinal=row[3],
+            degree=row[4],
+            coeffs=row[5],
+            base_field_label=row[6],
+        )
 
     def get_selected_systems(self, labels):
         if not labels:
@@ -232,7 +252,8 @@ class PostgresConnector(DadsConnector):
         rows = self.try_query(query, labels, fetch="all") or []
         return self._apply_model_objects_to_rows(rows)
 
-    def get_statistics(self, where_sql, params):
+    def get_statistics(self, filters):
+        where_sql, params = self.build_where_text(filters)
         query = sql.SQL("""
             SELECT count(*)
             FROM functions_dim_1_nf f
