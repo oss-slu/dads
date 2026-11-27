@@ -9,6 +9,7 @@ import signal
 import threading
 
 from dads.app import create_app
+from static_site import register_static
 
 app = create_app()
 
@@ -17,6 +18,11 @@ app = create_app()
 def watch_stdin():
     sys.stdin.read()
     os.kill(os.getpid(), signal.SIGTERM)
+
+
+static_dir = os.environ.get("DADS_STATIC_DIR")
+if static_dir:
+    register_static(app, static_dir)
 
 
 if __name__ == '__main__':
