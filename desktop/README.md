@@ -1,23 +1,20 @@
 # DynaBase Desktop
 
-A minimal [Electron](https://www.electronjs.org/) shell that opens the DynaBase web app in a native window. It starts the Python backend itself, waits until the backend can reach the database, and only then opens the window. The React app is loaded by URL, the same way a browser tab does, and is not bundled or changed.
+A minimal [Electron](https://www.electronjs.org/) shell that opens the DynaBase web app in a native window. It starts the Python backend itself, waits until the backend can reach the database, and only then opens the window. Flask serves the built React app and its API on the same port.
 
 ## Run order
 
-Start these in order, each in its own terminal:
+Start PostgreSQL and configure `Backend/database.ini` and the Python dependencies using the [Installation Guide](../Installation_Guide.md). From the repository root, install the frontend and desktop dependencies and build the frontend:
 
-1. **Database**: make sure your PostgreSQL database is running and `Backend/database.ini` points at it (see the [Installation Guide](../Installation_Guide.md)). The Python dependencies need to be installed too.
-2. **Frontend** (React dev server on http://localhost:3000):
-   ```
-   cd Frontend
-   npm start
-   ```
-3. **Desktop**:
-   ```
-   cd desktop
-   npm install
-   npm start
-   ```
+```sh
+npm --prefix Frontend ci --legacy-peer-deps
+cd desktop
+npm install
+npm run build:frontend
+npm start
+```
+
+Run `npm run build:frontend` again after changing the frontend.
 
 You don't need to run `python server.py` yourself. The desktop app runs it, waits until `http://127.0.0.1:5000/health` answers with `"db": true`, and then opens a window titled "DynaBase" with the About page. When you quit the app, it stops the backend and waits for it to exit.
 
@@ -61,16 +58,16 @@ It prints the backend's output with a `[backend]` prefix and `backend ready afte
 
 Polling `/health` is more reliable than sleeping for a fixed few seconds. Startup time varies with the machine and with how long the database takes to connect, so a fixed delay is either too short and races the backend or too long and wastes time on every launch.
 
-## Loading a different URL
+## Using the React dev server
 
-By default the window loads `http://localhost:3000`. Set `DADS_URL` to load something else:
+By default the window loads `http://127.0.0.1:5000/`. For frontend development, run `npm start` in `Frontend/` and then start Electron from `desktop/` with:
 
 ```
 # bash / macOS / Linux
-DADS_URL=http://127.0.0.1:5000 npm start
+DADS_URL=http://localhost:3000 npm start
 
 # PowerShell
-$env:DADS_URL='http://127.0.0.1:5000'; npm start
+$env:DADS_URL='http://localhost:3000'; npm start
 ```
 
 ## Links

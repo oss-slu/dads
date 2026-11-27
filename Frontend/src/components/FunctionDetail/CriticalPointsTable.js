@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import HelpBox from '../FunctionDetail/HelpBox'
+import ExternalLink from '../ExternalLink';
 
 export default function CriticalPointsTable({ data }) {
   return (
@@ -34,16 +35,14 @@ export default function CriticalPointsTable({ data }) {
               <HelpBox description="The smallest field containing all of the critical points." title="Field of Definition" />
             </TableCell>
             <TableCell align="right">{data.cp_field_of_defn ? (
-                <a
+                <ExternalLink
                   href={`https://www.lmfdb.org/NumberField/${data.cp_field_of_defn}`}
                   style={{
                     color: "blue",
                     textDecoration: "underline"
-                  }}
-                  target="_blank"
-                  rel="noopener noreferrer">
+                  }}>
                     {data.cp_field_of_defn}
-                </a>): ('N/A')}</TableCell>
+                </ExternalLink>): ('N/A')}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
