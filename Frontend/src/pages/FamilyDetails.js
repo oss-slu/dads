@@ -64,12 +64,12 @@ function FamilyDetailsTable({ family }) {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>{family[1]}</TableCell>
-              <TableCell>{family[2]}</TableCell>
-              <TableCell>{formatModelCoeffs(family[4])}</TableCell>
-              <TableCell>{family[6]}</TableCell>
-              <TableCell>{family[8]}</TableCell>
-              <TableCell>{family[9]}</TableCell>
+              <TableCell>{family.name}</TableCell>
+              <TableCell>{family.degree}</TableCell>
+              <TableCell>{formatModelCoeffs(family.model_coeffs)}</TableCell>
+              <TableCell>{family.base_field_label}</TableCell>
+              <TableCell>{family.sigma_one}</TableCell>
+              <TableCell>{family.sigma_two}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -87,10 +87,10 @@ function FamilyDetailsTable({ family }) {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>{family[5]}</TableCell>
-              <TableCell>{family[12] ? 'Yes' : 'No'}</TableCell>
-              <TableCell>{family[13]}</TableCell>
-              <TableCell>{family[14]}</TableCell>
+              <TableCell>{family.model_resultant}</TableCell>
+              <TableCell>{family.is_polynomial ? 'Yes' : 'No'}</TableCell>
+              <TableCell>{family.num_critical_points}</TableCell>
+              <TableCell>{family.automorphism_group_cardinality}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -100,7 +100,7 @@ function FamilyDetailsTable({ family }) {
         <Table>
           <TableBody>
             <TableRow>
-              <TableCell>{formatCitations(family[15])}</TableCell>
+              <TableCell>{formatCitations(family.citation)}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
