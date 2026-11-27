@@ -39,6 +39,27 @@ describe('backend', { skip: process.platform === 'win32' && 'fake backends are s
     await assert.rejects(started, /exited before it was ready.*signal SIGTERM/)
   })
 
+  it('starts the packaged executable with resource paths and stops it by closing stdin', async () => {
+    process.env.PYTHON = '/nonexistent'
+    const executable = fake('wait-for-stdin.sh')
+    const staticDir = '/resources/frontend'
+    const sqlitePath = '/resources/dads.sqlite'
+    const stopped = assert.rejects(start({ executable, staticDir, sqlitePath }), (err) => {
+      assert.match(err.message, /exited before it was ready \(code 0, signal null\)/)
+      assert.deepEqual(err.output, [
+        `[backend] cwd=${path.dirname(executable)}`,
+        '[backend] args=0',
+        `[backend] static=${staticDir}`,
+        `[backend] sqlite=${sqlitePath}`,
+        '[backend] stdin closed'
+      ])
+      return true
+    })
+
+    await stopBackend()
+    await stopped
+  })
+
   it('stopBackend() uses SIGKILL when the backend ignores SIGTERM', async () => {
     process.env.PYTHON = fake('ignore-term.sh')
     const started = start()

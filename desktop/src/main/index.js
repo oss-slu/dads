@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const { app, BrowserWindow, dialog } = require('electron')
 const { createWindow } = require('./window')
-const { FRONTEND_BUILD_DIR, startBackend, stopBackend } = require('./backend')
+const { BACKEND_EXECUTABLE, FRONTEND_BUILD_DIR, startBackend, stopBackend } = require('./backend')
 
 let quitting = false
 let backendStopped = false
@@ -10,11 +10,16 @@ let backendStopped = false
 const lastOutput = (lines) => lines && lines.length ? lines.join('\n') : '(no output)'
 
 app.whenReady().then(async () => {
-  const staticDir = process.env.DADS_URL ? undefined : FRONTEND_BUILD_DIR
+  const resources = process.resourcesPath
+  const staticDir = app.isPackaged
+    ? path.join(resources, 'frontend')
+    : process.env.DADS_URL ? undefined : FRONTEND_BUILD_DIR
   if (staticDir && !fs.existsSync(path.join(staticDir, 'index.html'))) {
     dialog.showErrorBox(
       'DynaBase frontend build is missing',
-      'Run npm run build:frontend in the desktop directory, then start DynaBase again.'
+      app.isPackaged
+        ? 'Reinstall DynaBase and try again.'
+        : 'Run npm run build:frontend in the desktop directory, then start DynaBase again.'
     )
     app.exit(1)
     return
@@ -36,7 +41,13 @@ app.whenReady().then(async () => {
 
   // Only open the window once the backend can answer, never a blank page
   try {
-    await startBackend({ logFile, onExit, staticDir })
+    const packagedBackend = app.isPackaged
+      ? {
+          executable: path.join(resources, 'backend', BACKEND_EXECUTABLE),
+          sqlitePath: path.join(resources, 'dads.sqlite')
+        }
+      : {}
+    await startBackend({ logFile, onExit, staticDir, ...packagedBackend })
   } catch (err) {
     // quitting stops the backend before it is ready, that is not an error
     if (quitting) return
