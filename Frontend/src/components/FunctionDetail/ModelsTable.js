@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import HelpBox from '../FunctionDetail/HelpBox'
+import ExternalLink from '../ExternalLink';
 
 // Recommend separating renderExponent into a utility file if they are used in multiple places, to avoid code duplication.
 export const renderExponent = (expressionArray) => {
@@ -158,16 +159,14 @@ export default function ModelsTable({ data }) {
                 <TableCell>{modelData[1]}</TableCell>
                 <TableCell>{modelData[2]}</TableCell>
                 <TableCell>{modelData[4] ? (
-                <a
+                <ExternalLink
                   href={`https://www.lmfdb.org/NumberField/${modelData[4]}`}
                   style={{
                     color: "blue",
                     textDecoration: "underline"
-                  }}
-                  target="_blank"
-                  rel="noopener noreferrer">
+                  }}>
                     {modelData[4]}
-                </a>): ('–')}
+                </ExternalLink>): ('–')}
                 </TableCell>
               </TableRow>
 

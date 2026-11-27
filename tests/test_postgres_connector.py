@@ -183,6 +183,23 @@ def test_build_where_text(mock_connect, mock_config):  # pylint: disable=unused-
     assert "Identifier('is_polynomial')" in where_repr
 
 
+@patch("dads.connectors.postgres.load_config", return_value={})
+@patch("psycopg2.connect")
+def test_build_where_text_contents(
+    mock_connect, mock_config
+):  # pylint: disable=unused-argument
+    connector = PostgresConnector()
+    where_sql, params = connector.build_where_text(
+        {"degree": [3, 4], "is_polynomial": [True]}
+    )
+    text = repr(where_sql)
+    assert "SQL('f.'), Identifier('degree')" in text
+    assert "Identifier('is_polynomial')" in text
+    assert text.count("SQL(' IN (')") == 2
+    assert "SQL(' AND ')" in text
+    assert params == [3, 4, True]
+
+
 @patch("dads.connectors.postgres.load_config", return_value=COMMON_MOCK_CONFIG)
 @patch("psycopg2.connect")
 def test_build_where_text_empty(

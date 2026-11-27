@@ -1,8 +1,8 @@
 const { BrowserWindow, shell } = require('electron')
 const { isExternal, isSameOrigin } = require('./links')
 
-// 3000 is the React dev server; DADS_URL lets us point the window somewhere else
-const APP_URL = process.env.DADS_URL || 'http://localhost:3000'
+// Flask serves the built frontend by default. DADS_URL can point to a dev server.
+const APP_URL = process.env.DADS_URL || 'http://127.0.0.1:5000/'
 const appOrigin = new URL(APP_URL).origin
 
 // Opens the main DynaBase window, routes links, and loads the app
